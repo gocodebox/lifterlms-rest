@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'LifterLMS REST API'
+  description: 'LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.'
+
+servers:
+  - url: /wp-json/llms/v1
+
+components:
+
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Specify the page number for a paginated collection.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Specify the number of results per paginated collection page.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 10
+    Order:
+      name: order
+      in: query
+      description: Specifcy the sort order for a collection of results.
+      required: false
+      schema:
+        type: string
+        enum: [ asc, desc ]
+        default: asc
+
+  schemas:
+
+    Student:
+      type: object
+      required:
+        - id
+        - email
+        - username
+      properties:
+        id:
+          description: The student's unique ID.
+          type: integer
+          minimum: 1
+          example: 1234
+          readOnly: true
+        email:
+          description: The student's email address.
+          type: string
+          example: jamie@lifterlms.com
+        username:
+          description: The student's username.
+          type: string
+          example: jamie2019
+        password:
+          description: The student's password.
+          type: string
+          example: my_l337-p@s5w0rd!
+          writeOnly: true
+        name:
+          $ref: '#/components/schemas/PersonName'
+        billing_address:
+          $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      properties:
+        address_1:
+          description: Address line 1.
+          type: string
+          example: 1234 Somewhere Place
+        address_2:
+          description: Address line 2.
+          type: string
+          example: Suite ABC
+        city:
+          description: City name.
+          type: string
+          example: Anywhere
+        state:
+          description: ISO code or state, province, or district name.
+          type: string
+          example: CA
+        postcode:
+          description: Postal code.
+          type: string
+          example: 12345-678
+        country:
+          description: ISO country code.
+          type: string
+          example: US
+
+    PersonName:
+      type: object
+      properties:
+        first:
+          description: The person's first name.
+          type: string
+          example: Jamie
+        last:
+          description: The person's last name.
+          type: string
+          example: Cook
+        display:
+          description: The person's public display name.
+          type: string
+          example: Jamie Cook
+
+security:
+  - BasicAuth: []
+
+paths:
+  /students:
+    get:
+      summary: List students
+      description: Retrieves a list of all students.
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ id, email ]
+            default: id
+
+      responses:
+        200:
+          description: Successfully returned a list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      summary: Create a student
+      description: Creates a new student object.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        200:
+          description: Successfully created the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+
+  /students/{id}:
+    parameters:
+      - name: id
+        description: The student's ID.
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Retrieve a student
+      description: Retrieve the details of an existing student.
+      responses:
+        201:
+          description: Successfully created a new student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+    patch:
+      summary: Update a student
+      description: Update the specified student by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        200:
+          description: Successfully updated the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
