@@ -1,0 +1,13 @@
+theme:
+  logo:
+    gutter: 20px
+  colors:
+    primary:
+      main: '#466dd8'
+  typography:
+    headings:
+      fontFamily: 'Montserrat'
+      fontWeight: 600
+    fontFamily: 'Montserrat'
+    fontWeight: 300
+    fontSize: 16px
