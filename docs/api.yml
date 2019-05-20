@@ -140,6 +140,25 @@ paths:
             type: string
             enum: [ id, email ]
             default: id
+        - name: enrolled_in
+          description: Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
+        - name: enrolled_not_in
+          description: Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
+
 
       responses:
         200:
@@ -185,7 +204,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
-    patch:
+    post:
       summary: Update a student
       description: Update the specified student by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       requestBody:
@@ -201,3 +220,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
+    delete:
+      summary: Delete a student.
+      description: Delete an existing student.
+      responses:
+        200:
+          description: Successfully deleted the student.
