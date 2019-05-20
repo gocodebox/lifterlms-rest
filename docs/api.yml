@@ -1,12 +1,10 @@
 openapi: 3.0.0
 info:
-  version: '1.0.0'
-  title: 'LifterLMS REST API'
+  version: 1.0.0
+  title: LifterLMS REST API
   description: 'LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.'
-
 servers:
   - url: /wp-json/llms/v1
-
 components:
 
   securitySchemes:
@@ -40,10 +38,59 @@ components:
       required: false
       schema:
         type: string
-        enum: [ asc, desc ]
+        enum:
+          - asc
+          - desc
         default: asc
 
   schemas:
+
+    Course:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: The unique course ID.
+          type: integer
+          minimum: 1
+          example: 789
+          readOnly: true
+        title:
+          description: The title of the course.
+          type: string
+          example: Getting Started with LifterLMS
+        content:
+          description: The raw HTML content of the course.
+          type: string
+          example: <h2>Primum cur ista res digna odio est</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam si propter voluptatem, quae est ista laus, quae possit e macello peti.</p>
+        date_created:
+          description: "The course creation date. Format: `Y-m-d H:i:s`"
+          type: string
+          example: "2019-05-20 17:22:05"
+        date_created_gmt:
+          description: "The course creation date (in GMT). Format: `Y-m-d H:i:s`"
+          type: string
+          example: "2019-05-20 13:22:05"
+        date_updated:
+          description: "Date of the last course update. Format: `Y-m-d H:i:s`"
+          type: string
+          example: "2019-05-20 17:25:05"
+        date_updated_gmt:
+          description: "Date of the last course update (in GMT). Format: `Y-m-d H:i:s`"
+          type: string
+          example: "2019-05-20 13:25:05"
+        status:
+          description: The publication status of the course.
+          type: string
+          enum:
+            - publish
+            - pending
+            - draft
+            - auto-draft
+            - future
+            - private
+            - trash
 
     Student:
       type: object
@@ -53,7 +100,7 @@ components:
         - username
       properties:
         id:
-          description: The student's unique ID.
+          description: The unique student ID.
           type: integer
           minimum: 1
           example: 1234
@@ -75,6 +122,27 @@ components:
           $ref: '#/components/schemas/PersonName'
         billing_address:
           $ref: '#/components/schemas/Address'
+        _links:
+          type: object
+          properties:
+            self:
+              description: REST URI to the student.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: '/students/1234'
+            collection:
+              description: REST URI to the student collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: '/students'
 
     Address:
       type: object
@@ -92,7 +160,7 @@ components:
           type: string
           example: Anywhere
         state:
-          description: ISO code or state, province, or district name.
+          description: 'ISO code or state, province, or district name.'
           type: string
           example: CA
         postcode:
@@ -120,14 +188,56 @@ components:
           type: string
           example: Jamie Cook
 
+    ErrorResponse400:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          enum:
+            - llms_rest_bad_request
+          default: llms_rest_bad_request
+          example: llms_rest_bad_request
+        message:
+          description: The API error message.
+          type: string
+          example: Invalid request.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+    ErrorResponse401:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          example: llms_rest_unauthorized
+        message:
+          description: The API error message.
+          type: string
+          default: Unauthorized.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+
 security:
   - BasicAuth: []
-
 paths:
-  /students:
+
+  /courses:
     get:
-      summary: List students
-      description: Retrieves a list of all students.
+      summary: List courses
+      description: Retrieve a list of courses.
+      tags:
+        - Courses
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
@@ -138,10 +248,56 @@ paths:
           required: false
           schema:
             type: string
-            enum: [ id, email ]
+            enum:
+              - id
+              - title
+            default: id
+      responses:
+        200:
+          description: Successfully returned a list of courses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        400:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse400'
+    post:
+      summary: Create a course
+      description: Create a new course object.
+      tags:
+        - Courses
+      responses:
+        200:
+          description: Successfully created a new course
+
+  /students:
+    get:
+      summary: List students
+      description: Retrieves a list of all students.
+      tags:
+        - Students
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - email
             default: id
         - name: enrolled_in
-          description: Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.
+          description: 'Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
           in: query
           required: false
           schema:
@@ -150,7 +306,7 @@ paths:
             items:
               type: integer
         - name: enrolled_not_in
-          description: Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.
+          description: 'Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
           in: query
           required: false
           schema:
@@ -158,10 +314,8 @@ paths:
             default: null
             items:
               type: integer
-
-
       responses:
-        200:
+        '200':
           description: Successfully returned a list of students
           content:
             application/json:
@@ -172,6 +326,8 @@ paths:
     post:
       summary: Create a student
       description: Creates a new student object.
+      tags:
+        - Students
       requestBody:
         required: true
         content:
@@ -179,14 +335,14 @@ paths:
             schema:
               $ref: '#/components/schemas/Student'
       responses:
-        200:
+        '200':
           description: Successfully created the student.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
 
-  /students/{id}:
+  '/students/{id}':
     parameters:
       - name: id
         description: The student's ID.
@@ -197,16 +353,21 @@ paths:
     get:
       summary: Retrieve a student
       description: Retrieve the details of an existing student.
+      tags:
+        - Students
       responses:
-        201:
+        '201':
           description: Successfully created a new student.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
+
     post:
       summary: Update a student
       description: Update the specified student by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Students
       requestBody:
         required: true
         content:
@@ -214,7 +375,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Student'
       responses:
-        200:
+        '200':
           description: Successfully updated the student.
           content:
             application/json:
@@ -223,6 +384,8 @@ paths:
     delete:
       summary: Delete a student.
       description: Delete an existing student.
+      tags:
+        - Students
       responses:
-        200:
+        '200':
           description: Successfully deleted the student.
