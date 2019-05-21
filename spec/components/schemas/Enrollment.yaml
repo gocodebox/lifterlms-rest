@@ -1,0 +1,64 @@
+type: object
+required:
+  - id
+  - student_id
+  - post_id
+properties:
+  id:
+    description: The unique ID of the enrollment.
+    type: integer
+    minimum: 1
+    example: 987
+    readOnly: true
+  student_id:
+    description: The ID of the student.
+    type: integer
+    minimum: 1
+    example: 123
+    readOnly: true
+  post_id:
+    description: The ID of the course/membership.
+    type: integer
+    minimum: 1
+    example: 456
+  date_created:
+    description: 'The enrollment creation date. Format: `Y-m-d H:i:s`'
+    type: string
+    example: '2019-05-21 14:22:05'
+    readOnly: true
+  date_updated:
+    description: 'The date of the last enrollment update. Format: `Y-m-d H:i:s`'
+    type: string
+    example: '2019-05-21 19:22:05'
+    readOnly: true
+  status:
+    description: The status of the enrollment.
+    type: string
+    default: enrolled
+    example: enrolled
+    enum:
+      - enrolled
+      - cancelled
+      - expired
+  _links:
+    readOnly: true
+    type: object
+    properties:
+      self:
+        description: REST URI to the enrollment.
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              example: /students/123/enrollments/987
+      collection:
+        description: REST URI to the student's enrollments collection.
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              example:  /students/123/enrollments/

@@ -6,19 +6,26 @@ parameters:
     required: true
     schema:
       type: integer
+  - name: enrollmentId
+    description: The ID of the enrollment.
+    example: 456
+    in: path
+    required: true
+    schema:
+        type: integer
 
 get:
-  summary: Retrieve a student
-  description: Retrieve the details of an existing student.
+  summary: Retrieve an enrollment
+  description: Retrieve the details of an existing enrollment.
   tags:
-    - Students
+    - Student Enrollments
   responses:
     200:
-      description: Successfully retrieved the student.
+      description: Successfully retrieved the enrollment.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Student'
+            $ref: '#/components/schemas/Enrollment'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -29,25 +36,31 @@ get:
       $ref: '#/components/responses/Error404'
 
 post:
-  summary: Update a student
-  description: >-
-    Update the specified student by setting the values of the parameters passed.
-    Any parameters not provided will be left unchanged.
+  summary: Update an enrollment
+  description: Update the specified enrollment by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
   tags:
-    - Students
+    - Student Enrollments
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Student'
+          allOf:
+            - $ref: '#/components/schemas/Enrollment'
+            - type: object
+              required:
+                - status
+              properties:
+                post_id:
+                  readOnly: true
+
   responses:
     200:
-      description: Successfully updated the student.
+      description: Successfully updated the enrollment.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Student'
+            $ref: '#/components/schemas/Enrollment'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -58,13 +71,13 @@ post:
       $ref: '#/components/responses/Error404'
 
 delete:
-  summary: Delete a student.
-  description: Delete an existing student.
+  summary: Delete an enrollment.
+  description: Delete an existing enrollment.
   tags:
-    - Students
+    - Student Enrollments
   responses:
     204:
-      description: Successfully deleted the student.
+      description: Successfully deleted the enrollment.
     400:
       $ref: '#/components/responses/Error400'
     401:

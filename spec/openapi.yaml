@@ -34,7 +34,27 @@ info:
     altText: LifterLMS
     url: "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png"
     href: "https://lifterlms.com/"
+
 servers:
   - url: /wp-json/llms/v1
+
 security:
   - BasicAuth: []
+
+tags:
+  - name: Students
+    description: |
+      Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
+
+      The students API allows you to create, view, update, and delete student accounts.
+  - name: Student Enrollments
+    description: |
+      Enrollments are used to track a student's access to content on your website.
+
+      The student enrollments API allows you to create, view, update, and delete student enrollments.
+
+x-tagGroups:
+  - name: Students
+    tags:
+      - Students
+      - Student Enrollments

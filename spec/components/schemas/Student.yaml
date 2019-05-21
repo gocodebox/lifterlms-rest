@@ -23,6 +23,11 @@ properties:
     type: string
     example: my_l337-p@s5w0rd!
     writeOnly: true
+  role:
+    description: The student's WordPress user role.
+    type: string
+    example: student
+    default: student
   name:
     $ref: '#/components/schemas/PersonName'
   billing_address:
