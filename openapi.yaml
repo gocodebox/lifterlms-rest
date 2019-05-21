@@ -28,6 +28,28 @@ servers:
   - url: /wp-json/llms/v1
 security:
   - BasicAuth: []
+tags:
+  - name: Courses
+    description: |
+      The courses API allows you to create, view, update, and delete courses.
+  - name: Students
+    description: |
+      Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
+
+      The students API allows you to create, view, update, and delete student accounts.
+  - name: Student Enrollments
+    description: |
+      Enrollments are used to track a student's access to content on your website.
+
+      The student enrollments API allows you to create, view, update, and delete student enrollments.
+x-tagGroups:
+  - name: Courses
+    tags:
+      - Courses
+  - name: Students
+    tags:
+      - Students
+      - Student Enrollments
 paths:
   /courses:
     get:
@@ -59,19 +81,106 @@ paths:
                 items:
                   $ref: '#/components/schemas/Course'
         '400':
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
     post:
       summary: Create a course
       description: Create a new course object.
       tags:
         - Courses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '201':
+          description: Successfully created the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/courses/{id}':
+    parameters:
+      - name: id
+        description: The course ID.
+        example: 123
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Retrieve a course
+      description: Retrieve the details of an existing course.
+      tags:
+        - Courses
       responses:
         '200':
-          description: Successfully created a new course
+          description: Successfully retrieved the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update a course
+      description: Update the specified course by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Courses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '200':
+          description: Successfully updated the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete a course
+      description: Delete an existing course.
+      tags:
+        - Courses
+      responses:
+        '204':
+          description: Successfully deleted the student.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
   /students:
     get:
       summary: List students
@@ -142,7 +251,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Student'
       responses:
-        '200':
+        '201':
           description: Successfully created the student.
           content:
             application/json:
@@ -158,6 +267,7 @@ paths:
     parameters:
       - name: id
         description: The student's ID.
+        example: 123
         in: path
         required: true
         schema:
@@ -168,8 +278,8 @@ paths:
       tags:
         - Students
       responses:
-        '201':
-          description: Successfully created a new student.
+        '200':
+          description: Successfully retrieved the student.
           content:
             application/json:
               schema:
@@ -209,7 +319,7 @@ paths:
         '404':
           $ref: '#/components/responses/Error404'
     delete:
-      summary: Delete a student.
+      summary: Delete a student
       description: Delete an existing student.
       tags:
         - Students
@@ -228,6 +338,7 @@ paths:
     parameters:
       - name: id
         description: The student's ID.
+        example: 123
         in: path
         required: true
         schema:
@@ -236,15 +347,166 @@ paths:
       summary: List student enrollments
       description: Retrieve a list of enrollments for a student.
       tags:
-        - Students
+        - Student Enrollments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - student_id
+              - post_id
+              - created_date
+            default: id
+        - name: post_in
+          description: 'Include only enrollments for the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
+        - name: post_not_in
+          description: 'Exclude enrollments for the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
       responses:
         '200':
-          description: Successully retrieve student enrollments.
+          description: Successully retrieved student enrollments.
           headers:
             X-WP-Total:
               $ref: '#/components/headers/PaginationTotalResults'
             X-WP-TotalPages:
               $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Create a new enrollment
+      description: Creates a new enrollment for a student.
+      tags:
+        - Student Enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+      responses:
+        '201':
+          description: Successfully created the enrollment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+  '/students/{id}/enrollments/{enrollmentId}':
+    parameters:
+      - name: id
+        description: The student's ID.
+        example: 123
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: enrollmentId
+        description: The ID of the enrollment.
+        example: 456
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Retrieve an enrollment
+      description: Retrieve the details of an existing enrollment.
+      tags:
+        - Student Enrollments
+      responses:
+        '200':
+          description: Successfully retrieved the enrollment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update an enrollment
+      description: Update the specified enrollment by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Student Enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Enrollment'
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    post_id:
+                      readOnly: true
+      responses:
+        '200':
+          description: Successfully updated the enrollment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete an enrollment.
+      description: Delete an existing enrollment.
+      tags:
+        - Student Enrollments
+      responses:
+        '204':
+          description: Successfully deleted the enrollment.
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -309,6 +571,7 @@ components:
           description: 'The course creation date (in GMT). Format: `Y-m-d H:i:s`'
           type: string
           example: '2019-05-20 13:22:05'
+          readOnly: true
         date_updated:
           description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
           type: string
@@ -317,6 +580,7 @@ components:
           description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
           type: string
           example: '2019-05-20 13:25:05'
+          readOnly: true
         status:
           description: The publication status of the course.
           type: string
@@ -328,6 +592,70 @@ components:
             - future
             - private
             - trash
+          default: publish
+    Enrollment:
+      type: object
+      required:
+        - id
+        - student_id
+        - post_id
+      properties:
+        id:
+          description: The unique ID of the enrollment.
+          type: integer
+          minimum: 1
+          example: 987
+          readOnly: true
+        student_id:
+          description: The ID of the student.
+          type: integer
+          minimum: 1
+          example: 123
+          readOnly: true
+        post_id:
+          description: The ID of the course/membership.
+          type: integer
+          minimum: 1
+          example: 456
+        date_created:
+          description: 'The enrollment creation date. Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-21 14:22:05'
+        date_updated:
+          description: 'The date of the last enrollment update. Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-21 19:22:05'
+        status:
+          description: The status of the enrollment.
+          type: string
+          default: enrolled
+          example: enrolled
+          enum:
+            - enrolled
+            - cancelled
+            - expired
+        _links:
+          readOnly: true
+          type: object
+          properties:
+            self:
+              description: REST URI to the enrollment.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /students/123/enrollments/987
+            collection:
+              description: REST URI to the student's enrollments collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /students/123/enrollments/
     Error:
       type: object
       properties:
@@ -469,6 +797,11 @@ components:
           type: string
           example: my_l337-p@s5w0rd!
           writeOnly: true
+        role:
+          description: The student's WordPress user role.
+          type: string
+          example: student
+          default: student
         name:
           $ref: '#/components/schemas/PersonName'
         billing_address:
