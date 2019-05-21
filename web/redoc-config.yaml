@@ -1,3 +1,4 @@
+# https://github.com/Rebilly/ReDoc/blob/master/src/theme.ts
 theme:
   logo:
     gutter: 20px
@@ -11,3 +12,5 @@ theme:
     fontFamily: 'Montserrat'
     fontWeight: 300
     fontSize: 16px
+  rightPanel:
+    backgroundColor: '#222'

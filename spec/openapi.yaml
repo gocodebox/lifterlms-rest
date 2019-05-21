@@ -42,11 +42,17 @@ security:
   - BasicAuth: []
 
 tags:
+
+  - name: Courses
+    description: |
+      The courses API allows you to create, view, update, and delete courses.
+
   - name: Students
     description: |
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
 
       The students API allows you to create, view, update, and delete student accounts.
+
   - name: Student Enrollments
     description: |
       Enrollments are used to track a student's access to content on your website.
@@ -54,6 +60,10 @@ tags:
       The student enrollments API allows you to create, view, update, and delete student enrollments.
 
 x-tagGroups:
+  - name: Courses
+    tags:
+      - Courses
+
   - name: Students
     tags:
       - Students

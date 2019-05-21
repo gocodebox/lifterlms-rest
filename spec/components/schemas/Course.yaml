@@ -27,6 +27,7 @@ properties:
     description: 'The course creation date (in GMT). Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-20 13:22:05'
+    readOnly: true
   date_updated:
     description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
     type: string
@@ -35,6 +36,7 @@ properties:
     description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-20 13:25:05'
+    readOnly: true
   status:
     description: The publication status of the course.
     type: string
@@ -46,3 +48,4 @@ properties:
       - future
       - private
       - trash
+    default: publish

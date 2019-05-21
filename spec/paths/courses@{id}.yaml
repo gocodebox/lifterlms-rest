@@ -1,6 +1,6 @@
 parameters:
   - name: id
-    description: The student's ID.
+    description: The course ID.
     example: 123
     in: path
     required: true
@@ -8,17 +8,17 @@ parameters:
       type: integer
 
 get:
-  summary: Retrieve a student
-  description: Retrieve the details of an existing student.
+  summary: Retrieve a course
+  description: Retrieve the details of an existing course.
   tags:
-    - Students
+    - Courses
   responses:
     200:
       description: Successfully retrieved the student.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Student'
+            $ref: '#/components/schemas/Course'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -29,25 +29,25 @@ get:
       $ref: '#/components/responses/Error404'
 
 post:
-  summary: Update a student
+  summary: Update a course
   description: >-
-    Update the specified student by setting the values of the parameters passed.
+    Update the specified course by setting the values of the parameters passed.
     Any parameters not provided will be left unchanged.
   tags:
-    - Students
+    - Courses
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Student'
+          $ref: '#/components/schemas/Course'
   responses:
     200:
       description: Successfully updated the student.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Student'
+            $ref: '#/components/schemas/Course'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -58,10 +58,10 @@ post:
       $ref: '#/components/responses/Error404'
 
 delete:
-  summary: Delete a student
-  description: Delete an existing student.
+  summary: Delete a course
+  description: Delete an existing course.
   tags:
-    - Students
+    - Courses
   responses:
     204:
       description: Successfully deleted the student.

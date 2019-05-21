@@ -75,7 +75,7 @@ post:
         schema:
           $ref: '#/components/schemas/Student'
   responses:
-    200:
+    201:
       description: Successfully created the student.
       content:
         application/json:

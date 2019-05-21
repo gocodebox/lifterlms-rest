@@ -25,12 +25,10 @@ properties:
     description: 'The enrollment creation date. Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-21 14:22:05'
-    readOnly: true
   date_updated:
     description: 'The date of the last enrollment update. Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-21 19:22:05'
-    readOnly: true
   status:
     description: The status of the enrollment.
     type: string
@@ -40,6 +38,7 @@ properties:
       - enrolled
       - cancelled
       - expired
+
   _links:
     readOnly: true
     type: object
