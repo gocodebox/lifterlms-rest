@@ -7,30 +7,28 @@ LifterLMS REST API
 
 A REST API feature plugin for [LifterLMS](https://github.com/gocodebox/lifterlms).
 
-## Specification
+**This specification (and repository) is currently under construction. It is not yet a functional API.**
+
+## Contributing [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](.github/CONTRIBUTING.md)
+
+We are looking for both API specification designers and developers interested in contributing. The best way to contribute is to join us in `#developers` on the official [LifterLMS Slack community](https://lifterlms.com/slack).
+
+## Specification & Documentation
 
 The LifterLMS REST API follows the [OpenAPI Specification (Version 3.0.0)](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md).
 
+REST API documentation is available at [gocodebox.github.io/lifterlms-rest/](https://gocodebox.github.io/lifterlms-rest/).
+
+The full OpenAPI spec can be downloaded in [json](https://gocodebox.github.io/lifterlms-rest/openapi.json) or [yaml](https://gocodebox.github.io/lifterlms-rest/openapi.yaml) formats.
 
 ## Building & Developing REST API Doc spec
 
-This repos
+This repo uses [ReDoc](https://github.com/Rebilly/ReDoc).
 
-### Install
+To build the docs locally for development:
 
-1. Install [Node JS](https://nodejs.org/)
-2. Clone repo and run `npm install` in the repo root
-
-### Usage
-
-#### `npm start`
-Starts the development server.
-
-#### `npm run build`
-Bundles the spec and prepares web_deploy folder with static assets.
-
-#### `npm test`
-Validates the spec.
-
-#### `npm run gh-pages`
-Deploys docs to GitHub Pages. You don't need to run it manually if you have Travis CI configured.
++ `npm install` in the repo root.
++ `npm start`: Starts the development server.
++ `npm run build`: Bundles the spec and prepares web_deploy folder with static assets.
++ `npm test`: Validates the spec.
++ `npm run gh-pages`: Deploys docs to GitHub Pages. You don't need to run it manually if you have Travis CI configured.
