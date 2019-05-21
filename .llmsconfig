@@ -19,5 +19,14 @@
 	},
 	"slush": {
 		"shortname": "REST"
+	},
+	"zip": {
+		"composer": true,
+		"src": {
+			"custom": [
+				"!./spec/**",
+				"!./web/**",
+			]
+		}
 	}
 }
