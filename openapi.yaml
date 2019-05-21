@@ -1,0 +1,566 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: LifterLMS REST API
+  description: |-
+    # Introduction
+    LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.
+    ## Requirements
+    To use the latest version of the REST API you must be using the following:
+
+      + LifterLMS [@version]+.
+      + WordPress 5.2+.
+      + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**
+      + An SSL certificate.
+
+    ## Errors
+    asrtasrtarst
+    ## Pagination
+    asrtastarstarst
+    # Authentication
+    Lorem ipsum...
+    <!-- ReDoc-Inject: <security-definitions> -->
+  x-logo:
+    altText: LifterLMS
+    url: 'https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png'
+    href: 'https://lifterlms.com/'
+servers:
+  - url: /wp-json/llms/v1
+security:
+  - BasicAuth: []
+paths:
+  /courses:
+    get:
+      summary: List courses
+      description: Retrieve a list of courses.
+      tags:
+        - Courses
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - title
+            default: id
+      responses:
+        '200':
+          description: Successfully returned a list of courses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a course
+      description: Create a new course object.
+      tags:
+        - Courses
+      responses:
+        '200':
+          description: Successfully created a new course
+  /students:
+    get:
+      summary: List students
+      description: Retrieves a list of all students.
+      tags:
+        - Students
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - email
+            default: id
+        - name: enrolled_in
+          description: 'Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
+        - name: enrolled_not_in
+          description: 'Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
+          in: query
+          required: false
+          schema:
+            type: array
+            default: null
+            items:
+              type: integer
+      responses:
+        '200':
+          description: Successfully returned a list of students
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create a student
+      description: Creates a new student object.
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Successfully created the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/students/{id}':
+    parameters:
+      - name: id
+        description: The student's ID.
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Retrieve a student
+      description: Retrieve the details of an existing student.
+      tags:
+        - Students
+      responses:
+        '201':
+          description: Successfully created a new student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update a student
+      description: Update the specified student by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Successfully updated the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete a student.
+      description: Delete an existing student.
+      tags:
+        - Students
+      responses:
+        '204':
+          description: Successfully deleted the student.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+  '/students/{id}/enrollments':
+    parameters:
+      - name: id
+        description: The student's ID.
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: List student enrollments
+      description: Retrieve a list of enrollments for a student.
+      tags:
+        - Students
+      responses:
+        '200':
+          description: Successully retrieve student enrollments.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        address_1:
+          description: Address line 1.
+          type: string
+          example: 1234 Somewhere Place
+        address_2:
+          description: Address line 2.
+          type: string
+          example: Suite ABC
+        city:
+          description: City name.
+          type: string
+          example: Anywhere
+        state:
+          description: 'ISO code or state, province, or district name.'
+          type: string
+          example: CA
+        postcode:
+          description: Postal code.
+          type: string
+          example: 12345-678
+        country:
+          description: ISO country code.
+          type: string
+          example: US
+    Course:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: The unique course ID.
+          type: integer
+          minimum: 1
+          example: 789
+          readOnly: true
+        title:
+          description: The title of the course.
+          type: string
+          example: Getting Started with LifterLMS
+        content:
+          description: The raw HTML content of the course.
+          type: string
+          example: '<h2>Primum cur ista res digna odio est</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam si propter voluptatem, quae est ista laus, quae possit e macello peti.</p>'
+        date_created:
+          description: 'The course creation date. Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-20 17:22:05'
+        date_created_gmt:
+          description: 'The course creation date (in GMT). Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-20 13:22:05'
+        date_updated:
+          description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-20 17:25:05'
+        date_updated_gmt:
+          description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-20 13:25:05'
+        status:
+          description: The publication status of the course.
+          type: string
+          enum:
+            - publish
+            - pending
+            - draft
+            - auto-draft
+            - future
+            - private
+            - trash
+    Error:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          enum:
+            - llms_rest_bad_request
+          default: llms_rest_bad_request
+          example: llms_rest_bad_request
+        message:
+          description: The API error message.
+          type: string
+          example: Invalid request.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              type: integer
+              minimum: 100
+              maximum: 600
+              example: 400
+              description: The HTTP status code.
+    Error400:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          example: llms_rest_bad_request
+        message:
+          description: The API error message.
+          type: string
+          example: Bad request.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              description: The HTTP status code.
+              type: integer
+              example: 400
+    Error401:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          example: llms_rest_unauthorized_request
+        message:
+          description: The API error message.
+          type: string
+          example: The API credentials were invalid.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              description: The HTTP status code.
+              type: integer
+              example: 401
+    Error403:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          example: llms_rest_forbidden_request
+        message:
+          description: The API error message.
+          type: string
+          example: User is authorized to perform this request.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              description: The HTTP status code.
+              type: integer
+              example: 403
+    Error404:
+      type: object
+      properties:
+        code:
+          description: The API error code.
+          type: string
+          example: llms_rest_not_found
+        message:
+          description: The API error message.
+          type: string
+          example: The requested resource could not be found.
+        data:
+          description: Additional response data.
+          type: object
+          properties:
+            status:
+              description: The HTTP status code.
+              type: integer
+              example: 404
+    PersonName:
+      type: object
+      properties:
+        first:
+          description: The person's first name.
+          type: string
+          example: Jamie
+        last:
+          description: The person's last name.
+          type: string
+          example: Cook
+        display:
+          description: The person's public display name.
+          type: string
+          example: Jamie Cook
+    Student:
+      type: object
+      required:
+        - id
+        - email
+        - username
+      properties:
+        id:
+          description: The unique student ID.
+          type: integer
+          minimum: 1
+          example: 1234
+          readOnly: true
+        email:
+          description: The student's email address.
+          type: string
+          example: jamie@lifterlms.com
+        username:
+          description: The student's username.
+          type: string
+          example: jamie2019
+        password:
+          description: The student's password.
+          type: string
+          example: my_l337-p@s5w0rd!
+          writeOnly: true
+        name:
+          $ref: '#/components/schemas/PersonName'
+        billing_address:
+          $ref: '#/components/schemas/Address'
+        _links:
+          type: object
+          properties:
+            self:
+              description: REST URI to the student.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /students/1234
+            collection:
+              description: REST URI to the student collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /students
+  responses:
+    Error400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error400'
+    Error401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error401'
+    Error403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error403'
+    Error404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error404'
+  parameters:
+    Order:
+      name: order
+      in: query
+      description: Specifcy the sort order for a collection of results.
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+    Page:
+      name: page
+      in: query
+      description: Specify the page number for a paginated collection.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Specify the number of results per paginated collection page.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 10
+  headers:
+    PaginationTotalPages:
+      description: Total number of pages available in the collection.
+      schema:
+        type: integer
+        example: 28
+    PaginationTotalResults:
+      description: Total number of results found in the collection.
+      schema:
+        type: integer
+        example: 275
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
