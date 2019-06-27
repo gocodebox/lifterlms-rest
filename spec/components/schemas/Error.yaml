@@ -3,14 +3,9 @@ properties:
   code:
     description: The API error code.
     type: string
-    enum:
-      - llms_rest_bad_request
-    default: llms_rest_bad_request
-    example: llms_rest_bad_request
   message:
     description: The API error message.
     type: string
-    example: Invalid request.
   data:
     description: Additional response data.
     type: object
@@ -19,5 +14,4 @@ properties:
         type: integer
         minimum: 100
         maximum: 600
-        example: 400
         description: The HTTP status code.

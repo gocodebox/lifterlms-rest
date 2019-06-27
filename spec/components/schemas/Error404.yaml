@@ -1,18 +1,11 @@
-type: object
-properties:
-  code:
-    description: The API error code.
-    type: string
-    example: llms_rest_not_found
-  message:
-    description: The API error message.
-    type: string
-    example: The requested resource could not be found.
-  data:
-    description: Additional response data.
-    type: object
-    properties:
-      status:
-        description: The HTTP status code.
-        type: integer
-        example: 404
+allOf:
+  - $ref: '#/components/schemas/Error'
+  - properties:
+      code:
+        default: llms_rest_not_found
+      message:
+        default: The requested resource could not be found.
+      data:
+        properties:
+          status:
+            default: 404
