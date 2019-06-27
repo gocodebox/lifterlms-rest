@@ -53,3 +53,12 @@ properties:
             href:
               type: string
               example: /students
+      enrollments:
+        description: REST URI to a collection of the student's enrollments.
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              example: /students/1234/enrollments

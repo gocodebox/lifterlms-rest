@@ -10,15 +10,25 @@ properties:
     readOnly: true
   title:
     description: The title of the course.
+    type: object
+    properties:
+      rendered:
+        type: string
+        description: Rendered title.
+        example: Getting Started with LifterLMS
+      raw:
+        type: string
+        description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+        example: Getting Started with LifterLMS
+  slug:
+    description: Course URL slug.
     type: string
-    example: Getting Started with LifterLMS
-  content:
-    description: The raw HTML content of the course.
+    example: getting-started-with-lifterlms
+  permalink:
+    description: Course URL.
     type: string
-    example: >-
-      <h2>Primum cur ista res digna odio est</h2><p>Lorem ipsum dolor sit amet,
-      consectetur adipiscing elit. Nam si propter voluptatem, quae est ista
-      laus, quae possit e macello peti.</p>
+    example: https://example.com/course/getting-started-with-lifterlms
+    readOnly: true
   date_created:
     description: 'The course creation date. Format: `Y-m-d H:i:s`'
     type: string
@@ -32,20 +42,23 @@ properties:
     description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-20 17:25:05'
+    readOnly: true
   date_updated_gmt:
     description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-20 13:25:05'
     readOnly: true
   status:
-    description: The publication status of the course.
-    type: string
+    $ref: '#/components/schemas/PostStatus'
+  catalog_visibility:
+    description: Visibility of the course in catalogs and search results.
     enum:
-      - publish
-      - pending
-      - draft
-      - auto-draft
-      - future
-      - private
-      - trash
-    default: publish
+      - catalog_search
+      - catalog
+      - search
+      - hidden
+    default: catalog_search
+  content:
+    $ref: '#/components/schemas/PostContent'
+  excerpt:
+    $ref: '#/components/schemas/PostExcerpt'

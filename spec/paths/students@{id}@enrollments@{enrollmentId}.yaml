@@ -71,7 +71,7 @@ post:
       $ref: '#/components/responses/Error404'
 
 delete:
-  summary: Delete an enrollment.
+  summary: Delete an enrollment
   description: Delete an existing enrollment.
   tags:
     - Student Enrollments

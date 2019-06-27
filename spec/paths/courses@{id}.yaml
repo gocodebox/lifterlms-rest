@@ -14,7 +14,7 @@ get:
     - Courses
   responses:
     200:
-      description: Successfully retrieved the student.
+      description: Successfully retrieved the course.
       content:
         application/json:
           schema:
@@ -29,6 +29,7 @@ get:
       $ref: '#/components/responses/Error404'
 
 post:
+  operationId: updateCourse
   summary: Update a course
   description: >-
     Update the specified course by setting the values of the parameters passed.
