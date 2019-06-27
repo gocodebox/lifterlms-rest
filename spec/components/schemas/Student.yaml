@@ -34,6 +34,7 @@ properties:
     $ref: '#/components/schemas/Address'
   _links:
     type: object
+    readOnly: true
     properties:
       self:
         description: REST URI to the student.
