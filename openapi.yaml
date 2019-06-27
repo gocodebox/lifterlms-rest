@@ -35,22 +35,11 @@ tags:
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
 
       The students API allows you to create, view, update, and delete student accounts.
-  - name: Student Enrollments
+  - name: Enrollments
     description: |
       Enrollments are used to track a student's access to content on your website.
 
-      The student enrollments API allows you to create, view, update, and delete student enrollments.
-  - name: Pagination
-    description: Pagination description (can use markdown syntax)
-    x-traitTag: true
-x-tagGroups:
-  - name: Courses
-    tags:
-      - Courses
-  - name: Students
-    tags:
-      - Students
-      - Student Enrollments
+      The enrollments API allows you to create, view, update, and delete student enrollments.
 paths:
   /courses:
     get:
@@ -72,10 +61,25 @@ paths:
             enum:
               - id
               - title
+              - date_created
+              - date_updated
+              - menu_order
             default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
       responses:
         '200':
           description: Successfully returned a list of courses.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/courses?page=1>; rel="first", </wp-json/llms/v1/courses?page=2>; rel="prev", </wp-json/llms/v1/courses?page=4>; rel="next", </wp-json/llms/v1/courses?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
           content:
             application/json:
               schema:
@@ -126,6 +130,9 @@ paths:
       description: Retrieve the details of an existing course.
       tags:
         - Courses
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/PostPassword'
       responses:
         '200':
           description: Successfully retrieved the course.
@@ -142,7 +149,6 @@ paths:
         '404':
           $ref: '#/components/responses/Error404'
     post:
-      operationId: updateCourse
       summary: Update a course
       description: Update the specified course by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       tags:
@@ -173,6 +179,182 @@ paths:
       description: Delete an existing course.
       tags:
         - Courses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force:
+                  description: Bypass the trash and force course deletion.
+                  type: boolean
+                  default: false
+      responses:
+        '204':
+          description: Successfully deleted the student.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+  /enrollments:
+    get:
+      summary: List enrollments
+      description: Retrieve a list of enrollments.
+      tags:
+        - Enrollments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          schema:
+            type: string
+            enum:
+              - id
+              - date_created
+              - date_updated
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+        - name: student
+          description: Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.
+          in: query
+          schema:
+            type: string
+            example: '123,456'
+        - name: student_exclude
+          description: Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.
+          in: query
+          schema:
+            type: string
+            example: '789,324'
+        - name: post
+          description: Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.
+          in: query
+          schema:
+            type: string
+            example: '123,456'
+        - name: post_exclude
+          description: Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.
+          in: query
+          schema:
+            type: string
+            example: '789,324'
+      responses:
+        '200':
+          description: Successfully returned a list of enrollments.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/enrollments?page=1>; rel="first", </wp-json/llms/v1/enrollments?page=2>; rel="prev", </wp-json/llms/v1/enrollments?page=4>; rel="next", </wp-json/llms/v1/enrollments?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create an enrollment
+      description: Create a new course object.
+      tags:
+        - Enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+      responses:
+        '201':
+          description: Successfully created the enrollment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/enrollments/{id}':
+    parameters:
+      - name: id
+        description: The enrollment ID.
+        example: 987
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Retrieve a enrollment
+      description: Retrieve the details of an existing enrollment.
+      tags:
+        - Enrollments
+      responses:
+        '200':
+          description: Successfully retrieved the enrollment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update an enrollment
+      description: Update the specified enrollment by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+      responses:
+        '200':
+          description: Successfully updated the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete an enrollment
+      description: Delete an existing enrollment.
+      tags:
+        - Enrollments
       responses:
         '204':
           description: Successfully deleted the student.
@@ -204,13 +386,14 @@ paths:
               - id
               - email
             default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
         - name: enrolled_in
           description: 'Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
           in: query
           required: false
           schema:
             type: array
-            default: null
             items:
               type: integer
         - name: enrolled_not_in
@@ -219,7 +402,6 @@ paths:
           required: false
           schema:
             type: array
-            default: null
             items:
               type: integer
       responses:
@@ -230,7 +412,7 @@ paths:
               description: Pagination links for the collection.
               schema:
                 type: string
-                example: '</students?page=1>; rel="first", </students?page=2>; rel="prev", </students?page=4>; rel="next", </students?page=5>; rel="last"'
+                example: '</wp-json/llms/v1/students?page=1>; rel="first", </wp-json/llms/v1/students?page=2>; rel="prev", </wp-json/llms/v1/students?page=4>; rel="next", </wp-json/llms/v1/students?page=5>; rel="last"'
             X-WP-Total:
               $ref: '#/components/headers/PaginationTotalResults'
             X-WP-TotalPages:
@@ -342,187 +524,6 @@ paths:
           $ref: '#/components/responses/Error403'
         '404':
           $ref: '#/components/responses/Error404'
-  '/students/{id}/enrollments':
-    parameters:
-      - name: id
-        description: The student's ID.
-        example: 123
-        in: path
-        required: true
-        schema:
-          type: integer
-    get:
-      summary: List student enrollments
-      description: Retrieve a list of enrollments for a student.
-      tags:
-        - Student Enrollments
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/Order'
-        - name: orderby
-          description: Specify the sort field for a collection of results.
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - id
-              - student_id
-              - post_id
-              - created_date
-            default: id
-        - name: post_in
-          description: 'Include only enrollments for the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
-          in: query
-          required: false
-          schema:
-            type: array
-            default: null
-            items:
-              type: integer
-        - name: post_not_in
-          description: 'Exclude enrollments for the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.'
-          in: query
-          required: false
-          schema:
-            type: array
-            default: null
-            items:
-              type: integer
-      responses:
-        '200':
-          description: Successully retrieved student enrollments.
-          headers:
-            X-WP-Total:
-              $ref: '#/components/headers/PaginationTotalResults'
-            X-WP-TotalPages:
-              $ref: '#/components/headers/PaginationTotalPages'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Enrollment'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-    post:
-      summary: Create a new enrollment
-      description: Creates a new enrollment for a student.
-      tags:
-        - Student Enrollments
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Enrollment'
-      responses:
-        '201':
-          description: Successfully created the enrollment.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Enrollment'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-  '/students/{id}/enrollments/{enrollmentId}':
-    parameters:
-      - name: id
-        description: The student's ID.
-        example: 123
-        in: path
-        required: true
-        schema:
-          type: integer
-      - name: enrollmentId
-        description: The ID of the enrollment.
-        example: 456
-        in: path
-        required: true
-        schema:
-          type: integer
-    get:
-      summary: Retrieve an enrollment
-      description: Retrieve the details of an existing enrollment.
-      tags:
-        - Student Enrollments
-      responses:
-        '200':
-          description: Successfully retrieved the enrollment.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Enrollment'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-    post:
-      summary: Update an enrollment
-      description: Update the specified enrollment by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-      tags:
-        - Student Enrollments
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: '#/components/schemas/Enrollment'
-                - type: object
-                  required:
-                    - status
-                  properties:
-                    post_id:
-                      readOnly: true
-      responses:
-        '200':
-          description: Successfully updated the enrollment.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Enrollment'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-    delete:
-      summary: Delete an enrollment
-      description: Delete an existing enrollment.
-      tags:
-        - Student Enrollments
-      responses:
-        '204':
-          description: Successfully deleted the enrollment.
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
 components:
   schemas:
     Address:
@@ -553,70 +554,247 @@ components:
           type: string
           example: US
     Course:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          description: The unique course ID.
-          type: integer
-          minimum: 1
-          example: 789
-          readOnly: true
-        title:
-          description: The title of the course.
-          type: object
+      allOf:
+        - $ref: '#/components/schemas/Post'
+        - type: object
           properties:
-            rendered:
+            permalink:
+              example: 'https://example.com/course/getting-started-with-lifterlms'
+            catalog_visibility:
+              description: Visibility of the course in catalogs and search results.
               type: string
-              description: Rendered title.
-              example: Getting Started with LifterLMS
-            raw:
+              enum:
+                - catalog_search
+                - catalog
+                - search
+                - hidden
+              default: catalog_search
+            categories:
+              description: List of course categories.
+              type: array
+              default: []
+              example:
+                - 1
+                - 2
+                - 3
+              items:
+                type: integer
+            tags:
+              description: List of course tags.
+              type: array
+              default: []
+              example:
+                - 4
+                - 5
+                - 6
+              items:
+                type: integer
+            difficulties:
+              description: List of course difficulties.
+              type: array
+              default: []
+              example:
+                - 7
+              items:
+                type: integer
+            tracks:
+              description: List of course tracks.
+              type: array
+              default: []
+              example:
+                - 8
+                - 9
+              items:
+                type: integer
+            instructors:
+              description: List of course instructors. Defaults to current user when creating a new course.
+              type: array
+              default: []
+              example:
+                - 1
+                - 2
+                - 3
+              items:
+                type: integer
+            audio_embed:
+              description: URL to an oEmbed enable audio URL.
               type: string
-              description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-              example: Getting Started with LifterLMS
-        slug:
-          description: Course URL slug.
-          type: string
-          example: getting-started-with-lifterlms
-        permalink:
-          description: Course URL.
-          type: string
-          example: 'https://example.com/course/getting-started-with-lifterlms'
-          readOnly: true
-        date_created:
-          description: 'The course creation date. Format: `Y-m-d H:i:s`'
-          type: string
-          example: '2019-05-20 17:22:05'
-        date_created_gmt:
-          description: 'The course creation date (in GMT). Format: `Y-m-d H:i:s`'
-          type: string
-          example: '2019-05-20 13:22:05'
-          readOnly: true
-        date_updated:
-          description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
-          type: string
-          example: '2019-05-20 17:25:05'
-          readOnly: true
-        date_updated_gmt:
-          description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
-          type: string
-          example: '2019-05-20 13:25:05'
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/PostStatus'
-        catalog_visibility:
-          description: Visibility of the course in catalogs and search results.
-          enum:
-            - catalog_search
-            - catalog
-            - search
-            - hidden
-          default: catalog_search
-        content:
-          $ref: '#/components/schemas/PostContent'
-        excerpt:
-          $ref: '#/components/schemas/PostExcerpt'
+              example: 'https://open.spotify.com/track/trackid'
+            video_embed:
+              description: URL to an oEmbed enable video URL.
+              type: string
+              example: 'https://www.youtube.com/watch?v=videoid'
+            capacity:
+              description: Number of students who can be enrolled in the course before enrollment closes.
+              type: integer
+              example: 25
+            capacity_message:
+              description: Message displayed when enrollment capacity has been reached.
+              type: string
+              default: Enrollment has closed because the maximum number of allowed students has been reached.
+            prerequisite:
+              description: Course ID of the prerequisite course.
+              type: integer
+              example: 456
+            prerequisite_track:
+              description: Term ID of a the prerequisite track.
+              type: integer
+              example: 789
+            length:
+              description: User defined course length.
+              type: string
+              example: 7 days
+            restricted_message:
+              description: 'Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.'
+              type: string
+              default: You must enroll in this course to access course content.
+            access_period:
+              description: 'Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.'
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    date:
+                      description: 'Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
+                      type: string
+                      example: '2019-05-20 17:22:05'
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
+                      type: string
+                      default: 'This course opens on [lifterlms_course_info key="start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    date:
+                      description: 'Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
+                      type: string
+                      example: '2019-06-05 17:22:05'
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
+                      type: string
+                      default: 'This course closed on [lifterlms_course_info key="end_date"].'
+            enrollment_period:
+              description: 'Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.'
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    date:
+                      description: 'Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
+                      type: string
+                      example: '2019-05-20 17:22:05'
+                    message:
+                      description: Message displayed to visitors when the course is accessed before the opening date has passed.
+                      type: string
+                      default: 'Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    date:
+                      description: 'Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
+                      type: string
+                      example: '2019-06-05 17:22:05'
+                    message:
+                      description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
+                      type: string
+                      default: 'Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].'
+            sales_page:
+              description: Defines alternate content displayed to visitors and non-enrolled students when accessing the course.
+              type: object
+              properties:
+                content_type:
+                  description: Determines the type of sales page content to display.<br> - `none` displays the course content.<br> - `content` displays alternate content from the `excerpt` property.<br> - `page` redirects to the WordPress page defined in `content_page_id`.<br> - `url` redirects to the URL defined in `content_page_url`.
+                  type: string
+                  enum:
+                    - none
+                    - content
+                    - page
+                    - url
+                  default: none
+                content_page_id:
+                  description: The WordPress page ID of the sales page.<br> Required when `content_type` equals `page`.<br> Only returned when the `content_type` equals `page`.
+                  type: integer
+                  example: 543
+                content_page_url:
+                  description: The URL of the sales page content.<br> Required when `content_type` equals `url`.<br> Only returned when the `content_type` equals `url`.
+                  type: string
+                  example: 'https://example.tld/custom-sales-page'
+            _links:
+              type: object
+              readOnly: true
+              properties:
+                self:
+                  description: REST URI to the course.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/courses/1234
+                collection:
+                  description: REST URI to the course collection.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/courses
+                instructors:
+                  description: REST URI to the collection of course instructors.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/courses/1234/instructors
+                prerequisites:
+                  description: REST URIs to course prerequisite resources.
+                  type: array
+                  example:
+                    - type: course
+                      href: /wp-json/llms/v1/courses/456
+                    - type: track
+                      href: /wp-json/wp/v2/course_track/789
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      href:
+                        type: string
+                'wp:featured_media':
+                  description: REST URI to the WordPress attachement image.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/wp/v2/media/987
+                'wp:term':
+                  description: Collection of REST URIs to the course's taxonomy term information.
+                  type: array
+                  example:
+                    - taxonomy: course_cat
+                      href: /wp-json/wp-v2/course_cat?post=123
+                    - taxonomy: course_tag
+                      href: /wp-json/wp-v2/course_tag?post=123
+                    - taxonomy: course_difficulty
+                      href: /wp-json/wp-v2/course_difficulty?post=123
+                    - taxonomy: course_track
+                      href: /wp-json/wp-v2/course_track?post=123
+                  items:
+                    type: object
+                    properties:
+                      taxonomy:
+                        type: string
+                      href:
+                        type: string
     Enrollment:
       type: object
       required:
@@ -635,7 +813,6 @@ components:
           type: integer
           minimum: 1
           example: 123
-          readOnly: true
         post_id:
           description: The ID of the course/membership.
           type: integer
@@ -649,11 +826,11 @@ components:
           description: 'The date of the last enrollment update. Format: `Y-m-d H:i:s`'
           type: string
           example: '2019-05-21 19:22:05'
+          readOnly: true
         status:
           description: The status of the enrollment.
           type: string
           default: enrolled
-          example: enrolled
           enum:
             - enrolled
             - cancelled
@@ -670,30 +847,43 @@ components:
                 properties:
                   href:
                     type: string
-                    example: /students/123/enrollments/987
+                    example: /wp-json/llms/v1/enrollments/987
             collection:
-              description: REST URI to the student's enrollments collection.
+              description: REST URI to the enrollments collection.
               type: array
               items:
                 type: object
                 properties:
                   href:
                     type: string
-                    example: /students/123/enrollments/
+                    example: /wp-json/llms/v1/enrollments/
+            post:
+              description: Rest URI to the post resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/courses/456
+            student:
+              description: Rest URI to the student resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/students/123
     Error:
       type: object
       properties:
         code:
           description: The API error code.
           type: string
-          enum:
-            - llms_rest_bad_request
-          default: llms_rest_bad_request
-          example: llms_rest_bad_request
         message:
           description: The API error message.
           type: string
-          example: Invalid request.
         data:
           description: Additional response data.
           type: object
@@ -702,84 +892,56 @@ components:
               type: integer
               minimum: 100
               maximum: 600
-              example: 400
               description: The HTTP status code.
     Error400:
-      type: object
-      properties:
-        code:
-          description: The API error code.
-          type: string
-          example: llms_rest_bad_request
-        message:
-          description: The API error message.
-          type: string
-          example: Bad request.
-        data:
-          description: Additional response data.
-          type: object
-          properties:
-            status:
-              description: The HTTP status code.
-              type: integer
-              example: 400
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              default: llms_rest_bad_request
+              type: string
+            message:
+              default: Bad request.
+            data:
+              properties:
+                status:
+                  default: 400
     Error401:
-      type: object
-      properties:
-        code:
-          description: The API error code.
-          type: string
-          example: llms_rest_unauthorized_request
-        message:
-          description: The API error message.
-          type: string
-          example: The API credentials were invalid.
-        data:
-          description: Additional response data.
-          type: object
-          properties:
-            status:
-              description: The HTTP status code.
-              type: integer
-              example: 401
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              default: llms_rest_unauthorized_request
+            message:
+              default: The API credentials were invalid.
+            data:
+              properties:
+                status:
+                  default: 401
     Error403:
-      type: object
-      properties:
-        code:
-          description: The API error code.
-          type: string
-          example: llms_rest_forbidden_request
-        message:
-          description: The API error message.
-          type: string
-          example: User is authorized to perform this request.
-        data:
-          description: Additional response data.
-          type: object
-          properties:
-            status:
-              description: The HTTP status code.
-              type: integer
-              example: 403
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              default: llms_rest_forbidden_request
+            message:
+              default: You are not authorized to perform this request.
+            data:
+              properties:
+                status:
+                  default: 403
     Error404:
-      type: object
-      properties:
-        code:
-          description: The API error code.
-          type: string
-          example: llms_rest_not_found
-        message:
-          description: The API error message.
-          type: string
-          example: The requested resource could not be found.
-        data:
-          description: Additional response data.
-          type: object
-          properties:
-            status:
-              description: The HTTP status code.
-              type: integer
-              example: 404
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            code:
+              default: llms_rest_not_found
+            message:
+              default: The requested resource could not be found.
+            data:
+              properties:
+                status:
+                  default: 404
     PersonName:
       type: object
       properties:
@@ -795,6 +957,91 @@ components:
           description: The person's public display name.
           type: string
           example: Jamie Cook
+    Post:
+      description: Reduced WordPress Post object properties shared by LifterLMS custom post types
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: Post ID.
+          type: integer
+          minimum: 1
+          example: 123
+          readOnly: true
+        title:
+          description: Post title.
+          type: object
+          properties:
+            rendered:
+              type: string
+              description: Rendered title.
+              example: Getting Started with LifterLMS
+            raw:
+              type: string
+              description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+              example: Getting Started with LifterLMS
+        slug:
+          description: Post URL slug.
+          type: string
+          example: getting-started-with-lifterlms
+        permalink:
+          description: Post URL.
+          type: string
+          example: 'https://example.com/post/getting-started-with-lifterlms'
+          readOnly: true
+        date_created:
+          description: 'Creation date. Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 17:22:05'
+        date_created_gmt:
+          description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 13:22:05'
+          readOnly: true
+        date_updated:
+          description: 'Date last modified. Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 17:25:05'
+          readOnly: true
+        date_updated_gmt:
+          description: 'Date last modified (in GMT). Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 13:25:05'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/PostStatus'
+        password:
+          description: Password used to protect access to the content.
+          type: string
+          example: p4$sW0rd
+        content:
+          $ref: '#/components/schemas/PostContent'
+        excerpt:
+          $ref: '#/components/schemas/PostExcerpt'
+        featured_media:
+          description: Featured image ID.
+          type: integer
+          example: 987
+        menu_order:
+          description: Custom post sort order.
+          type: integer
+          default: 0
+          minimum: 0
+        comment_status:
+          description: Post comment status. Default comment status dependent upon general WordPress post discussion settings.
+          type: string
+          enum:
+            - open
+            - closed
+          default: open
+        ping_status:
+          description: Post ping status. Default ping status dependent upon general WordPress post discussion settings.
+          type: string
+          enum:
+            - open
+            - closed
+          default: open
     PostContent:
       description: The HTML content of the course.
       type: object
@@ -868,6 +1115,7 @@ components:
           $ref: '#/components/schemas/Address'
         _links:
           type: object
+          readOnly: true
           properties:
             self:
               description: REST URI to the student.
@@ -877,7 +1125,7 @@ components:
                 properties:
                   href:
                     type: string
-                    example: /students/1234
+                    example: /wp-json/llms/v1/students/1234
             collection:
               description: REST URI to the student collection.
               type: array
@@ -886,7 +1134,7 @@ components:
                 properties:
                   href:
                     type: string
-                    example: /students
+                    example: /wp-json/llms/v1/students
             enrollments:
               description: REST URI to a collection of the student's enrollments.
               type: array
@@ -895,10 +1143,10 @@ components:
                 properties:
                   href:
                     type: string
-                    example: /students/1234/enrollments
+                    example: /wp-json/llms/v1/enrollments?student=1234
   responses:
     Error400:
-      description: Bad request
+      description: Bad request.
       content:
         application/json:
           schema:
@@ -933,6 +1181,20 @@ components:
           - view
           - edit
         default: view
+    Exclude:
+      name: exclude
+      in: query
+      description: Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.
+      schema:
+        type: string
+        example: '10,11,12'
+    Include:
+      name: include
+      in: query
+      description: Limit results to a list of ids. Accepts a single id or a comma separated list of ids.
+      schema:
+        type: string
+        example: '1,2,3'
     Order:
       name: order
       in: query
@@ -962,6 +1224,14 @@ components:
         type: integer
         minimum: 1
         default: 10
+    PostPassword:
+      name: password
+      in: query
+      description: Post password. Required if the post is password protected.
+      required: false
+      schema:
+        type: string
+        example: p4$sW0rd
   headers:
     PaginationTotalPages:
       description: Total number of pages available in the collection.
