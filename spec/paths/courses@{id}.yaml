@@ -66,6 +66,16 @@ delete:
   description: Delete an existing course.
   tags:
     - Courses
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            force:
+              description: Bypass the trash and force course deletion.
+              type: boolean
+              default: false
   responses:
     204:
       description: Successfully deleted the student.
