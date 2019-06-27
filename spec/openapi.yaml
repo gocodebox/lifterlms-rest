@@ -49,22 +49,17 @@ tags:
 
       The students API allows you to create, view, update, and delete student accounts.
 
-  - name: Student Enrollments
+  - name: Enrollments
     description: |
       Enrollments are used to track a student's access to content on your website.
 
-      The student enrollments API allows you to create, view, update, and delete student enrollments.
+      The enrollments API allows you to create, view, update, and delete student enrollments.
 
-  - name: Pagination
-    description: Pagination description (can use markdown syntax)
-    x-traitTag: true
+# x-tagGroups:
+#   - name: Courses
+#     tags:
+#       - Courses
 
-x-tagGroups:
-  - name: Courses
-    tags:
-      - Courses
-
-  - name: Students
-    tags:
-      - Students
-      - Student Enrollments
+#   - name: Students
+#     tags:
+#       - Students

@@ -1,0 +1,75 @@
+parameters:
+  - name: id
+    description: The enrollment ID.
+    example: 987
+    in: path
+    required: true
+    schema:
+      type: integer
+
+get:
+  summary: Retrieve a enrollment
+  description: Retrieve the details of an existing enrollment.
+  tags:
+    - Enrollments
+  responses:
+    200:
+      description: Successfully retrieved the enrollment.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Enrollment'
+    400:
+      $ref: '#/components/responses/Error400'
+    401:
+      $ref: '#/components/responses/Error401'
+    403:
+      $ref: '#/components/responses/Error403'
+    404:
+      $ref: '#/components/responses/Error404'
+
+post:
+  summary: Update an enrollment
+  description: >-
+    Update the specified enrollment by setting the values of the parameters passed.
+    Any parameters not provided will be left unchanged.
+  tags:
+    - Enrollments
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Enrollment'
+  responses:
+    200:
+      description: Successfully updated the student.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Enrollment'
+    400:
+      $ref: '#/components/responses/Error400'
+    401:
+      $ref: '#/components/responses/Error401'
+    403:
+      $ref: '#/components/responses/Error403'
+    404:
+      $ref: '#/components/responses/Error404'
+
+delete:
+  summary: Delete an enrollment
+  description: Delete an existing enrollment.
+  tags:
+    - Enrollments
+  responses:
+    204:
+      description: Successfully deleted the student.
+    400:
+      $ref: '#/components/responses/Error400'
+    401:
+      $ref: '#/components/responses/Error401'
+    403:
+      $ref: '#/components/responses/Error403'
+    404:
+      $ref: '#/components/responses/Error404'
