@@ -6,7 +6,9 @@ allOf:
         type: string
       message:
         default: Bad request.
+        type: string
       data:
         properties:
           status:
             default: 400
+            type: integer
