@@ -15,7 +15,6 @@ properties:
     type: integer
     minimum: 1
     example: 123
-    readOnly: true
   post_id:
     description: The ID of the course/membership.
     type: integer
@@ -29,16 +28,15 @@ properties:
     description: 'The date of the last enrollment update. Format: `Y-m-d H:i:s`'
     type: string
     example: '2019-05-21 19:22:05'
+    readOnly: true
   status:
     description: The status of the enrollment.
     type: string
     default: enrolled
-    example: enrolled
     enum:
       - enrolled
       - cancelled
       - expired
-
   _links:
     readOnly: true
     type: object
@@ -51,13 +49,31 @@ properties:
           properties:
             href:
               type: string
-              example: /students/123/enrollments/987
+              example: /wp-json/llms/v1/enrollments/987
       collection:
-        description: REST URI to the student's enrollments collection.
+        description: REST URI to the enrollments collection.
         type: array
         items:
           type: object
           properties:
             href:
               type: string
-              example:  /students/123/enrollments/
+              example:  /wp-json/llms/v1/enrollments/
+      post:
+        description: Rest URI to the post resource.
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              example:  /wp-json/llms/v1/courses/456
+      student:
+        description: Rest URI to the student resource.
+        type: array
+        items:
+          type: object
+          properties:
+            href:
+              type: string
+              example:  /wp-json/llms/v1/students/123
