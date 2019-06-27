@@ -62,4 +62,4 @@ properties:
           properties:
             href:
               type: string
-              example: /wp-json/llms/v1/students/1234/enrollments
+              example: /wp-json/llms/v1/enrollments?student=1234
