@@ -50,11 +50,10 @@ get:
           schema:
             type: string
             example: >-
-              </students?page=1>; rel="first",
-              </students?page=2>; rel="prev",
-              </students?page=4>; rel="next",
-              </students?page=5>; rel="last"
-
+              </wp-json/llms/v1/students?page=1>; rel="first",
+              </wp-json/llms/v1/students?page=2>; rel="prev",
+              </wp-json/llms/v1/students?page=4>; rel="next",
+              </wp-json/llms/v1/students?page=5>; rel="last"
         X-WP-Total:
           $ref: '#/components/headers/PaginationTotalResults'
         X-WP-TotalPages:
