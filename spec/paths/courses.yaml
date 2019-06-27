@@ -17,6 +17,9 @@ get:
         enum:
           - id
           - title
+          - date_created
+          - date_updated
+          - menu_order
         default: id
   responses:
     200:
