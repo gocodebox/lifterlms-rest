@@ -28,7 +28,6 @@ get:
       required: false
       schema:
         type: array
-        default: null
         items:
           type: integer
     - name: enrolled_not_in
@@ -40,7 +39,6 @@ get:
       required: false
       schema:
         type: array
-        default: null
         items:
           type: integer
   responses:
