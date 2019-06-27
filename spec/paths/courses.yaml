@@ -24,6 +24,20 @@ get:
   responses:
     200:
       description: Successfully returned a list of courses.
+      headers:
+        Link:
+          description: Pagination links for the collection.
+          schema:
+            type: string
+            example: >-
+              </wp-json/llms/v1/enrollments?page=1>; rel="first",
+              </wp-json/llms/v1/enrollments?page=2>; rel="prev",
+              </wp-json/llms/v1/enrollments?page=4>; rel="next",
+              </wp-json/llms/v1/enrollments?page=5>; rel="last"
+        X-WP-Total:
+          $ref: '#/components/headers/PaginationTotalResults'
+        X-WP-TotalPages:
+          $ref: '#/components/headers/PaginationTotalPages'
       content:
         application/json:
           schema:
