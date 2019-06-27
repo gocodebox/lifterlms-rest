@@ -12,6 +12,9 @@ get:
   description: Retrieve the details of an existing course.
   tags:
     - Courses
+  parameters:
+    - $ref: '#/components/parameters/Context'
+    - $ref: '#/components/parameters/PostPassword'
   responses:
     200:
       description: Successfully retrieved the course.

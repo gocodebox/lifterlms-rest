@@ -1,0 +1,84 @@
+description: Reduced WordPress Post object properties shared by LifterLMS custom post types
+type: object
+required:
+  - id
+properties:
+  id:
+    description: Post ID.
+    type: integer
+    minimum: 1
+    example: 123
+    readOnly: true
+  title:
+    description: Post title.
+    type: object
+    properties:
+      rendered:
+        type: string
+        description: Rendered title.
+        example: Getting Started with LifterLMS
+      raw:
+        type: string
+        description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+        example: Getting Started with LifterLMS
+  slug:
+    description: Post URL slug.
+    type: string
+    example: getting-started-with-lifterlms
+  permalink:
+    description: Post URL.
+    type: string
+    example: https://example.com/post/getting-started-with-lifterlms
+    readOnly: true
+  date_created:
+    description: 'Creation date. Format: `Y-m-d H:i:s`.'
+    type: string
+    example: '2019-05-20 17:22:05'
+  date_created_gmt:
+    description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
+    type: string
+    example: '2019-05-20 13:22:05'
+    readOnly: true
+  date_updated:
+    description: 'Date last modified. Format: `Y-m-d H:i:s`.'
+    type: string
+    example: '2019-05-20 17:25:05'
+    readOnly: true
+  date_updated_gmt:
+    description: 'Date last modified (in GMT). Format: `Y-m-d H:i:s`.'
+    type: string
+    example: '2019-05-20 13:25:05'
+    readOnly: true
+  status:
+    $ref: '#/components/schemas/PostStatus'
+  password:
+    description: Password used to protect access to the content.
+    type: string
+    example: p4$sW0rd
+  content:
+    $ref: '#/components/schemas/PostContent'
+  excerpt:
+    $ref: '#/components/schemas/PostExcerpt'
+  featured_media:
+    description: Featured image ID.
+    type: integer
+    example: 987
+  menu_order:
+    description: Custom post sort order.
+    type: integer
+    default: 0
+    minimum: 0
+  comment_status:
+    description: Post comment status. Default comment status dependent upon general WordPress post discussion settings.
+    type: string
+    enum:
+      - open
+      - closed
+    default: open
+  ping_status:
+    description: Post ping status. Default ping status dependent upon general WordPress post discussion settings.
+    type: string
+    enum:
+      - open
+      - closed
+    default: open

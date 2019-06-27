@@ -1,64 +1,253 @@
-type: object
-required:
-  - id
-properties:
-  id:
-    description: The unique course ID.
-    type: integer
-    minimum: 1
-    example: 789
-    readOnly: true
-  title:
-    description: The title of the course.
-    type: object
+allOf:
+  - $ref: '#/components/schemas/Post'
+  - type: object
     properties:
-      rendered:
+      permalink:
+        example: https://example.com/course/getting-started-with-lifterlms
+      catalog_visibility:
+        description: Visibility of the course in catalogs and search results.
+        enum:
+          - catalog_search
+          - catalog
+          - search
+          - hidden
+        default: catalog_search
+      categories:
+        description: List of course categories.
+        type: array
+        default: []
+        example: [ 1, 2, 3 ]
+        items:
+          type: integer
+      tags:
+        description: List of course tags.
+        type: array
+        default: []
+        example: [ 4, 5, 6 ]
+        items:
+          type: integer
+      difficulties:
+        description: List of course difficulties.
+        type: array
+        default: []
+        example: [ 7 ]
+        items:
+          type: integer
+      tracks:
+        description: List of course tracks.
+        type: array
+        default: []
+        example: [ 8, 9 ]
+        items:
+          type: integer
+      instructors:
+        description: List of course instructors. Defaults to current user when creating a new course.
+        type: array
+        default: []
+        example: [ 1, 2, 3 ]
+        items:
+          type: integer
+      audio_embed:
+        description: URL to an oEmbed enable audio URL.
         type: string
-        description: Rendered title.
-        example: Getting Started with LifterLMS
-      raw:
+        example: https://open.spotify.com/track/trackid
+      video_embed:
+        description: URL to an oEmbed enable video URL.
         type: string
-        description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-        example: Getting Started with LifterLMS
-  slug:
-    description: Course URL slug.
-    type: string
-    example: getting-started-with-lifterlms
-  permalink:
-    description: Course URL.
-    type: string
-    example: https://example.com/course/getting-started-with-lifterlms
-    readOnly: true
-  date_created:
-    description: 'The course creation date. Format: `Y-m-d H:i:s`'
-    type: string
-    example: '2019-05-20 17:22:05'
-  date_created_gmt:
-    description: 'The course creation date (in GMT). Format: `Y-m-d H:i:s`'
-    type: string
-    example: '2019-05-20 13:22:05'
-    readOnly: true
-  date_updated:
-    description: 'Date of the last course update. Format: `Y-m-d H:i:s`'
-    type: string
-    example: '2019-05-20 17:25:05'
-    readOnly: true
-  date_updated_gmt:
-    description: 'Date of the last course update (in GMT). Format: `Y-m-d H:i:s`'
-    type: string
-    example: '2019-05-20 13:25:05'
-    readOnly: true
-  status:
-    $ref: '#/components/schemas/PostStatus'
-  catalog_visibility:
-    description: Visibility of the course in catalogs and search results.
-    enum:
-      - catalog_search
-      - catalog
-      - search
-      - hidden
-    default: catalog_search
-  content:
-    $ref: '#/components/schemas/PostContent'
-  excerpt:
-    $ref: '#/components/schemas/PostExcerpt'
+        example: https://www.youtube.com/watch?v=videoid
+      capacity:
+        description: Number of students who can be enrolled in the course before enrollment closes.
+        type: integer
+        example: 25
+      capacity_message:
+        description: Message displayed when enrollment capacity has been reached.
+        type: string
+        default: Enrollment has closed because the maximum number of allowed students has been reached.
+      prerequisite:
+        description: Course ID of the prerequisite course.
+        type: integer
+        example: 456
+      prerequisite_track:
+        description: Term ID of a the prerequisite track.
+        type: integer
+        example: 789
+      length:
+        description: User defined course length.
+        type: string
+        example: 7 days
+      restricted_message:
+        description: Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.
+        type: string
+        default: You must enroll in this course to access course content.
+      access_period:
+        description: Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.
+        type: object
+        properties:
+          opens:
+            type: object
+            properties:
+              date:
+                description: 'Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
+                type: string
+                example: '2019-05-20 17:22:05'
+              message:
+                description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
+                type: string
+                default: This course opens on [lifterlms_course_info key="start_date"].
+          closes:
+            type: object
+            properties:
+              date:
+                description: 'Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
+                type: string
+                example: '2019-06-05 17:22:05'
+              message:
+                description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
+                type: string
+                default: This course closed on [lifterlms_course_info key="end_date"].
+      enrollment_period:
+        description: Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.
+        type: object
+        properties:
+          opens:
+            type: object
+            properties:
+              date:
+                description: 'Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
+                type: string
+                example: '2019-05-20 17:22:05'
+              message:
+                description: Message displayed to visitors when the course is accessed before the opening date has passed.
+                type: string
+                default: Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].
+          closes:
+            type: object
+            properties:
+              date:
+                description: 'Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
+                type: string
+                example: '2019-06-05 17:22:05'
+              message:
+                description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
+                type: string
+                default: Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].
+      sales_page:
+        description: Defines alternate content displayed to visitors and non-enrolled students when accessing the course.
+        type: object
+        properties:
+          content_type:
+            description: >-
+              Determines the type of sales page content to display.<br>
+              - `none` displays the course content.<br>
+              - `content` displays alternate content from the `excerpt` property.<br>
+              - `page` redirects to the WordPress page defined in `content_page_id`.<br>
+              - `url` redirects to the URL defined in `content_page_url`.
+            type: string
+            enum:
+              - none
+              - content
+              - page
+              - url
+            default: none
+          content_page_id:
+            description: >-
+              The WordPress page ID of the sales page.<br>
+              Required when `content_type` equals `page`.<br>
+              Only returned when the `content_type` equals `page`.
+            type: integer
+            example: 543
+          content_page_url:
+            description: >-
+              The URL of the sales page content.<br>
+              Required when `content_type` equals `url`.<br>
+              Only returned when the `content_type` equals `url`.
+            type: string
+            example: https://example.tld/custom-sales-page
+      _links:
+        type: object
+        readOnly: true
+        properties:
+          self:
+            description: REST URI to the course.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/courses/1234
+          collection:
+            description: REST URI to the course collection.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/courses
+          instructors:
+            description: REST URI to the collection of course instructors.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/courses/1234/instructors
+          prerequisites:
+            description: REST URIs to course prerequisite resources.
+            type: array
+            example: [
+              {
+                "type": "course",
+                "href": "/wp-json/llms/v1/courses/456"
+              },
+              {
+                "type": "track",
+                "href": "/wp-json/wp/v2/course_track/789"
+              }
+            ]
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                href:
+                  type: string
+          wp:featured_media:
+            description: REST URI to the WordPress attachement image.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/wp/v2/media/987
+          wp:term:
+            description: Collection of REST URIs to the course's taxonomy term information.
+            type: array
+            example: [
+              {
+                "taxonomy": "course_cat",
+                "href": "/wp-json/wp-v2/course_cat?post=123"
+              },
+              {
+                "taxonomy": "course_tag",
+                "href": "/wp-json/wp-v2/course_tag?post=123"
+              },
+              {
+                "taxonomy": "course_difficulty",
+                "href": "/wp-json/wp-v2/course_difficulty?post=123"
+              },
+              {
+                "taxonomy": "course_track",
+                "href": "/wp-json/wp-v2/course_track?post=123"
+              },
+            ]
+            items:
+              type: object
+              properties:
+                taxonomy:
+                  type: string
+                href:
+                  type: string
