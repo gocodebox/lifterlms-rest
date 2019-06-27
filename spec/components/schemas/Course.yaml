@@ -6,6 +6,7 @@ allOf:
         example: https://example.com/course/getting-started-with-lifterlms
       catalog_visibility:
         description: Visibility of the course in catalogs and search results.
+        type: string
         enum:
           - catalog_search
           - catalog

@@ -3,6 +3,7 @@ allOf:
   - properties:
       code:
         default: llms_rest_bad_request
+        type: string
       message:
         default: Bad request.
       data:
