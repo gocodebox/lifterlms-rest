@@ -21,6 +21,8 @@ get:
           - date_updated
           - menu_order
         default: id
+    - $ref: '#/components/parameters/Include'
+    - $ref: '#/components/parameters/Exclude'
   responses:
     200:
       description: Successfully returned a list of courses.
