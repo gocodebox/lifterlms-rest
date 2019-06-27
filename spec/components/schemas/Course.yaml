@@ -186,8 +186,17 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/courses
+          enrollments:
+            description: REST URI to the collection of the courses's enrollments.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/enrollments?post=1234
           instructors:
-            description: REST URI to the collection of course instructors.
+            description: REST URI to the collection of the course's instructors.
             type: array
             items:
               type: object
@@ -215,6 +224,15 @@ allOf:
                   type: string
                 href:
                   type: string
+          students:
+            description: REST URI to the collection of the course's enrolled students.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/students?enrolled_in=1234
           wp:featured_media:
             description: REST URI to the WordPress attachement image.
             type: array
