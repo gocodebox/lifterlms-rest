@@ -17,6 +17,8 @@ get:
           - id
           - email
         default: id
+    - $ref: '#/components/parameters/Include'
+    - $ref: '#/components/parameters/Exclude'
     - name: enrolled_in
       description: >-
         Retrieve only students enrolled in the specified course(s) and/or
