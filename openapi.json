@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "LifterLMS REST API",
-    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n## Pagination\nasrtastarstarst\n# Authentication\nLorem ipsum...\n<!-- ReDoc-Inject: <security-definitions> -->",
+    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n# Authentication\nLorem ipsum...\n<!-- ReDoc-Inject: <security-definitions> -->",
     "x-logo": {
       "altText": "LifterLMS",
       "url": "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png",
@@ -32,6 +32,11 @@
     {
       "name": "Student Enrollments",
       "description": "Enrollments are used to track a student's access to content on your website.\n\nThe student enrollments API allows you to create, view, update, and delete student enrollments.\n"
+    },
+    {
+      "name": "Pagination",
+      "description": "Pagination description (can use markdown syntax)",
+      "x-traitTag": true
     }
   ],
   "x-tagGroups": [
@@ -58,6 +63,9 @@
           "Courses"
         ],
         "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
           {
             "$ref": "#/components/parameters/Page"
           },
@@ -167,7 +175,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the student.",
+            "description": "Successfully retrieved the course.",
             "content": {
               "application/json": {
                 "schema": {
@@ -191,6 +199,7 @@
         }
       },
       "post": {
+        "operationId": "updateCourse",
         "summary": "Update a course",
         "description": "Update the specified course by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
         "tags": [
@@ -318,6 +327,13 @@
           "200": {
             "description": "Successfully returned a list of students",
             "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</students?page=1>; rel=\"first\", </students?page=2>; rel=\"prev\", </students?page=4>; rel=\"next\", </students?page=5>; rel=\"last\""
+                }
+              },
               "X-WP-Total": {
                 "$ref": "#/components/headers/PaginationTotalResults"
               },
@@ -757,7 +773,7 @@
         }
       },
       "delete": {
-        "summary": "Delete an enrollment.",
+        "summary": "Delete an enrollment",
         "description": "Delete an existing enrollment.",
         "tags": [
           "Student Enrollments"
@@ -834,13 +850,30 @@
           },
           "title": {
             "description": "The title of the course.",
-            "type": "string",
-            "example": "Getting Started with LifterLMS"
+            "type": "object",
+            "properties": {
+              "rendered": {
+                "type": "string",
+                "description": "Rendered title.",
+                "example": "Getting Started with LifterLMS"
+              },
+              "raw": {
+                "type": "string",
+                "description": "Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                "example": "Getting Started with LifterLMS"
+              }
+            }
           },
-          "content": {
-            "description": "The raw HTML content of the course.",
+          "slug": {
+            "description": "Course URL slug.",
             "type": "string",
-            "example": "<h2>Primum cur ista res digna odio est</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam si propter voluptatem, quae est ista laus, quae possit e macello peti.</p>"
+            "example": "getting-started-with-lifterlms"
+          },
+          "permalink": {
+            "description": "Course URL.",
+            "type": "string",
+            "example": "https://example.com/course/getting-started-with-lifterlms",
+            "readOnly": true
           },
           "date_created": {
             "description": "The course creation date. Format: `Y-m-d H:i:s`",
@@ -856,7 +889,8 @@
           "date_updated": {
             "description": "Date of the last course update. Format: `Y-m-d H:i:s`",
             "type": "string",
-            "example": "2019-05-20 17:25:05"
+            "example": "2019-05-20 17:25:05",
+            "readOnly": true
           },
           "date_updated_gmt": {
             "description": "Date of the last course update (in GMT). Format: `Y-m-d H:i:s`",
@@ -865,18 +899,23 @@
             "readOnly": true
           },
           "status": {
-            "description": "The publication status of the course.",
-            "type": "string",
+            "$ref": "#/components/schemas/PostStatus"
+          },
+          "catalog_visibility": {
+            "description": "Visibility of the course in catalogs and search results.",
             "enum": [
-              "publish",
-              "pending",
-              "draft",
-              "auto-draft",
-              "future",
-              "private",
-              "trash"
+              "catalog_search",
+              "catalog",
+              "search",
+              "hidden"
             ],
-            "default": "publish"
+            "default": "catalog_search"
+          },
+          "content": {
+            "$ref": "#/components/schemas/PostContent"
+          },
+          "excerpt": {
+            "$ref": "#/components/schemas/PostExcerpt"
           }
         }
       },
@@ -1119,6 +1158,52 @@
           }
         }
       },
+      "PostContent": {
+        "description": "The HTML content of the course.",
+        "type": "object",
+        "properties": {
+          "rendered": {
+            "type": "string",
+            "description": "Rendered HTML content.",
+            "example": "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n"
+          },
+          "raw": {
+            "type": "string",
+            "description": "Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+            "example": "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->"
+          }
+        }
+      },
+      "PostExcerpt": {
+        "description": "The HTML excerpt of the course.",
+        "type": "object",
+        "properties": {
+          "rendered": {
+            "type": "string",
+            "description": "Rendered HTML content.",
+            "example": "<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+          },
+          "raw": {
+            "type": "string",
+            "description": "Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+            "example": "Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus."
+          }
+        }
+      },
+      "PostStatus": {
+        "description": "The publication status of the course.",
+        "type": "string",
+        "enum": [
+          "publish",
+          "pending",
+          "draft",
+          "auto-draft",
+          "future",
+          "private",
+          "trash"
+        ],
+        "default": "publish"
+      },
       "Student": {
         "type": "object",
         "required": [
@@ -1190,6 +1275,19 @@
                     }
                   }
                 }
+              },
+              "enrollments": {
+                "description": "REST URI to a collection of the student's enrollments.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/students/1234/enrollments"
+                    }
+                  }
+                }
               }
             }
           }
@@ -1239,6 +1337,20 @@
       }
     },
     "parameters": {
+      "Context": {
+        "name": "context",
+        "in": "query",
+        "description": "Specify the scope under which the request is made. `edit` should be used when requesting content to be modified; `view` should be used when requesting content to be displayed.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "view",
+            "edit"
+          ],
+          "default": "view"
+        }
+      },
       "Order": {
         "name": "order",
         "in": "query",
