@@ -4,6 +4,8 @@ allOf:
     properties:
       permalink:
         example: https://example.com/course/getting-started-with-lifterlms
+      post_type:
+        default: 'course'
       catalog_visibility:
         description: Visibility of the course in catalogs and search results.
         type: string
