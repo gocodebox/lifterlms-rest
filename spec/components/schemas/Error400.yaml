@@ -5,7 +5,7 @@ allOf:
         default: llms_rest_bad_request
         type: string
       message:
-        default: Bad request.
+        default: Invalid or malformed request syntax.
         type: string
       data:
         properties:
