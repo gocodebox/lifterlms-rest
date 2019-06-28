@@ -1,6 +1,6 @@
 parameters:
   - name: id
-    description: The student's ID.
+    description: The instructor's ID.
     example: 123
     in: path
     required: true
@@ -8,10 +8,10 @@ parameters:
       type: integer
 
 get:
-  summary: List a student's content
-  description: Retrieves a list of all content available to a student via enrollments.
+  summary: List an instructor's content
+  description: Retrieves a list of all the instructor's LMS content.
   tags:
-    - Students
+    - Instructors
   parameters:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
@@ -28,7 +28,6 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
-    - $ref: '#/components/parameters/EnrollmentStatus'
     - name: post
       description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
       in: query
@@ -44,17 +43,17 @@ get:
     - $ref: '#/components/parameters/PostType'
   responses:
     200:
-      description: Successfully returned a list of the student's content.
+      description: Successfully returned a list of the instructor's content.
       headers:
         Link:
           description: Pagination links for the collection.
           schema:
             type: string
             example: >-
-              </wp-json/llms/v1/students/123/content?page=1>; rel="first",
-              </wp-json/llms/v1/students/123/content?page=2>; rel="prev",
-              </wp-json/llms/v1/students/123/content?page=4>; rel="next",
-              </wp-json/llms/v1/students/123/content?page=5>; rel="last"
+              </wp-json/llms/v1/instructors/123/content?page=1>; rel="first",
+              </wp-json/llms/v1/instructors/123/content?page=2>; rel="prev",
+              </wp-json/llms/v1/instructors/123/content?page=4>; rel="next",
+              </wp-json/llms/v1/instructors/123/content?page=5>; rel="last"
         X-WP-Total:
           $ref: '#/components/headers/PaginationTotalResults'
         X-WP-TotalPages:

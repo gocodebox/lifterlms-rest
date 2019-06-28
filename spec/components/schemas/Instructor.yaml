@@ -1,0 +1,41 @@
+allOf:
+  - $ref: '#/components/schemas/User'
+  - type: object
+    properties:
+      role:
+        enum:
+          - lms_manager
+          - instructor
+          - instructors_assistant
+        default: instructor
+      _links:
+        type: object
+        readOnly: true
+        properties:
+          self:
+            description: REST URI to the instructor.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/instructors/1234
+          collection:
+            description: REST URI to the instructor collection.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/instructors
+          content:
+            description: REST URI to a collection of the instructor's content.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/instructors/1234/contents
