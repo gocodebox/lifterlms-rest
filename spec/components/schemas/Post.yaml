@@ -38,7 +38,6 @@ properties:
     description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
     type: string
     example: '2019-05-20 13:22:05'
-    readOnly: true
   date_updated:
     description: 'Date last modified. Format: `Y-m-d H:i:s`.'
     type: string
