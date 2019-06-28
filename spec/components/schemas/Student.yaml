@@ -3,6 +3,8 @@ allOf:
   - type: object
     properties:
       role:
+        enum:
+          - student
         default: student
         readOnly: true
       _links:
