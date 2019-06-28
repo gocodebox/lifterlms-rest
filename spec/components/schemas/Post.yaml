@@ -49,6 +49,10 @@ properties:
     type: string
     example: '2019-05-20 13:25:05'
     readOnly: true
+  post_type:
+    allOf:
+      - $ref: '#/components/schemas/PostType'
+      - readOnly: true
   status:
     $ref: '#/components/schemas/PostStatus'
   password:

@@ -1,0 +1,6 @@
+description: LifterLMS custom post types available for enrollments
+type: string
+enum:
+  - course
+  - llms_membership
+default: course
