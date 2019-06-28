@@ -1,0 +1,34 @@
+description: Reduced WordPress User object properties shared by LifterLMS custom user types
+type: object
+required:
+  - id
+  - email
+  - username
+properties:
+  id:
+    description: The unique student ID.
+    type: integer
+    minimum: 1
+    example: 1234
+    readOnly: true
+  email:
+    description: The student's email address.
+    type: string
+    example: jamie@lifterlms.com
+  username:
+    description: The student's username.
+    type: string
+    example: jamie2019
+  password:
+    description: The student's password.
+    type: string
+    example: my_l337-p@$5w0rd!
+    writeOnly: true
+  role:
+    description: The student's WordPress user role.
+    type: string
+    default: student
+  name:
+    $ref: '#/components/schemas/UserName'
+  billing_address:
+    $ref: '#/components/schemas/Address'

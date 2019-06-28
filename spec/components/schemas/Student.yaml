@@ -1,65 +1,47 @@
-type: object
-required:
-  - id
-  - email
-  - username
-properties:
-  id:
-    description: The unique student ID.
-    type: integer
-    minimum: 1
-    example: 1234
-    readOnly: true
-  email:
-    description: The student's email address.
-    type: string
-    example: jamie@lifterlms.com
-  username:
-    description: The student's username.
-    type: string
-    example: jamie2019
-  password:
-    description: The student's password.
-    type: string
-    example: my_l337-p@s5w0rd!
-    writeOnly: true
-  role:
-    description: The student's WordPress user role.
-    type: string
-    example: student
-    default: student
-  name:
-    $ref: '#/components/schemas/PersonName'
-  billing_address:
-    $ref: '#/components/schemas/Address'
-  _links:
-    type: object
-    readOnly: true
+allOf:
+  - $ref: '#/components/schemas/User'
+  - type: object
     properties:
-      self:
-        description: REST URI to the student.
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              example: /wp-json/llms/v1/students/1234
-      collection:
-        description: REST URI to the student collection.
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              example: /wp-json/llms/v1/students
-      enrollments:
-        description: REST URI to a collection of the student's enrollments.
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              example: /wp-json/llms/v1/enrollments?student=1234
+      role:
+        default: student
+        readOnly: true
+      _links:
+        type: object
+        readOnly: true
+        properties:
+          self:
+            description: REST URI to the student.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/students/1234
+          collection:
+            description: REST URI to the student collection.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/students
+          content:
+            description: REST URI to a collection of the student's content.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/students/1234/contents
+          enrollments:
+            description: REST URI to a collection of the student's enrollments.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/enrollments?student=1234
