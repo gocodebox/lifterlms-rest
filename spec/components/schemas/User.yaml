@@ -6,28 +6,27 @@ required:
   - username
 properties:
   id:
-    description: The unique student ID.
+    description: The unique user ID.
     type: integer
     minimum: 1
     example: 1234
     readOnly: true
   email:
-    description: The student's email address.
+    description: The user's email address.
     type: string
     example: jamie@lifterlms.com
   username:
-    description: The student's username.
+    description: The user's username.
     type: string
     example: jamie2019
   password:
-    description: The student's password.
+    description: The user's password.
     type: string
     example: my_l337-p@$5w0rd!
     writeOnly: true
   role:
-    description: The student's WordPress user role.
+    description: The user's WordPress user role.
     type: string
-    default: student
   name:
     $ref: '#/components/schemas/UserName'
   billing_address:
