@@ -1,11 +1,10 @@
 parameters:
   - name: id
-    description: The course ID.
-    example: 123
     in: path
+    description: Unique Course Identifier. The WordPress Post `ID`.
     required: true
     schema:
-      type: integer
+      $ref: '#/components/schemas/ResourceId'
 
 get:
   summary: Retrieve a course
@@ -46,7 +45,7 @@ post:
           $ref: '#/components/schemas/Course'
   responses:
     200:
-      description: Successfully updated the student.
+      description: Successfully updated the course.
       content:
         application/json:
           schema:

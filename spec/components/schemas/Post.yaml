@@ -4,11 +4,9 @@ required:
   - id
 properties:
   id:
-    description: Post ID.
-    type: integer
-    minimum: 1
-    example: 123
-    readOnly: true
+    allOf:
+      - description: Unique Post Identifier. The WordPress Post `ID`.
+      - $ref: '#/components/schemas/ResourceId'
   title:
     description: Post title.
     type: object

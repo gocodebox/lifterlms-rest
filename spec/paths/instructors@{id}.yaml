@@ -1,11 +1,11 @@
 parameters:
   - name: id
-    description: The instructor's ID.
+    description: Unique Instructor Identifer. The WordPress User `ID`.
     example: 123
     in: path
     required: true
     schema:
-      type: integer
+      $ref: '#/components/schemas/ResourceId'
 
 get:
   summary: Retrieve an instructor

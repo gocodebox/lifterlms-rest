@@ -6,11 +6,9 @@ required:
   - username
 properties:
   id:
-    description: The unique user ID.
-    type: integer
-    minimum: 1
-    example: 1234
-    readOnly: true
+    allOf:
+      - description: Unique User Identifer. The WordPress User `ID`.
+      - $ref: '#/components/schemas/ResourceId'
   email:
     description: The user's email address.
     type: string

@@ -1,11 +1,11 @@
 parameters:
   - name: id
-    description: The enrollment ID.
+    description: Unique enrollment Identifier.
     example: 987
     in: path
     required: true
     schema:
-      type: integer
+      $ref: '#/components/schemas/ResourceId'
 
 get:
   summary: Retrieve a enrollment

@@ -5,11 +5,10 @@ required:
   - post_id
 properties:
   id:
-    description: The unique ID of the enrollment.
-    type: integer
-    minimum: 1
-    example: 987
-    readOnly: true
+    allOf:
+      - description: Unique enrollment Identifier.
+      - example: 987
+      - $ref: '#/components/schemas/ResourceId'
   student_id:
     description: The ID of the student.
     type: integer

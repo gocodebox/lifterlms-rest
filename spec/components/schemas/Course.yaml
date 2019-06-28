@@ -1,4 +1,8 @@
 allOf:
+  - type: object
+    properties:
+      id:
+        description: Unique Course Identifier. The WordPress Post `ID`.
   - $ref: '#/components/schemas/Post'
   - type: object
     properties:

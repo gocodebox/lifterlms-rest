@@ -1,4 +1,8 @@
 allOf:
+  - type: object
+    properties:
+      id:
+        description: Unique Student Identifer. The WordPress User `ID`.
   - $ref: '#/components/schemas/User'
   - type: object
     properties:
