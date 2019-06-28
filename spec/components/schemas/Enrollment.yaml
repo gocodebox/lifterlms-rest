@@ -30,13 +30,7 @@ properties:
     example: '2019-05-21 19:22:05'
     readOnly: true
   status:
-    description: The status of the enrollment.
-    type: string
-    default: enrolled
-    enum:
-      - enrolled
-      - cancelled
-      - expired
+    $ref: '#/components/schemas/EnrollmentStatus'
   _links:
     readOnly: true
     type: object
