@@ -55,7 +55,7 @@ properties:
   status:
     $ref: '#/components/schemas/PostStatus'
   password:
-    description: Password used to protect access to the content.
+    description: Password used to protect access to the content.<br>Readable only in `edit` context.
     type: string
     example: p4$sW0rd
   content:
