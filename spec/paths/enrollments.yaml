@@ -16,6 +16,8 @@ get:
           - id
           - date_created
           - date_updated
+          - post_id
+          - student_id
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
@@ -43,6 +45,7 @@ get:
       schema:
         type: string
         example: 789,324
+    - $ref: '#/components/parameters/PostType'
   responses:
     200:
       description: Successfully returned a list of enrollments.
