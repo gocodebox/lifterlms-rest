@@ -205,7 +205,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/courses/1234/instructors
+                  example: /wp-json/llms/v1/instructors?post=1234
           prerequisites:
             description: REST URIs to course prerequisite resources.
             type: array
