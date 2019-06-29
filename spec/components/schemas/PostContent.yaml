@@ -1,4 +1,4 @@
-description: The HTML content of the course.
+description: The HTML content of the post.
 type: object
 properties:
   rendered:

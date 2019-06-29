@@ -1,0 +1,11 @@
+description: Post title.
+type: object
+properties:
+  rendered:
+    type: string
+    description: Rendered title.
+    example: Getting Started with LifterLMS
+  raw:
+    type: string
+    description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+    example: Getting Started with LifterLMS
