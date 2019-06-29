@@ -27,20 +27,105 @@ servers:
 security:
   - BasicAuth: []
 tags:
+  - name: Access Plans
+    description: |
+      Access plans allow you to define how LMS content is purchased and accessed by your students.
+
+      The access plans API allows you to create, view, update, and delete courses.
   - name: Courses
     description: |
       The courses API allows you to create, view, update, and delete courses.
-  - name: Students
-    description: |
-      Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
-
-      The students API allows you to create, view, update, and delete student accounts.
   - name: Enrollments
     description: |
       Enrollments are used to track a student's access to content on your website.
 
       The enrollments API allows you to create, view, update, and delete student enrollments.
+  - name: Instructors
+    description: |
+      Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.
+
+      The instructors API allows you to create, view, update, and delete student accounts.
+  - name: Students
+    description: |
+      Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
+
+      The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
 paths:
+  /access-plans:
+    get:
+      summary: List access plans
+      description: Retrieve a list of access plans.
+      tags:
+        - Access Plans
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - title
+              - date_created
+              - date_updated
+              - menu_order
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+      responses:
+        '200':
+          description: Successfully returned a list of access plans.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/access-plans?page=1>; rel="first", </wp-json/llms/v1/access-plans?page=2>; rel="prev", </wp-json/llms/v1/access-plans?page=4>; rel="next", </wp-json/llms/v1/access-plans?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessPlan'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create an access plan
+      description: Create a new access plan object.
+      tags:
+        - Access Plans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPlan'
+      responses:
+        '201':
+          description: Successfully created the student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPlan'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
   /courses:
     get:
       summary: List courses
@@ -119,12 +204,11 @@ paths:
   '/courses/{id}':
     parameters:
       - name: id
-        description: The course ID.
-        example: 123
         in: path
+        description: Unique Course Identifier. The WordPress Post `ID`.
         required: true
         schema:
-          type: integer
+          $ref: '#/components/schemas/ResourceId'
     get:
       summary: Retrieve a course
       description: Retrieve the details of an existing course.
@@ -161,7 +245,7 @@ paths:
               $ref: '#/components/schemas/Course'
       responses:
         '200':
-          description: Successfully updated the student.
+          description: Successfully updated the course.
           content:
             application/json:
               schema:
@@ -219,6 +303,8 @@ paths:
               - id
               - date_created
               - date_updated
+              - post_id
+              - student_id
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
@@ -246,6 +332,7 @@ paths:
           schema:
             type: string
             example: '789,324'
+        - $ref: '#/components/parameters/PostType'
       responses:
         '200':
           description: Successfully returned a list of enrollments.
@@ -298,12 +385,12 @@ paths:
   '/enrollments/{id}':
     parameters:
       - name: id
-        description: The enrollment ID.
+        description: Unique enrollment Identifier.
         example: 987
         in: path
         required: true
         schema:
-          type: integer
+          $ref: '#/components/schemas/ResourceId'
     get:
       summary: Retrieve a enrollment
       description: Retrieve the details of an existing enrollment.
@@ -366,6 +453,230 @@ paths:
           $ref: '#/components/responses/Error403'
         '404':
           $ref: '#/components/responses/Error404'
+  /instructors:
+    get:
+      summary: List instructors
+      description: Retrieves a list of all instructors.
+      tags:
+        - Instructors
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - email
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+        - name: post
+          description: Include only instructors for the specified post(s). Acceps a single `id` or a comma separated list of `ids`.
+          in: query
+          required: false
+          schema:
+            type: string
+            example: '8,9,10'
+        - name: post_not_in
+          description: Exclude instructors for the specified post(s). Acceps a single `id` or a comma separated list of `ids`.
+          in: query
+          required: false
+          schema:
+            type: string
+            example: '11,12,13'
+      responses:
+        '200':
+          description: Successfully returned a list of instructors
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/instructors?page=1>; rel="first", </wp-json/llms/v1/instructors?page=2>; rel="prev", </wp-json/llms/v1/instructors?page=4>; rel="next", </wp-json/llms/v1/instructors?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Instructor'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create an instructor
+      description: Creates a new instructor object.
+      tags:
+        - Instructors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Instructor'
+      responses:
+        '201':
+          description: Successfully created the instructor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instructor'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/instructors/{id}':
+    parameters:
+      - name: id
+        description: Unique Instructor Identifer. The WordPress User `ID`.
+        example: 123
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Retrieve an instructor
+      description: Retrieve the details of an existing instructor.
+      tags:
+        - Instructors
+      responses:
+        '200':
+          description: Successfully retrieved the instructor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instructor'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update an instructor
+      description: Update the specified instructor by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Instructors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Instructor'
+      responses:
+        '200':
+          description: Successfully updated the instructor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instructor'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete an instructor
+      description: Delete an existing instructor.
+      tags:
+        - Instructors
+      responses:
+        '204':
+          description: Successfully deleted the instructor.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+  '/instructors/{id}/content':
+    parameters:
+      - name: id
+        description: The instructor's ID.
+        example: 123
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: List an instructor's content
+      description: Retrieves a list of all the instructor's LMS content.
+      tags:
+        - Instructors
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - email
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+        - name: post
+          description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          in: query
+          schema:
+            type: string
+            example: '123,456'
+        - name: post_exclude
+          description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          in: query
+          schema:
+            type: string
+            example: '789,324'
+        - $ref: '#/components/parameters/PostType'
+      responses:
+        '200':
+          description: Successfully returned a list of the instructor's content.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/instructors/123/content?page=1>; rel="first", </wp-json/llms/v1/instructors/123/content?page=2>; rel="prev", </wp-json/llms/v1/instructors/123/content?page=4>; rel="next", </wp-json/llms/v1/instructors/123/content?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
   /students:
     get:
       summary: List students
@@ -456,12 +767,12 @@ paths:
   '/students/{id}':
     parameters:
       - name: id
-        description: The student's ID.
+        description: Unique student Identifer. The WordPress User `ID`.
         example: 123
         in: path
         required: true
         schema:
-          type: integer
+          $ref: '#/components/schemas/ResourceId'
     get:
       summary: Retrieve a student
       description: Retrieve the details of an existing student.
@@ -524,8 +835,101 @@ paths:
           $ref: '#/components/responses/Error403'
         '404':
           $ref: '#/components/responses/Error404'
+  '/students/{id}/content':
+    parameters:
+      - name: id
+        description: Unique student Identifer. The WordPress User `ID`.
+        example: 123
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: List a student's content
+      description: Retrieves a list of all content available to a student via enrollments.
+      tags:
+        - Students
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - email
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+        - $ref: '#/components/parameters/EnrollmentStatus'
+        - name: post
+          description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          in: query
+          schema:
+            type: string
+            example: '123,456'
+        - name: post_exclude
+          description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          in: query
+          schema:
+            type: string
+            example: '789,324'
+        - $ref: '#/components/parameters/PostType'
+      responses:
+        '200':
+          description: Successfully returned a list of the student's content.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/students/123/content?page=1>; rel="first", </wp-json/llms/v1/students/123/content?page=2>; rel="prev", </wp-json/llms/v1/students/123/content?page=4>; rel="next", </wp-json/llms/v1/students/123/content?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
 components:
   schemas:
+    AccessPlan:
+      allOf:
+        - type: object
+          required:
+            - price
+          properties:
+            id:
+              readOnly: true
+              description: Unique Access Plan Identifier. The WordPress Post `ID`.
+            price:
+              description: Access plan price.
+              type: float
+              minimum: 0
+              default: 0
+              example: 199.97
+            title:
+              $ref: '#/components/schemas/PostTitle'
+            content:
+              $ref: '#/components/schemas/PostContent'
+            enroll_text:
+              description: Text of the "Purchase" button
+              type: string
+              default: Buy Now
+        - $ref: '#/components/schemas/Post'
     Address:
       type: object
       properties:
@@ -555,11 +959,18 @@ components:
           example: US
     Course:
       allOf:
-        - $ref: '#/components/schemas/Post'
+        - type: object
+          properties:
+            id:
+              readOnly: true
+              description: Unique Course Identifier. The WordPress Post `ID`.
+        - $ref: '#/components/schemas/PostPublic'
         - type: object
           properties:
             permalink:
               example: 'https://example.com/course/getting-started-with-lifterlms'
+            post_type:
+              default: course
             catalog_visibility:
               description: Visibility of the course in catalogs and search results.
               type: string
@@ -743,15 +1154,24 @@ components:
                       href:
                         type: string
                         example: /wp-json/llms/v1/courses
-                instructors:
-                  description: REST URI to the collection of course instructors.
+                enrollments:
+                  description: REST URI to the collection of the courses's enrollments.
                   type: array
                   items:
                     type: object
                     properties:
                       href:
                         type: string
-                        example: /wp-json/llms/v1/courses/1234/instructors
+                        example: /wp-json/llms/v1/enrollments?post=1234
+                instructors:
+                  description: REST URI to the collection of the course's instructors.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/instructors?post=1234
                 prerequisites:
                   description: REST URIs to course prerequisite resources.
                   type: array
@@ -767,6 +1187,15 @@ components:
                         type: string
                       href:
                         type: string
+                students:
+                  description: REST URI to the collection of the course's enrolled students.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/students?enrolled_in=1234
                 'wp:featured_media':
                   description: REST URI to the WordPress attachement image.
                   type: array
@@ -803,11 +1232,10 @@ components:
         - post_id
       properties:
         id:
-          description: The unique ID of the enrollment.
-          type: integer
-          minimum: 1
-          example: 987
-          readOnly: true
+          allOf:
+            - description: Unique enrollment Identifier.
+            - example: 987
+            - $ref: '#/components/schemas/ResourceId'
         student_id:
           description: The ID of the student.
           type: integer
@@ -828,13 +1256,7 @@ components:
           example: '2019-05-21 19:22:05'
           readOnly: true
         status:
-          description: The status of the enrollment.
-          type: string
-          default: enrolled
-          enum:
-            - enrolled
-            - cancelled
-            - expired
+          $ref: '#/components/schemas/EnrollmentStatus'
         _links:
           readOnly: true
           type: object
@@ -875,21 +1297,27 @@ components:
                   href:
                     type: string
                     example: /wp-json/llms/v1/students/123
+    EnrollmentStatus:
+      description: The status of the enrollment.
+      type: string
+      enum:
+        - enrolled
+        - expired
+        - cancelled
+        - none
+      default: enrolled
     Error:
       type: object
       properties:
         code:
           description: The API error code.
-          type: string
         message:
           description: The API error message.
-          type: string
         data:
           description: Additional response data.
           type: object
           properties:
             status:
-              type: integer
               minimum: 100
               maximum: 600
               description: The HTTP status code.
@@ -901,48 +1329,334 @@ components:
               default: llms_rest_bad_request
               type: string
             message:
-              default: Bad request.
+              default: Invalid or malformed request syntax.
+              type: string
             data:
               properties:
                 status:
                   default: 400
+                  type: integer
     Error401:
       allOf:
         - $ref: '#/components/schemas/Error'
         - properties:
             code:
               default: llms_rest_unauthorized_request
+              type: string
             message:
               default: The API credentials were invalid.
+              type: string
             data:
               properties:
                 status:
                   default: 401
+                  type: integer
     Error403:
       allOf:
         - $ref: '#/components/schemas/Error'
         - properties:
             code:
               default: llms_rest_forbidden_request
+              type: string
             message:
               default: You are not authorized to perform this request.
+              type: string
             data:
               properties:
                 status:
                   default: 403
+                  type: integer
     Error404:
       allOf:
         - $ref: '#/components/schemas/Error'
         - properties:
             code:
               default: llms_rest_not_found
+              type: string
             message:
               default: The requested resource could not be found.
+              type: string
             data:
               properties:
                 status:
                   default: 404
-    PersonName:
+                  type: integer
+    Instructor:
+      allOf:
+        - type: object
+          properties:
+            id:
+              description: Unique Instructor Identifer. The WordPress User `ID`.
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            role:
+              enum:
+                - lms_manager
+                - instructor
+                - instructors_assistant
+              default: instructor
+            _links:
+              type: object
+              readOnly: true
+              properties:
+                self:
+                  description: REST URI to the instructor.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/instructors/1234
+                collection:
+                  description: REST URI to the instructor collection.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/instructors
+                content:
+                  description: REST URI to a collection of the instructor's content.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/instructors/1234/contents
+    Post:
+      description: Reduced WordPress Post object properties shared by LifterLMS custom post types
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          allOf:
+            - description: Unique Post Identifier. The WordPress Post `ID`.
+            - $ref: '#/components/schemas/ResourceId'
+        date_created:
+          description: 'Creation date. Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 17:22:05'
+        date_created_gmt:
+          description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 13:22:05'
+        date_updated:
+          description: 'Date last modified. Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 17:25:05'
+          readOnly: true
+        date_updated_gmt:
+          description: 'Date last modified (in GMT). Format: `Y-m-d H:i:s`.'
+          type: string
+          example: '2019-05-20 13:25:05'
+          readOnly: true
+        menu_order:
+          description: Custom post sort order.
+          type: integer
+          default: 0
+          minimum: 0
+    PostContent:
+      description: The HTML content of the post.
+      type: object
+      properties:
+        rendered:
+          type: string
+          description: Rendered HTML content.
+          example: '\n<h2>Lorem ipsum dolor sit amet.</h2>\n\n\n\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n'
+        raw:
+          type: string
+          description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+          example: '<!-- wp:heading -->\n<h2>Lorem ipsum dolor sit amet.</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n<!-- /wp:paragraph -->'
+    PostExcerpt:
+      description: The HTML excerpt of the post.
+      type: object
+      properties:
+        rendered:
+          type: string
+          description: Rendered HTML content.
+          example: '<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>'
+        raw:
+          type: string
+          description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+          example: 'Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.'
+    PostPublic:
+      description: Reduced WordPress Post object properties shared by LifterLMS custom post types
+      allOf:
+        - $ref: '#/components/schemas/Post'
+        - type: object
+          properties:
+            title:
+              $ref: '#/components/schemas/PostTitle'
+            content:
+              $ref: '#/components/schemas/PostContent'
+            excerpt:
+              $ref: '#/components/schemas/PostExcerpt'
+            slug:
+              description: Post URL slug.
+              type: string
+              example: getting-started-with-lifterlms
+            permalink:
+              description: Post URL.
+              type: string
+              example: 'https://example.com/post/getting-started-with-lifterlms'
+              readOnly: true
+            post_type:
+              allOf:
+                - $ref: '#/components/schemas/PostType'
+                - readOnly: true
+            status:
+              $ref: '#/components/schemas/PostStatus'
+            password:
+              description: Password used to protect access to the content.<br>Readable only in `edit` context.
+              type: string
+              example: p4$sW0rd
+            featured_media:
+              description: Featured image ID.
+              type: integer
+              example: 987
+            comment_status:
+              description: Post comment status. Default comment status dependent upon general WordPress post discussion settings.
+              type: string
+              enum:
+                - open
+                - closed
+              default: open
+            ping_status:
+              description: Post ping status. Default ping status dependent upon general WordPress post discussion settings.
+              type: string
+              enum:
+                - open
+                - closed
+              default: open
+    PostStatus:
+      description: The publication status of the course.
+      type: string
+      enum:
+        - publish
+        - pending
+        - draft
+        - auto-draft
+        - future
+        - private
+        - trash
+      default: publish
+    PostTitle:
+      description: Post title.
+      type: object
+      properties:
+        rendered:
+          type: string
+          description: Rendered title.
+          example: Getting Started with LifterLMS
+        raw:
+          type: string
+          description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+          example: Getting Started with LifterLMS
+    PostType:
+      description: LifterLMS custom post types available for enrollments
+      type: string
+      enum:
+        - course
+        - llms_membership
+      default: course
+    ResourceId:
+      description: Unique Resource Identifier.
+      type: integer
+      minimum: 1
+      example: 123
+      readOnly: true
+    Student:
+      allOf:
+        - type: object
+          properties:
+            id:
+              description: Unique Student Identifer. The WordPress User `ID`.
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            role:
+              enum:
+                - student
+              default: student
+              readOnly: true
+            _links:
+              type: object
+              readOnly: true
+              properties:
+                self:
+                  description: REST URI to the student.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/students/1234
+                collection:
+                  description: REST URI to the student collection.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/students
+                content:
+                  description: REST URI to a collection of the student's content.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/students/1234/contents
+                enrollments:
+                  description: REST URI to a collection of the student's enrollments.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/enrollments?student=1234
+    User:
+      description: Reduced WordPress User object properties shared by LifterLMS custom user types
+      type: object
+      required:
+        - id
+        - email
+        - username
+      properties:
+        id:
+          allOf:
+            - description: Unique User Identifer. The WordPress User `ID`.
+            - $ref: '#/components/schemas/ResourceId'
+        email:
+          description: The user's email address.
+          type: string
+          example: jamie@lifterlms.com
+        username:
+          description: The user's username.
+          type: string
+          example: jamie2019
+        password:
+          description: The user's password.
+          type: string
+          example: my_l337-p@$5w0rd!
+          writeOnly: true
+        role:
+          description: The user's WordPress user role.
+          type: string
+        name:
+          $ref: '#/components/schemas/UserName'
+        billing_address:
+          $ref: '#/components/schemas/Address'
+    UserName:
       type: object
       properties:
         first:
@@ -957,214 +1671,31 @@ components:
           description: The person's public display name.
           type: string
           example: Jamie Cook
-    Post:
-      description: Reduced WordPress Post object properties shared by LifterLMS custom post types
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          description: Post ID.
-          type: integer
-          minimum: 1
-          example: 123
-          readOnly: true
-        title:
-          description: Post title.
-          type: object
-          properties:
-            rendered:
-              type: string
-              description: Rendered title.
-              example: Getting Started with LifterLMS
-            raw:
-              type: string
-              description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-              example: Getting Started with LifterLMS
-        slug:
-          description: Post URL slug.
-          type: string
-          example: getting-started-with-lifterlms
-        permalink:
-          description: Post URL.
-          type: string
-          example: 'https://example.com/post/getting-started-with-lifterlms'
-          readOnly: true
-        date_created:
-          description: 'Creation date. Format: `Y-m-d H:i:s`.'
-          type: string
-          example: '2019-05-20 17:22:05'
-        date_created_gmt:
-          description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
-          type: string
-          example: '2019-05-20 13:22:05'
-          readOnly: true
-        date_updated:
-          description: 'Date last modified. Format: `Y-m-d H:i:s`.'
-          type: string
-          example: '2019-05-20 17:25:05'
-          readOnly: true
-        date_updated_gmt:
-          description: 'Date last modified (in GMT). Format: `Y-m-d H:i:s`.'
-          type: string
-          example: '2019-05-20 13:25:05'
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/PostStatus'
-        password:
-          description: Password used to protect access to the content.
-          type: string
-          example: p4$sW0rd
-        content:
-          $ref: '#/components/schemas/PostContent'
-        excerpt:
-          $ref: '#/components/schemas/PostExcerpt'
-        featured_media:
-          description: Featured image ID.
-          type: integer
-          example: 987
-        menu_order:
-          description: Custom post sort order.
-          type: integer
-          default: 0
-          minimum: 0
-        comment_status:
-          description: Post comment status. Default comment status dependent upon general WordPress post discussion settings.
-          type: string
-          enum:
-            - open
-            - closed
-          default: open
-        ping_status:
-          description: Post ping status. Default ping status dependent upon general WordPress post discussion settings.
-          type: string
-          enum:
-            - open
-            - closed
-          default: open
-    PostContent:
-      description: The HTML content of the course.
-      type: object
-      properties:
-        rendered:
-          type: string
-          description: Rendered HTML content.
-          example: '\n<h2>Lorem ipsum dolor sit amet.</h2>\n\n\n\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n'
-        raw:
-          type: string
-          description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-          example: '<!-- wp:heading -->\n<h2>Lorem ipsum dolor sit amet.</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n<!-- /wp:paragraph -->'
-    PostExcerpt:
-      description: The HTML excerpt of the course.
-      type: object
-      properties:
-        rendered:
-          type: string
-          description: Rendered HTML content.
-          example: '<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>'
-        raw:
-          type: string
-          description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-          example: 'Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.'
-    PostStatus:
-      description: The publication status of the course.
-      type: string
-      enum:
-        - publish
-        - pending
-        - draft
-        - auto-draft
-        - future
-        - private
-        - trash
-      default: publish
-    Student:
-      type: object
-      required:
-        - id
-        - email
-        - username
-      properties:
-        id:
-          description: The unique student ID.
-          type: integer
-          minimum: 1
-          example: 1234
-          readOnly: true
-        email:
-          description: The student's email address.
-          type: string
-          example: jamie@lifterlms.com
-        username:
-          description: The student's username.
-          type: string
-          example: jamie2019
-        password:
-          description: The student's password.
-          type: string
-          example: my_l337-p@s5w0rd!
-          writeOnly: true
-        role:
-          description: The student's WordPress user role.
-          type: string
-          example: student
-          default: student
-        name:
-          $ref: '#/components/schemas/PersonName'
-        billing_address:
-          $ref: '#/components/schemas/Address'
-        _links:
-          type: object
-          readOnly: true
-          properties:
-            self:
-              description: REST URI to the student.
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                    example: /wp-json/llms/v1/students/1234
-            collection:
-              description: REST URI to the student collection.
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                    example: /wp-json/llms/v1/students
-            enrollments:
-              description: REST URI to a collection of the student's enrollments.
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                    example: /wp-json/llms/v1/enrollments?student=1234
   responses:
     Error400:
-      description: Bad request.
+      x-summary: Bad request.
+      description: Invalid or malformed request syntax.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error400'
     Error401:
-      description: Unauthorized
+      x-summary: Unauthorized.
+      description: Invalid API Credentials.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error401'
     Error403:
-      description: Forbidden
+      x-summary: Forbidden.
+      description: The client does not have access to perform the requested action.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error403'
     Error404:
-      description: Not Found
+      x-summary: Not Found.
+      description: The requested resource could not be located.
       content:
         application/json:
           schema:
@@ -1181,17 +1712,24 @@ components:
           - view
           - edit
         default: view
+    EnrollmentStatus:
+      name: enrollment_status
+      in: query
+      description: Limit results by enrollment status.
+      required: false
+      schema:
+        $ref: '#/components/schemas/EnrollmentStatus'
     Exclude:
       name: exclude
       in: query
-      description: Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.
+      description: Exclude a list of `id`s from results. Accepts a single `id` or a comma separated list of `id`s.
       schema:
         type: string
         example: '10,11,12'
     Include:
       name: include
       in: query
-      description: Limit results to a list of ids. Accepts a single id or a comma separated list of ids.
+      description: Limit results to a list of `id`s. Accepts a single `id` or a comma separated list of `id`s.
       schema:
         type: string
         example: '1,2,3'
@@ -1232,6 +1770,13 @@ components:
       schema:
         type: string
         example: p4$sW0rd
+    PostType:
+      name: post_type
+      in: query
+      description: Filter results to those of a specific `post_type`.
+      required: false
+      schema:
+        $ref: '#/components/schemas/PostType'
   headers:
     PaginationTotalPages:
       description: Total number of pages available in the collection.
