@@ -7,6 +7,7 @@ allOf:
   - type: object
     properties:
       role:
+        type: string
         enum:
           - student
         default: student

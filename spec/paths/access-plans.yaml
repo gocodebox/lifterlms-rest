@@ -1,8 +1,8 @@
 get:
-  summary: List courses
-  description: Retrieve a list of courses.
+  summary: List access plans
+  description: Retrieve a list of access plans.
   tags:
-    - Courses
+    - Access Plans
   parameters:
     - $ref: '#/components/parameters/Context'
     - $ref: '#/components/parameters/Page'
@@ -25,17 +25,17 @@ get:
     - $ref: '#/components/parameters/Exclude'
   responses:
     200:
-      description: Successfully returned a list of courses.
+      description: Successfully returned a list of access plans.
       headers:
         Link:
           description: Pagination links for the collection.
           schema:
             type: string
             example: >-
-              </wp-json/llms/v1/courses?page=1>; rel="first",
-              </wp-json/llms/v1/courses?page=2>; rel="prev",
-              </wp-json/llms/v1/courses?page=4>; rel="next",
-              </wp-json/llms/v1/courses?page=5>; rel="last"
+              </wp-json/llms/v1/access-plans?page=1>; rel="first",
+              </wp-json/llms/v1/access-plans?page=2>; rel="prev",
+              </wp-json/llms/v1/access-plans?page=4>; rel="next",
+              </wp-json/llms/v1/access-plans?page=5>; rel="last"
         X-WP-Total:
           $ref: '#/components/headers/PaginationTotalResults'
         X-WP-TotalPages:
@@ -45,7 +45,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/CourseResponse'
+              $ref: '#/components/schemas/AccessPlan'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -54,23 +54,23 @@ get:
       $ref: '#/components/responses/Error403'
 
 post:
-  summary: Create a course
-  description: Create a new course object.
+  summary: Create an access plan
+  description: Create a new access plan object.
   tags:
-    - Courses
+    - Access Plans
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/CourseRequest'
+          $ref: '#/components/schemas/AccessPlan'
   responses:
     201:
-      description: Successfully created the course.
+      description: Successfully created the student.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CourseResponse'
+            $ref: '#/components/schemas/AccessPlan'
     400:
       $ref: '#/components/responses/Error400'
     401:

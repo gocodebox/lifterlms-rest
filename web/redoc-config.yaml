@@ -15,3 +15,5 @@ theme:
   rightPanel:
     backgroundColor: '#222'
 
+requiredPropsFirst: true
+# sortPropsAlphabetically: true

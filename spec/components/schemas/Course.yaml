@@ -1,16 +1,12 @@
 allOf:
-  - type: object
-    properties:
-      id:
-        readOnly: true
-        description: Unique Course Identifier. The WordPress Post `ID`.
   - $ref: '#/components/schemas/PostPublic'
   - type: object
     properties:
       permalink:
         example: https://example.com/course/getting-started-with-lifterlms
       post_type:
-        default: 'course'
+        default: course
+        type: string
       catalog_visibility:
         description: Visibility of the course in catalogs and search results.
         type: string
@@ -65,12 +61,12 @@ allOf:
         example: https://www.youtube.com/watch?v=videoid
       capacity:
         description: Number of students who can be enrolled in the course before enrollment closes.
-        type: integer
-        example: 25
-      capacity_message:
-        description: Message displayed when enrollment capacity has been reached.
-        type: string
-        default: Enrollment has closed because the maximum number of allowed students has been reached.
+        type: object
+        properties:
+          limit:
+            description: Number of students who can be enrolled in the course before enrollment closes.
+            type: integer
+            example: 25
       prerequisite:
         description: Course ID of the prerequisite course.
         type: integer
@@ -79,14 +75,6 @@ allOf:
         description: Term ID of a the prerequisite track.
         type: integer
         example: 789
-      length:
-        description: User defined course length.
-        type: string
-        example: 7 days
-      restricted_message:
-        description: Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.
-        type: string
-        default: You must enroll in this course to access course content.
       access_period:
         description: Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.
         type: object
@@ -98,10 +86,6 @@ allOf:
                 description: 'Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
                 type: string
                 example: '2019-05-20 17:22:05'
-              message:
-                description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
-                type: string
-                default: This course opens on [lifterlms_course_info key="start_date"].
           closes:
             type: object
             properties:
@@ -109,10 +93,6 @@ allOf:
                 description: 'Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
                 type: string
                 example: '2019-06-05 17:22:05'
-              message:
-                description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
-                type: string
-                default: This course closed on [lifterlms_course_info key="end_date"].
       enrollment_period:
         description: Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.
         type: object
@@ -124,10 +104,6 @@ allOf:
                 description: 'Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
                 type: string
                 example: '2019-05-20 17:22:05'
-              message:
-                description: Message displayed to visitors when the course is accessed before the opening date has passed.
-                type: string
-                default: Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].
           closes:
             type: object
             properties:
@@ -135,10 +111,6 @@ allOf:
                 description: 'Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
                 type: string
                 example: '2019-06-05 17:22:05'
-              message:
-                description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
-                type: string
-                default: Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].
       sales_page:
         description: Defines alternate content displayed to visitors and non-enrolled students when accessing the course.
         type: object

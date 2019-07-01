@@ -39,6 +39,12 @@ security:
 
 tags:
 
+  - name: Access Plans
+    description: |
+      Access plans allow you to define how LMS content is purchased and accessed by your students.
+
+      The access plans API allows you to create, view, update, and delete courses.
+
   - name: Courses
     description: |
       The courses API allows you to create, view, update, and delete courses.

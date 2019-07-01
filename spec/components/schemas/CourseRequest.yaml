@@ -1,0 +1,60 @@
+allOf:
+  - type: object
+    properties:
+      id:
+        readOnly: true
+        description: Unique Course Identifier. The WordPress Post `ID`.
+  - $ref: '#/components/schemas/PostContentRequest'
+  - type: object
+    properties:
+      access_period:
+        type: object
+        properties:
+          opens:
+            type: object
+            properties:
+              message:
+                description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
+                type: string
+                default: This course opens on [lifterlms_course_info key="start_date"].
+          closes:
+            type: object
+            properties:
+              message:
+                description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
+                type: string
+                default: This course closed on [lifterlms_course_info key="end_date"].
+      enrollment_period:
+        type: object
+        properties:
+          opens:
+            type: object
+            properties:
+              message:
+                description: Message displayed to visitors when the course is accessed before the opening date has passed.
+                type: string
+                default: Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].
+          closes:
+            type: object
+            properties:
+              message:
+                description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
+                type: string
+                default: Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].
+      capacity:
+        description: Number of students who can be enrolled in the course before enrollment closes.
+        type: object
+        properties:
+          capacity_message:
+            description: Message displayed when enrollment capacity has been reached.
+            type: string
+            default: Enrollment has closed because the maximum number of allowed students has been reached.
+      length:
+        description: User defined course length.
+        type: string
+        example: 7 days
+      restricted_message:
+        description: Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.
+        type: string
+        default: You must enroll in this course to access course content.
+  - $ref: '#/components/schemas/Course'

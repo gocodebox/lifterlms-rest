@@ -1,0 +1,53 @@
+allOf:
+  - type: object
+    required:
+      - price
+    properties:
+      id:
+        readOnly: true
+        description: Unique Access Plan Identifier. The WordPress Post `ID`.
+      price:
+        description: Access plan price.
+        type: number
+        format: float
+        minimum: 0
+        default: 0
+        example: 199.97
+      # title:
+        # $ref: '#/components/schemas/PostTitle'
+      # content:
+        # $ref: '#/components/schemas/PostContent'
+      enroll_text:
+        description: Text of the "Purchase" button
+        type: string
+        default: Buy Now
+  - $ref: '#/components/schemas/Post'
+
+
+      # "access_expiration": "lifetime",
+      # "access_expires": "",
+      # "access_length": 0,
+      # "access_period": "",
+      # "availability": "open",
+      # "availability_restrictions": [],
+      # "checkout_redirect_forced": "no",
+      # "checkout_redirect_page": 0,
+      # "checkout_redirect_type": "self",
+      # "checkout_redirect_url": "",
+      # "enroll_text": "",
+      # "excerpt": "",
+      # "frequency": 0,
+      # "length": 0,
+      # "on_sale": "no",
+      # "period": "",
+      # "product_id": 12,
+      # "sale_end": "",
+      # "sale_price": 0,
+      # "sale_start": "",
+      # "sku": "",
+      # "title": "Start Today!",
+      # "trial_length": 0,
+      # "trial_offer": "no",
+      # "trial_period": "",
+      # "trial_price": 0,
+      # "type": "llms_access_plan",

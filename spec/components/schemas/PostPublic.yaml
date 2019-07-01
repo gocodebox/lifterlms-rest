@@ -3,12 +3,6 @@ allOf:
   - $ref: '#/components/schemas/Post'
   - type: object
     properties:
-      title:
-        $ref: '#/components/schemas/PostTitle'
-      content:
-        $ref: '#/components/schemas/PostContent'
-      excerpt:
-        $ref: '#/components/schemas/PostExcerpt'
       slug:
         description: Post URL slug.
         type: string
@@ -21,6 +15,7 @@ allOf:
       post_type:
         allOf:
           - $ref: '#/components/schemas/PostType'
+
           - readOnly: true
       status:
         $ref: '#/components/schemas/PostStatus'

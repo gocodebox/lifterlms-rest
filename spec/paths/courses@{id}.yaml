@@ -20,7 +20,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Course'
+            $ref: '#/components/schemas/CourseResponse'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -42,14 +42,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Course'
+          $ref: '#/components/schemas/CourseRequest'
   responses:
     200:
       description: Successfully updated the course.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Course'
+            $ref: '#/components/schemas/CourseResponse'
     400:
       $ref: '#/components/responses/Error400'
     401:
@@ -76,7 +76,7 @@ delete:
               default: false
   responses:
     204:
-      description: Successfully deleted the student.
+      description: Successfully deleted the course.
     400:
       $ref: '#/components/responses/Error400'
     401:
