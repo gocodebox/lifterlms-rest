@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "gulp": "^4.0.0",
-    "lifterlms-lib-tasks": "^3.0.9",
+    "lifterlms-lib-tasks": "^3.5.1",
     "require-dir": "^0.3.2",
-    "swagger-repo": "^2.0.0-rc.11"
+    "swagger-repo": "^2.0.0-rc.13"
   },
   "scripts": {
     "start": "swagger-repo serve -p 8888",
