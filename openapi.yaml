@@ -170,7 +170,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Course'
+                  $ref: '#/components/schemas/CourseResponse'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -187,14 +187,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Course'
+              $ref: '#/components/schemas/CourseRequest'
       responses:
         '201':
-          description: Successfully created the student.
+          description: Successfully created the course.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Course'
+                $ref: '#/components/schemas/CourseResponse'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -223,7 +223,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Course'
+                $ref: '#/components/schemas/CourseResponse'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -242,14 +242,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Course'
+              $ref: '#/components/schemas/CourseRequest'
       responses:
         '200':
           description: Successfully updated the course.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Course'
+                $ref: '#/components/schemas/CourseResponse'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -275,7 +275,7 @@ paths:
                   default: false
       responses:
         '204':
-          description: Successfully deleted the student.
+          description: Successfully deleted the course.
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -917,14 +917,11 @@ components:
               description: Unique Access Plan Identifier. The WordPress Post `ID`.
             price:
               description: Access plan price.
-              type: float
+              type: number
+              format: float
               minimum: 0
               default: 0
               example: 199.97
-            title:
-              $ref: '#/components/schemas/PostTitle'
-            content:
-              $ref: '#/components/schemas/PostContent'
             enroll_text:
               description: Text of the "Purchase" button
               type: string
@@ -959,11 +956,6 @@ components:
           example: US
     Course:
       allOf:
-        - type: object
-          properties:
-            id:
-              readOnly: true
-              description: Unique Course Identifier. The WordPress Post `ID`.
         - $ref: '#/components/schemas/PostPublic'
         - type: object
           properties:
@@ -971,6 +963,7 @@ components:
               example: 'https://example.com/course/getting-started-with-lifterlms'
             post_type:
               default: course
+              type: string
             catalog_visibility:
               description: Visibility of the course in catalogs and search results.
               type: string
@@ -1037,12 +1030,12 @@ components:
               example: 'https://www.youtube.com/watch?v=videoid'
             capacity:
               description: Number of students who can be enrolled in the course before enrollment closes.
-              type: integer
-              example: 25
-            capacity_message:
-              description: Message displayed when enrollment capacity has been reached.
-              type: string
-              default: Enrollment has closed because the maximum number of allowed students has been reached.
+              type: object
+              properties:
+                limit:
+                  description: Number of students who can be enrolled in the course before enrollment closes.
+                  type: integer
+                  example: 25
             prerequisite:
               description: Course ID of the prerequisite course.
               type: integer
@@ -1051,14 +1044,6 @@ components:
               description: Term ID of a the prerequisite track.
               type: integer
               example: 789
-            length:
-              description: User defined course length.
-              type: string
-              example: 7 days
-            restricted_message:
-              description: 'Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.'
-              type: string
-              default: You must enroll in this course to access course content.
             access_period:
               description: 'Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.'
               type: object
@@ -1070,10 +1055,6 @@ components:
                       description: 'Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
                       type: string
                       example: '2019-05-20 17:22:05'
-                    message:
-                      description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
-                      type: string
-                      default: 'This course opens on [lifterlms_course_info key="start_date"].'
                 closes:
                   type: object
                   properties:
@@ -1081,10 +1062,6 @@ components:
                       description: 'Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
                       type: string
                       example: '2019-06-05 17:22:05'
-                    message:
-                      description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
-                      type: string
-                      default: 'This course closed on [lifterlms_course_info key="end_date"].'
             enrollment_period:
               description: 'Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.'
               type: object
@@ -1096,10 +1073,6 @@ components:
                       description: 'Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
                       type: string
                       example: '2019-05-20 17:22:05'
-                    message:
-                      description: Message displayed to visitors when the course is accessed before the opening date has passed.
-                      type: string
-                      default: 'Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].'
                 closes:
                   type: object
                   properties:
@@ -1107,10 +1080,6 @@ components:
                       description: 'Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
                       type: string
                       example: '2019-06-05 17:22:05'
-                    message:
-                      description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
-                      type: string
-                      default: 'Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].'
             sales_page:
               description: Defines alternate content displayed to visitors and non-enrolled students when accessing the course.
               type: object
@@ -1224,6 +1193,184 @@ components:
                         type: string
                       href:
                         type: string
+    CourseRequest:
+      allOf:
+        - type: object
+          properties:
+            id:
+              readOnly: true
+              description: Unique Course Identifier. The WordPress Post `ID`.
+        - $ref: '#/components/schemas/PostContentRequest'
+        - type: object
+          properties:
+            access_period:
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
+                      type: string
+                      default: 'This course opens on [lifterlms_course_info key="start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
+                      type: string
+                      default: 'This course closed on [lifterlms_course_info key="end_date"].'
+            enrollment_period:
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to visitors when the course is accessed before the opening date has passed.
+                      type: string
+                      default: 'Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
+                      type: string
+                      default: 'Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].'
+            capacity:
+              description: Number of students who can be enrolled in the course before enrollment closes.
+              type: object
+              properties:
+                capacity_message:
+                  description: Message displayed when enrollment capacity has been reached.
+                  type: string
+                  default: Enrollment has closed because the maximum number of allowed students has been reached.
+            length:
+              description: User defined course length.
+              type: string
+              example: 7 days
+            restricted_message:
+              description: 'Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.'
+              type: string
+              default: You must enroll in this course to access course content.
+        - $ref: '#/components/schemas/Course'
+    CourseResponse:
+      allOf:
+        - type: object
+          properties:
+            id:
+              readOnly: true
+              description: Unique Course Identifier. The WordPress Post `ID`.
+        - $ref: '#/components/schemas/PostContentResponse'
+        - type: object
+          properties:
+            access_period:
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
+                      type: object
+                      properties:
+                        rendered:
+                          description: Rendered message content.
+                          type: string
+                          default: 'This course opens on January, 28, 2019.'
+                        raw:
+                          description: Raw message content.
+                          type: string
+                          default: 'This course opens on [lifterlms_course_info key="start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
+                      type: object
+                      properties:
+                        rendered:
+                          description: Rendered message content.
+                          type: string
+                          default: 'This course closed on March 5, 2018.'
+                        raw:
+                          description: Raw message content.
+                          type: string
+                          default: 'This course closed on [lifterlms_course_info key="end_date"].'
+            enrollment_period:
+              type: object
+              properties:
+                opens:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to visitors when the course is accessed before the opening date has passed.
+                      type: object
+                      properties:
+                        rendered:
+                          description: Rendered message content.
+                          type: string
+                          default: 'Enrollment in this course opens on opens on January, 28, 2019.'
+                        raw:
+                          description: Raw message content.
+                          type: string
+                          default: 'Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].'
+                closes:
+                  type: object
+                  properties:
+                    message:
+                      description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
+                      type: object
+                      properties:
+                        rendered:
+                          description: Rendered message content.
+                          type: string
+                          default: 'Enrollment in this course closed on March 5, 2018.'
+                        raw:
+                          description: Raw message content.
+                          type: string
+                          default: 'Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].'
+            capacity:
+              description: Number of students who can be enrolled in the course before enrollment closes.
+              type: object
+              properties:
+                capacity_message:
+                  description: Message displayed when enrollment capacity has been reached.
+                  type: object
+                  properties:
+                    rendered:
+                      description: Rendered message content.
+                      type: string
+                      example: Enrollment has closed because the maximum number of allowed students has been reached.
+                    raw:
+                      description: Raw message content.
+                      type: string
+                      example: Enrollment has closed because the maximum number of allowed students has been reached.
+            length:
+              description: User defined course length.
+              type: object
+              properties:
+                rendered:
+                  description: Rendered length description.
+                  type: string
+                  example: 7 days
+                raw:
+                  description: Raw length description.
+                  type: string
+                  example: 7 days
+            restricted_message:
+              description: 'Message displayed when non-enrolled visitors try to access restricted course content (lessons, quizzes, etc..) directly.'
+              type: object
+              properties:
+                rendered:
+                  description: Rendered message content.
+                  type: string
+                  default: You must enroll in this course to access course content.
+                raw:
+                  description: Raw message content.
+                  type: string
+                  default: You must enroll in this course to access course content.
+        - $ref: '#/components/schemas/Course'
     Enrollment:
       type: object
       required:
@@ -1391,6 +1538,7 @@ components:
         - type: object
           properties:
             role:
+              type: string
               enum:
                 - lms_manager
                 - instructor
@@ -1460,42 +1608,68 @@ components:
           type: integer
           default: 0
           minimum: 0
-    PostContent:
-      description: The HTML content of the post.
+    PostContentRequest:
+      description: Post content request fields.
       type: object
+      required:
+        - title
+        - content
       properties:
-        rendered:
+        title:
           type: string
-          description: Rendered HTML content.
-          example: '\n<h2>Lorem ipsum dolor sit amet.</h2>\n\n\n\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n'
-        raw:
+          description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+          example: Getting Started with LifterLMS
+        content:
           type: string
-          description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+          description: Raw post content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
           example: '<!-- wp:heading -->\n<h2>Lorem ipsum dolor sit amet.</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n<!-- /wp:paragraph -->'
-    PostExcerpt:
-      description: The HTML excerpt of the post.
-      type: object
-      properties:
-        rendered:
-          type: string
-          description: Rendered HTML content.
-          example: '<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>'
-        raw:
+        excerpt:
           type: string
           description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
           example: 'Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.'
+    PostContentResponse:
+      description: Post content fields.
+      type: object
+      properties:
+        title:
+          type: object
+          properties:
+            rendered:
+              type: string
+              description: Rendered title.
+              example: Getting Started with LifterLMS
+            raw:
+              type: string
+              description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+              example: Getting Started with LifterLMS
+        content:
+          type: object
+          properties:
+            rendered:
+              type: string
+              description: Rendered post content.
+              example: '\n<h2>Lorem ipsum dolor sit amet.</h2>\n\n\n\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n'
+            raw:
+              type: string
+              description: Raw post content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+              example: '<!-- wp:heading -->\n<h2>Lorem ipsum dolor sit amet.</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\n<!-- /wp:paragraph -->'
+        excerpt:
+          type: object
+          properties:
+            rendered:
+              type: string
+              description: Rendered HTML content.
+              example: '<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>'
+            raw:
+              type: string
+              description: Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
+              example: 'Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.'
     PostPublic:
       description: Reduced WordPress Post object properties shared by LifterLMS custom post types
       allOf:
         - $ref: '#/components/schemas/Post'
         - type: object
           properties:
-            title:
-              $ref: '#/components/schemas/PostTitle'
-            content:
-              $ref: '#/components/schemas/PostContent'
-            excerpt:
-              $ref: '#/components/schemas/PostExcerpt'
             slug:
               description: Post URL slug.
               type: string
@@ -1545,18 +1719,6 @@ components:
         - private
         - trash
       default: publish
-    PostTitle:
-      description: Post title.
-      type: object
-      properties:
-        rendered:
-          type: string
-          description: Rendered title.
-          example: Getting Started with LifterLMS
-        raw:
-          type: string
-          description: Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
-          example: Getting Started with LifterLMS
     PostType:
       description: LifterLMS custom post types available for enrollments
       type: string
@@ -1580,6 +1742,7 @@ components:
         - type: object
           properties:
             role:
+              type: string
               enum:
                 - student
               default: student
