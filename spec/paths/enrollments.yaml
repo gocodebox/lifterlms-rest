@@ -22,30 +22,42 @@ get:
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
     - name: student
-      description: Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.
+      description: Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.
       in: query
       schema:
         type: string
         example: 123,456
     - name: student_exclude
-      description: Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.
+      description: Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.
       in: query
       schema:
         type: string
         example: 789,324
     - name: post
-      description: Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.
+      description: Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.
       in: query
       schema:
         type: string
         example: 123,456
     - name: post_exclude
-      description: Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.
+      description: Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.
       in: query
       schema:
         type: string
         example: 789,324
     - $ref: '#/components/parameters/PostType'
+    - name: status
+      description: Include enrollments for the specified status or list of statuses. Accepts a status or comma separated list of statuses.
+      in: query
+      schema:
+        type: string
+        enum:
+          - enrolled
+          - expired
+          - cancelled
+          - none
+          - any
+        default: any
   responses:
     200:
       description: Successfully returned a list of enrollments.
