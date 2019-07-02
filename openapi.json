@@ -85,6 +85,15 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "product_id",
+            "description": "Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separted list of course/membership ids.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "123,456"
+            }
           }
         ],
         "responses": {
@@ -110,7 +119,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AccessPlan"
+                    "$ref": "#/components/schemas/AccessPlanResponse"
                   }
                 }
               }
@@ -138,7 +147,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccessPlan"
+                "$ref": "#/components/schemas/AccessPlanRequest"
               }
             }
           }
@@ -149,7 +158,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccessPlan"
+                  "$ref": "#/components/schemas/AccessPlanResponse"
                 }
               }
             }
@@ -162,6 +171,123 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/access-plans/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique AccessPlan Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve an access plan",
+        "description": "Retrieve the details of an existing access plan.",
+        "tags": [
+          "Access Plans"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/PostPassword"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the access plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update an access plan",
+        "description": "Update the specified access plan by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Access Plans"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessPlanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the access plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an access plan",
+        "description": "Delete an existing access plan.",
+        "tags": [
+          "Access Plans"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the access plan."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -463,7 +589,7 @@
           },
           {
             "name": "student",
-            "description": "Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.",
+            "description": "Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.",
             "in": "query",
             "schema": {
               "type": "string",
@@ -472,7 +598,7 @@
           },
           {
             "name": "student_exclude",
-            "description": "Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separted list of student ids.",
+            "description": "Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.",
             "in": "query",
             "schema": {
               "type": "string",
@@ -481,7 +607,7 @@
           },
           {
             "name": "post",
-            "description": "Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.",
+            "description": "Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.",
             "in": "query",
             "schema": {
               "type": "string",
@@ -490,7 +616,7 @@
           },
           {
             "name": "post_exclude",
-            "description": "Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separted list of student ids.",
+            "description": "Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.",
             "in": "query",
             "schema": {
               "type": "string",
@@ -499,6 +625,22 @@
           },
           {
             "$ref": "#/components/parameters/PostType"
+          },
+          {
+            "name": "status",
+            "description": "Include enrollments for the specified status or list of statuses. Accepts a status or comma separated list of statuses.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enrolled",
+                "expired",
+                "cancelled",
+                "none",
+                "any"
+              ],
+              "default": "any"
+            }
           }
         ],
         "responses": {
@@ -1423,7 +1565,9 @@
           {
             "type": "object",
             "required": [
-              "price"
+              "title",
+              "price",
+              "product_id"
             ],
             "properties": {
               "id": {
@@ -1435,18 +1579,303 @@
                 "type": "number",
                 "format": "float",
                 "minimum": 0,
-                "default": 0,
                 "example": 199.97
+              },
+              "sku": {
+                "description": "External identifier.",
+                "type": "string",
+                "example": "LIFETIME-999-001"
+              },
+              "frequency": {
+                "description": "Billing frequency.<br> `0` denotes a one-time payment.<br> `>= 1` denotes a recurring plan.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 6,
+                "default": 0
+              },
+              "length": {
+                "description": "For recurring plans only.<br> Determines the number of intervals a plan should run for.<br> `0` denotes the plan should run until cancelled.",
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "period": {
+                "description": "For recurring plans only.<br> Determines the interval of recurring payments.",
+                "type": "string",
+                "enum": [
+                  "year",
+                  "month",
+                  "week",
+                  "day"
+                ],
+                "default": "year"
               },
               "enroll_text": {
                 "description": "Text of the \"Purchase\" button",
                 "type": "string",
                 "default": "Buy Now"
+              },
+              "sale_enabled": {
+                "description": "Mark the plan as \"On Sale\" allowing for temporary price adjustments.",
+                "type": "boolean",
+                "default": false
+              },
+              "sale_price": {
+                "description": "Sale price.",
+                "type": "number",
+                "format": "float",
+                "minimum": 0,
+                "example": 1
+              },
+              "sale_date_start": {
+                "description": "Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.<br> Only appies when `sale_pricing` is `true`. Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-01-23 00:00:00"
+              },
+              "sale_date_end": {
+                "description": "Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely.<br> Only appies when `sale_pricing` is `true`. Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-03-23 23:59:59"
+              },
+              "availability_restrictions": {
+                "description": "Restrict usage of this access plan to students enrolled in at least one of the specified memberships.",
+                "type": "array",
+                "minimum": 1,
+                "example": [
+                  123,
+                  456,
+                  789
+                ],
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "access_expiration": {
+                "description": "Access expiration type.<br> `lifetime` provides access until cancelled or until a recurring payment fails.<br> `limited-period` provides access for a limited period as specified by `access_length` and `access_period` `limited-date` provides access until the date specified by `access_expires_date`",
+                "type": "string",
+                "enum": [
+                  "lifetime",
+                  "limited-period",
+                  "limited-date"
+                ],
+                "default": "lifetime"
+              },
+              "access_expires": {
+                "description": "Date when access expires.<br> Only applicable when $access_expiration is `limited-date`. Format: `Y-m-d H:i:s`.",
+                "type": "string"
+              },
+              "access_length": {
+                "description": "Determine the length of access from time of purchase.<br> Only applicable when `access_expiration` is `limited-period`.",
+                "type": "integer",
+                "minimum": 1,
+                "default": 1
+              },
+              "access_period": {
+                "description": "Determine the length of access from time of purchase.<br> Only applicable when `access_expiration` is `limited-period`.",
+                "type": "string",
+                "enum": [
+                  "year",
+                  "month",
+                  "week",
+                  "day"
+                ],
+                "default": "year"
+              },
+              "trial_enabled": {
+                "description": "Enable a trial period for a recurring access plan.",
+                "type": "boolean",
+                "default": false
+              },
+              "trial_length": {
+                "description": "Determines the length of trial access.<br> Only applicaable when `trial_enabled` is `true`.",
+                "type": "integer",
+                "minimum": 1,
+                "default": 1
+              },
+              "trial_period": {
+                "description": "Determines the length of trial access.<br> Only applicaable when `trial_enabled` is `true`.",
+                "type": "string",
+                "enum": [
+                  "year",
+                  "month",
+                  "week",
+                  "day"
+                ],
+                "default": "week"
+              },
+              "trial_price": {
+                "description": "Determines the price of the trial period.<br> Only applicaable when `trial_enabled` is `true`.",
+                "type": "number",
+                "format": "float",
+                "minimum": 0,
+                "default": 0,
+                "example": 1.99
+              },
+              "product_id": {
+                "description": "Determines the course or membership which can be accessed through the plan.",
+                "type": "integer",
+                "minimum": 1,
+                "example": 789
+              },
+              "redirect_type": {
+                "description": "Determines the redirction behavior of the user's browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `product_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.",
+                "type": "string",
+                "enum": [
+                  "self",
+                  "page",
+                  "url"
+                ],
+                "default": "self"
+              },
+              "redirect_page": {
+                "description": "WordPress page ID to use for checkout success redirection.<br>Applicable only when `redirect_type` is `page`.",
+                "type": "integer",
+                "minimum": 1
+              },
+              "redirect_url": {
+                "description": "URL to use for checkout success redirection.<br>Applicable only when `redirect_type` is `url`.",
+                "type": "string",
+                "example": "https://example.tld/my/redirect"
+              },
+              "redirect_forced": {
+                "description": "Use this plans's redirect settings when purchasing a Membership this plan is restricted to.<br> Applicable only when `availability_restrictions` exist for the plan.",
+                "type": "boolean",
+                "default": false
               }
             }
           },
           {
             "$ref": "#/components/schemas/Post"
+          }
+        ]
+      },
+      "AccessPlanRequest": {
+        "required": [
+          "price"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccessPlan"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Access plan name.",
+                "example": "Liftetime Access"
+              },
+              "content": {
+                "type": "string",
+                "description": "Access plan short description.",
+                "example": "\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"
+              }
+            }
+          }
+        ]
+      },
+      "AccessPlanResponse": {
+        "required": [
+          "price"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccessPlan"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "description": "Access plan name.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "type": "string",
+                    "description": "Rendered title.",
+                    "example": "Liftetime Access"
+                  },
+                  "raw": {
+                    "type": "string",
+                    "description": "Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                    "example": "Liftetime Access"
+                  }
+                }
+              },
+              "content": {
+                "description": "Access plan short description.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "type": "string",
+                    "description": "Rendered description.",
+                    "example": "\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"
+                  },
+                  "raw": {
+                    "type": "string",
+                    "description": "Raw description. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                    "example": "\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"
+                  }
+                }
+              },
+              "_links": {
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the access plan.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/access-plans/123"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the access plan collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/access-plans"
+                        }
+                      }
+                    }
+                  },
+                  "product": {
+                    "description": "REST URI to the access plan's related course or membership.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/789"
+                        }
+                      }
+                    }
+                  },
+                  "restrictions": {
+                    "description": "REST URIs to the memberships required to use the access plan.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/memberships?include=123,456,789"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -1487,6 +1916,15 @@
       },
       "Course": {
         "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "readOnly": true,
+                "description": "Unique Course Identifier. The WordPress Post `ID`."
+              }
+            }
+          },
           {
             "$ref": "#/components/schemas/PostPublic"
           },
@@ -1583,16 +2021,16 @@
                 "type": "string",
                 "example": "https://www.youtube.com/watch?v=videoid"
               },
-              "capacity": {
+              "capacaity_enabled": {
+                "description": "Determines if an enrollment capacity limit is enabled.",
+                "type": "boolean",
+                "default": false
+              },
+              "capacity_limit": {
                 "description": "Number of students who can be enrolled in the course before enrollment closes.",
-                "type": "object",
-                "properties": {
-                  "limit": {
-                    "description": "Number of students who can be enrolled in the course before enrollment closes.",
-                    "type": "integer",
-                    "example": 25
-                  }
-                }
+                "minimum": 0,
+                "type": "integer",
+                "example": 25
               },
               "prerequisite": {
                 "description": "Course ID of the prerequisite course.",
@@ -1604,84 +2042,46 @@
                 "type": "integer",
                 "example": 789
               },
-              "access_period": {
-                "description": "Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.",
-                "type": "object",
-                "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "description": "Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.",
-                        "type": "string",
-                        "example": "2019-05-20 17:22:05"
-                      }
-                    }
-                  },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "description": "Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.",
-                        "type": "string",
-                        "example": "2019-06-05 17:22:05"
-                      }
-                    }
-                  }
-                }
+              "access_opens_date": {
+                "description": "Date when the course opens, allowing enrolled students to begin to view and interact with the restricted course content.<br> If blank the course is open until after the `access_closes_date` has passed.<br> Does not affect course enrollment, see `enrollment_opens_date` to control the course enrollment start date.<br> Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-05-20 17:22:05"
               },
-              "enrollment_period": {
-                "description": "Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.",
-                "type": "object",
-                "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "description": "Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.",
-                        "type": "string",
-                        "example": "2019-05-20 17:22:05"
-                      }
-                    }
-                  },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "description": "Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.",
-                        "type": "string",
-                        "example": "2019-06-05 17:22:05"
-                      }
-                    }
-                  }
-                }
+              "access_closes_date": {
+                "description": "Date when the course closes. After this date enrolled students may no longer view and interact with the restricted course content.<br> If blank the course is open indefinitely after the the `access_opens_date` has passed.<br> Does not affect course enrollment, see `enrollment_opens_date` to control the course enrollment close date.<br> Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-06-05 17:22:05"
               },
-              "sales_page": {
-                "description": "Defines alternate content displayed to visitors and non-enrolled students when accessing the course.",
-                "type": "object",
-                "properties": {
-                  "content_type": {
-                    "description": "Determines the type of sales page content to display.<br> - `none` displays the course content.<br> - `content` displays alternate content from the `excerpt` property.<br> - `page` redirects to the WordPress page defined in `content_page_id`.<br> - `url` redirects to the URL defined in `content_page_url`.",
-                    "type": "string",
-                    "enum": [
-                      "none",
-                      "content",
-                      "page",
-                      "url"
-                    ],
-                    "default": "none"
-                  },
-                  "content_page_id": {
-                    "description": "The WordPress page ID of the sales page.<br> Required when `content_type` equals `page`.<br> Only returned when the `content_type` equals `page`.",
-                    "type": "integer",
-                    "example": 543
-                  },
-                  "content_page_url": {
-                    "description": "The URL of the sales page content.<br> Required when `content_type` equals `url`.<br> Only returned when the `content_type` equals `url`.",
-                    "type": "string",
-                    "example": "https://example.tld/custom-sales-page"
-                  }
-                }
+              "enrollment_opens_date": {
+                "description": "Date when the course enrollment opens.<br> If blank course enrollment is open until after the `enrollment_closes_date` has passed.<br> Does not affect course content access, see `access_opens_date` to control course access start date.<br> Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-05-15 12:15:00"
+              },
+              "enrollment_closes_date": {
+                "description": "Date when the course enrollment closes.<br> If blank course enrollment is open indefinitely after the the `enrollment_opens_date` has passed.<br> Does not affect course content access, see `access_opens_date` to control course access close date.<br> Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "example": "2019-10-01 23:59:59"
+              },
+              "sales_page_type": {
+                "description": "Defines alternate content displayed to visitors and non-enrolled students when accessing the course.<br> - `none` displays the course content.<br> - `content` displays alternate content from the `excerpt` property.<br> - `page` redirects to the WordPress page defined in `content_page_id`.<br> - `url` redirects to the URL defined in `content_page_url`.",
+                "type": "string",
+                "enum": [
+                  "none",
+                  "content",
+                  "page",
+                  "url"
+                ],
+                "default": "none"
+              },
+              "sales_page_page_id": {
+                "description": "The WordPress page ID of the sales page.<br> Required when `sales_page_type` equals `page`.<br> Only returned when the `sales_page_type` equals `page`.",
+                "type": "integer",
+                "example": 543
+              },
+              "sales_page_url": {
+                "description": "The URL of the sales page content.<br> Required when `sales_page_type` equals `url`.<br> Only returned when the `sales_page_type` equals `url`.",
+                "type": "string",
+                "example": "https://example.tld/custom-sales-page"
               },
               "_links": {
                 "type": "object",
@@ -1832,80 +2232,35 @@
       "CourseRequest": {
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "id": {
-                "readOnly": true,
-                "description": "Unique Course Identifier. The WordPress Post `ID`."
-              }
-            }
-          },
-          {
             "$ref": "#/components/schemas/PostContentRequest"
           },
           {
             "type": "object",
             "properties": {
-              "access_period": {
-                "type": "object",
-                "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to enrolled students when the course is accessed before the opening date has passed.",
-                        "type": "string",
-                        "default": "This course opens on [lifterlms_course_info key=\"start_date\"]."
-                      }
-                    }
-                  },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to enrolled students when the course is accessed after the closing date has passed.",
-                        "type": "string",
-                        "default": "This course closed on [lifterlms_course_info key=\"end_date\"]."
-                      }
-                    }
-                  }
-                }
+              "access_opens_message": {
+                "description": "Message displayed to enrolled students when the course is accessed before the `access_opens_date` has passed.",
+                "type": "string",
+                "default": "This course opens on [lifterlms_course_info key=\"start_date\"]."
               },
-              "enrollment_period": {
-                "type": "object",
-                "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to visitors when the course is accessed before the opening date has passed.",
-                        "type": "string",
-                        "default": "Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"]."
-                      }
-                    }
-                  },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to students and visitors when the course is accessed after the closing date has passed.",
-                        "type": "string",
-                        "default": "Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"]."
-                      }
-                    }
-                  }
-                }
+              "access_closes_message": {
+                "description": "Message displayed to enrolled students when the course is accessed after the `access_closes_date` has passed.",
+                "type": "string",
+                "default": "This course closed on [lifterlms_course_info key=\"end_date\"]."
               },
-              "capacity": {
-                "description": "Number of students who can be enrolled in the course before enrollment closes.",
-                "type": "object",
-                "properties": {
-                  "capacity_message": {
-                    "description": "Message displayed when enrollment capacity has been reached.",
-                    "type": "string",
-                    "default": "Enrollment has closed because the maximum number of allowed students has been reached."
-                  }
-                }
+              "enrollment_opens_message": {
+                "description": "Message displayed to visitors when attempting to enroll into a course before the `enrollment_opens_date` has passed.",
+                "type": "string",
+                "default": "Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"]."
+              },
+              "enrollment_closes_message": {
+                "description": "Message displayed to visitors when attempting to enroll into a course after the `enrollment_closes_date` has passed.",
+                "type": "string",
+                "default": "Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"]."
+              },
+              "capacity_message": {
+                "description": "Message displayed when enrollment capacity has been reached.",
+                "type": "string",
+                "default": "Enrollment has closed because the maximum number of allowed students has been reached."
               },
               "length": {
                 "description": "User defined course length.",
@@ -1927,133 +2282,88 @@
       "CourseResponse": {
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "id": {
-                "readOnly": true,
-                "description": "Unique Course Identifier. The WordPress Post `ID`."
-              }
-            }
-          },
-          {
             "$ref": "#/components/schemas/PostContentResponse"
           },
           {
             "type": "object",
             "properties": {
-              "access_period": {
+              "access_opens_message": {
+                "description": "Message displayed to enrolled students when the course is accessed before the `access_opens_date` has passed.",
                 "type": "object",
                 "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to enrolled students when the course is accessed before the opening date has passed.",
-                        "type": "object",
-                        "properties": {
-                          "rendered": {
-                            "description": "Rendered message content.",
-                            "type": "string",
-                            "default": "This course opens on January, 28, 2019."
-                          },
-                          "raw": {
-                            "description": "Raw message content.",
-                            "type": "string",
-                            "default": "This course opens on [lifterlms_course_info key=\"start_date\"]."
-                          }
-                        }
-                      }
-                    }
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "default": "This course opens on January, 28, 2019."
                   },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to enrolled students when the course is accessed after the closing date has passed.",
-                        "type": "object",
-                        "properties": {
-                          "rendered": {
-                            "description": "Rendered message content.",
-                            "type": "string",
-                            "default": "This course closed on March 5, 2018."
-                          },
-                          "raw": {
-                            "description": "Raw message content.",
-                            "type": "string",
-                            "default": "This course closed on [lifterlms_course_info key=\"end_date\"]."
-                          }
-                        }
-                      }
-                    }
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "default": "This course opens on [lifterlms_course_info key=\"start_date\"]."
                   }
                 }
               },
-              "enrollment_period": {
+              "access_closes_message": {
+                "description": "Message displayed to enrolled students when the course is accessed after the `access_closes_date` has passed.",
                 "type": "object",
                 "properties": {
-                  "opens": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to visitors when the course is accessed before the opening date has passed.",
-                        "type": "object",
-                        "properties": {
-                          "rendered": {
-                            "description": "Rendered message content.",
-                            "type": "string",
-                            "default": "Enrollment in this course opens on opens on January, 28, 2019."
-                          },
-                          "raw": {
-                            "description": "Raw message content.",
-                            "type": "string",
-                            "default": "Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"]."
-                          }
-                        }
-                      }
-                    }
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "default": "This course closed on March 5, 2018."
                   },
-                  "closes": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "description": "Message displayed to students and visitors when the course is accessed after the closing date has passed.",
-                        "type": "object",
-                        "properties": {
-                          "rendered": {
-                            "description": "Rendered message content.",
-                            "type": "string",
-                            "default": "Enrollment in this course closed on March 5, 2018."
-                          },
-                          "raw": {
-                            "description": "Raw message content.",
-                            "type": "string",
-                            "default": "Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"]."
-                          }
-                        }
-                      }
-                    }
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "default": "This course closed on [lifterlms_course_info key=\"end_date\"]."
                   }
                 }
               },
-              "capacity": {
-                "description": "Number of students who can be enrolled in the course before enrollment closes.",
+              "enrollment_opens_message": {
+                "description": "Message displayed to visitors when attempting to enroll into a course before the `enrollment_opens_date` has passed.",
                 "type": "object",
                 "properties": {
-                  "capacity_message": {
-                    "description": "Message displayed when enrollment capacity has been reached.",
-                    "type": "object",
-                    "properties": {
-                      "rendered": {
-                        "description": "Rendered message content.",
-                        "type": "string",
-                        "example": "Enrollment has closed because the maximum number of allowed students has been reached."
-                      },
-                      "raw": {
-                        "description": "Raw message content.",
-                        "type": "string",
-                        "example": "Enrollment has closed because the maximum number of allowed students has been reached."
-                      }
-                    }
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "default": "Enrollment in this course opens on opens on January, 28, 2019."
+                  },
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "default": "Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"]."
+                  }
+                }
+              },
+              "enrollment_closes_message": {
+                "description": "Message displayed to visitors when attempting to enroll into a course after the `enrollment_closes_date` has passed.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "default": "Enrollment in this course closed on March 5, 2018."
+                  },
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "default": "Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"]."
+                  }
+                }
+              },
+              "capacity_message": {
+                "description": "Message displayed when enrollment capacity has been reached.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "example": "Enrollment has closed because the maximum number of allowed students has been reached."
+                  },
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "example": "Enrollment has closed because the maximum number of allowed students has been reached."
                   }
                 }
               },
