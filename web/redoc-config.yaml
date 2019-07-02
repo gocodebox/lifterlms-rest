@@ -16,4 +16,4 @@ theme:
     backgroundColor: '#222'
 
 requiredPropsFirst: true
-# sortPropsAlphabetically: true
+sortPropsAlphabetically: true

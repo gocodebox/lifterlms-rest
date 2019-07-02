@@ -1,94 +1,67 @@
 allOf:
-  - type: object
-    properties:
-      id:
-        readOnly: true
-        description: Unique Course Identifier. The WordPress Post `ID`.
   - $ref: '#/components/schemas/PostContentResponse'
   - type: object
     properties:
-      access_period:
+      access_opens_message:
+        description: Message displayed to enrolled students when the course is accessed before the `access_opens_date` has passed.
         type: object
         properties:
-          opens:
-            type: object
-            properties:
-              message:
-                description: Message displayed to enrolled students when the course is accessed before the opening date has passed.
-                type: object
-                properties:
-                  rendered:
-                    description: Rendered message content.
-                    type: string
-                    default: This course opens on January, 28, 2019.
-                  raw:
-                    description: Raw message content.
-                    type: string
-                    default: This course opens on [lifterlms_course_info key="start_date"].
-          closes:
-            type: object
-            properties:
-              message:
-                description: Message displayed to enrolled students when the course is accessed after the closing date has passed.
-                type: object
-                properties:
-                  rendered:
-                    description: Rendered message content.
-                    type: string
-                    default: This course closed on March 5, 2018.
-                  raw:
-                    description: Raw message content.
-                    type: string
-                    default: This course closed on [lifterlms_course_info key="end_date"].
-      enrollment_period:
+          rendered:
+            description: Rendered message content.
+            type: string
+            default: This course opens on January, 28, 2019.
+          raw:
+            description: Raw message content.
+            type: string
+            default: This course opens on [lifterlms_course_info key="start_date"].
+      access_closes_message:
+        description: Message displayed to enrolled students when the course is accessed after the `access_closes_date` has passed.
         type: object
         properties:
-          opens:
-            type: object
-            properties:
-              message:
-                description: Message displayed to visitors when the course is accessed before the opening date has passed.
-                type: object
-                properties:
-                  rendered:
-                    description: Rendered message content.
-                    type: string
-                    default: Enrollment in this course opens on opens on January, 28, 2019.
-                  raw:
-                    description: Raw message content.
-                    type: string
-                    default: Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].
-          closes:
-            type: object
-            properties:
-              message:
-                description: Message displayed to students and visitors when the course is accessed after the closing date has passed.
-                type: object
-                properties:
-                  rendered:
-                    description: Rendered message content.
-                    type: string
-                    default: Enrollment in this course closed on March 5, 2018.
-                  raw:
-                    description: Raw message content.
-                    type: string
-                    default: Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].
-      capacity:
-        description: Number of students who can be enrolled in the course before enrollment closes.
+          rendered:
+            description: Rendered message content.
+            type: string
+            default: This course closed on March 5, 2018.
+          raw:
+            description: Raw message content.
+            type: string
+            default: This course closed on [lifterlms_course_info key="end_date"].
+      enrollment_opens_message:
+        description: Message displayed to visitors when attempting to enroll into a course before the `enrollment_opens_date` has passed.
         type: object
         properties:
-          capacity_message:
-            description: Message displayed when enrollment capacity has been reached.
-            type: object
-            properties:
-              rendered:
-                description: Rendered message content.
-                type: string
-                example: Enrollment has closed because the maximum number of allowed students has been reached.
-              raw:
-                description: Raw message content.
-                type: string
-                example: Enrollment has closed because the maximum number of allowed students has been reached.
+          rendered:
+            description: Rendered message content.
+            type: string
+            default: Enrollment in this course opens on opens on January, 28, 2019.
+          raw:
+            description: Raw message content.
+            type: string
+            default: Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].
+      enrollment_closes_message:
+        description: Message displayed to visitors when attempting to enroll into a course after the `enrollment_closes_date` has passed.
+        type: object
+        properties:
+          rendered:
+            description: Rendered message content.
+            type: string
+            default: Enrollment in this course closed on March 5, 2018.
+          raw:
+            description: Raw message content.
+            type: string
+            default: Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].
+      capacity_message:
+        description: Message displayed when enrollment capacity has been reached.
+        type: object
+        properties:
+          rendered:
+            description: Rendered message content.
+            type: string
+            example: Enrollment has closed because the maximum number of allowed students has been reached.
+          raw:
+            description: Raw message content.
+            type: string
+            example: Enrollment has closed because the maximum number of allowed students has been reached.
       length:
         description: User defined course length.
         type: object

@@ -1,4 +1,9 @@
 allOf:
+  - type: object
+    properties:
+      id:
+        readOnly: true
+        description: Unique Course Identifier. The WordPress Post `ID`.
   - $ref: '#/components/schemas/PostPublic'
   - type: object
     properties:
@@ -59,14 +64,15 @@ allOf:
         description: URL to an oEmbed enable video URL.
         type: string
         example: https://www.youtube.com/watch?v=videoid
-      capacity:
+      capacaity_enabled:
+        description: Determines if an enrollment capacity limit is enabled.
+        type: boolean
+        default: false
+      capacity_limit:
         description: Number of students who can be enrolled in the course before enrollment closes.
-        type: object
-        properties:
-          limit:
-            description: Number of students who can be enrolled in the course before enrollment closes.
-            type: integer
-            example: 25
+        minimum: 0
+        type: integer
+        example: 25
       prerequisite:
         description: Course ID of the prerequisite course.
         type: integer
@@ -75,74 +81,66 @@ allOf:
         description: Term ID of a the prerequisite track.
         type: integer
         example: 789
-      access_period:
-        description: Defines a period within which enrolled students can access, view, and interact with restricted course content. These dates do not affect course enrollment, see `enrollment_period` to control the course enrollment period.
-        type: object
-        properties:
-          opens:
-            type: object
-            properties:
-              date:
-                description: 'Date when the course opens. If blank the course is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
-                type: string
-                example: '2019-05-20 17:22:05'
-          closes:
-            type: object
-            properties:
-              date:
-                description: 'Date when the course closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
-                type: string
-                example: '2019-06-05 17:22:05'
-      enrollment_period:
-        description: Defines a period within which students can enroll into the course. These dates do not affect course content access, see `access_period` to control the course content access period.
-        type: object
-        properties:
-          opens:
-            type: object
-            properties:
-              date:
-                description: 'Date when course enrollment opens. If blank course enrollment is considered open until the the closing date has passed. Format: `Y-m-d H:i:s`.'
-                type: string
-                example: '2019-05-20 17:22:05'
-          closes:
-            type: object
-            properties:
-              date:
-                description: 'Date when course enrollment closes. If blank the course is considered open until the opening date has passed. Format: `Y-m-d H:i:s`.'
-                type: string
-                example: '2019-06-05 17:22:05'
-      sales_page:
-        description: Defines alternate content displayed to visitors and non-enrolled students when accessing the course.
-        type: object
-        properties:
-          content_type:
-            description: >-
-              Determines the type of sales page content to display.<br>
-              - `none` displays the course content.<br>
-              - `content` displays alternate content from the `excerpt` property.<br>
-              - `page` redirects to the WordPress page defined in `content_page_id`.<br>
-              - `url` redirects to the URL defined in `content_page_url`.
-            type: string
-            enum:
-              - none
-              - content
-              - page
-              - url
-            default: none
-          content_page_id:
-            description: >-
-              The WordPress page ID of the sales page.<br>
-              Required when `content_type` equals `page`.<br>
-              Only returned when the `content_type` equals `page`.
-            type: integer
-            example: 543
-          content_page_url:
-            description: >-
-              The URL of the sales page content.<br>
-              Required when `content_type` equals `url`.<br>
-              Only returned when the `content_type` equals `url`.
-            type: string
-            example: https://example.tld/custom-sales-page
+      access_opens_date:
+        description: >-
+          Date when the course opens, allowing enrolled students to begin to view and interact with the restricted course content.<br>
+          If blank the course is open until after the `access_closes_date` has passed.<br>
+          Does not affect course enrollment, see `enrollment_opens_date` to control the course enrollment start date.<br>
+          Format: `Y-m-d H:i:s`.
+        type: string
+        example: '2019-05-20 17:22:05'
+      access_closes_date:
+        description: >-
+          Date when the course closes. After this date enrolled students may no longer view and interact with the restricted course content.<br>
+          If blank the course is open indefinitely after the the `access_opens_date` has passed.<br>
+          Does not affect course enrollment, see `enrollment_opens_date` to control the course enrollment close date.<br>
+          Format: `Y-m-d H:i:s`.
+        type: string
+        example: '2019-06-05 17:22:05'
+      enrollment_opens_date:
+        description: >-
+          Date when the course enrollment opens.<br>
+          If blank course enrollment is open until after the `enrollment_closes_date` has passed.<br>
+          Does not affect course content access, see `access_opens_date` to control course access start date.<br>
+          Format: `Y-m-d H:i:s`.
+        type: string
+        example: '2019-05-15 12:15:00'
+      enrollment_closes_date:
+        description: >-
+          Date when the course enrollment closes.<br>
+          If blank course enrollment is open indefinitely after the the `enrollment_opens_date` has passed.<br>
+          Does not affect course content access, see `access_opens_date` to control course access close date.<br>
+          Format: `Y-m-d H:i:s`.
+        type: string
+        example: '2019-10-01 23:59:59'
+      sales_page_type:
+        description: >-
+          Defines alternate content displayed to visitors and non-enrolled students when accessing the course.<br>
+          - `none` displays the course content.<br>
+          - `content` displays alternate content from the `excerpt` property.<br>
+          - `page` redirects to the WordPress page defined in `content_page_id`.<br>
+          - `url` redirects to the URL defined in `content_page_url`.
+        type: string
+        enum:
+          - none
+          - content
+          - page
+          - url
+        default: none
+      sales_page_page_id:
+        description: >-
+          The WordPress page ID of the sales page.<br>
+          Required when `sales_page_type` equals `page`.<br>
+          Only returned when the `sales_page_type` equals `page`.
+        type: integer
+        example: 543
+      sales_page_url:
+        description: >-
+          The URL of the sales page content.<br>
+          Required when `sales_page_type` equals `url`.<br>
+          Only returned when the `sales_page_type` equals `url`.
+        type: string
+        example: https://example.tld/custom-sales-page
       _links:
         type: object
         readOnly: true
