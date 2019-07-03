@@ -29,6 +29,7 @@ properties:
     type: array
     default: []
     example: [ 1, 2, 3 ]
+    minItems: 1
     items:
       type: integer
   sales_page_type:

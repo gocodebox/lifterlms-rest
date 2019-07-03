@@ -20,12 +20,6 @@ info:
 
     asrtasrtarst
 
-    # Authentication
-
-    Lorem ipsum...
-
-    <!-- ReDoc-Inject: <security-definitions> -->
-
   x-logo:
     altText: LifterLMS
     url: "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png"
@@ -38,6 +32,11 @@ security:
   - BasicAuth: []
 
 tags:
+
+  - name: Authentication
+    description: |
+      arstarstarstarst
+      <!-- ReDoc-Inject: <security-definitions> -->
 
   - name: Access Plans
     description: |
@@ -54,6 +53,10 @@ tags:
       Enrollments are used to track a student's access to content on your website.
 
       The enrollments API allows you to create, view, update, and delete student enrollments.
+
+  - name: Memberships
+    description: |
+      The memberships API allows you to create, view, update, and delete memberships.
 
   - name: Instructors
     description: |
