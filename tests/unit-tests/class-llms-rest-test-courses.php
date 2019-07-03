@@ -1,0 +1,808 @@
+<?php
+/**
+ * Tests for Courses API.
+ *
+ * @package LifterLMS-Rest/Tests
+ *
+ * @group REST
+ * @group rest_courses
+ *
+ * @since [version]
+ * @version [version]
+ */
+
+/**
+ * LLMS_REST_Test_Courses class.
+ *
+ *  TODO:
+ *  - update tests with the new params, e.g. rendered/raw content
+ */
+class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case {
+
+	/**
+	 * Route.
+	 *
+	 * @var string
+	 */
+	private $route = '/llms/v1/courses';
+
+	/**
+	 * Post type.
+	 *
+	 * @var string
+	 */
+	private $post_type = 'course';
+
+	/**
+	 * Setup our test server, endpoints, and user info.
+	 */
+	public function setUp() {
+
+		parent::setUp();
+		$this->endpoint     = new LLMS_REST_Courses_Controller();
+		$this->user_allowed = $this->factory->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
+
+		$this->user_forbidden = $this->factory->user->create(
+			array(
+				'role' => 'subscriber',
+			)
+		);
+
+		$this->sample_course_args = array(
+			'title'        => array(
+				'rendered' => 'Getting Started with LifterLMS',
+				'raw'      => 'Getting Started with LifterLMS',
+			),
+			'content'      => array(
+				'rendered' => "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
+				'raw'      => "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
+			),
+			'date_created' => '2019-05-20 17:22:05',
+			'status'       => 'publish',
+		);
+
+		global $wpdb;
+		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
+	}
+
+	/**
+	 * Test route registration.
+	 *
+	 * @since [version]
+	 */
+	public function test_register_routes() {
+
+		$routes = $this->server->get_routes();
+		$this->assertArrayHasKey( $this->route, $routes );
+		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)', $routes );
+
+	}
+
+
+	/**
+	 * Test list courses.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 12 courses.
+		$courses = $this->factory->course->create_many( 12 );
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
+
+		$res_data = $response->get_data();
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 10, count( $res_data ) ); // default per_page is 10.
+
+		// Check retrieved courses are the same as the generated ones.
+		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
+		for ( $i = 0; $i < 10; $i++ ) {
+			$this->courses_fields_match( new LLMS_Course( $courses[ $i ] ), $res_data[ $i ] );
+		}
+
+	}
+
+	/**
+	 * Test list courses pagination success.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_with_pagination() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 15 courses.
+		$courses = $this->factory->course->create_many( 15 );
+		$request = new WP_REST_Request( 'GET', $this->route );
+		$request->set_param( 'page', 2 );
+
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 5, count( $res_data ) );
+
+		// Check retrieved courses are the same as the generated ones with an offset of 10 (first page).
+		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
+		for ( $i = 0; $i < 5; $i++ ) {
+			$this->courses_fields_match( new LLMS_Course( $courses[ $i + 10 ] ), $res_data[ $i ] );
+		}
+
+	}
+
+	/**
+	 * Test list courses include arg
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_include() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 15 courses.
+		$courses = $this->factory->course->create_many( 5 );
+		$request = new WP_REST_Request( 'GET', $this->route );
+
+		// get only the 2nd and 3rd course.
+		$request->set_param( 'include', "$courses[1], $courses[2]" );
+
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 2, count( $res_data ) );
+
+		// Check retrieved courses are the same as the second and third generated courses.
+		for ( $i = 0; $i < 2; $i++ ) {
+			$this->courses_fields_match( new LLMS_Course( $courses[ $i + 1 ] ), $res_data[ $i ] );
+		}
+
+	}
+
+	/**
+	 * Test list courses exclude arg
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_exclude() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 15 courses.
+		$courses = $this->factory->course->create_many( 5 );
+		$request = new WP_REST_Request( 'GET', $this->route );
+
+		// get only the 2nd and 3rd course.
+		$request->set_param( 'exclude', "$courses[0], $courses[1]" );
+
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 3, count( $res_data ) );
+		// Check retrieved data do not contain first and second created courses.
+		$this->assertEquals( array_slice( $courses, 2 ), wp_list_pluck( $res_data, 'id' ) );
+	}
+
+	/**
+	 * Test list courses ordered by id desc.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_ordered_by_id_desc() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 5 courses.
+		$courses = $this->factory->course->create_many( 5 );
+		$request = new WP_REST_Request( 'GET', $this->route );
+		$request->set_param( 'order', 'desc' ); // default is 'asc'.
+
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		// Check retrieved courses are the same as the generated ones but in the reversed order.
+		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
+		$reversed_data = array_reverse( $res_data );
+		for ( $i = 0; $i < 5; $i++ ) {
+			$this->courses_fields_match( new LLMS_Course( $courses[ $i ] ), $reversed_data[ $i ] );
+		}
+
+	}
+
+	/**
+	 * Test list courses ordered by title.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_ordered_by_title() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 2 courses.
+		$courses = $this->factory->course->create_many( 2 );
+
+		$course_first = new LLMS_Course( $courses[0] );
+		$course_first->set( 'title', 'Course B' );
+		$course_second = new LLMS_Course( $courses[1] );
+		$course_second->set( 'title', 'Course A' );
+
+		$request = new WP_REST_Request( 'GET', $this->route );
+		$request->set_param( 'orderby', 'title' ); // default is id.
+
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Check retrieved courses are ordered by title asc.
+		$this->assertEquals( 'Course A', $res_data[0]['title']['rendered'] );
+		$this->assertEquals( 'Course B', $res_data[1]['title']['rendered'] );
+
+	}
+
+	/**
+	 * Test list courses ordered by title
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_ordered_by_title_desc() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 2 courses.
+		$courses = $this->factory->course->create_many( 2 );
+
+		$course_first = new LLMS_Course( $courses[0] );
+		$course_first->set( 'title', 'Course B' );
+		$course_second = new LLMS_Course( $courses[1] );
+		$course_second->set( 'title', 'Course A' );
+
+		$request = new WP_REST_Request( 'GET', $this->route );
+		$request->set_param( 'orderby', 'title' ); // default is id.
+		$request->set_param( 'order', 'desc' ); // default is 'asc'.
+
+		$response = $this->server->dispatch( $request );
+		$res_data = $response->get_data();
+
+		// Check retrieved courses are ordered by title desc.
+		$this->assertEquals( 'Course B', $res_data[0]['title']['rendered'] );
+		$this->assertEquals( 'Course A', $res_data[1]['title']['rendered'] );
+	}
+
+	/**
+	 * Test getting courses without permission.
+	 *
+	 * @since [version]
+	 *//*
+	public function test_get_courses_without_permission() {
+
+		wp_set_current_user( 0 );
+
+		// Setup course.
+		$this->factory->course->create();
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
+
+		// Check we don't have permissions to make this request.
+		$this->assertEquals( 401, $response->get_status() );
+
+	}
+	*/
+
+	/**
+	 * Test getting courses: forbidden request.
+	 *
+	 * @since [version]
+	 *//*
+	public function test_get_courses_forbidden() {
+
+		wp_set_current_user( $this->user_forbidden );
+
+		// Setup course.
+		$this->factory->course->create();
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
+
+		// Check we're not allowed to get results.
+		$this->assertEquals( 403, $response->get_status() );
+
+	}*/
+
+	/**
+	 * Test getting courses: bad request.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_courses_bad_request() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 5 courses.
+		$courses = $this->factory->course->create_many( 5 );
+		$request = new WP_REST_Request( 'GET', $this->route );
+
+		// Bad request, there's no page 2.
+		$request->set_param( 'page', 2 );
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( 400, $response->get_status() );
+
+		// Bad request, order param allowed are only "desc" and "asc" (emum).
+		$request->set_param( 'order', 'not_desc' );
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( 400, $response->get_status() );
+
+	}
+
+	/**
+	 * Test getting a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Setup course.
+		$course   = $this->factory->course->create_and_get();
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		// Check retrieved course matches the created ones.
+		$this->courses_fields_match( $course, $response->get_data() );
+
+	}
+
+
+	/**
+	 * Test getting single course without permission.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_course_without_permission() {
+
+		wp_set_current_user( 0 );
+
+		// Setup course.
+		$course_id = $this->factory->course->create();
+		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id ) );
+
+		// Check we don't have permissions to make this request.
+		$this->assertEquals( 401, $response->get_status() );
+
+	}
+
+	/**
+	 * Test getting forbidden single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_course_forbidden() {
+
+		wp_set_current_user( $this->user_forbidden );
+
+		// Setup course.
+		$course_id = $this->factory->course->create();
+		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id ) );
+
+		// Check we're not allowed to get results.
+		$this->assertEquals( 403, $response->get_status() );
+
+	}
+
+	/**
+	 * Test getting single course that doesn't exist.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_nonexistent_course() {
+
+		wp_set_current_user( 0 );
+
+		// Setup course.
+		$course_id = $this->factory->course->create();
+		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id . '4' ) );
+
+		// the course doesn't exists.
+		$this->assertEquals( 404, $response->get_status() );
+
+	}
+
+	/**
+	 * Test creating a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$request->set_body_params( $this->prepare_for_request( $this->sample_course_args ) );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 201, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		$this->assertEquals( $res_data['title']['rendered'], $this->sample_course_args['title']['rendered'] );
+		$this->assertEquals( $res_data['content']['rendered'], do_blocks( llms_content( $this->sample_course_args['content']['rendered'] ) ) );
+		$this->assertEquals( $res_data['date_created'], $this->sample_course_args['date_created'] );
+		$this->assertEquals( $res_data['status'], $this->sample_course_args['status'] );
+
+	}
+
+	/**
+	 * Test producing bad request error when creating a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_bad_request() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$course_args = $this->sample_course_args;
+
+		// Creating a course passing an id produces a bad request.
+		$course_args['id'] = '123';
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+		// create a course without title.
+		$course_args = $this->sample_course_args;
+		unset( $course_args['title'] );
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+		// create a course without content.
+		$course_args = $this->sample_course_args;
+		unset( $course_args['content'] );
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+		// status param must respect the item scehma, hence one of "publish" "pending" "draft" "auto-draft" "future" "private" "trash".
+		$course_args           = $this->sample_course_args;
+		$course_args['status'] = 'not_in_enum';
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+	}
+
+	/**
+	 * Test creating single course without permissions.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_without_permissions() {
+
+		wp_set_current_user( 0 );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$request->set_body_params( $this->sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Unhauthorized.
+		$this->assertEquals( 401, $response->get_status() );
+
+	}
+
+	/**
+	 * Test forbidden single course creation.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_forbidden() {
+
+		wp_set_current_user( $this->user_forbidden );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$request->set_body_params( $this->sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Forbidden.
+		$this->assertEquals( 403, $response->get_status() );
+
+	}
+
+
+	/**
+	 * Test updating a course.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_course() {
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		wp_set_current_user( $this->user_allowed );
+
+		// update.
+		$update_data = array(
+			'title'            => 'A TITLE UPDTAED',
+			'content'          => '<p>CONTENT UPDATED</p>',
+			'date_created'     => '2019-05-22 17:22:05',
+			'date_created_gmt' => '2019-05-22 17:22:05',
+			'status'           => 'draft',
+		);
+
+		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_body_params( $update_data );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		$this->assertEquals( $res_data['title']['rendered'], $update_data['title'] );
+		$this->assertEquals( $res_data['content']['rendered'], do_blocks( llms_content( $update_data['content'] ) ) );
+		$this->assertEquals( $res_data['date_created'], $update_data['date_created'] );
+		$this->assertEquals( $res_data['status'], $update_data['status'] );
+
+	}
+
+	/**
+	 * Test updating a nonexistent course.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_nonexistent_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$id = 48987456;
+
+		$request     = new WP_REST_Request( 'POST', $this->route . '/' . $id );
+		$course_args = $this->sample_course_args;
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+		$res_data = $response->get_data();
+
+		// Not found.
+		$this->assertEquals( 404, $response->get_status() );
+
+	}
+
+	/**
+	 * Test forbidden single course update.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_forbidden_course() {
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		wp_set_current_user( $this->user_forbidden );
+
+		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
+
+		$request->set_body_params( $this->sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 403, $response->get_status() );
+
+	}
+
+	/**
+	 * Test single course update without authorization.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_course_without_authorization() {
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		wp_set_current_user( 0 );
+
+		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
+
+		$request->set_body_params( $this->sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Unauthorized.
+		$this->assertEquals( 401, $response->get_status() );
+
+	}
+
+	/**
+	 * Test deleting a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get_id() );
+		$request->set_param( 'force', true );
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 200, $response->get_status() );
+
+		// check the deleted post is the correct one.
+		$this->courses_fields_match( $course, $response->get_data()['previous'], $with_modified_date = false );
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+
+		// Cannot find just deleted post.
+		$this->assertEquals( 404, $response->get_status() );
+
+	}
+
+	/**
+	 * Test deleting a nonexistent single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_nonexistent_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/747484940' );
+		$request->set_param( 'force', true );
+		$response = $this->server->dispatch( $request );
+
+		// Post not found.
+		$this->assertEquals( 404, $response->get_status() );
+
+	}
+
+
+	/**
+	 * Test single course update without authorization.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_forbidden_course() {
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		wp_set_current_user( $this->user_forbidden );
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+
+		$response = $this->server->dispatch( $request );
+
+		// Forbidden.
+		$this->assertEquals( 403, $response->get_status() );
+
+	}
+
+	/**
+	 * Test single course deletion without authorization.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_course_without_authorization() {
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		wp_set_current_user( 0 );
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+
+		$response = $this->server->dispatch( $request );
+
+		// Unauthorized.
+		$this->assertEquals( 401, $response->get_status() );
+
+	}
+
+	/**
+	 * Utility to prepare a course array to be sent for creation
+	 *
+	 * @since [version]
+	 *
+	 * @param array $course An array of course data.
+	 */
+	private function prepare_for_request( $course ) {
+		foreach ( array( 'title', 'content', 'excerpt' ) as $key ) {
+			if ( isset( $course[ $key ] ) && is_array( $course[ $key ] ) && isset( $course[ $key ]['raw'] ) ) {
+				$course[ $key ] = $course[ $key ]['raw'];
+			}
+		}
+
+		return $course;
+	}
+
+	/**
+	 * Utility to compare a Course with response course data.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Course $course       A LLMS_Course.
+	 * @param array       $course_data  An array of course data.
+	 * @param string      $context      Optional. Default 'view'.
+	 * @return void
+	 */
+	private function courses_fields_match( $course, $course_data, $context = 'view' ) {
+
+		$post = $course->get( 'post' );
+
+		$expected = array(
+			'id'               => $course->get( 'id' ),
+			'title'            => array(
+				'raw'      => $post->post_title,
+				'rendered' => $course->get( 'title' ),
+			),
+			'status'           => $course->get( 'status' ),
+			'content'          => array(
+				'raw'      => $post->post_content,
+				'rendered' => do_blocks( $course->get( 'content' ) ),
+			),
+			'date_created'     => $course->get( 'date', 'Y-m-d H:i:s' ),
+			'date_created_gmt' => $post->post_date_gmt,
+			'date_updated'     => $course->get( 'modified', 'Y-m-d H:i:s' ),
+			'date_updated_gmt' => $post->post_modified_gmt,
+		);
+
+		if ( 'edit' !== $context ) {
+			unset(
+				$expected['content']['raw'],
+				$expected['excerpt']['raw'],
+				$expected['title']['raw']
+			);
+		}
+
+		foreach ( $expected as $key => $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $k => $v ) {
+					$this->assertEquals( $v, $course_data[ $key ][ $k ] );
+				}
+			} else {
+				$this->assertEquals( $value, $course_data[ $key ] );
+			}
+		}
+
+	}
+
+}

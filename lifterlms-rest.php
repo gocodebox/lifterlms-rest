@@ -37,7 +37,7 @@ if ( ! defined( 'LLMS_REST_API_PLUGIN_URL' ) ) {
 
 // Load Plugin.
 if ( ! class_exists( 'LifterLMS_REST_API' ) ) {
-	require_once LLMS_REST_API_PLUGIN_DIR . 'lifterlms-rest-api.php';
+	require_once LLMS_REST_API_PLUGIN_DIR . 'class-lifterlms-rest-api.php';
 }
 
 // phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid

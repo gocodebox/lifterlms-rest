@@ -3,7 +3,7 @@
  * Testing Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
- * @since   [version]
+ * @since [version]
  * @version [version]
  */
 

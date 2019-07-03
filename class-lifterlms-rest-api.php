@@ -1,6 +1,6 @@
 <?php
 /**
- * LifterLMS_REST_API main class
+ * LifterLMS_REST_API main class.
  *
  * @package  LifterLMS_REST_API/Classes
  *
@@ -18,25 +18,25 @@ defined( 'ABSPATH' ) || exit;
 final class LifterLMS_REST_API {
 
 	/**
-	 * Current version of the plugin
+	 * Current version of the plugin.
 	 *
 	 * @var string
 	 */
 	public $version = '1.0.0';
 
 	/**
-	 * Singleton instance of the class
+	 * Singleton instance of the class.
 	 *
 	 * @var     obj
 	 */
 	private static $_instance = null;
 
 	/**
-	 * Singleton Instance of the LifterLMS_REST_API class
+	 * Singleton Instance of the LifterLMS_REST_API class.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return obj instance of the LifterLMS_REST_API class
+	 * @return obj instance of the LifterLMS_REST_API class.
 	 */
 	public static function instance() {
 
@@ -49,7 +49,7 @@ final class LifterLMS_REST_API {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 *
@@ -71,19 +71,66 @@ final class LifterLMS_REST_API {
 
 
 	/**
-	 * Include files and instantiate classes
+	 * Include files and instantiate classes.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	public function includes() {
+		// Authentication needs to run early to handle basic auth.
+		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
 
-		// require_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-filename.php';.
+		add_action( 'rest_api_init', array( $this, 'rest_api_includes' ), 5 );
+		add_action( 'rest_api_init', array( $this, 'rest_api_controllers_init' ), 10 );
 	}
 
 	/**
-	 * Include all required files and classes
+	 * Include REST api specific files.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function rest_api_includes() {
+
+		$includes = array(
+			// Functions.
+			'llms-rest-functions',
+
+			// Abstracts first.
+			'abstracts/class-llms-rest-posts-controller',
+
+			'class-llms-rest-courses-controller',
+		);
+
+		foreach ( $includes as $include ) {
+			include_once LLMS_REST_API_PLUGIN_DIR . 'includes/' . $include . '.php';
+		}
+	}
+
+	/**
+	 * Instantiate REST api Controllers.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function rest_api_controllers_init() {
+
+		$controllers = array(
+			'LLMS_REST_Courses_Controller',
+		);
+
+		foreach ( $controllers as $controller ) {
+			$controller_instance = new $controller();
+			$controller_instance->register_routes();
+		}
+
+	}
+
+	/**
+	 * Include all required files and classes.
 	 *
 	 * @since 1.0.0
 	 *
@@ -102,7 +149,7 @@ final class LifterLMS_REST_API {
 	}
 
 	/**
-	 * Load l10n files
+	 * Load l10n files.
 	 * The first loaded file takes priority.
 	 *
 	 * Files can be found in the following order:
@@ -125,6 +172,5 @@ final class LifterLMS_REST_API {
 		load_plugin_textdomain( 'lifterlms', false, dirname( plugin_basename( __FILE__ ) ) . '//i18n' );
 
 	}
-
 
 }
