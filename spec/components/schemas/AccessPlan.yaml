@@ -179,4 +179,12 @@ allOf:
           Applicable only when `availability_restrictions` exist for the plan.
         type: boolean
         default: false
+      visibility:
+        description: Access plan visibility.
+        type: string
+        enum:
+          - visible
+          - hidden
+          - featured
+        default: visible
   - $ref: '#/components/schemas/Post'
