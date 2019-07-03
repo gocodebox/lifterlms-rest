@@ -63,7 +63,9 @@ get:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Course'
+              anyOf:
+                - $ref: '#/components/schemas/CourseResponse'
+                - $ref: '#/components/schemas/MembershipResponse'
     400:
       $ref: '#/components/responses/Error400'
     401:
