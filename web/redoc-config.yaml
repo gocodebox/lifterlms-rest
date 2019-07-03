@@ -15,5 +15,6 @@ theme:
   rightPanel:
     backgroundColor: '#222'
 
+noAutoAuth: true
 requiredPropsFirst: true
 sortPropsAlphabetically: true
