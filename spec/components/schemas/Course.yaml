@@ -163,6 +163,15 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/courses
+          access_plans:
+            description: REST URI to the collection of access plans for the course.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/access-plans?product_id=1234
           enrollments:
             description: REST URI to the collection of the courses's enrollments.
             type: array
