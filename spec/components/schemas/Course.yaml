@@ -247,7 +247,7 @@ allOf:
               {
                 "taxonomy": "course_track",
                 "href": "/wp-json/wp-v2/course_track?post=123"
-              },
+              }
             ]
             items:
               type: object
