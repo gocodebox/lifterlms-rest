@@ -92,4 +92,9 @@ allOf:
           Format: `Y-m-d H:i:s`.
         type: string
         example: '2019-10-01 23:59:59'
+      video_tile:
+        description: When `true` the `video_embed` will be used on the course tiles (on the catalog, for example) instead of the featured image.
+        type: boolean
+        default: false
+
   - $ref: '#/components/schemas/SharedCourseMembership'
