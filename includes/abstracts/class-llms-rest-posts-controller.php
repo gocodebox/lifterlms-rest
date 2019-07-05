@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  *  TODO:
- * - how to handle password required posts
  * - do we really want to reply with "Bad request" for llms_rest_bad_request ?
  * - Implement everything :D
  */
@@ -120,7 +119,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 	}
 
-
 	/**
 	 * Check if a given request has access to read items.
 	 *
@@ -132,11 +130,12 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 
 		// Everybody can list llms posts (in read mode).
-		if ( 'edit' === $request['context'] && ! $this->check_post_permissions( 'edit' ) ) {
+		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
 			return llms_rest_authorization_required_error();
 		}
 
 		return true;
+
 	}
 
 	/**
@@ -186,7 +185,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		return $response;
 	}
 
-
 	/**
 	 * Check if a given request has access to create an item.
 	 *
@@ -199,7 +197,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return llms_rest_bad_request_error();
 		}
 
-		if ( ! $this->check_post_permissions( 'create' ) ) {
+		if ( ! $this->check_create_permission() ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -221,7 +219,23 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
-		if ( ! $this->check_post_permissions( 'read', $object->get( 'id' ) ) ) {
+		if ( 'edit' === $request['context'] && ! $this->check_update_permission( $object ) ) {
+			return llms_rest_authorization_required_error();
+		}
+
+		if ( ! empty( $request['password'] ) ) {
+			// Check post password, and return error if invalid.
+			if ( ! hash_equals( $object->get( 'password' ), $request['password'] ) ) {
+				return llms_rest_authorization_required_error();
+			}
+		}
+
+		// Allow access to all password protected posts if the context is edit.
+		if ( 'edit' === $request['context'] ) {
+			add_filter( 'post_password_required', '__return_false' );
+		}
+
+		if ( ! $this->check_read_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -318,7 +332,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
-		if ( ! $this->check_post_permissions( 'edit', $object->get( 'id' ) ) ) {
+		if ( ! $this->check_update_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -389,7 +403,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
-		if ( ! $this->check_post_permissions( 'delete', $object->get( 'id' ) ) ) {
+		if ( ! $this->check_delete_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -491,13 +505,16 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		}
 
 		foreach ( $result as $post ) {
-
-			if ( ! $this->check_post_permissions( 'read', $post->post_id ) ) {
+			$object = $this->get_object( $post );
+			if ( ! $this->check_read_permission( $object ) ) {
 				continue;
 			}
 
-			$data      = $this->prepare_item_for_response( $this->get_object( $post ), $request );
-			$objects[] = $this->prepare_response_for_collection( $data );
+			$response_object = $this->prepare_item_for_response( $object, $request );
+
+			if ( ! is_wp_error( $response_object ) ) {
+				$objects[] = $this->prepare_response_for_collection( $response_object );
+			}
 		}
 
 		// Allow access to all password protected posts if the context is edit.
@@ -536,6 +553,15 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
 
+		$has_password_filter = false;
+
+		if ( $this->can_access_password_content( $object, $request ) ) {
+			// Allow access to the post, permissions already checked before.
+			add_filter( 'post_password_required', '__return_false' );
+
+			$has_password_filter = true;
+		}
+
 		$data = array(
 			'id'               => $object->get( 'id' ),
 			'date_created'     => $object->get_date( 'date', 'Y-m-d H:i:s' ),
@@ -565,6 +591,11 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			),
 		);
 
+		if ( $has_password_filter ) {
+			// Reset filter.
+			remove_filter( 'post_password_required', '__return_false' );
+		}
+
 		return $data;
 
 	}
@@ -587,6 +618,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$temp = $post;
 		$post = $object->get( 'post' ); // phpcs:ignore
 		setup_postdata( $post );
+
 		$removed_filters_for_response = $this->maybe_remove_filters_for_response( $object );
 		$data                         = $this->prepare_object_for_response( $object, $request );
 		$this->maybe_add_removed_filters_for_response( $removed_filters_for_response );
@@ -1113,35 +1145,123 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Check permissions of posts on REST API.
+	 * Checks if a post can be edited.
 	 *
 	 * @since [version]
 	 *
-	 * @param string $context   Optional. Request context. Default 'read'.
-	 * @param int    $object_id Optional. Post ID. Default 0.
-	 * @return bool
+	 * @return bool Whether the post can be created
 	 */
-	public function check_post_permissions( $context = 'read', $object_id = 0 ) {
+	protected function check_create_permission() {
 
-		$post_type = $this->post_type;
+		$post_type = get_post_type_object( $this->post_type );
+		return current_user_can( $post_type->cap->publish_posts );
 
-		$contexts = array(
-			'read'   => 'read_private_posts',
-			'create' => 'publish_posts',
-			'edit'   => 'edit_post',
-			'delete' => 'delete_post',
-		);
+	}
 
-		if ( 'revision' === $post_type ) {
-			$permission = false;
-		} else {
-			$cap              = $contexts[ $context ];
-			$post_type_object = get_post_type_object( $post_type );
-			$permission       = current_user_can( $post_type_object->cap->$cap, $object_id );
+	/**
+	 * Checks if an llms post can be edited.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object Optional. The LLMS_Post_model object. Default null.
+	 * @return bool Whether the post can be edited.
+	 */
+	protected function check_update_permission( $object = null ) {
+
+		$post_type = get_post_type_object( $this->post_type );
+		return is_null( $object ) ? current_user_can( $post_type->cap->edit_posts ) : current_user_can( $post_type->cap->edit_post, $object->get( 'id' ) );
+
+	}
+
+	/**
+	 * Checks if an llms post can be deleted.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object The LLMS_Post_model object.
+	 * @return bool Whether the post can be deleted.
+	 */
+	protected function check_delete_permission( $object ) {
+
+		$post_type = get_post_type_object( $this->post_type );
+		return current_user_can( $post_type->cap->delete_post, $object->get( 'id' ) );
+
+	}
+
+	/**
+	 * Checks if an llms post can be read.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object The LLMS_Post_model object.
+	 * @return bool Whether the post can be read.
+	 */
+	protected function check_read_permission( $object ) {
+
+		$post_type = get_post_type_object( $this->post_type );
+		$status    = $object->get( 'status' );
+		$id        = $object->get( 'id' );
+		$wp_post   = $object->get( 'post' );
+
+		// Is the post readable?
+		if ( 'publish' === $status || current_user_can( $post_type->cap->read_post, $id ) ) {
+			return true;
 		}
 
-		return apply_filters( 'check_post_permissions', $permission, $context, $object_id, $post_type );
+		$post_status_obj = get_post_status_object( $status );
+		if ( $post_status_obj && $post_status_obj->public ) {
+			return true;
+		}
 
+		// Can we read the parent if we're inheriting?
+		if ( 'inherit' === $status && $wp_post->post_parent > 0 ) {
+			$parent = get_post( $wp_post->post_parent );
+			if ( $parent ) {
+				return $this->check_read_permission( $parent );
+			}
+		}
+
+		/*
+		 * If there isn't a parent, but the status is set to inherit, assume
+		 * it's published (as per get_post_status()).
+		 */
+		if ( 'inherit' === $status ) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+
+	/**
+	 * Checks if the user can access password-protected content.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object  The LLMS_Post_model object.
+	 * @param WP_REST_Request $request Request data to check.
+	 * @return bool True if the user can access password-protected content, otherwise false.
+	 */
+	public function can_access_password_content( $object, $request ) {
+
+		if ( empty( $object->get( 'password' ) ) ) {
+			// No filter required.
+			return false;
+		}
+
+		// Edit context always gets access to password-protected posts.
+		if ( 'edit' === $request['context'] ) {
+			return true;
+		}
+
+		// No password, no auth.
+		if ( empty( $request['password'] ) ) {
+			return false;
+		}
+
+		// Double-check the request password.
+		return hash_equals( $object->get( 'password' ), $request['password'] );
 	}
 
 }
