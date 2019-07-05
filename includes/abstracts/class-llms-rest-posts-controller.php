@@ -587,7 +587,9 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$temp = $post;
 		$post = $object->get( 'post' ); // phpcs:ignore
 		setup_postdata( $post );
-		$data = $this->prepare_object_for_response( $object, $request );
+		$removed_filters_for_response = $this->maybe_remove_filters_for_response( $object );
+		$data                         = $this->prepare_object_for_response( $object, $request );
+		$this->maybe_add_removed_filters_for_response( $removed_filters_for_response );
 		$post = $temp; // phpcs:ignore
 		wp_reset_postdata();
 
@@ -1054,23 +1056,60 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Return an LLMS Post Model raw meta field
+	 * Re-add filters previously removed
 	 *
 	 * @since [version]
 	 *
 	 * @param LLMS_Post_Model $object Object.
-	 * @param string          $field  Meta key.
-	 * @return mixed
+	 * @return array Array of filters removed for response
 	 */
-	protected function get_object_raw_meta( $object, $field ) {
+	protected function maybe_remove_filters_for_response( $object ) {
 
-		if ( metadata_exists( 'post', $object->get( 'id' ), $object->get( 'meta_prefix' ) . $field ) ) {
-			$raw_value = get_post_meta( $object->get( 'id' ), $object->get( 'meta_prefix' ) . $field, true );
-		} else {
-			$raw_value = $object->get_default_value( $field );
+		$filters_to_be_removed = $this->get_filters_to_be_removed_for_response( $object );
+		$filters_removed       = array();
+
+		// Need to remove some filters.
+		foreach ( $filters_to_be_removed as $hook => $filters ) {
+			foreach ( $filters as $filter_data ) {
+				$has_filter = has_filter( $hook, $filter_data['callback'] );
+
+				if ( false !== $has_filter && $filter_data['priority'] === $has_filter ) {
+					remove_filter( $hook, $filter_data['callback'], $filter_data['priority'] );
+					if ( ! isset( $filters_removed[ $hook ] ) ) {
+						$filters_removed[ $hook ] = array();
+					}
+					$filters_removed[ $hook ][] = $filter_data;
+
+				}
+			}
 		}
-		return $raw_value;
 
+		return $filters_removed;
+
+	}
+
+	/**
+	 * Re-add filters previously removed
+	 *
+	 * @since [version]
+	 *
+	 * @param array $filters_removed Array of filters removed to be re-added.
+	 * @return void
+	 */
+	protected function maybe_add_removed_filters_for_response( $filters_removed ) {
+
+		if ( ! empty( $filters_removed ) ) {
+			foreach ( $filters_removed as $hook => $filters ) {
+				foreach ( $filters as $filter_data ) {
+					add_filter(
+						$hook,
+						$filter_data['callback'],
+						$filter_data['priority'],
+						isset( $filter_data['accepted_args'] ) ? $filter_data['accepted_args'] : 1
+					);
+				}
+			}
+		}
 	}
 
 	/**

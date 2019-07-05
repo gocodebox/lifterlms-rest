@@ -401,7 +401,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param LLMS_Post_Model $course  Course object.
+	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
@@ -450,7 +450,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$data['video_embed'] = $course->get( 'video_embed' );
 
 		// Capacity.
-		$data['capacity_enabled'] = 'yes' === $this->get( 'enable_capacity' );
+		$data['capacity_enabled'] = 'yes' === $course->get( 'enable_capacity' );
 		$data['capacity_limit']   = $course->get( 'capacity' );
 		$data['capacity_message'] = array(
 			'raw'      => $course->get( 'capacity_message', $raw = true ),
@@ -464,6 +464,76 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		return $data;
+	}
+
+	/**
+	 * Get action/filters to be removed before preparing the item for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Course $course Course object.
+	 * @return array Array of action/filters to be removed for response.
+	 */
+	protected function get_filters_to_be_removed_for_response( $course ) {
+
+		if ( ! llms_blocks_is_post_migrated( $course->get( 'id' ) ) ) {
+			return array();
+		}
+
+		return array(
+			// hook => [callback, priority].
+			'lifterlms_single_course_after_summary' => array(
+				// Course Information.
+				array(
+					'callback' => 'lifterlms_template_single_meta_wrapper_start',
+					'priority' => 5,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_length',
+					'priority' => 10,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_difficulty',
+					'priority' => 20,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_course_tracks',
+					'priority' => 25,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_course_categories',
+					'priority' => 30,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_course_tags',
+					'priority' => 35,
+				),
+				array(
+					'callback' => 'lifterlms_template_single_meta_wrapper_end',
+					'priority' => 50,
+				),
+				// Course Progress.
+				array(
+					'callback' => 'lifterlms_template_single_course_progress',
+					'priority' => 60,
+				),
+				// Course Syllabus.
+				array(
+					'callback' => 'lifterlms_template_single_syllabus',
+					'priority' => 90,
+				),
+				// Instructors.
+				array(
+					'callback' => 'lifterlms_template_course_author',
+					'priority' => 40,
+				),
+				// Pricing Table.
+				array(
+					'callback' => 'lifterlms_template_pricing_table',
+					'priority' => 60,
+				),
+			),
+		);
 	}
 
 }
