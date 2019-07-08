@@ -365,9 +365,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			),
 			'sales_page_page_id'        => array(
 				'description' => __(
-					'The WordPress page ID of the sales page.
-					Required when sales_page_type equals page.
-					Only returned when the sales_page_type equals page.',
+					'The WordPress page ID of the sales page. Required when sales_page_type equals page. Only returned when the sales_page_type equals page.',
 					'lifterlms'
 				),
 				'type'        => 'integer',
@@ -377,12 +375,18 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				),
 			),
 			'sales_page_page_type'      => array(
-				'description' => __( 'Determines the type of sales page content to display.<br> - <code>none</code> displays the course content.<br> - <code>content</code> displays alternate content from the <code>excerpt</code> property.<br> - <code>page</code> redirects to the WordPress page defined in <code>content_page_id</code>.<br> - <code>url</code> redirects to the URL defined in <code>content_page_url</code>', 'lifterlms' ),
+				'description' => __(
+					'Determines the type of sales page content to display.<br> - <code>none</code> displays the course content.<br> - <code>content</code> displays alternate content from the <code>excerpt</code> property.<br> - <code>page</code> redirects to the WordPress page defined in <code>content_page_id</code>.<br> - <code>url</code> redirects to the URL defined in <code>content_page_url</code>',
+					'lifterlms'
+				),
 				'enum'        => array_keys( llms_get_sales_page_types() ),
 				'context'     => array( 'view', 'edit' ),
 			),
 			'sales_page_page_url'       => array(
-				'description' => __( 'The URL of the sales page content.Required when <code>content_type</code> equals <code>url</code>.Only returned when the <code>content_type</code> equals <code>url</code>.', 'lifterlms' ),
+				'description' => __(
+					'The URL of the sales page content. Required when <code>content_type</code> equals <code>url</code>. Only returned when the <code>content_type</code> equals <code>url</code>.',
+					'lifterlms'
+				),
 				'type'        => 'string',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
@@ -409,7 +413,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$data = parent::prepare_object_for_response( $course, $request );
 
-		// Add specific fields.
+		// Catalog visibility.
 		$data['catalog_visibility'] = $course->get_product()->get_catalog_visibility();
 
 		// Categories.
@@ -469,6 +473,22 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'raw'      => $course->get( 'length', $raw = true ),
 			'rendered' => $course->get( 'length' ),
 		);
+
+		// Restricted message.
+		$data['restricted_message'] = array(
+			'raw'      => $course->get( 'content_restricted_message', $raw = true ),
+			'rendered' => $course->get( 'content_restricted_message' ),
+		);
+
+		// Sales page page type.
+		$data['sales_page_page_type'] = $course->get( 'sales_page_content_type' );
+
+		// Sales page id.
+		if ( 'page' === $data['sales_page_page_type'] ) {
+			$data['sales_page_page_id'] = $course->get( 'sales_page_content_page_id' );
+		} elseif ( 'url' === $data['sales_page_page_type'] ) { // Sales page url
+			$data['sales_page_page_url'] = $course->get( 'sales_page_content_url' );
+		}
 
 		return $data;
 	}

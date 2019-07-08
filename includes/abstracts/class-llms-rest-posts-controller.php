@@ -637,7 +637,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$response = rest_ensure_response( $data );
 
 		$links = $this->prepare_links( $object );
-		error_log( print_r( $links, true ) );
 		$response->add_links( $links );
 
 		return $response;
