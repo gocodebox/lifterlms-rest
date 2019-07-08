@@ -15,7 +15,6 @@ allOf:
       post_type:
         allOf:
           - $ref: '#/components/schemas/PostType'
-
           - readOnly: true
       status:
         $ref: '#/components/schemas/PostStatus'
