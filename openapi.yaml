@@ -947,8 +947,10 @@ paths:
           description: Filter sections by the parent post (section) ID.
           in: query
           required: false
-          schemas:
-            type: string
+          schema:
+            type: integer
+            minimum: 1
+            example: 789
       responses:
         '200':
           description: Successfully returned a list of lessons.
@@ -1277,8 +1279,10 @@ paths:
           description: Filter sections by the parent post (course) ID.
           in: query
           required: false
-          schemas:
-            type: string
+          schema:
+            type: integer
+            minimum: 1
+            example: 1234
       responses:
         '200':
           description: Successfully returned a list of sections.
@@ -2120,9 +2124,13 @@ components:
             categories:
               description: List of course categories.
               type: array
+              items:
+                type: integer
             tags:
               description: List of course tags.
               type: array
+              items:
+                type: integer
             difficulties:
               description: List of course difficulties.
               type: array
@@ -2886,9 +2894,13 @@ components:
             categories:
               description: List of membership categories.
               type: array
+              items:
+                type: integer
             tags:
               description: List of membership tags.
               type: array
+              items:
+                type: integer
             restriction_action:
               description: |
                 Determines the action to take when content restricted by the membership is accessed by a non-member.<br>
@@ -3263,7 +3275,6 @@ components:
               type: integer
               nullable: true
               minimum: 1
-              default: null
               example: 789
         _links:
           readOnly: true

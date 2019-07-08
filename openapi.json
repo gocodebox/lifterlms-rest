@@ -1457,8 +1457,10 @@
             "description": "Filter sections by the parent post (section) ID.",
             "in": "query",
             "required": false,
-            "schemas": {
-              "type": "string"
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 789
             }
           }
         ],
@@ -1998,8 +2000,10 @@
             "description": "Filter sections by the parent post (course) ID.",
             "in": "query",
             "required": false,
-            "schemas": {
-              "type": "string"
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1234
             }
           }
         ],
@@ -3284,11 +3288,17 @@
               },
               "categories": {
                 "description": "List of course categories.",
-                "type": "array"
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
               },
               "tags": {
                 "description": "List of course tags.",
-                "type": "array"
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
               },
               "difficulties": {
                 "description": "List of course difficulties.",
@@ -4391,11 +4401,17 @@
               },
               "categories": {
                 "description": "List of membership categories.",
-                "type": "array"
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
               },
               "tags": {
                 "description": "List of membership tags.",
-                "type": "array"
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
               },
               "restriction_action": {
                 "description": "Determines the action to take when content restricted by the membership is accessed by a non-member.<br>\n`none`: Remain on page and display the message `restriction_message`.\n`membership`: Redirect to the membership's permalink.\n`page`: Redirect to the permalink of the page identified by `restriction_page_id`.\n`custom`: Redirct to the URL identified by `restriction_url`.\n",
@@ -4922,7 +4938,6 @@
                 "type": "integer",
                 "nullable": true,
                 "minimum": 1,
-                "default": null,
                 "example": 789
               }
             }
