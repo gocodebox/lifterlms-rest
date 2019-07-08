@@ -451,11 +451,18 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Capacity.
 		$data['capacity_enabled'] = 'yes' === $course->get( 'enable_capacity' );
+
 		$data['capacity_limit']   = $course->get( 'capacity' );
 		$data['capacity_message'] = array(
 			'raw'      => $course->get( 'capacity_message', $raw = true ),
 			'rendered' => $course->get( 'capacity_message' ),
 		);
+
+		// Prerequisite.
+		$data['prerequisite'] = (int) $course->get_prerequisite_id();
+
+		// Prerequisite track.
+		$data['prerequisite_track'] = (int) $course->get_prerequisite_id( 'course_track' );
 
 		// Length.
 		$data['length'] = array(
@@ -534,6 +541,66 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				),
 			),
 		);
+	}
+
+	/**
+	 * Prepare links for the request.
+	 *
+	 * @param LLMS_Course $course  LLMS Course.
+	 * @return array Links for the given object.
+	 */
+	protected function prepare_links( $course ) {
+		$links     = parent::prepare_links( $course );
+		$course_id = $course->get( 'id' );
+
+		$course_links = array();
+
+		// Enrollments.
+		$course_links['enrollments'] = array(
+			'href' => add_query_arg(
+				'post',
+				$course_id,
+				rest_url( sprintf( '%s/%s', 'llms/v1', 'enrollments' ) )
+			),
+		);
+
+		// Instrcutors.
+		$course_links['instructors'] = array(
+			'href' => add_query_arg(
+				'post',
+				$course_id,
+				rest_url( sprintf( '%s/%s', 'llms/v1', 'instructors' ) )
+			),
+		);
+
+		// Prerequisite.
+		$prerequisite = $course->get_prerequisite_id();
+		if ( ! empty( $prerequisite ) ) {
+			$course_links['prerequisites'][] = array(
+				'type' => $this->post_type,
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $prerequisite ) ),
+			);
+		}
+
+		// Prerequisite track.
+		$prerequisite_track = $course->get_prerequisite_id( 'course_track' );
+		if ( ! empty( $prerequisite_track ) ) {
+			$course_links['prerequisites'][] = array(
+				'type' => 'track',
+				'href' => rest_url( sprintf( 'wp/v2/%s/%d', 'course_track', $prerequisite_track ) ),
+			);
+		}
+
+		// Students.
+		$course_links['students'] = array(
+			'href' => add_query_arg(
+				'enrolled_in',
+				$course_id,
+				rest_url( sprintf( '%s/%s', 'llms/v1', 'students' ) )
+			),
+		);
+
+		return array_merge( $links, $course_links );
 	}
 
 }
