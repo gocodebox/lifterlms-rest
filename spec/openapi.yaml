@@ -106,6 +106,7 @@ x-tagGroups:
     tags:
       - Courses
       - Sections
+      - Lessons
 
   - name: Enrollments
     tags:
