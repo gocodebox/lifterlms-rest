@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "LifterLMS REST API",
-    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n# Authentication\nLorem ipsum...\n<!-- ReDoc-Inject: <security-definitions> -->",
+    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-CONSUMER-KEY` and `X-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF\n```",
     "x-logo": {
       "altText": "LifterLMS",
       "url": "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png",
@@ -17,7 +17,7 @@
   ],
   "security": [
     {
-      "BasicAuth": []
+      "Basic-Authentication": []
     }
   ],
   "tags": [
@@ -34,12 +34,55 @@
       "description": "Enrollments are used to track a student's access to content on your website.\n\nThe enrollments API allows you to create, view, update, and delete student enrollments.\n"
     },
     {
+      "name": "Memberships",
+      "description": "The memberships API allows you to create, view, update, and delete memberships.\n"
+    },
+    {
       "name": "Instructors",
       "description": "Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.\n\nThe instructors API allows you to create, view, update, and delete student accounts.\n"
     },
     {
+      "name": "Sections",
+      "description": "The sections API allows you to create, view, update, and delete sections.\n\nSections are used within courses to organize content (lessons) into groups.\n"
+    },
+    {
       "name": "Students",
       "description": "Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the \"student\" role).\n\nThe students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.\n"
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "Courses",
+      "tags": [
+        "Courses",
+        "Sections",
+        "Lessons"
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "tags": [
+        "Enrollments"
+      ]
+    },
+    {
+      "name": "Memberships",
+      "tags": [
+        "Memberships"
+      ]
+    },
+    {
+      "name": "E-Commerce",
+      "tags": [
+        "Access Plans"
+      ]
+    },
+    {
+      "name": "Users",
+      "tags": [
+        "Students",
+        "Instructors"
+      ]
     }
   ],
   "paths": {
@@ -134,7 +177,13 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -G\n"
+          }
+        ]
       },
       "post": {
         "summary": "Create an access plan",
@@ -147,7 +196,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AccessPlanRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AccessPlanRequest"
+                  },
+                  {
+                    "required": [
+                      "title",
+                      "price",
+                      "product_id"
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -172,7 +232,13 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -d price=199.97 \\\n  -d title=\"Lifetime Access\"\n  -d product_id=123\n"
+          }
+        ]
       }
     },
     "/access-plans/{id}": {
@@ -224,7 +290,13 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -G\n"
+          }
+        ]
       },
       "post": {
         "summary": "Update an access plan",
@@ -265,7 +337,13 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -d price=25.00\n"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete an access plan",
@@ -289,7 +367,13 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -X DELETE\n"
+          }
+        ]
       }
     },
     "/courses": {
@@ -387,7 +471,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CourseRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CourseRequest"
+                  },
+                  {
+                    "required": [
+                      "title",
+                      "content"
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -532,6 +626,114 @@
         "responses": {
           "204": {
             "description": "Successfully deleted the course."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/courses/{id}/content": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique course Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List course content",
+        "description": "Retrieve a collection of an existing course's content.",
+        "tags": [
+          "Courses"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "order",
+                "id",
+                "title"
+              ],
+              "default": "order"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/PostPassword"
+          },
+          {
+            "name": "parent",
+            "description": "Filter results to those belonging to the specified parent.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 987
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the course outline.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/courses/1234/content/?page=1>; rel=\"first\", </wp-json/llms/v1/courses/1234/content/?page=2>; rel=\"prev\", </wp-json/llms/v1/courses/1234/content/?page=4>; rel=\"next\", </wp-json/llms/v1/courses/1234/content/?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SectionResponse"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/Error400"
@@ -941,7 +1143,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Instructor"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Instructor"
+                  },
+                  {
+                    "required": [
+                      "email"
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -1173,7 +1384,14 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Course"
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/CourseResponse"
+                      },
+                      {
+                        "$ref": "#/components/schemas/MembershipResponse"
+                      }
+                    ]
                   }
                 }
               }
@@ -1187,6 +1405,898 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/lesson": {
+      "get": {
+        "summary": "List lessons",
+        "description": "Retrieve a list of lessons.",
+        "tags": [
+          "Lessons"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "title",
+                "date_created",
+                "date_updated",
+                "menu_order"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "parent",
+            "description": "Filter sections by the parent post (section) ID.",
+            "in": "query",
+            "required": false,
+            "schemas": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of lessons.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/lessons?page=1>; rel=\"first\", </wp-json/llms/v1/lessons?page=2>; rel=\"prev\", </wp-json/llms/v1/lessons?page=4>; rel=\"next\", </wp-json/llms/v1/lessons?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LessonResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a lesson",
+        "description": "Create a new lesson object.",
+        "tags": [
+          "Lessons"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LessonRequest"
+                  },
+                  {
+                    "required": [
+                      "title",
+                      "content"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the lesson.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/lesson/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique lesson Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a lesson",
+        "description": "Retrieve the details of an existing lesson.",
+        "tags": [
+          "Lessons"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/PostPassword"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the lesson.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a lesson",
+        "description": "Update the specified lesson by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Lessons"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the lesson.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a lesson",
+        "description": "Delete an existing lesson.",
+        "tags": [
+          "Lessons"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "force": {
+                    "description": "Bypass the trash and force lesson deletion.",
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the lesson."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/memberships": {
+      "get": {
+        "summary": "List memberships",
+        "description": "Retrieve a list of memberships.",
+        "tags": [
+          "Memberships"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "title",
+                "date_created",
+                "date_updated",
+                "menu_order"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of memberships.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/memberships?page=1>; rel=\"first\", </wp-json/llms/v1/memberships?page=2>; rel=\"prev\", </wp-json/llms/v1/memberships?page=4>; rel=\"next\", </wp-json/llms/v1/memberships?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MembershipResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a membership",
+        "description": "Create a new membership object.",
+        "tags": [
+          "Memberships"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MembershipRequest"
+                  },
+                  {
+                    "required": [
+                      "title",
+                      "content"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/memberships/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique membership Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a membership",
+        "description": "Retrieve the details of an existing membership.",
+        "tags": [
+          "Memberships"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/PostPassword"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a membership",
+        "description": "Update the specified membership by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Memberships"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MembershipRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a membership",
+        "description": "Delete an existing membership.",
+        "tags": [
+          "Memberships"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "force": {
+                    "description": "Bypass the trash and force membership deletion.",
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the membership."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/sections": {
+      "get": {
+        "summary": "List sections",
+        "description": "Retrieve a list of sections.",
+        "tags": [
+          "Sections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "title",
+                "date_created",
+                "date_updated",
+                "menu_order"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "parent",
+            "description": "Filter sections by the parent post (course) ID.",
+            "in": "query",
+            "required": false,
+            "schemas": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of sections.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/sections?page=1>; rel=\"first\", </wp-json/llms/v1/sections?page=2>; rel=\"prev\", </wp-json/llms/v1/sections?page=4>; rel=\"next\", </wp-json/llms/v1/sections?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SectionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a section",
+        "description": "Create a new section object.",
+        "tags": [
+          "Sections"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the section.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/sections/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique Section Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a section",
+        "description": "Retrieve the details of an existing section.",
+        "tags": [
+          "Sections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the section.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a section",
+        "description": "Update the specified section by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Sections"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the section.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a section",
+        "description": "Delete an existing section.",
+        "tags": [
+          "Sections"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the section."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/sections/{id}/content": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique section Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List section content",
+        "description": "Retrieve a collection of an existing section's content.",
+        "tags": [
+          "Sections"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "order",
+                "id",
+                "title"
+              ],
+              "default": "order"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "name": "parent",
+            "description": "Filter results to those belonging to the specified parent.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 987
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the section contents.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/sections/1234/content/?page=1>; rel=\"first\", </wp-json/llms/v1/sections/1234/content/?page=2>; rel=\"prev\", </wp-json/llms/v1/sections/1234/content/?page=4>; rel=\"next\", </wp-json/llms/v1/sections/1234/content/?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LessonResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -1304,7 +2414,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Student"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Student"
+                  },
+                  {
+                    "required": [
+                      "email"
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -1539,7 +2658,14 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Course"
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/CourseResponse"
+                      },
+                      {
+                        "$ref": "#/components/schemas/MembershipResponse"
+                      }
+                    ]
                   }
                 }
               }
@@ -1556,6 +2682,218 @@
           }
         }
       }
+    },
+    "/students/{id}/progress": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "Unique student Identifer. The WordPress User `ID`.",
+          "example": 123,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List student progress",
+        "description": "Retrieves a list of a student's progress records.",
+        "tags": [
+          "Students"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date_updated",
+                "date_created",
+                "progress"
+              ],
+              "default": "date_updated"
+            }
+          },
+          {
+            "name": "status",
+            "description": "Filter results to records matching the specified status.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "incomplete",
+                "complete"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of a student's progress records.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/students/123/progress?page=1>; rel=\"first\", </wp-json/llms/v1/students/123/progress?page=2>; rel=\"prev\", </wp-json/llms/v1/students/123/progress?page=4>; rel=\"next\", </wp-json/llms/v1/students/123/progress?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Progress"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/students/{id}/progress/{post_id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "Unique student Identifer. The WordPress User `ID`.",
+          "example": 123,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        },
+        {
+          "name": "post_id",
+          "description": "Unique course, lesson, or section Identifer. The WordPress Post `ID`.",
+          "example": 456,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get student progress",
+        "description": "Retrieves information about a student's progress through course content.",
+        "tags": [
+          "Students"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved student's progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Progress"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update student progress",
+        "description": "Update the status of a student's progress through course content.",
+        "tags": [
+          "Students"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Progress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved student's progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Progress"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete student progress",
+        "description": "Deletes the record of a student's progress through course content.",
+        "tags": [
+          "Students"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the student."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1564,11 +2902,6 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "title",
-              "price",
-              "product_id"
-            ],
             "properties": {
               "id": {
                 "readOnly": true,
@@ -1741,6 +3074,16 @@
                 "description": "Use this plans's redirect settings when purchasing a Membership this plan is restricted to.<br> Applicable only when `availability_restrictions` exist for the plan.",
                 "type": "boolean",
                 "default": false
+              },
+              "visibility": {
+                "description": "Access plan visibility.",
+                "type": "string",
+                "enum": [
+                  "visible",
+                  "hidden",
+                  "featured"
+                ],
+                "default": "visible"
               }
             }
           },
@@ -1750,9 +3093,6 @@
         ]
       },
       "AccessPlanRequest": {
-        "required": [
-          "price"
-        ],
         "allOf": [
           {
             "$ref": "#/components/schemas/AccessPlan"
@@ -1940,40 +3280,15 @@
               },
               "catalog_visibility": {
                 "description": "Visibility of the course in catalogs and search results.",
-                "type": "string",
-                "enum": [
-                  "catalog_search",
-                  "catalog",
-                  "search",
-                  "hidden"
-                ],
-                "default": "catalog_search"
+                "type": "string"
               },
               "categories": {
                 "description": "List of course categories.",
-                "type": "array",
-                "default": [],
-                "example": [
-                  1,
-                  2,
-                  3
-                ],
-                "items": {
-                  "type": "integer"
-                }
+                "type": "array"
               },
               "tags": {
                 "description": "List of course tags.",
-                "type": "array",
-                "default": [],
-                "example": [
-                  4,
-                  5,
-                  6
-                ],
-                "items": {
-                  "type": "integer"
-                }
+                "type": "array"
               },
               "difficulties": {
                 "description": "List of course difficulties.",
@@ -1998,19 +3313,6 @@
                   "type": "integer"
                 }
               },
-              "instructors": {
-                "description": "List of course instructors. Defaults to current user when creating a new course.",
-                "type": "array",
-                "default": [],
-                "example": [
-                  1,
-                  2,
-                  3
-                ],
-                "items": {
-                  "type": "integer"
-                }
-              },
               "audio_embed": {
                 "description": "URL to an oEmbed enable audio URL.",
                 "type": "string",
@@ -2021,7 +3323,7 @@
                 "type": "string",
                 "example": "https://www.youtube.com/watch?v=videoid"
               },
-              "capacaity_enabled": {
+              "capacity_enabled": {
                 "description": "Determines if an enrollment capacity limit is enabled.",
                 "type": "boolean",
                 "default": false
@@ -2062,170 +3364,15 @@
                 "type": "string",
                 "example": "2019-10-01 23:59:59"
               },
-              "sales_page_type": {
-                "description": "Defines alternate content displayed to visitors and non-enrolled students when accessing the course.<br> - `none` displays the course content.<br> - `content` displays alternate content from the `excerpt` property.<br> - `page` redirects to the WordPress page defined in `content_page_id`.<br> - `url` redirects to the URL defined in `content_page_url`.",
-                "type": "string",
-                "enum": [
-                  "none",
-                  "content",
-                  "page",
-                  "url"
-                ],
-                "default": "none"
-              },
-              "sales_page_page_id": {
-                "description": "The WordPress page ID of the sales page.<br> Required when `sales_page_type` equals `page`.<br> Only returned when the `sales_page_type` equals `page`.",
-                "type": "integer",
-                "example": 543
-              },
-              "sales_page_url": {
-                "description": "The URL of the sales page content.<br> Required when `sales_page_type` equals `url`.<br> Only returned when the `sales_page_type` equals `url`.",
-                "type": "string",
-                "example": "https://example.tld/custom-sales-page"
-              },
-              "_links": {
-                "type": "object",
-                "readOnly": true,
-                "properties": {
-                  "self": {
-                    "description": "REST URI to the course.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/courses/1234"
-                        }
-                      }
-                    }
-                  },
-                  "collection": {
-                    "description": "REST URI to the course collection.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/courses"
-                        }
-                      }
-                    }
-                  },
-                  "enrollments": {
-                    "description": "REST URI to the collection of the courses's enrollments.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/enrollments?post=1234"
-                        }
-                      }
-                    }
-                  },
-                  "instructors": {
-                    "description": "REST URI to the collection of the course's instructors.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/instructors?post=1234"
-                        }
-                      }
-                    }
-                  },
-                  "prerequisites": {
-                    "description": "REST URIs to course prerequisite resources.",
-                    "type": "array",
-                    "example": [
-                      {
-                        "type": "course",
-                        "href": "/wp-json/llms/v1/courses/456"
-                      },
-                      {
-                        "type": "track",
-                        "href": "/wp-json/wp/v2/course_track/789"
-                      }
-                    ],
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string"
-                        },
-                        "href": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "students": {
-                    "description": "REST URI to the collection of the course's enrolled students.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/students?enrolled_in=1234"
-                        }
-                      }
-                    }
-                  },
-                  "wp:featured_media": {
-                    "description": "REST URI to the WordPress attachement image.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/wp/v2/media/987"
-                        }
-                      }
-                    }
-                  },
-                  "wp:term": {
-                    "description": "Collection of REST URIs to the course's taxonomy term information.",
-                    "type": "array",
-                    "example": [
-                      {
-                        "taxonomy": "course_cat",
-                        "href": "/wp-json/wp-v2/course_cat?post=123"
-                      },
-                      {
-                        "taxonomy": "course_tag",
-                        "href": "/wp-json/wp-v2/course_tag?post=123"
-                      },
-                      {
-                        "taxonomy": "course_difficulty",
-                        "href": "/wp-json/wp-v2/course_difficulty?post=123"
-                      },
-                      {
-                        "taxonomy": "course_track",
-                        "href": "/wp-json/wp-v2/course_track?post=123"
-                      }
-                    ],
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "taxonomy": {
-                          "type": "string"
-                        },
-                        "href": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
+              "video_tile": {
+                "description": "When `true` the `video_embed` will be used on the course tiles (on the catalog, for example) instead of the featured image.",
+                "type": "boolean",
+                "default": false
               }
             }
+          },
+          {
+            "$ref": "#/components/schemas/SharedCourseMembership"
           }
         ]
       },
@@ -2403,6 +3550,180 @@
           },
           {
             "$ref": "#/components/schemas/Course"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the course.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/1234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the course collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses"
+                        }
+                      }
+                    }
+                  },
+                  "access_plans": {
+                    "description": "REST URI to the collection of access plans for the course.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/access-plans?product_id=1234"
+                        }
+                      }
+                    }
+                  },
+                  "content": {
+                    "description": "REST URI to the course's content collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/1234/content"
+                        }
+                      }
+                    }
+                  },
+                  "enrollments": {
+                    "description": "REST URI to the collection of the courses's enrollments.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/enrollments?post=1234"
+                        }
+                      }
+                    }
+                  },
+                  "instructors": {
+                    "description": "REST URI to the collection of the course's instructors.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/instructors?post=1234"
+                        }
+                      }
+                    }
+                  },
+                  "prerequisites": {
+                    "description": "REST URIs to course prerequisite resources.",
+                    "type": "array",
+                    "example": [
+                      {
+                        "type": "course",
+                        "href": "/wp-json/llms/v1/courses/456"
+                      },
+                      {
+                        "type": "track",
+                        "href": "/wp-json/wp/v2/course_track/789"
+                      }
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "students": {
+                    "description": "REST URI to the collection of the course's enrolled students.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/students?enrolled_in=1234"
+                        }
+                      }
+                    }
+                  },
+                  "wp:featured_media": {
+                    "description": "REST URI to the WordPress attachement image.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/wp/v2/media/987"
+                        }
+                      }
+                    }
+                  },
+                  "wp:term": {
+                    "description": "Collection of REST URIs to the course's taxonomy term information.",
+                    "type": "array",
+                    "example": [
+                      {
+                        "taxonomy": "course_cat",
+                        "href": "/wp-json/wp-v2/course_cat?post=123"
+                      },
+                      {
+                        "taxonomy": "course_tag",
+                        "href": "/wp-json/wp-v2/course_tag?post=123"
+                      },
+                      {
+                        "taxonomy": "course_difficulty",
+                        "href": "/wp-json/wp-v2/course_difficulty?post=123"
+                      },
+                      {
+                        "taxonomy": "course_track",
+                        "href": "/wp-json/wp-v2/course_track?post=123"
+                      }
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxonomy": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -2660,7 +3981,8 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "Unique Instructor Identifer. The WordPress User `ID`."
+                "description": "Unique Instructor Identifer. The WordPress User `ID`.",
+                "readOnly": true
               }
             }
           },
@@ -2671,6 +3993,7 @@
             "type": "object",
             "properties": {
               "role": {
+                "description": "The user's WordPress user role.",
                 "type": "string",
                 "enum": [
                   "lms_manager",
@@ -2718,6 +4041,593 @@
                         "href": {
                           "type": "string",
                           "example": "/wp-json/llms/v1/instructors/1234/contents"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Lesson": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Unique lesson identifier. The WordPress Post `ID`.",
+                "readOnly": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/PostPublic"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "readOnly": true,
+                "example": 789
+              },
+              "permalink": {
+                "example": "https://example.com/lesson/getting-started-with-lifterlms"
+              },
+              "post_type": {
+                "default": "lesson",
+                "type": "string"
+              },
+              "audio_embed": {
+                "description": "URL to an oEmbed enable audio URL.",
+                "type": "string",
+                "example": "https://open.spotify.com/track/trackid"
+              },
+              "video_embed": {
+                "description": "URL to an oEmbed enable video URL.",
+                "type": "string",
+                "example": "https://www.youtube.com/watch?v=videoid"
+              },
+              "prerequisite": {
+                "description": "Lesson ID of the prerequisite lesson.",
+                "type": "integer",
+                "example": 321
+              },
+              "public": {
+                "description": "Denotes a lesson that's publicly accessible regardless of course enrollment.",
+                "type": "boolean",
+                "default": false
+              },
+              "course_id": {
+                "description": "WordPress post ID of the lesson's parent course.",
+                "type": "integer",
+                "minimum": 1,
+                "example": 1234,
+                "readOnly": true
+              },
+              "parent_id": {
+                "description": "WordPress post ID of the parent item.<br> Must be a Section ID. `0` indicates an \"orphaned\" lesson which can be edited and viewed by instructors and admins but cannot be read by students.",
+                "type": "integer",
+                "minimum": 0,
+                "example": 987
+              },
+              "points": {
+                "description": "Determines the weight of the lesson when grading the course.",
+                "type": "integer",
+                "minimum": 0,
+                "default": 1
+              },
+              "order": {
+                "description": "Order of the lesson within its immediate parent.",
+                "type": "integer",
+                "default": 1,
+                "minimum": 1
+              },
+              "drip_method": {
+                "description": "Determine the method with which to make the lesson content available.\n\n- `none`: Drip is disabled; the lesson is immediately available.\n- `date`: Lesson is made available at a specific date and time.\n- `enrollment`: Lesson is made available a specific number of days after enrollment into the course.\n- `start`: Lesson is made available a specific number of days after the course's start date. Only available on courses with a `access_opens_date`.\n- `prerequisite`: Lesson is made available a specific number of days after the `prerequisite` lesson is completed.\n",
+                "type": "string",
+                "enum": [
+                  "none",
+                  "date",
+                  "enrollment",
+                  "start",
+                  "prerequisite"
+                ],
+                "default": "none"
+              },
+              "drip_days": {
+                "description": "Number of days to wait before allowing access to the lesson. Applicable only when `drip_method` is `enrollment`, `start`, or `prerequisite`.",
+                "type": "integer",
+                "minimum": 1,
+                "default": 1
+              },
+              "drip_date": {
+                "description": "The date and time when the lesson becomes available. Applicable only when `drip_method` is `date`. Format: `Y-m-d H:i:s`.",
+                "type": "string",
+                "nullable": true,
+                "example": "2019-12-12 23:23:59"
+              },
+              "quiz": {
+                "description": "Associate a quiz with this lesson.",
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "description": "Determines if a quiz is enabled for the lesson.",
+                    "type": "boolean",
+                    "default": false,
+                    "example": true
+                  },
+                  "id": {
+                    "description": "The post ID of the associated quiz.",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0,
+                    "example": 432
+                  },
+                  "progression": {
+                    "description": "Determines lesson progression requirements related to the quiz.\n\n- `complete`: The quiz must be completed (with any grade) to progress the lesson.\n- `pass`: A passing grade must be earned to progress the lesson.\n",
+                    "type": "string",
+                    "enum": [
+                      "complete",
+                      "pass"
+                    ],
+                    "default": "complete"
+                  }
+                }
+              },
+              "assignment": {
+                "description": "Associate an assignment with this lesson.\n\n_While assignment functionality is included with the LifterLMS Core REST API, the assignments themselves are implemented by the LifterLMS Assignments add-on._\n",
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "description": "Determines if an assignment is enabled for the lesson.",
+                    "type": "boolean",
+                    "default": false,
+                    "example": true
+                  },
+                  "id": {
+                    "description": "The post ID of the associated assingment.",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0,
+                    "example": 876
+                  },
+                  "progression": {
+                    "description": "Determines lesson progression requirements related to the assignment.\n\n- `complete`: The assignment must be completed (with any grade) to progress the lesson.\n- `pass`: A passing grade must be earned to progress the lesson.\n",
+                    "type": "string",
+                    "enum": [
+                      "complete",
+                      "pass"
+                    ],
+                    "default": "complete"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "LessonRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentRequest"
+          },
+          {
+            "$ref": "#/components/schemas/Lesson"
+          }
+        ]
+      },
+      "LessonResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentResponse"
+          },
+          {
+            "$ref": "#/components/schemas/Lesson"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the lesson.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/lessons/1234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the lesson collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/lessons"
+                        }
+                      }
+                    }
+                  },
+                  "assignment": {
+                    "description": "REST URI to the lesson's assignment.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/assignments/876"
+                        }
+                      }
+                    }
+                  },
+                  "course": {
+                    "description": "REST URI to the lesson's parent course.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/1234"
+                        }
+                      }
+                    }
+                  },
+                  "prerequisite": {
+                    "description": "REST URIs to lesson prerequisite resources.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "lesson"
+                        },
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/lessons/321"
+                        }
+                      }
+                    }
+                  },
+                  "parent": {
+                    "description": "REST URI to the lessons's parent.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "course"
+                        },
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/sections/987"
+                        }
+                      }
+                    }
+                  },
+                  "quiz": {
+                    "description": "REST URI to the lesson's quiz.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/quizzes/432"
+                        }
+                      }
+                    }
+                  },
+                  "siblings": {
+                    "description": "REST URI to the collection of the lessons's siblings within its parent.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/lessons?parent=987"
+                        }
+                      }
+                    }
+                  },
+                  "wp:featured_media": {
+                    "description": "REST URI to the WordPress attachement image.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/wp/v2/media/987"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Membership": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "readOnly": true,
+                "description": "Unique membership identifier. The WordPress Post `ID`."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/PostPublic"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "permalink": {
+                "example": "https://example.com/membership/getting-started-with-lifterlms"
+              },
+              "post_type": {
+                "default": "membership",
+                "type": "string"
+              },
+              "categories": {
+                "description": "List of membership categories.",
+                "type": "array"
+              },
+              "tags": {
+                "description": "List of membership tags.",
+                "type": "array"
+              },
+              "restriction_action": {
+                "description": "Determines the action to take when content restricted by the membership is accessed by a non-member.<br>\n`none`: Remain on page and display the message `restriction_message`.\n`membership`: Redirect to the membership's permalink.\n`page`: Redirect to the permalink of the page identified by `restriction_page_id`.\n`custom`: Redirct to the URL identified by `restriction_url`.\n",
+                "type": "string",
+                "enum": [
+                  "none",
+                  "membership",
+                  "page",
+                  "custom"
+                ],
+                "default": "none"
+              },
+              "restriction_page_id": {
+                "description": "WordPress page ID used for redirecting non-members when `restriction_action` is `page`.",
+                "type": "integer",
+                "minimum": 1,
+                "example": 456
+              },
+              "restriction_url": {
+                "description": "URL used for redirecting non-members when `restriction_action` is `custom`.",
+                "type": "string",
+                "example": "https://example.tld/my-custom-url"
+              },
+              "auto_enroll": {
+                "description": "List of courses to automatically enroll students into when they're enrolled into the membership.",
+                "type": "array",
+                "default": [],
+                "example": [
+                  456,
+                  789
+                ],
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/SharedCourseMembership"
+          }
+        ]
+      },
+      "MembershipRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "restriction_message": {
+                "description": "Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.",
+                "type": "string",
+                "default": "You must belong to the [lifterlms_membership_link id=\"1234\"] membership to access this content."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Membership"
+          }
+        ]
+      },
+      "MembershipResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentResponse"
+          },
+          {
+            "$ref": "#/components/schemas/Membership"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "restriction_message": {
+                "description": "Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "description": "Rendered message content.",
+                    "type": "string",
+                    "default": "You must belong to the <a href=\"https//example.com/membership/gold\">Gold</a> membership to access this content."
+                  },
+                  "raw": {
+                    "description": "Raw message content.",
+                    "type": "string",
+                    "default": "You must belong to the [lifterlms_membership_link id=\"1234\"] membership to access this content."
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the membership.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/memberships/1234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the membership collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/memberships"
+                        }
+                      }
+                    }
+                  },
+                  "access_plans": {
+                    "description": "REST URI to the collection of access plans for the membership.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/access-plans?product_id=1234"
+                        }
+                      }
+                    }
+                  },
+                  "auto_enrollment_courses": {
+                    "description": "REST URI to the collection of automatic enrollment courses for the membership.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses?include=456,789"
+                        }
+                      }
+                    }
+                  },
+                  "enrollments": {
+                    "description": "REST URI to the collection of the memberships's enrollments.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/enrollments?post=1234"
+                        }
+                      }
+                    }
+                  },
+                  "instructors": {
+                    "description": "REST URI to the collection of the membership's instructors.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/instructors?post=1234"
+                        }
+                      }
+                    }
+                  },
+                  "students": {
+                    "description": "REST URI to the collection of the membership's enrolled students.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/students?enrolled_in=1234"
+                        }
+                      }
+                    }
+                  },
+                  "wp:featured_media": {
+                    "description": "REST URI to the WordPress attachement image.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/wp/v2/media/987"
+                        }
+                      }
+                    }
+                  },
+                  "wp:term": {
+                    "description": "Collection of REST URIs to the membership's taxonomy term information.",
+                    "type": "array",
+                    "example": [
+                      {
+                        "taxonomy": "membership_cat",
+                        "href": "/wp-json/wp-v2/membership_cat?post=123"
+                      },
+                      {
+                        "taxonomy": "membership_tag",
+                        "href": "/wp-json/wp-v2/membership_tag?post=123"
+                      },
+                      {
+                        "taxonomy": "membership_difficulty",
+                        "href": "/wp-json/wp-v2/membership_difficulty?post=123"
+                      },
+                      {
+                        "taxonomy": "membership_track",
+                        "href": "/wp-json/wp-v2/membership_track?post=123"
+                      }
+                    ],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "taxonomy": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "type": "string"
                         }
                       }
                     }
@@ -2778,24 +4688,20 @@
       "PostContentRequest": {
         "description": "Post content request fields.",
         "type": "object",
-        "required": [
-          "title",
-          "content"
-        ],
         "properties": {
           "title": {
             "type": "string",
-            "description": "Raw title. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+            "description": "Raw title.",
             "example": "Getting Started with LifterLMS"
           },
           "content": {
             "type": "string",
-            "description": "Raw post content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+            "description": "Raw post content.",
             "example": "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->"
           },
           "excerpt": {
             "type": "string",
-            "description": "Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+            "description": "Raw excerpt content.",
             "example": "Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus."
           }
         }
@@ -2805,6 +4711,7 @@
         "type": "object",
         "properties": {
           "title": {
+            "description": "Post title.",
             "type": "object",
             "properties": {
               "rendered": {
@@ -2820,6 +4727,7 @@
             }
           },
           "content": {
+            "description": "Post content.",
             "type": "object",
             "properties": {
               "rendered": {
@@ -2835,6 +4743,7 @@
             }
           },
           "excerpt": {
+            "description": "Post excerpt.",
             "type": "object",
             "properties": {
               "rendered": {
@@ -2935,9 +4844,148 @@
         "type": "string",
         "enum": [
           "course",
-          "llms_membership"
+          "llms_membership",
+          "section"
         ],
         "default": "course"
+      },
+      "Progress": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "student_id": {
+            "description": "The ID of the student.",
+            "type": "integer",
+            "minimum": 1,
+            "example": 123,
+            "readOnly": true
+          },
+          "post_id": {
+            "description": "The ID of the course, section, or lesson.",
+            "type": "integer",
+            "minimum": 1,
+            "example": 456,
+            "readOnly": true
+          },
+          "date_created": {
+            "description": "The progress creation date. Format: `Y-m-d H:i:s`",
+            "type": "string",
+            "example": "2019-05-21 14:22:05"
+          },
+          "date_updated": {
+            "description": "The date of the last progress update. Format: `Y-m-d H:i:s`",
+            "type": "string",
+            "example": "2019-05-21 19:22:05",
+            "readOnly": true
+          },
+          "progress": {
+            "description": "Student's progress as a percentage.",
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 0,
+            "example": 89.83,
+            "readOnly": true
+          },
+          "status": {
+            "description": "Student progress status.",
+            "type": "string",
+            "enum": [
+              "incomplete",
+              "complete"
+            ],
+            "default": "incomplete",
+            "example": "complete"
+          },
+          "trigger": {
+            "description": "Determines what triggered the progress event.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "description": "Describes the type of trigger which created the progress event.",
+                "type": "string",
+                "enum": [
+                  "lesson",
+                  "quiz",
+                  "assignment",
+                  "admin",
+                  "unspecified"
+                ],
+                "default": "unspecified",
+                "example": "lesson"
+              },
+              "related_id": {
+                "description": "A resource ID for the related post or user which triggered the progress event.",
+                "type": "integer",
+                "nullable": true,
+                "minimum": 1,
+                "default": null,
+                "example": 789
+              }
+            }
+          },
+          "_links": {
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "self": {
+                "description": "REST URI to the progress.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/students/123/progress/456"
+                    }
+                  }
+                }
+              },
+              "collection": {
+                "description": "REST URI to the collection of student progress records.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/students/123/progress"
+                    }
+                  }
+                }
+              },
+              "post": {
+                "description": "Rest URI to the post resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/courses/456"
+                    }
+                  }
+                }
+              },
+              "student": {
+                "description": "Rest URI to the student resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/students/123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "ResourceId": {
         "description": "Unique Resource Identifier.",
@@ -2946,13 +4994,283 @@
         "example": 123,
         "readOnly": true
       },
+      "Section": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "description": "Unique section identifier. The WordPress Post `ID`.",
+                "readOnly": true
+              },
+              {
+                "$ref": "#/components/schemas/ResourceId"
+              },
+              {
+                "example": 987
+              }
+            ]
+          },
+          "date_created": {
+            "description": "Creation date. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:22:05"
+          },
+          "date_created_gmt": {
+            "description": "Creation date (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:22:05"
+          },
+          "date_updated": {
+            "description": "Date last modified. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:25:05",
+            "readOnly": true
+          },
+          "date_updated_gmt": {
+            "description": "Date last modified (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:25:05",
+            "readOnly": true
+          },
+          "order": {
+            "description": "Order of the section within the course.",
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
+          "parent_id": {
+            "description": "WordPress post ID of the parent item.<br> Must be a Course ID.",
+            "type": "integer",
+            "minimum": 1,
+            "example": 1234
+          },
+          "post_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostType"
+              },
+              {
+                "type": "string",
+                "default": "section",
+                "readOnly": true
+              }
+            ]
+          }
+        }
+      },
+      "SectionRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "title",
+              "order",
+              "parent_id"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Raw title.",
+                "example": "Getting Started with LifterLMS"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Section"
+          }
+        ]
+      },
+      "SectionResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Section"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "description": "Section Title",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "description": "Rendered title.",
+                    "type": "string",
+                    "example": "Introduction"
+                  },
+                  "raw": {
+                    "description": "Raw title.",
+                    "type": "string",
+                    "example": "Introduction"
+                  }
+                }
+              },
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the section.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/sections/1234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the section collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/sections"
+                        }
+                      }
+                    }
+                  },
+                  "content": {
+                    "description": "REST URI to the section's child content.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/sections/1234/content?parent=987"
+                        }
+                      }
+                    }
+                  },
+                  "parent": {
+                    "description": "REST URI to the section's parent.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "course"
+                        },
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/1234"
+                        }
+                      }
+                    }
+                  },
+                  "siblings": {
+                    "description": "REST URI to the collection of the section's siblings within its parent.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/sections?parent=1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SharedCourseMembership": {
+        "description": "Properties shared by courses and memberships.",
+        "type": "object",
+        "properties": {
+          "catalog_visibility": {
+            "description": "Visibility of the post in catalogs and search results.",
+            "type": "string",
+            "enum": [
+              "catalog_search",
+              "catalog",
+              "search",
+              "hidden"
+            ],
+            "default": "catalog_search"
+          },
+          "categories": {
+            "description": "List of post categories.",
+            "type": "array",
+            "default": [],
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "tags": {
+            "description": "List of post tags.",
+            "type": "array",
+            "default": [],
+            "example": [
+              4,
+              5,
+              6
+            ],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "instructors": {
+            "description": "List of post instructors. Defaults to current user when creating a new post.",
+            "type": "array",
+            "default": [],
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "minItems": 1,
+            "items": {
+              "type": "integer"
+            }
+          },
+          "sales_page_type": {
+            "description": "Defines alternate content displayed to visitors and non-enrolled students when accessing the post.<br> - `none` displays the post content.<br> - `content` displays alternate content from the `excerpt` property.<br> - `page` redirects to the WordPress page defined in `content_page_id`.<br> - `url` redirects to the URL defined in `content_page_url`.",
+            "type": "string",
+            "enum": [
+              "none",
+              "content",
+              "page",
+              "url"
+            ],
+            "default": "none"
+          },
+          "sales_page_page_id": {
+            "description": "The WordPress page ID of the sales page.<br> Required when `sales_page_type` equals `page`.<br> Only returned when the `sales_page_type` equals `page`.",
+            "type": "integer",
+            "example": 543
+          },
+          "sales_page_url": {
+            "description": "The URL of the sales page content.<br> Required when `sales_page_type` equals `url`.<br> Only returned when the `sales_page_type` equals `url`.",
+            "type": "string",
+            "example": "https://example.tld/custom-sales-page"
+          }
+        }
+      },
       "Student": {
         "allOf": [
           {
             "type": "object",
             "properties": {
               "id": {
-                "description": "Unique Student Identifer. The WordPress User `ID`."
+                "description": "Unique Student Identifer. The WordPress User `ID`.",
+                "readOnly": true
               }
             }
           },
@@ -2963,6 +5281,7 @@
             "type": "object",
             "properties": {
               "role": {
+                "description": "The user's WordPress user role.",
                 "type": "string",
                 "enum": [
                   "student"
@@ -2982,7 +5301,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/students/1234"
+                          "example": "/wp-json/llms/v1/students/456"
                         }
                       }
                     }
@@ -3008,7 +5327,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/students/1234/contents"
+                          "example": "/wp-json/llms/v1/students/456/contents"
                         }
                       }
                     }
@@ -3021,7 +5340,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/enrollments?student=1234"
+                          "example": "/wp-json/llms/v1/enrollments?student=456"
                         }
                       }
                     }
@@ -3035,19 +5354,15 @@
       "User": {
         "description": "Reduced WordPress User object properties shared by LifterLMS custom user types",
         "type": "object",
-        "required": [
-          "id",
-          "email",
-          "username"
-        ],
         "properties": {
           "id": {
             "allOf": [
               {
-                "description": "Unique User Identifer. The WordPress User `ID`."
+                "$ref": "#/components/schemas/ResourceId"
               },
               {
-                "$ref": "#/components/schemas/ResourceId"
+                "description": "Unique User Identifer. The WordPress User `ID`.",
+                "example": 456
               }
             ]
           },
@@ -3066,10 +5381,6 @@
             "type": "string",
             "example": "my_l337-p@$5w0rd!",
             "writeOnly": true
-          },
-          "role": {
-            "description": "The user's WordPress user role.",
-            "type": "string"
           },
           "name": {
             "$ref": "#/components/schemas/UserName"
@@ -3096,6 +5407,128 @@
             "description": "The person's public display name.",
             "type": "string",
             "example": "Jamie Cook"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "description": "Unique webhook Identifier. The WordPress post `ID`."
+              },
+              {
+                "example": 654
+              },
+              {
+                "$ref": "#/components/schemas/ResourceId"
+              }
+            ]
+          },
+          "name": {
+            "description": "A friendly, human-readable name for the webhook.",
+            "type": "string",
+            "minimum": 1,
+            "example": 123
+          },
+          "status": {
+            "description": "The status of the webhook.\n\n+ `active`: Payload will be delivered\n+ `paused`: Delivery is disabled by an admin.\n+ `disabled`: Delivery is disabled because of delivery failure.\n",
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "disabled"
+            ],
+            "default": "active"
+          },
+          "topic": {
+            "description": "The Webhook topic."
+          },
+          "resource": {
+            "description": "The Webhook resource."
+          },
+          "date_created": {
+            "description": "Creation date. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:22:05",
+            "readOnly": true
+          },
+          "date_created_gmt": {
+            "description": "Creation date (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:22:05",
+            "readOnly": true
+          },
+          "date_updated": {
+            "description": "Date last modified. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:25:05",
+            "readOnly": true
+          },
+          "date_updated_gmt": {
+            "description": "Date last modified (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:25:05",
+            "readOnly": true
+          },
+          "_links": {
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "self": {
+                "description": "REST URI to the enrollment.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/enrollments/987"
+                    }
+                  }
+                }
+              },
+              "collection": {
+                "description": "REST URI to the enrollments collection.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/enrollments/"
+                    }
+                  }
+                }
+              },
+              "post": {
+                "description": "Rest URI to the post resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/courses/456"
+                    }
+                  }
+                }
+              },
+              "student": {
+                "description": "Rest URI to the student resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/students/123"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3261,7 +5694,7 @@
       }
     },
     "securitySchemes": {
-      "BasicAuth": {
+      "Basic-Authentication": {
         "type": "http",
         "scheme": "basic"
       }
