@@ -7,8 +7,9 @@ required:
 properties:
   id:
     allOf:
-      - description: Unique User Identifer. The WordPress User `ID`.
       - $ref: '#/components/schemas/ResourceId'
+      - description: Unique User Identifer. The WordPress User `ID`.
+        example: 456
   email:
     description: The user's email address.
     type: string
@@ -22,9 +23,6 @@ properties:
     type: string
     example: my_l337-p@$5w0rd!
     writeOnly: true
-  role:
-    description: The user's WordPress user role.
-    type: string
   name:
     $ref: '#/components/schemas/UserName'
   billing_address:

@@ -3,10 +3,12 @@ allOf:
     properties:
       id:
         description: Unique Instructor Identifer. The WordPress User `ID`.
+        readOnly: true
   - $ref: '#/components/schemas/User'
   - type: object
     properties:
       role:
+        description: The user's WordPress user role.
         type: string
         enum:
           - lms_manager

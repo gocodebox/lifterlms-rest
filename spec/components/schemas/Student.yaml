@@ -3,10 +3,12 @@ allOf:
     properties:
       id:
         description: Unique Student Identifer. The WordPress User `ID`.
+        readOnly: true
   - $ref: '#/components/schemas/User'
   - type: object
     properties:
       role:
+        description: The user's WordPress user role.
         type: string
         enum:
           - student
@@ -24,7 +26,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/students/1234
+                  example: /wp-json/llms/v1/students/456
           collection:
             description: REST URI to the student collection.
             type: array
@@ -42,7 +44,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/students/1234/contents
+                  example: /wp-json/llms/v1/students/456/contents
           enrollments:
             description: REST URI to a collection of the student's enrollments.
             type: array
@@ -51,4 +53,4 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/enrollments?student=1234
+                  example: /wp-json/llms/v1/enrollments?student=456
