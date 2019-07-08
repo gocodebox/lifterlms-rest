@@ -20,6 +20,34 @@ info:
 
     asrtasrtarst
 
+    # Authentication
+
+    Requests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.
+
+
+    Requests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.
+
+    ## Basic Authentication
+
+    The preferred authentication method is HTTP Basic Authentication.
+
+    To use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.
+
+    ```
+      curl https://example.tld/wp-json/llms/v1/courses \
+        -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF
+    ```
+
+    ## Header Authentication
+
+    Alternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-CONSUMER-KEY` and `X-CONSUMER-SECRET`.
+
+    ```
+      curl https://example.tld/wp-json/llms/v1/courses \
+        -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
+        -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
+    ```
+
   x-logo:
     altText: LifterLMS
     url: "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png"
@@ -29,14 +57,9 @@ servers:
   - url: /wp-json/llms/v1
 
 security:
-  - BasicAuth: []
+  - Basic-Authentication: []
 
 tags:
-
-  - name: Authentication
-    description: |
-      arstarstarstarst
-      <!-- ReDoc-Inject: <security-definitions> -->
 
   - name: Access Plans
     description: |
@@ -64,6 +87,12 @@ tags:
 
       The instructors API allows you to create, view, update, and delete student accounts.
 
+  - name: Sections
+    description: |
+      The sections API allows you to create, view, update, and delete sections.
+
+      Sections are used within courses to organize content (lessons) into groups.
+
   - name: Students
     description: |
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
@@ -71,11 +100,23 @@ tags:
       The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
 
 
-# x-tagGroups:
-#   - name: Courses
-#     tags:
-#       - Courses
+x-tagGroups:
 
-#   - name: Students
-#     tags:
-#       - Students
+  - name: Courses
+    tags:
+      - Courses
+      - Sections
+      - Enrollments
+
+  - name: Memberships
+    tags:
+      - Memberships
+
+  - name: E-Commerce
+    tags:
+      - Access Plans
+
+  - name: Users
+    tags:
+      - Students
+      - Instructors
