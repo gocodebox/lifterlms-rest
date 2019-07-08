@@ -82,7 +82,10 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Student'
+          allOf:
+            - $ref: '#/components/schemas/Student'
+            - required:
+              - email
   responses:
     201:
       description: Successfully created the student.

@@ -63,7 +63,11 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/MembershipRequest'
+         allOf:
+            - $ref: '#/components/schemas/MembershipRequest'
+            - required:
+              - title
+              - content
   responses:
     201:
       description: Successfully created the membership.

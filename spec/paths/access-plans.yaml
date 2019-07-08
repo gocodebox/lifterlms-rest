@@ -69,7 +69,12 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/AccessPlanRequest'
+          allOf:
+            - $ref: '#/components/schemas/AccessPlanRequest'
+            - required:
+              - title
+              - price
+              - product_id
   responses:
     201:
       description: Successfully created the student.

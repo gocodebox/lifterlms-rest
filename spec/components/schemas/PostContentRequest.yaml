@@ -1,8 +1,5 @@
 description: Post content request fields.
 type: object
-required:
-  - title
-  - content
 properties:
   title:
     type: string

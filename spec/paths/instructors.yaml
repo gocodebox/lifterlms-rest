@@ -74,7 +74,10 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Instructor'
+          allOf:
+            - $ref: '#/components/schemas/Instructor'
+            - required:
+              - email
   responses:
     201:
       description: Successfully created the instructor.

@@ -1,9 +1,5 @@
 allOf:
   - type: object
-    required:
-      - title
-      - price
-      - product_id
     properties:
       id:
         readOnly: true

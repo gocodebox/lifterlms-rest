@@ -1,5 +1,3 @@
-required:
-  - price
 allOf:
   - $ref: '#/components/schemas/AccessPlan'
   - type: object

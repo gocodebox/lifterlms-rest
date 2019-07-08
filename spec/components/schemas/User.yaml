@@ -1,9 +1,5 @@
 description: Reduced WordPress User object properties shared by LifterLMS custom user types
 type: object
-required:
-  - id
-  - email
-  - username
 properties:
   id:
     allOf:

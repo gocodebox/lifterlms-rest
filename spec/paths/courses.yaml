@@ -63,7 +63,11 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/CourseRequest'
+          allOf:
+            - $ref: '#/components/schemas/CourseRequest'
+            - required:
+              - title
+              - content
   responses:
     201:
       description: Successfully created the course.
