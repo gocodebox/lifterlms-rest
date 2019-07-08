@@ -43,7 +43,7 @@ allOf:
         description: URL to an oEmbed enable video URL.
         type: string
         example: https://www.youtube.com/watch?v=videoid
-      capacaity_enabled:
+      capacity_enabled:
         description: Determines if an enrollment capacity limit is enabled.
         type: boolean
         default: false
