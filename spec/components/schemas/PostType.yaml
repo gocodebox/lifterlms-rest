@@ -3,4 +3,5 @@ type: string
 enum:
   - course
   - llms_membership
+  - section
 default: course
