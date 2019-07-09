@@ -11,7 +11,7 @@ get:
   summary: List a student's content
   description: Retrieves a list of all content available to a student via enrollments.
   tags:
-    - Students
+    - Student's Content
   parameters:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'

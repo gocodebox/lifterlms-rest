@@ -11,7 +11,7 @@ get:
   summary: List student progress
   description: Retrieves a list of a student's progress records.
   tags:
-    - Students
+    - Student's Progress
   parameters:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'

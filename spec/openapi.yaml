@@ -77,15 +77,15 @@ tags:
 
       The enrollments API allows you to create, view, update, and delete student enrollments.
 
-  - name: Memberships
-    description: |
-      The memberships API allows you to create, view, update, and delete memberships.
-
   - name: Instructors
     description: |
       Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.
 
       The instructors API allows you to create, view, update, and delete student accounts.
+
+  - name: Memberships
+    description: |
+      The memberships API allows you to create, view, update, and delete memberships.
 
   - name: Sections
     description: |
@@ -99,6 +99,9 @@ tags:
 
       The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
 
+  - name: Student Progress
+    description: |
+      The Student Progress API allows you to create, view, update, and delete a student's progress through courses and LMS content.
 
 x-tagGroups:
 
@@ -108,19 +111,24 @@ x-tagGroups:
       - Sections
       - Lessons
 
+  - name: E-Commerce
+    tags:
+      - Access Plans
+
   - name: Enrollments
     tags:
       - Enrollments
+
+  - name: Instructors
+    tags:
+      - Instructors
 
   - name: Memberships
     tags:
       - Memberships
 
-  - name: E-Commerce
-    tags:
-      - Access Plans
-
-  - name: Users
+  - name: Students
     tags:
       - Students
-      - Instructors
+      - Student Content
+      - Student Progress
