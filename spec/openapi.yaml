@@ -99,7 +99,79 @@ tags:
 
   - name: Student Progress
     description: |
-      The Student Progress API allows you to create, view, update, and delete a student's progress through courses and LMS content.
+      The Student Progress API allows you to create, view, update, and delete a student's progress through courses.
+
+      A student's progress through a course is calculated by dividing the number of lessons completed by the student by the total number of lessons available in a course. It is not possible to manually update the `progress` percentage property of a course, instead you must update the status of each lesson in the course.
+
+      When updating the status of a course or a section, the status of the lessons within that course or section will be automatically updated to match the status of the course or section. For example, when updating a course's status to `complete` a new `complete` progress record will be created/updated for each incomplete lesson in the course.
+
+      Finally, the `progress` property of a lesson will _always_ be either `0` _or_ `100` whereas the `progress` of courses and sections will range from `0` _to_ `100`.
+
+  - name: Webhooks
+    description: |
+      Webhooks can be created to notify you about LMS-related events that happen on your site.
+
+      The Webhooks API allows you to create, view, update, and delete webhooks.
+
+      Webhooks may additionally be managed on the LifterLMS Webhooks screen on your site's WordPress admin panel.
+
+      ## Topics
+
+      The `topic` is a combination of the resource (e.g. student) and event (e.g. created). Each `topic` maps to one or more hook names (e.g. `llms_user_registered`). The proper hooks are automatically added based on the `topic`.
+
+      The following topics are available:
+
+      + Courses
+        + `course.created`
+        + `course.updated`
+        + `course.deleted`
+        + `course.restored`
+      + Sections
+        + `section.created`
+        + `section.updated`
+        + `section.deleted`
+        + `section.restored`
+      + Lessons
+        + `lesson.created`
+        + `lesson.updated`
+        + `lesson.deleted`
+        + `lesson.restored`
+      + Memberships
+        + `membership.created`
+        + `membership.updated`
+        + `membership.deleted`
+        + `membership.restored`
+      + Access Plans
+        + `access_plan.created`
+        + `access_plan.updated`
+        + `access_plan.deleted`
+        + `access_plan.restored`
+      + Orders
+        + `order.created`
+        + `order.updated`
+        + `order.deleted`
+        + `order.restored`
+      + Transaction
+        + `transaction.created`
+        + `transaction.updated`
+        + `transaction.deleted`
+      + Students
+        + `student.created`
+        + `student.updated`
+        + `student.deleted`
+      + Student Enrollment
+        + `enrollment.created`
+        + `enrollment.updated`
+        + `enrollment.deleted`
+      + Student Progress
+        + `progress.updated`
+        + `progress.deleted`
+      + Instructors
+        + `instructor.created`
+        + `instructor.updated`
+        + `instructor.deleted`
+
+      Custom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.
 
 x-tagGroups:
 
@@ -126,3 +198,7 @@ x-tagGroups:
       - Students
       - Student Enrollments
       - Student Progress
+
+  - name: Webhooks
+    tags:
+      - Webhooks
