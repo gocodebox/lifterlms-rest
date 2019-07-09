@@ -39,28 +39,6 @@ properties:
       - incomplete
       - complete
     default: incomplete
-    example: complete
-  trigger:
-    description: Determines what triggered the progress event.
-    type: object
-    properties:
-      type:
-        description: Describes the type of trigger which created the progress event.
-        type: string
-        enum:
-          - lesson
-          - quiz
-          - assignment
-          - admin
-          - unspecified
-        default: unspecified
-        example: lesson
-      related_id:
-        description: A resource ID for the related post or user which triggered the progress event.
-        type: integer
-        nullable: true
-        minimum: 1
-        example: 789
   _links:
     readOnly: true
     type: object
@@ -89,6 +67,13 @@ properties:
         items:
           type: object
           properties:
+            type:
+              type: string
+              enum:
+                - course
+                - section
+                - lesson
+              example: course
             href:
               type: string
               example:  /wp-json/llms/v1/courses/456
