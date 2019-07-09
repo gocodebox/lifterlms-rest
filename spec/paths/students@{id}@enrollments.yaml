@@ -8,10 +8,10 @@ parameters:
       $ref: '#/components/schemas/ResourceId'
 
 get:
-  summary: List student progress
-  description: Retrieves a list of a student's progress records.
+  summary: List student enrollments
+  description: Retrieves a list of a student's enrollment records.
   tags:
-    - Student Progress
+    - Student Enrollments
   parameters:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
@@ -24,30 +24,27 @@ get:
         enum:
           - date_updated
           - date_created
-          - progress
+          - enrollment
         default: date_updated
     - name: status
       description: Filter results to records matching the specified status.
       in: query
       required: false
       schema:
-        type: string
-        enum:
-          - incomplete
-          - complete
+        $ref: '#/components/schemas/EnrollmentStatus'
   responses:
     200:
-      description: Successfully returned a list of a student's progress records.
+      description: Successfully returned a list of a student's enrollment records.
       headers:
         Link:
           description: Pagination links for the collection.
           schema:
             type: string
             example: >-
-              </wp-json/llms/v1/students/123/progress?page=1>; rel="first",
-              </wp-json/llms/v1/students/123/progress?page=2>; rel="prev",
-              </wp-json/llms/v1/students/123/progress?page=4>; rel="next",
-              </wp-json/llms/v1/students/123/progress?page=5>; rel="last"
+              </wp-json/llms/v1/students/123/enrollment?page=1>; rel="first",
+              </wp-json/llms/v1/students/123/enrollment?page=2>; rel="prev",
+              </wp-json/llms/v1/students/123/enrollment?page=4>; rel="next",
+              </wp-json/llms/v1/students/123/enrollment?page=5>; rel="last"
         X-WP-Total:
           $ref: '#/components/headers/PaginationTotalResults'
         X-WP-TotalPages:
@@ -57,7 +54,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Progress'
+              $ref: '#/components/schemas/Enrollment'
     400:
       $ref: '#/components/responses/Error400'
     401:

@@ -1,20 +1,27 @@
 parameters:
   - name: id
-    description: Unique enrollment Identifier.
-    example: 987
+    description: Unique student Identifer. The WordPress User `ID`.
+    example: 123
+    in: path
+    required: true
+    schema:
+      $ref: '#/components/schemas/ResourceId'
+  - name: post_id
+    description: Unique course, lesson, or section Identifer. The WordPress Post `ID`.
+    example: 456
     in: path
     required: true
     schema:
       $ref: '#/components/schemas/ResourceId'
 
 get:
-  summary: Retrieve a enrollment
-  description: Retrieve the details of an existing enrollment.
+  summary: Get student enrollment
+  description: Retrieves information about a student's enrollment in a course or membership.
   tags:
-    - Enrollments
+    - Student Enrollments
   responses:
     200:
-      description: Successfully retrieved the enrollment.
+      description: Successfully retrieved student's enrollment.
       content:
         application/json:
           schema:
@@ -29,12 +36,10 @@ get:
       $ref: '#/components/responses/Error404'
 
 post:
-  summary: Update an enrollment
-  description: >-
-    Update the specified enrollment by setting the values of the parameters passed.
-    Any parameters not provided will be left unchanged.
+  summary: Create or update student enrollment
+  description: Create or update a student's enrollment in a course or membership.
   tags:
-    - Enrollments
+    - Student Enrollments
   requestBody:
     required: true
     content:
@@ -43,7 +48,13 @@ post:
           $ref: '#/components/schemas/Enrollment'
   responses:
     200:
-      description: Successfully updated the student.
+      description: Successfully updated student's enrollment.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Enrollment'
+    201:
+      description: Successfully created the student's enrollment.
       content:
         application/json:
           schema:
@@ -58,10 +69,10 @@ post:
       $ref: '#/components/responses/Error404'
 
 delete:
-  summary: Delete an enrollment
-  description: Delete an existing enrollment.
+  summary: Delete student enrollment
+  description: Deletes the record of a student's enrollment in a course or membership.
   tags:
-    - Enrollments
+    - Student Enrollments
   responses:
     204:
       description: Successfully deleted the student.

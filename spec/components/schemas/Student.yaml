@@ -36,15 +36,6 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/students
-          content:
-            description: REST URI to a collection of the student's content.
-            type: array
-            items:
-              type: object
-              properties:
-                href:
-                  type: string
-                  example: /wp-json/llms/v1/students/456/contents
           enrollments:
             description: REST URI to a collection of the student's enrollments.
             type: array
@@ -53,4 +44,13 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/enrollments?student=456
+                  example: /wp-json/llms/v1/students/456/enrollments
+          progress:
+            description: REST URI to a collection of the student's progress records.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/students/456/progress

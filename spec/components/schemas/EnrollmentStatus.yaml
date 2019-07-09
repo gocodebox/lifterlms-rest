@@ -4,5 +4,3 @@ enum:
   - enrolled
   - expired
   - cancelled
-  - none
-default: enrolled

@@ -36,7 +36,7 @@ properties:
           properties:
             href:
               type: string
-              example: /wp-json/llms/v1/enrollments/987
+              example: /wp-json/llms/v1/students/123/enrollments/456
       collection:
         description: REST URI to the enrollments collection.
         type: array
@@ -45,7 +45,7 @@ properties:
           properties:
             href:
               type: string
-              example:  /wp-json/llms/v1/enrollments/
+              example:  /wp-json/llms/v1/students/123/enrollments
       post:
         description: Rest URI to the post resource.
         type: array

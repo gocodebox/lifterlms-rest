@@ -1,53 +1,53 @@
 parameters:
   - name: id
-    description: Unique student Identifer. The WordPress User `ID`.
-    example: 123
     in: path
+    description: Unique course Identifier. The WordPress Post `ID`.
     required: true
     schema:
       $ref: '#/components/schemas/ResourceId'
 
+
 get:
-  summary: List student progress
-  description: Retrieves a list of a student's progress records.
+  summary: List course enrollments
+  description: Retrieve a collection of an existing course's enrollments.
   tags:
-    - Student Progress
+    - Courses
   parameters:
+    - $ref: '#/components/parameters/Context'
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
     - $ref: '#/components/parameters/Order'
     - name: orderby
-      description: Specify the sort field for a collection of results.
+      description: Specify the sort field for the collection of results.
       in: query
       schema:
         type: string
         enum:
           - date_updated
           - date_created
-          - progress
+          - enrollment
         default: date_updated
+    - $ref: '#/components/parameters/Include'
+    - $ref: '#/components/parameters/PostPassword'
     - name: status
       description: Filter results to records matching the specified status.
       in: query
       required: false
       schema:
-        type: string
-        enum:
-          - incomplete
-          - complete
+        $ref: '#/components/schemas/EnrollmentStatus'
   responses:
     200:
-      description: Successfully returned a list of a student's progress records.
+      description: Successfully retrieved the course's enrollments.
       headers:
         Link:
           description: Pagination links for the collection.
           schema:
             type: string
             example: >-
-              </wp-json/llms/v1/students/123/progress?page=1>; rel="first",
-              </wp-json/llms/v1/students/123/progress?page=2>; rel="prev",
-              </wp-json/llms/v1/students/123/progress?page=4>; rel="next",
-              </wp-json/llms/v1/students/123/progress?page=5>; rel="last"
+              </wp-json/llms/v1/courses/1234/enrollments?page=1>; rel="first",
+              </wp-json/llms/v1/courses/1234/enrollments?page=2>; rel="prev",
+              </wp-json/llms/v1/courses/1234/enrollments?page=4>; rel="next",
+              </wp-json/llms/v1/courses/1234/enrollments?page=5>; rel="last"
         X-WP-Total:
           $ref: '#/components/headers/PaginationTotalResults'
         X-WP-TotalPages:
@@ -57,7 +57,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Progress'
+              $ref: '#/components/schemas/Enrollment'
     400:
       $ref: '#/components/responses/Error400'
     401:
