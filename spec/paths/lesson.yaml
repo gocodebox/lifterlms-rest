@@ -27,8 +27,11 @@ get:
       description: Filter sections by the parent post (section) ID.
       in: query
       required: false
-      schemas:
-        type: string
+      schema:
+        type: integer
+        minimum: 1
+        example: 789
+
   responses:
     200:
       description: Successfully returned a list of lessons.

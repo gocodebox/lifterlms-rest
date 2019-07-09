@@ -27,8 +27,10 @@ get:
       description: Filter sections by the parent post (course) ID.
       in: query
       required: false
-      schemas:
-        type: string
+      schema:
+        type: integer
+        minimum: 1
+        example: 1234
   responses:
     200:
       description: Successfully returned a list of sections.
