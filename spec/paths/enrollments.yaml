@@ -89,8 +89,8 @@ get:
       $ref: '#/components/responses/Error403'
 
 post:
-  summary: Create an enrollment
-  description: Create a new course object.
+  summary: Create or update an enrollment
+  description: Create a new enrollment or update an existing enrollment for a specific course or membership and student.
   tags:
     - Enrollments
   requestBody:
@@ -100,6 +100,12 @@ post:
         schema:
           $ref: '#/components/schemas/Enrollment'
   responses:
+    200:
+      description: Successfully updated the enrollment.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Enrollment'
     201:
       description: Successfully created the enrollment.
       content:
@@ -112,3 +118,43 @@ post:
       $ref: '#/components/responses/Error401'
     403:
       $ref: '#/components/responses/Error403'
+    404:
+      $ref: '#/components/responses/Error404'
+
+delete:
+  summary: Delete an enrollment
+  description: Delete an existing enrollment.
+  tags:
+    - Enrollments
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - student_id
+            - post_id
+          properties:
+            student_id:
+              description: The ID of the student.
+              type: integer
+              minimum: 1
+              example: 123
+            post_id:
+              description: The ID of the course/membership.
+              type: integer
+              minimum: 1
+              example: 456
+
+  responses:
+    204:
+      description: Successfully deleted the enrollment.
+    400:
+      $ref: '#/components/responses/Error400'
+    401:
+      $ref: '#/components/responses/Error401'
+    403:
+      $ref: '#/components/responses/Error403'
+    404:
+      $ref: '#/components/responses/Error404'

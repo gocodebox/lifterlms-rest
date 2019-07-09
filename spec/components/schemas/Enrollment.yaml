@@ -1,14 +1,8 @@
 type: object
 required:
-  - id
   - student_id
   - post_id
 properties:
-  id:
-    allOf:
-      - description: Unique enrollment Identifier.
-      - example: 987
-      - $ref: '#/components/schemas/ResourceId'
   student_id:
     description: The ID of the student.
     type: integer
@@ -58,6 +52,12 @@ properties:
         items:
           type: object
           properties:
+            type:
+              type: string
+              enum:
+                - course
+                - membership
+              example: course
             href:
               type: string
               example:  /wp-json/llms/v1/courses/456
