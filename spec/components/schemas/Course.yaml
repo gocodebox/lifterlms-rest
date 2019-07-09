@@ -18,9 +18,13 @@ allOf:
       categories:
         description: List of course categories.
         type: array
+        items:
+          type: integer
       tags:
         description: List of course tags.
         type: array
+        items:
+          type: integer
       difficulties:
         description: List of course difficulties.
         type: array

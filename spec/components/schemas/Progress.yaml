@@ -60,7 +60,6 @@ properties:
         type: integer
         nullable: true
         minimum: 1
-        default: null
         example: 789
   _links:
     readOnly: true
