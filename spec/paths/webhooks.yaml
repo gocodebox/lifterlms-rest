@@ -83,6 +83,7 @@ post:
             - $ref: '#/components/schemas/Webhook'
             - required:
               - topic
+              - url
   responses:
     201:
       description: Successfully created the webhook.

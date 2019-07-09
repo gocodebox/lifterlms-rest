@@ -27,6 +27,17 @@ properties:
     description: The Webhook topic.
     type: string
     example: student.created
+  url:
+    description: The webhook payload delivery URL.
+    type: string
+    example: https://example.tld/webhook-receipt/endpoint
+  secret:
+    description: |
+      An optional secret key used to generate the webhook delivery signature.
+
+      If no secret is supplied and random string will be generated using `wp_generate_password()`.
+    type: string
+    example: $P3CI41-$3CR37!
   resource:
     description: The parsed `topic` resource.
     type: string

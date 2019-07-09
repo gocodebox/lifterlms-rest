@@ -40,7 +40,7 @@ info:
 
     ## Header Authentication
 
-    Alternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-CONSUMER-KEY` and `X-CONSUMER-SECRET`.
+    Alternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.
 
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
@@ -172,6 +172,63 @@ tags:
         + `instructor.deleted`
 
       Custom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.
+
+      ## Delivery
+
+      Webhook payloads are delivered in the background using wp-cron and `wp_remote_post()` (HTTP POST).
+
+      Custom headers are supplied to assist with the receipt of the webhook:
+
+      | Header                   | Description                                        | Example             |
+      | ------------------------ | -------------------------------------------------- | ------------------- |
+      | X-LLMS-Webhook-Source    | The URL of the LifterLMS website.                  | https://example.tld |
+      | X-LLMS-Webhook-Topic     | The webhook `topic` property.                      | student.created     |
+      | X-LLMS-Webhook-Resource  | The webhook `resource` property.                   | student             |
+      | X-LLMS-Webhook-Event     | The webhook `event` property.                      | created             |
+      | X-LLMS-Webhook-Signature | A base64 encoded HMAC-SHA256 hash of the payload.  |                     |
+      | X-LLMS-Webhook-ID        | The unique webhook identifier (WordPress post ID). | 654                 |
+      | X-LLMS-Delivery-ID       | A unique ID for the webhook delivery.              | 765                 |
+
+      The payload is a JSON-encoded object of the API resource as if retrieved by a `GET` request.
+
+      The payload for a custom hook will be a JSON-encoded version of the first parameter supplied by the hook.
+
+      ## Signature Verification
+
+      Webhooks are signed by LifterLMS and the event's unique signature is included in the `X-LLMS-Webhook-Signature` header. The signature allows you to verify that the webhook was sent by LifterLMS and not by a third party. We recommend verifying all webhooks and discarding any payloads which cannot be verified.
+
+      The `X-LLMS-Webhook-Signature` contains a timestamp and one or more signatures. The timestamp is prefixed by `t=` and the signatures are prefixed by `v` and an integer. Currently the only valid signature scheme is `v1`.
+
+      ```
+      X-LLMS-Webhook-Signature: t=1562715579,v1=0d579d62ef442b6e2d1d522924aafed480fdaaacbe498486a94445de8b995819
+      ```
+
+      The signature is generated using a hash-based message authentication code ([HMAC](https://en.wikipedia.org/wiki/HMAC)) with [SHA-256](https://en.wikipedia.org/wiki/SHA-2).
+
+      To verify a webhook signature you must construct an _expected_ webhook signature which you can then compare against the webhook signature supplied with delivery.
+
+      #### Step 1: Extract the timestamps and signatures from the header
+
+      Split the header, using the `,` character as the separator, to get a list of elements. Then split each element, using the `=` character as the separator, to get a prefix and value pair.
+
+      The value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature. You can discard all other elements.
+
+      #### Step 2: Prepare the payload string for signing
+
+      You achieve this by concatenating:
+
+      + The timestamp (as a string)
+      + The character `.`
+      + The actual JSON payload (i.e. the request's body)
+
+      #### Step 3: Generate the expected signature string
+
+      Compute an HMAC with the SHA256 hash function. Use the endpoints signing secret as the key, and use the string from Step 2 as the message.
+
+      #### Step 4: Compare the signatures
+
+      Compare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.
+
 
 x-tagGroups:
 
