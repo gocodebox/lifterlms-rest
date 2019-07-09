@@ -23,7 +23,7 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
-    - name: product_id
+    - name: post_id
       description: Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separted list of course/membership ids.
       in: query
       schema:
@@ -74,7 +74,7 @@ post:
             - required:
               - title
               - price
-              - product_id
+              - post_id
   responses:
     201:
       description: Successfully created the student.

@@ -50,7 +50,7 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/access-plans
-          product:
+          post:
             description: REST URI to the access plan's related course or membership.
             type: array
             items:

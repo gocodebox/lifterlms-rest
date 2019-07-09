@@ -120,7 +120,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/access-plans?product_id=1234
+                  example: /wp-json/llms/v1/access-plans?post_id=1234
           content:
             description: REST URI to the course's content collection.
             type: array
