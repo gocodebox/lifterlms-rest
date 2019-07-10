@@ -524,10 +524,10 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Sales page page type.
 		$data['sales_page_page_type'] = $course->get( 'sales_page_content_type' );
 
-		// Sales page id.
+		// Sales page id/url.
 		if ( 'page' === $data['sales_page_page_type'] ) {
 			$data['sales_page_page_id'] = $course->get( 'sales_page_content_page_id' );
-		} elseif ( 'url' === $data['sales_page_page_type'] ) { // Sales page url
+		} elseif ( 'url' === $data['sales_page_page_type'] ) {
 			$data['sales_page_page_url'] = $course->get( 'sales_page_content_url' );
 		}
 
@@ -616,6 +616,20 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$course_links = array();
 
+		// Access plans.
+		$course_links['access_plans'] = array(
+			'href' => add_query_arg(
+				'post',
+				$course_id,
+				rest_url( sprintf( '%s/%s', 'llms/v1', 'access-plans' ) )
+			),
+		);
+
+		// Content.
+		$course_links['content'] = array(
+			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $course_id, 'content' ) ),
+		);
+
 		// Enrollments.
 		$course_links['enrollments'] = array(
 			'href' => add_query_arg(
@@ -625,7 +639,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			),
 		);
 
-		// Instrcutors.
+		// Insturctors.
 		$course_links['instructors'] = array(
 			'href' => add_query_arg(
 				'post',
