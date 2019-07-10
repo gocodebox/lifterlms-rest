@@ -142,8 +142,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'default'     => false,
 			),
 			'capacity_limit'            => array(
-				'type'        => 'integer',
 				'description' => __( 'Number of students who can be enrolled in the course before enrollment closes.', 'lifterlms' ),
+				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
@@ -239,8 +239,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'access_closes_message'     => array(
-				'type'        => 'object',
 				'description' => __( 'Message displayed to enrolled students when the course is accessed after the access_closes_date has passed.', 'lifterlms' ),
+				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
@@ -273,8 +273,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'access_opens_message'      => array(
-				'type'        => 'object',
 				'description' => __( 'Message displayed to enrolled students when the course is accessed before the access_opens_date has passed.', 'lifterlms' ),
+				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
@@ -307,8 +307,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'enrollment_closes_message' => array(
-				'type'        => 'object',
 				'description' => __( 'Message displayed to visitors when attempting to enroll into a course after the enrollment_closes_date has passed.', 'lifterlms' ),
+				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
@@ -341,8 +341,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'enrollment_opens_message'  => array(
-				'type'        => 'object',
 				'description' => __( 'Message displayed to visitors when attempting to enroll into a course before the enrollment_opens_date has passed.', 'lifterlms' ),
+				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
@@ -379,6 +379,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'Determines the type of sales page content to display.<br> - <code>none</code> displays the course content.<br> - <code>content</code> displays alternate content from the <code>excerpt</code> property.<br> - <code>page</code> redirects to the WordPress page defined in <code>content_page_id</code>.<br> - <code>url</code> redirects to the URL defined in <code>content_page_url</code>',
 					'lifterlms'
 				),
+				'type'        => 'string',
 				'enum'        => array_keys( llms_get_sales_page_types() ),
 				'context'     => array( 'view', 'edit' ),
 			),
@@ -478,6 +479,46 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$data['restricted_message'] = array(
 			'raw'      => $course->get( 'content_restricted_message', $raw = true ),
 			'rendered' => $course->get( 'content_restricted_message' ),
+		);
+
+		// Enrollment open/closed.
+		$data['access_opens_date']  = $course->get_date( 'start_date', 'Y-m-d H:i:s' );
+		$data['access_closes_date'] = $course->get_date( 'end_date', 'Y-m-d H:i:s' );
+
+		$data['access_opens_message'] = array(
+			'raw'      => $course->get( 'course_opens_message', $raw = true ),
+			/**
+			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
+			 */
+			'rendered' => do_shortcode( $course->get( 'course_opens_message' ) ), // we need shortcodes to be processed.
+		);
+
+		$data['access_closes_message'] = array(
+			'raw'      => $course->get( 'course_closed_message', $raw = true ),
+			/**
+			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
+			 */
+			'rendered' => do_shortcode( $course->get( 'course_closed_message' ) ), // we need shortcodes to be processed.
+		);
+
+		// Enrollment open/closed.
+		$data['enrollment_opens_date']  = $course->get_date( 'enrollment_start_date', 'Y-m-d H:i:s' );
+		$data['enrollment_closes_date'] = $course->get_date( 'enrollment_end_date', 'Y-m-d H:i:s' );
+
+		$data['enrollment_opens_message'] = array(
+			'raw'      => $course->get( 'enrollment_opens_message', $raw = true ),
+			/**
+			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
+			 */
+			'rendered' => do_shortcode( $course->get( 'enrollment_opens_message' ) ), // we need shortcodes to be processed.
+		);
+
+		$data['enrollment_closes_message'] = array(
+			'raw'      => $course->get( 'enrollment_closed_message', $raw = true ),
+			/**
+			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
+			 */
+			'rendered' => do_shortcode( $course->get( 'enrollment_closed_message' ) ), // we need shortcodes to be processed.
 		);
 
 		// Sales page page type.
