@@ -394,6 +394,12 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'sanitize_callback' => 'esc_url_raw',
 				),
 			),
+			'video_tile'                => array(
+				'description' => __( 'When true the video_embed will be used on the course tiles (on the catalog, for example) instead of the featured image.', 'lifterlms' ),
+				'type'        => 'boolean',
+				'default'     => false,
+				'context'     => array( 'view', 'edit' ),
+			),
 		);
 
 		$schema['properties'] = array_merge( (array) $schema['properties'], $course_properties );
@@ -453,6 +459,9 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Video Embed.
 		$data['video_embed'] = $course->get( 'video_embed' );
+
+		// Video tile.
+		$data['video_tile'] = 'yes' === $course->get( 'tile_featured_video' );
 
 		// Capacity.
 		$data['capacity_enabled'] = 'yes' === $course->get( 'enable_capacity' );
@@ -532,6 +541,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $data;
+
 	}
 
 	/**
