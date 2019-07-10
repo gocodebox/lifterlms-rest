@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "LifterLMS REST API",
-    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-CONSUMER-KEY` and `X-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF\n```",
+    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS [@version]+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Errors\nasrtasrtarst\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF\n```",
     "x-logo": {
       "altText": "LifterLMS",
       "url": "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png",
@@ -30,16 +30,12 @@
       "description": "The courses API allows you to create, view, update, and delete courses.\n"
     },
     {
-      "name": "Enrollments",
-      "description": "Enrollments are used to track a student's access to content on your website.\n\nThe enrollments API allows you to create, view, update, and delete student enrollments.\n"
+      "name": "Instructors",
+      "description": "Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.\n\nThe instructors API allows you to create, view, update, and delete student accounts.\n"
     },
     {
       "name": "Memberships",
       "description": "The memberships API allows you to create, view, update, and delete memberships.\n"
-    },
-    {
-      "name": "Instructors",
-      "description": "Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.\n\nThe instructors API allows you to create, view, update, and delete student accounts.\n"
     },
     {
       "name": "Sections",
@@ -48,6 +44,18 @@
     {
       "name": "Students",
       "description": "Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the \"student\" role).\n\nThe students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.\n"
+    },
+    {
+      "name": "Student Enrollments",
+      "description": "The Student Enrollments API allows you to create, view, update, and delete records of a student's enrollment into courses and memberships.\n"
+    },
+    {
+      "name": "Student Progress",
+      "description": "The Student Progress API allows you to create, view, update, and delete a student's progress through courses.\n\nA student's progress through a course is calculated by dividing the number of lessons completed by the student by the total number of lessons available in a course. It is not possible to manually update the `progress` percentage property of a course, instead you must update the status of each lesson in the course.\n\nWhen updating the status of a course or a section, the status of the lessons within that course or section will be automatically updated to match the status of the course or section. For example, when updating a course's status to `complete` a new `complete` progress record will be created/updated for each incomplete lesson in the course.\n\nFinally, the `progress` property of a lesson will _always_ be either `0` _or_ `100` whereas the `progress` of courses and sections will range from `0` _to_ `100`.\n"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Webhooks can be created to notify you about LMS-related events that happen on your site.\n\nThe Webhooks API allows you to create, view, update, and delete webhooks.\n\nWebhooks may additionally be managed on the LifterLMS Webhooks screen on your site's WordPress admin panel.\n\n## Topics\n\nThe `topic` is a combination of the resource (e.g. student) and event (e.g. created). Each `topic` maps to one or more hook names (e.g. `llms_user_registered`). The proper hooks are automatically added based on the `topic`.\n\nThe following topics are available:\n\n+ Courses\n  + `course.created`\n  + `course.updated`\n  + `course.deleted`\n  + `course.restored`\n+ Sections\n  + `section.created`\n  + `section.updated`\n  + `section.deleted`\n  + `section.restored`\n+ Lessons\n  + `lesson.created`\n  + `lesson.updated`\n  + `lesson.deleted`\n  + `lesson.restored`\n+ Memberships\n  + `membership.created`\n  + `membership.updated`\n  + `membership.deleted`\n  + `membership.restored`\n+ Access Plans\n  + `access_plan.created`\n  + `access_plan.updated`\n  + `access_plan.deleted`\n  + `access_plan.restored`\n+ Orders\n  + `order.created`\n  + `order.updated`\n  + `order.deleted`\n  + `order.restored`\n+ Transaction\n  + `transaction.created`\n  + `transaction.updated`\n  + `transaction.deleted`\n+ Students\n  + `student.created`\n  + `student.updated`\n  + `student.deleted`\n+ Student Enrollment\n  + `enrollment.created`\n  + `enrollment.updated`\n  + `enrollment.deleted`\n+ Student Progress\n  + `progress.updated`\n  + `progress.deleted`\n+ Instructors\n  + `instructor.created`\n  + `instructor.updated`\n  + `instructor.deleted`\n\nCustom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.\n\n## Delivery\n\nWebhook payloads are delivered in the background using wp-cron and `wp_remote_post()` (HTTP POST).\n\nCustom headers are supplied to assist with the receipt of the webhook:\n\n| Header                   | Description                                        | Example             |\n| ------------------------ | -------------------------------------------------- | ------------------- |\n| X-LLMS-Webhook-Source    | The URL of the LifterLMS website.                  | https://example.tld |\n| X-LLMS-Webhook-Topic     | The webhook `topic` property.                      | student.created     |\n| X-LLMS-Webhook-Resource  | The webhook `resource` property.                   | student             |\n| X-LLMS-Webhook-Event     | The webhook `event` property.                      | created             |\n| X-LLMS-Webhook-Signature | A base64 encoded HMAC-SHA256 hash of the payload.  |                     |\n| X-LLMS-Webhook-ID        | The unique webhook identifier (WordPress post ID). | 654                 |\n| X-LLMS-Delivery-ID       | A unique ID for the webhook delivery.              | 765                 |\n\nThe payload is a JSON-encoded object of the API resource as if retrieved by a `GET` request.\n\nThe payload for a custom hook will be a JSON-encoded version of the first parameter supplied by the hook.\n\n## Signature Verification\n\nWebhooks are signed by LifterLMS and the event's unique signature is included in the `X-LLMS-Webhook-Signature` header. The signature allows you to verify that the webhook was sent by LifterLMS and not by a third party. We recommend verifying all webhooks and discarding any payloads which cannot be verified.\n\nThe `X-LLMS-Webhook-Signature` contains a timestamp and one or more signatures. The timestamp is prefixed by `t=` and the signatures are prefixed by `v` and an integer. Currently the only valid signature scheme is `v1`.\n\n```\nX-LLMS-Webhook-Signature: t=1562715579,v1=0d579d62ef442b6e2d1d522924aafed480fdaaacbe498486a94445de8b995819\n```\n\nThe signature is generated using a hash-based message authentication code ([HMAC](https://en.wikipedia.org/wiki/HMAC)) with [SHA-256](https://en.wikipedia.org/wiki/SHA-2).\n\nTo verify a webhook signature you must construct an _expected_ webhook signature which you can then compare against the webhook signature supplied with delivery.\n\n#### Step 1: Extract the timestamps and signatures from the header\n\nSplit the header, using the `,` character as the separator, to get a list of elements. Then split each element, using the `=` character as the separator, to get a prefix and value pair.\n\nThe value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature. You can discard all other elements.\n\n#### Step 2: Prepare the payload string for signing\n\nYou achieve this by concatenating:\n\n+ The timestamp (as a string)\n+ The character `.`\n+ The actual JSON payload (i.e. the request's body)\n\n#### Step 3: Generate the expected signature string\n\nCompute an HMAC with the SHA256 hash function. Use the endpoints signing secret as the key, and use the string from Step 2 as the message.\n\n#### Step 4: Compare the signatures\n\nCompare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.\n"
     }
   ],
   "x-tagGroups": [
@@ -60,9 +68,15 @@
       ]
     },
     {
-      "name": "Enrollments",
+      "name": "E-Commerce",
       "tags": [
-        "Enrollments"
+        "Access Plans"
+      ]
+    },
+    {
+      "name": "Instructors",
+      "tags": [
+        "Instructors"
       ]
     },
     {
@@ -72,16 +86,17 @@
       ]
     },
     {
-      "name": "E-Commerce",
+      "name": "Students",
       "tags": [
-        "Access Plans"
+        "Students",
+        "Student Enrollments",
+        "Student Progress"
       ]
     },
     {
-      "name": "Users",
+      "name": "Webhooks",
       "tags": [
-        "Students",
-        "Instructors"
+        "Webhooks"
       ]
     }
   ],
@@ -130,7 +145,7 @@
             "$ref": "#/components/parameters/Exclude"
           },
           {
-            "name": "product_id",
+            "name": "post_id",
             "description": "Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separted list of course/membership ids.",
             "in": "query",
             "schema": {
@@ -204,7 +219,7 @@
                     "required": [
                       "title",
                       "price",
-                      "product_id"
+                      "post_id"
                     ]
                   }
                 ]
@@ -236,7 +251,7 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -d price=199.97 \\\n  -d title=\"Lifetime Access\"\n  -d product_id=123\n"
+            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -d price=199.97 \\\n  -d title=\"Lifetime Access\"\n  -d post_id=123\n"
           }
         ]
       }
@@ -750,14 +765,28 @@
         }
       }
     },
-    "/enrollments": {
+    "/courses/{id}/enrollments": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique course Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
       "get": {
-        "summary": "List enrollments",
-        "description": "Retrieve a list of enrollments.",
+        "summary": "List course enrollments",
+        "description": "Retrieve a collection of an existing course's enrollments.",
         "tags": [
-          "Enrollments"
+          "Courses"
         ],
         "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
           {
             "$ref": "#/components/parameters/Page"
           },
@@ -769,91 +798,43 @@
           },
           {
             "name": "orderby",
-            "description": "Specify the sort field for a collection of results.",
+            "description": "Specify the sort field for the collection of results.",
             "in": "query",
             "schema": {
               "type": "string",
               "enum": [
-                "id",
-                "date_created",
                 "date_updated",
-                "post_id",
-                "student_id"
+                "date_created",
+                "enrollment"
               ],
-              "default": "id"
+              "default": "date_updated"
             }
           },
           {
             "$ref": "#/components/parameters/Include"
           },
           {
-            "$ref": "#/components/parameters/Exclude"
-          },
-          {
-            "name": "student",
-            "description": "Retrieve enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "123,456"
-            }
-          },
-          {
-            "name": "student_exclude",
-            "description": "Exclude enrollments for a specific list of one or more students. Accepts a student id or comma separated list of student ids.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "789,324"
-            }
-          },
-          {
-            "name": "post",
-            "description": "Retrieve enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "123,456"
-            }
-          },
-          {
-            "name": "post_exclude",
-            "description": "Exclude enrollments for a specific list of one or more posts. Accepts a student id or comma separated list of student ids.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "789,324"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/PostType"
+            "$ref": "#/components/parameters/PostPassword"
           },
           {
             "name": "status",
-            "description": "Include enrollments for the specified status or list of statuses. Accepts a status or comma separated list of statuses.",
+            "description": "Filter results to records matching the specified status.",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string",
-              "enum": [
-                "enrolled",
-                "expired",
-                "cancelled",
-                "none",
-                "any"
-              ],
-              "default": "any"
+              "$ref": "#/components/schemas/EnrollmentStatus"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully returned a list of enrollments.",
+            "description": "Successfully retrieved the course's enrollments.",
             "headers": {
               "Link": {
                 "description": "Pagination links for the collection.",
                 "schema": {
                   "type": "string",
-                  "example": "</wp-json/llms/v1/enrollments?page=1>; rel=\"first\", </wp-json/llms/v1/enrollments?page=2>; rel=\"prev\", </wp-json/llms/v1/enrollments?page=4>; rel=\"next\", </wp-json/llms/v1/enrollments?page=5>; rel=\"last\""
+                  "example": "</wp-json/llms/v1/courses/1234/enrollments?page=1>; rel=\"first\", </wp-json/llms/v1/courses/1234/enrollments?page=2>; rel=\"prev\", </wp-json/llms/v1/courses/1234/enrollments?page=4>; rel=\"next\", </wp-json/llms/v1/courses/1234/enrollments?page=5>; rel=\"last\""
                 }
               },
               "X-WP-Total": {
@@ -873,151 +854,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Error401"
-          },
-          "403": {
-            "$ref": "#/components/responses/Error403"
-          }
-        }
-      },
-      "post": {
-        "summary": "Create an enrollment",
-        "description": "Create a new course object.",
-        "tags": [
-          "Enrollments"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Enrollment"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successfully created the enrollment.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Enrollment"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Error401"
-          },
-          "403": {
-            "$ref": "#/components/responses/Error403"
-          }
-        }
-      }
-    },
-    "/enrollments/{id}": {
-      "parameters": [
-        {
-          "name": "id",
-          "description": "Unique enrollment Identifier.",
-          "example": 987,
-          "in": "path",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/ResourceId"
-          }
-        }
-      ],
-      "get": {
-        "summary": "Retrieve a enrollment",
-        "description": "Retrieve the details of an existing enrollment.",
-        "tags": [
-          "Enrollments"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the enrollment.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Enrollment"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Error401"
-          },
-          "403": {
-            "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
-          }
-        }
-      },
-      "post": {
-        "summary": "Update an enrollment",
-        "description": "Update the specified enrollment by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
-        "tags": [
-          "Enrollments"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Enrollment"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully updated the student.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Enrollment"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Error401"
-          },
-          "403": {
-            "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an enrollment",
-        "description": "Delete an existing enrollment.",
-        "tags": [
-          "Enrollments"
-        ],
-        "responses": {
-          "204": {
-            "description": "Successfully deleted the student."
           },
           "400": {
             "$ref": "#/components/responses/Error400"
@@ -1952,6 +1788,111 @@
         }
       }
     },
+    "/memberships/{id}/enrollments": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique membership Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List membership enrollments",
+        "description": "Retrieve a collection of an existing membership's enrollments.",
+        "tags": [
+          "Memberships"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for the collection of results.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date_updated",
+                "date_created",
+                "enrollment"
+              ],
+              "default": "date_updated"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/PostPassword"
+          },
+          {
+            "name": "status",
+            "description": "Filter results to records matching the specified status.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/EnrollmentStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the membership's enrollments.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/memberships/1234/enrollments?page=1>; rel=\"first\", </wp-json/llms/v1/memberships/1234/enrollments?page=2>; rel=\"prev\", </wp-json/llms/v1/memberships/1234/enrollments?page=4>; rel=\"next\", </wp-json/llms/v1/memberships/1234/enrollments?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Enrollment"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
     "/sections": {
       "get": {
         "summary": "List sections",
@@ -2565,7 +2506,7 @@
         }
       }
     },
-    "/students/{id}/content": {
+    "/students/{id}/enrollments": {
       "parameters": [
         {
           "name": "id",
@@ -2579,10 +2520,10 @@
         }
       ],
       "get": {
-        "summary": "List a student's content",
-        "description": "Retrieves a list of all content available to a student via enrollments.",
+        "summary": "List student enrollments",
+        "description": "Retrieves a list of a student's enrollment records.",
         "tags": [
-          "Students"
+          "Student Enrollments"
         ],
         "parameters": [
           {
@@ -2598,56 +2539,35 @@
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
-                "id",
-                "email"
+                "date_updated",
+                "date_created",
+                "enrollment"
               ],
-              "default": "id"
+              "default": "date_updated"
             }
           },
           {
-            "$ref": "#/components/parameters/Include"
-          },
-          {
-            "$ref": "#/components/parameters/Exclude"
-          },
-          {
-            "$ref": "#/components/parameters/EnrollmentStatus"
-          },
-          {
-            "name": "post",
-            "description": "Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.",
+            "name": "status",
+            "description": "Filter results to records matching the specified status.",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string",
-              "example": "123,456"
+              "$ref": "#/components/schemas/EnrollmentStatus"
             }
-          },
-          {
-            "name": "post_exclude",
-            "description": "Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "example": "789,324"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/PostType"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully returned a list of the student's content.",
+            "description": "Successfully returned a list of a student's enrollment records.",
             "headers": {
               "Link": {
                 "description": "Pagination links for the collection.",
                 "schema": {
                   "type": "string",
-                  "example": "</wp-json/llms/v1/students/123/content?page=1>; rel=\"first\", </wp-json/llms/v1/students/123/content?page=2>; rel=\"prev\", </wp-json/llms/v1/students/123/content?page=4>; rel=\"next\", </wp-json/llms/v1/students/123/content?page=5>; rel=\"last\""
+                  "example": "</wp-json/llms/v1/students/123/enrollment?page=1>; rel=\"first\", </wp-json/llms/v1/students/123/enrollment?page=2>; rel=\"prev\", </wp-json/llms/v1/students/123/enrollment?page=4>; rel=\"next\", </wp-json/llms/v1/students/123/enrollment?page=5>; rel=\"last\""
                 }
               },
               "X-WP-Total": {
@@ -2662,14 +2582,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/CourseResponse"
-                      },
-                      {
-                        "$ref": "#/components/schemas/MembershipResponse"
-                      }
-                    ]
+                    "$ref": "#/components/schemas/Enrollment"
                   }
                 }
               }
@@ -2683,6 +2596,139 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/students/{id}/enrollments/{post_id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "Unique student Identifer. The WordPress User `ID`.",
+          "example": 123,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        },
+        {
+          "name": "post_id",
+          "description": "Unique course, lesson, or section Identifer. The WordPress Post `ID`.",
+          "example": 456,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get student enrollment",
+        "description": "Retrieves information about a student's enrollment in a course or membership.",
+        "tags": [
+          "Student Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved student's enrollment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enrollment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create or update student enrollment",
+        "description": "Create or update a student's enrollment in a course or membership.",
+        "tags": [
+          "Student Enrollments"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Enrollment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated student's enrollment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enrollment"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Successfully created the student's enrollment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enrollment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete student enrollment",
+        "description": "Deletes the record of a student's enrollment in a course or membership.",
+        "tags": [
+          "Student Enrollments"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the student."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -2704,7 +2750,7 @@
         "summary": "List student progress",
         "description": "Retrieves a list of a student's progress records.",
         "tags": [
-          "Students"
+          "Student Progress"
         ],
         "parameters": [
           {
@@ -2781,6 +2827,9 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -2812,7 +2861,7 @@
         "summary": "Get student progress",
         "description": "Retrieves information about a student's progress through course content.",
         "tags": [
-          "Students"
+          "Student Progress"
         ],
         "responses": {
           "200": {
@@ -2821,6 +2870,183 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Progress"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update student progress",
+        "description": "Update the status of a student's progress through course content.",
+        "tags": [
+          "Student Progress"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Progress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated student's progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Progress"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete student progress",
+        "description": "Deletes the record of a student's progress through course content.",
+        "tags": [
+          "Student Progress"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the student."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "summary": "List webhooks",
+        "description": "Retrieve a list of webhooks.",
+        "tags": [
+          "Webhooks"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "date_created",
+                "date_updated"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "status",
+            "description": "Filter results to those matching a specific status.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "paused",
+                "disabled"
+              ]
+            }
+          },
+          {
+            "name": "resource",
+            "description": "Filter results to those for a specific resource.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "description": "Filter results to those for a specific event.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of webhooks.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/webhooks?page=1>; rel=\"first\", </wp-json/llms/v1/webhooks?page=2>; rel=\"prev\", </wp-json/llms/v1/webhooks?page=4>; rel=\"next\", </wp-json/llms/v1/webhooks?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
                 }
               }
             }
@@ -2837,28 +3063,38 @@
         }
       },
       "post": {
-        "summary": "Update student progress",
-        "description": "Update the status of a student's progress through course content.",
+        "summary": "Create a webhook",
+        "description": "Create a new webhook object.",
         "tags": [
-          "Students"
+          "Webhooks"
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Progress"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Webhook"
+                  },
+                  {
+                    "required": [
+                      "topic",
+                      "url"
+                    ]
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Successfully retrieved student's progress.",
+          "201": {
+            "description": "Successfully created the webhook.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Progress"
+                  "$ref": "#/components/schemas/Webhook"
                 }
               }
             }
@@ -2873,16 +3109,101 @@
             "$ref": "#/components/responses/Error403"
           }
         }
+      }
+    },
+    "/webhooks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique webhook identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a webhook",
+        "description": "Retrieve the details of an existing webhook.",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a webhook",
+        "description": "Update the specified webhook by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Webhook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
       },
       "delete": {
-        "summary": "Delete student progress",
-        "description": "Deletes the record of a student's progress through course content.",
+        "summary": "Delete a webhook",
+        "description": "Delete an existing webhook.",
         "tags": [
-          "Students"
+          "Webhooks"
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted the student."
+            "description": "Successfully deleted the webhook."
           },
           "400": {
             "$ref": "#/components/responses/Error400"
@@ -3048,14 +3369,14 @@
                 "default": 0,
                 "example": 1.99
               },
-              "product_id": {
+              "post_id": {
                 "description": "Determines the course or membership which can be accessed through the plan.",
                 "type": "integer",
                 "minimum": 1,
                 "example": 789
               },
               "redirect_type": {
-                "description": "Determines the redirction behavior of the user's browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `product_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.",
+                "description": "Determines the redirction behavior of the user's browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `post_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.",
                 "type": "string",
                 "enum": [
                   "self",
@@ -3191,7 +3512,7 @@
                       }
                     }
                   },
-                  "product": {
+                  "post": {
                     "description": "REST URI to the access plan's related course or membership.",
                     "type": "array",
                     "items": {
@@ -3603,7 +3924,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/access-plans?product_id=1234"
+                          "example": "/wp-json/llms/v1/access-plans?post_id=1234"
                         }
                       }
                     }
@@ -3740,24 +4061,10 @@
       "Enrollment": {
         "type": "object",
         "required": [
-          "id",
           "student_id",
           "post_id"
         ],
         "properties": {
-          "id": {
-            "allOf": [
-              {
-                "description": "Unique enrollment Identifier."
-              },
-              {
-                "example": 987
-              },
-              {
-                "$ref": "#/components/schemas/ResourceId"
-              }
-            ]
-          },
           "student_id": {
             "description": "The ID of the student.",
             "type": "integer",
@@ -3796,7 +4103,7 @@
                   "properties": {
                     "href": {
                       "type": "string",
-                      "example": "/wp-json/llms/v1/enrollments/987"
+                      "example": "/wp-json/llms/v1/students/123/enrollments/456"
                     }
                   }
                 }
@@ -3809,7 +4116,7 @@
                   "properties": {
                     "href": {
                       "type": "string",
-                      "example": "/wp-json/llms/v1/enrollments/"
+                      "example": "/wp-json/llms/v1/students/123/enrollments"
                     }
                   }
                 }
@@ -3820,6 +4127,14 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "course",
+                        "membership"
+                      ],
+                      "example": "course"
+                    },
                     "href": {
                       "type": "string",
                       "example": "/wp-json/llms/v1/courses/456"
@@ -3850,10 +4165,8 @@
         "enum": [
           "enrolled",
           "expired",
-          "cancelled",
-          "none"
-        ],
-        "default": "enrolled"
+          "cancelled"
+        ]
       },
       "Error": {
         "type": "object",
@@ -4545,7 +4858,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/access-plans?product_id=1234"
+                          "example": "/wp-json/llms/v1/access-plans?post_id=1234"
                         }
                       }
                     }
@@ -4913,34 +5226,7 @@
               "incomplete",
               "complete"
             ],
-            "default": "incomplete",
-            "example": "complete"
-          },
-          "trigger": {
-            "description": "Determines what triggered the progress event.",
-            "type": "object",
-            "properties": {
-              "type": {
-                "description": "Describes the type of trigger which created the progress event.",
-                "type": "string",
-                "enum": [
-                  "lesson",
-                  "quiz",
-                  "assignment",
-                  "admin",
-                  "unspecified"
-                ],
-                "default": "unspecified",
-                "example": "lesson"
-              },
-              "related_id": {
-                "description": "A resource ID for the related post or user which triggered the progress event.",
-                "type": "integer",
-                "nullable": true,
-                "minimum": 1,
-                "example": 789
-              }
-            }
+            "default": "incomplete"
           },
           "_links": {
             "readOnly": true,
@@ -4978,6 +5264,15 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "course",
+                        "section",
+                        "lesson"
+                      ],
+                      "example": "course"
+                    },
                     "href": {
                       "type": "string",
                       "example": "/wp-json/llms/v1/courses/456"
@@ -5334,19 +5629,6 @@
                       }
                     }
                   },
-                  "content": {
-                    "description": "REST URI to a collection of the student's content.",
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "href": {
-                          "type": "string",
-                          "example": "/wp-json/llms/v1/students/456/contents"
-                        }
-                      }
-                    }
-                  },
                   "enrollments": {
                     "description": "REST URI to a collection of the student's enrollments.",
                     "type": "array",
@@ -5355,7 +5637,20 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/enrollments?student=456"
+                          "example": "/wp-json/llms/v1/students/456/enrollments"
+                        }
+                      }
+                    }
+                  },
+                  "progress": {
+                    "description": "REST URI to a collection of the student's progress records.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/students/456/progress"
                         }
                       }
                     }
@@ -5434,10 +5729,10 @@
                 "description": "Unique webhook Identifier. The WordPress post `ID`."
               },
               {
-                "example": 654
+                "$ref": "#/components/schemas/ResourceId"
               },
               {
-                "$ref": "#/components/schemas/ResourceId"
+                "example": 654
               }
             ]
           },
@@ -5445,7 +5740,7 @@
             "description": "A friendly, human-readable name for the webhook.",
             "type": "string",
             "minimum": 1,
-            "example": 123
+            "example": "A Student Enrolled in a Course"
           },
           "status": {
             "description": "The status of the webhook.\n\n+ `active`: Payload will be delivered\n+ `paused`: Delivery is disabled by an admin.\n+ `disabled`: Delivery is disabled because of delivery failure.\n",
@@ -5458,10 +5753,40 @@
             "default": "active"
           },
           "topic": {
-            "description": "The Webhook topic."
+            "description": "The Webhook topic.",
+            "type": "string",
+            "example": "student.created"
+          },
+          "url": {
+            "description": "The webhook payload delivery URL.",
+            "type": "string",
+            "example": "https://example.tld/webhook-receipt/endpoint"
+          },
+          "secret": {
+            "description": "An optional secret key used to generate the webhook delivery signature.\n\nIf no secret is supplied and random string will be generated using `wp_generate_password()`.\n",
+            "type": "string",
+            "example": "$P3CI41-$3CR37!"
           },
           "resource": {
-            "description": "The Webhook resource."
+            "description": "The parsed `topic` resource.",
+            "type": "string",
+            "readOnly": true,
+            "example": "student"
+          },
+          "event": {
+            "description": "The parsed `topic` event.",
+            "type": "string",
+            "readOnly": true,
+            "example": "created"
+          },
+          "hooks": {
+            "description": "An array of hook names associated with the topic.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "llms_user_registered"
+            },
+            "readOnly": true
           },
           "date_created": {
             "description": "Creation date. Format: `Y-m-d H:i:s`.",
@@ -5492,53 +5817,27 @@
             "type": "object",
             "properties": {
               "self": {
-                "description": "REST URI to the enrollment.",
+                "description": "REST URI to the webhook.",
                 "type": "array",
                 "items": {
                   "type": "object",
                   "properties": {
                     "href": {
                       "type": "string",
-                      "example": "/wp-json/llms/v1/enrollments/987"
+                      "example": "/wp-json/llms/v1/webhooks/654"
                     }
                   }
                 }
               },
               "collection": {
-                "description": "REST URI to the enrollments collection.",
+                "description": "REST URI to the webhooks collection.",
                 "type": "array",
                 "items": {
                   "type": "object",
                   "properties": {
                     "href": {
                       "type": "string",
-                      "example": "/wp-json/llms/v1/enrollments/"
-                    }
-                  }
-                }
-              },
-              "post": {
-                "description": "Rest URI to the post resource.",
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "href": {
-                      "type": "string",
-                      "example": "/wp-json/llms/v1/courses/456"
-                    }
-                  }
-                }
-              },
-              "student": {
-                "description": "Rest URI to the student resource.",
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "href": {
-                      "type": "string",
-                      "example": "/wp-json/llms/v1/students/123"
+                      "example": "/wp-json/llms/v1/webhooks/"
                     }
                   }
                 }
