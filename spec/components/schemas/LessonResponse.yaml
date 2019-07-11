@@ -1,7 +1,5 @@
 allOf:
   - $ref: '#/components/schemas/PostContentResponse'
-  # - type: object
-  #   properties:
   - $ref: '#/components/schemas/Lesson'
   - type: object
     properties:
