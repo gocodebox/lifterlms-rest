@@ -81,6 +81,36 @@ tags:
     description: |
       The memberships API allows you to create, view, update, and delete memberships.
 
+  - name: Quiz Questions
+    description: |
+      The quiz questions API allows you to create, view, update, and delete quiz questions.
+
+      ## Question Types
+
+      There are four unique question types available via the LifterLMS Core:
+
+      + Multiple Choice
+      + Picture Choice
+      + True / False
+      + Content
+
+      An additional eight question types are available with the LifterLMS Advanced Quizzes Add-on:
+
+      + Fill in the Blank
+      + Reorder Items
+      + Reorder Pictures
+      + Short Answer
+      + Long Answer
+      + File Upload
+      + Code
+      + Scale
+
+      While these additional question types are documented here, they are only available when the LifterLMS Advanced Quizzes Add-on is installed and activated on your site.
+
+  - name: Quizzes
+    description: |
+      The quizzes API allows you to create, view, update, and delete quizzes.
+
   - name: Sections
     description: |
       The sections API allows you to create, view, update, and delete sections.
@@ -249,6 +279,12 @@ x-tagGroups:
   - name: Memberships
     tags:
       - Memberships
+
+  - name: Quizzes
+    tags:
+      - Quizzes
+      - Quiz Questions
+      - Quiz Attempts
 
   - name: Students
     tags:
