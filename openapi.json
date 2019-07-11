@@ -38,6 +38,14 @@
       "description": "The memberships API allows you to create, view, update, and delete memberships.\n"
     },
     {
+      "name": "Quiz Questions",
+      "description": "The quiz questions API allows you to create, view, update, and delete quiz questions.\n\n## Question Types\n\nThere are four unique question types available via the LifterLMS Core:\n\n+ Multiple Choice\n+ Picture Choice\n+ True / False\n+ Content\n\nAn additional eight question types are available with the LifterLMS Advanced Quizzes Add-on:\n\n+ Fill in the Blank\n+ Reorder Items\n+ Reorder Pictures\n+ Short Answer\n+ Long Answer\n+ File Upload\n+ Code\n+ Scale\n\nWhile these additional question types are documented here, they are only available when the LifterLMS Advanced Quizzes Add-on is installed and activated on your site.\n"
+    },
+    {
+      "name": "Quizzes",
+      "description": "The quizzes API allows you to create, view, update, and delete quizzes.\n"
+    },
+    {
       "name": "Sections",
       "description": "The sections API allows you to create, view, update, and delete sections.\n\nSections are used within courses to organize content (lessons) into groups.\n"
     },
@@ -83,6 +91,14 @@
       "name": "Memberships",
       "tags": [
         "Memberships"
+      ]
+    },
+    {
+      "name": "Quizzes",
+      "tags": [
+        "Quizzes",
+        "Quiz Questions",
+        "Quiz Attempts"
       ]
     },
     {
@@ -1877,6 +1893,711 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/quiz-questions": {
+      "get": {
+        "summary": "List quiz questions",
+        "description": "Retrieve a list of quiz questions.",
+        "tags": [
+          "Quiz Questions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "title",
+                "date_created",
+                "date_updated"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "quiz",
+            "description": "Filter quiz questions by the parent post (quiz) ID.",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 789
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of quiz questions.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/quiz-questions?page=1>; rel=\"first\", </wp-json/llms/v1/quiz-questions?page=2>; rel=\"prev\", </wp-json/llms/v1/quiz-questions?page=4>; rel=\"next\", </wp-json/llms/v1/quiz-questions?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuizQuestionTypesResponseList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a quiz question",
+        "description": "Create a new quiz question object.",
+        "tags": [
+          "Quiz Questions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "title": "Multiple Choice",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "choices",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeChoice"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Picture Choice",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "choices",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypePictureChoice"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "True / False",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "choices",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeTrueFalse"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Content",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeContent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Fill in the Blank",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeBlank"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Long Answer",
+                    "allOf": [
+                      {
+                        "required": [
+                          "title",
+                          "question_type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeLongAnswer"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the quiz question.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "choice": {
+                    "summary": "Multiple Choice Question",
+                    "value": {}
+                  },
+                  "long_answer": {
+                    "summary": "Long Answer Question",
+                    "value": {}
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/QuizQuestionTypesResponseList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/quiz-questions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique quiz question identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a quiz question",
+        "description": "Retrieve the details of an existing quiz question.",
+        "tags": [
+          "Quiz Questions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the quiz question.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizQuestionTypesResponseList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a quiz question",
+        "description": "Update the specified quiz question by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Quiz Questions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "title": "Multiple Choice",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeChoice"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Picture Choice",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypePictureChoice"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "True / False",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeTrueFalse"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Content",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeContent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Fill in the Blank",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeBlank"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Long Answer",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionTypeLongAnswer"
+                      },
+                      {
+                        "$ref": "#/components/schemas/QuizQuestionRequest"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the quiz question.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizQuestionTypesResponseList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a quiz question",
+        "description": "Delete an existing quiz question.",
+        "tags": [
+          "Quiz Questions"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the quiz question."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/quizzes": {
+      "get": {
+        "summary": "List quizzes",
+        "description": "Retrieve a list of quizzes.",
+        "tags": [
+          "Quizzes"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "title",
+                "date_created",
+                "date_updated"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "parent",
+            "description": "Filter quizzes by the parent post (lesson) ID.",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 789
+            }
+          },
+          {
+            "name": "course",
+            "description": "Filter quizzes by the parent couse ID.",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1234
+            }
+          },
+          {
+            "name": "status",
+            "description": "Filter quizzes by the post status.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "publish",
+                "draft"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of quizzes.",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/quizzes?page=1>; rel=\"first\", </wp-json/llms/v1/quizzes?page=2>; rel=\"prev\", </wp-json/llms/v1/quizzes?page=4>; rel=\"next\", </wp-json/llms/v1/quizzes?page=5>; rel=\"last\""
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuizResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a quiz",
+        "description": "Create a new quiz object.",
+        "tags": [
+          "Quizzes"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/QuizRequest"
+                  },
+                  {
+                    "required": [
+                      "title",
+                      "content"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the quiz.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/quizzes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique Quiz Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a quiz",
+        "description": "Retrieve the details of an existing quiz.",
+        "tags": [
+          "Quizzes"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the quiz.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a quiz",
+        "description": "Update the specified quiz by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Quizzes"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuizRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the quiz.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a quiz",
+        "description": "Delete an existing quiz.",
+        "tags": [
+          "Quizzes"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the quiz."
           },
           "400": {
             "$ref": "#/components/responses/Error400"
@@ -5296,6 +6017,773 @@
             }
           }
         }
+      },
+      "Quiz": {
+        "description": "Base quiz post object.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique quiz identifer. The WordPress Post `ID`.",
+            "type": "integer",
+            "minimum": 234,
+            "readOnly": true
+          },
+          "date_created": {
+            "description": "Creation date. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:22:05"
+          },
+          "date_created_gmt": {
+            "description": "Creation date (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:22:05"
+          },
+          "date_updated": {
+            "description": "Date last modified. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:25:05",
+            "readOnly": true
+          },
+          "date_updated_gmt": {
+            "description": "Date last modified (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:25:05",
+            "readOnly": true
+          },
+          "slug": {
+            "description": "Quiz URL slug.",
+            "type": "string",
+            "example": "final-exam"
+          },
+          "permalink": {
+            "description": "Quiz URL.",
+            "type": "string",
+            "example": "https://example.tld/quiz/final-exam",
+            "readOnly": true
+          },
+          "post_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostType"
+              },
+              {
+                "readOnly": true,
+                "type": "string",
+                "default": "llms_quiz"
+              }
+            ]
+          },
+          "status": {
+            "description": "The publication status of the quiz.",
+            "type": "string",
+            "enum": [
+              "publish",
+              "draft"
+            ],
+            "default": "draft"
+          },
+          "attempt_limiting": {
+            "description": "Determine if attempt limiting is enabled.\n\nWhen enabled, students are locked out after the number of attempts specified by `allowed_attempts`.\n",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "attempts_allowed": {
+            "description": "Limit the number of times a student can attempt the quiz before the quiz is locked. Only used when `attempt_limiting` is `true`.",
+            "type": "integer",
+            "minimum": 1
+          },
+          "time_limiting": {
+            "description": "Determine if a time limit is enforced for each attempt.\n\nWhen enabled, a quiz attempt is automatically ended after the time period specified by `time_limit` has passed.\n",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "time_limit": {
+            "description": "Determines the number of minutes allowed for each quiz attempt. Only used when `time_limiting` is `true`.",
+            "type": "integer",
+            "minimum": 1,
+            "example": 90
+          },
+          "passing_percentage": {
+            "description": "Determines the grade required to consider an attempt \"passing\".",
+            "type": "number",
+            "minimum": 0,
+            "default": 65
+          },
+          "total_points": {
+            "description": "The total points of all questions within the quiz.",
+            "type": "integer",
+            "minimum": 0,
+            "example": 10,
+            "readOnly": true
+          },
+          "show_correct_answer": {
+            "description": "When enabled, students will be shown the correct answers to questions they answered incorrectly during quiz reviews.",
+            "type": "boolean",
+            "default": false
+          },
+          "randomize_questions": {
+            "description": "When enabled, questions will be shuffled into a random order for each new quiz attempt.",
+            "type": "boolean",
+            "default": false
+          },
+          "course_id": {
+            "description": "WordPress post ID of the quizzes's parent course.",
+            "type": "integer",
+            "minimum": 1,
+            "example": 1234,
+            "readOnly": true
+          },
+          "parent_id": {
+            "description": "WordPress post ID of the parent item.<br> Must be a Lesson ID. `0` indicates an \"orphaned\" quiz which can be edited and viewed by instructors and admins but cannot be taken by students.",
+            "type": "integer",
+            "minimum": 0,
+            "example": 789
+          }
+        }
+      },
+      "QuizQuestion": {
+        "description": "Base quiz question post object.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique question identifer. The WordPress Post `ID`.",
+            "type": "integer",
+            "minimum": 234,
+            "readOnly": true
+          },
+          "date_created": {
+            "description": "Creation date. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:22:05"
+          },
+          "date_created_gmt": {
+            "description": "Creation date (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:22:05"
+          },
+          "date_updated": {
+            "description": "Date last modified. Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 17:25:05",
+            "readOnly": true
+          },
+          "date_updated_gmt": {
+            "description": "Date last modified (in GMT). Format: `Y-m-d H:i:s`.",
+            "type": "string",
+            "example": "2019-05-20 13:25:05",
+            "readOnly": true
+          },
+          "post_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostType"
+              },
+              {
+                "readOnly": true,
+                "type": "string",
+                "default": "llms_question"
+              }
+            ]
+          },
+          "order": {
+            "description": "Order of the question within its immediate parent.",
+            "type": "integer",
+            "default": 1,
+            "minimum": 1
+          },
+          "parent_id": {
+            "description": "Resource ID of the question's parent (quiz).",
+            "type": "integer",
+            "minimum": 1,
+            "example": 234
+          },
+          "points": {
+            "description": "Number of points awarded for correctly answering the question.",
+            "type": "integer",
+            "minimum": 0,
+            "default": 1,
+            "example": 10
+          },
+          "video_embed": {
+            "description": "URL to an oEmbed enable video URL.",
+            "type": "string",
+            "example": "https://www.youtube.com/watch?v=videoid"
+          },
+          "featured_media": {
+            "description": "Featured image ID.",
+            "type": "integer",
+            "example": 205
+          }
+        }
+      },
+      "QuizQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Raw quiz title. Most likely in the form of a question.",
+            "type": "string",
+            "example": "What is your favorite color?"
+          },
+          "content": {
+            "description": "Raw quiz content. Useful for providing additional information or context to the question.",
+            "type": "string",
+            "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+          },
+          "answer_clarification": {
+            "description": "Raw additional clarifying information displayed on the quiz attempt review screen when the question was answered incorrectly.",
+            "type": "string",
+            "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+          }
+        }
+      },
+      "QuizQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Quiz title. Most likely in the form of a question.",
+            "type": "object",
+            "properties": {
+              "rendered": {
+                "type": "string",
+                "description": "Rendered title.",
+                "example": "What is your favorite color?"
+              },
+              "raw": {
+                "type": "string",
+                "description": "Raw title. Useful when displaying title in the WP Editor. Only returned in `edit` context.",
+                "example": "What is your favorite color?"
+              }
+            }
+          },
+          "content": {
+            "description": "Quiz content. Useful for providing additional information or context to the question.",
+            "type": "object",
+            "properties": {
+              "rendered": {
+                "type": "string",
+                "description": "Rendered content.",
+                "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+              },
+              "raw": {
+                "type": "string",
+                "description": "Raw content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+              }
+            }
+          },
+          "answer_clarification": {
+            "description": "Additional clarifying information displayed on the quiz attempt review screen when the question was answered incorrectly.",
+            "type": "object",
+            "properties": {
+              "rendered": {
+                "type": "string",
+                "description": "Rendered content.",
+                "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+              },
+              "raw": {
+                "type": "string",
+                "description": "Raw content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+              }
+            }
+          }
+        }
+      },
+      "QuizQuestionTypeBlank": {
+        "title": "Fill in the Blank",
+        "description": "Fill in the Blank quiz question type",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "blank"
+              },
+              "correct_value": {
+                "description": "Specify the correct value(s) for each blank in the `title` property and enable automatic grading of the question.\n\nFor questions with multiple blanks, separate each blank by with a pipe (`|`) character. The correct values should be supplied in the same order as the blanks.\n",
+                "type": "string",
+                "example": "foo|bar"
+              }
+            }
+          }
+        ]
+      },
+      "QuizQuestionTypeChoice": {
+        "title": "Multiple Choice",
+        "description": "Choice quiz question type",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "choice"
+              },
+              "choices": {
+                "description": "A collection of choices available for the question.",
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 26,
+                "example": [
+                  {
+                    "marker": "A",
+                    "choice": "Red",
+                    "correct": false
+                  },
+                  {
+                    "marker": "B",
+                    "choice": "Green",
+                    "correct": true
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Unique resource identifier for the choice.",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "marker": {
+                      "description": "The marker used to visually identify and order the choices.\n\nValid markers: `A` through `Z`.\n\nIf no marker is supplied, the next available marker in the range will be used.\n",
+                      "type": "string",
+                      "default": "A"
+                    },
+                    "choice": {
+                      "description": "Raw choice text.",
+                      "type": "string"
+                    },
+                    "correct": {
+                      "description": "Determines if the choice is correct.\n\nWhen `multi_choices` is disabled, only one choice may be marked as `correct`.\n",
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              },
+              "multi_choices": {
+                "description": "Enable multiple correct answers.\n\nWhen disabled only a single correct choice is available, when enabled, one or more correct choices are available.\n",
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        ]
+      },
+      "QuizQuestionTypeContent": {
+        "title": "Content",
+        "description": "Content quiz question type",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "content"
+              },
+              "points": {
+                "type": "integer",
+                "readOnly": true,
+                "example": 0,
+                "default": 0
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          }
+        ]
+      },
+      "QuizQuestionTypeLongAnswer": {
+        "title": "Long Answer",
+        "description": "Long answer quiz question type",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "long_answer"
+              },
+              "words_min": {
+                "description": "Minimum word count for the answer. Setting the minimum at `0` disables the minimum word count.",
+                "type": "integer",
+                "minimum": 0,
+                "example": 500
+              },
+              "words_max": {
+                "description": "Maximum word count for the answer.  Setting the maximum at `0` disables the maximum word count.",
+                "type": "integer",
+                "minimum": 0,
+                "example": 10000
+              }
+            }
+          }
+        ]
+      },
+      "QuizQuestionTypePictureChoice": {
+        "title": "Picture Choice",
+        "description": "Picuter choice quiz question type",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "picture_choice"
+              },
+              "choices": {
+                "description": "A collection of choices available for the question.",
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 26,
+                "example": [
+                  {
+                    "marker": "A",
+                    "choice": {
+                      "id": 98,
+                      "src": "https://mysite.tld/wp-content/uploads/2019/05/picture-choice-img-1.png"
+                    },
+                    "correct": false
+                  },
+                  {
+                    "marker": "B",
+                    "choice": {
+                      "id": 99,
+                      "src": "https://mysite.tld/wp-content/uploads/2019/05/picture-choice-img-2.png"
+                    },
+                    "correct": true
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Unique resource identifier for the choice.",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "marker": {
+                      "description": "The marker used to visually identify and order the choices.\n\nValid markers: `A` through `Z`.\n\nIf no marker is supplied, the next available marker in the range will be used.\n",
+                      "type": "string",
+                      "default": "A"
+                    },
+                    "choice": {
+                      "description": "Object of image information for the choice.",
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "description": "WP Attachment ID for the choice image.",
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "src": {
+                          "description": "Full URL to the image resource on the server. Only returned in edit context",
+                          "type": "string",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "correct": {
+                      "description": "Determines if the choice is correct.\n\nWhen `multi_choices` is disabled, only one choice may be marked as `correct`.\n",
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              },
+              "multi_choices": {
+                "description": "Enable multiple correct answers.\n\nWhen disabled only a single correct choice is available, when enabled, one or more correct choices are available.\n",
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        ]
+      },
+      "QuizQuestionTypesResponseList": {
+        "anyOf": [
+          {
+            "title": "Multiple Choice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypeChoice"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          },
+          {
+            "title": "Picture Choice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypePictureChoice"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          },
+          {
+            "title": "True / False",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypeTrueFalse"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          },
+          {
+            "title": "Content",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypeContent"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          },
+          {
+            "title": "Fill in the Blank",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypeBlank"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          },
+          {
+            "title": "Long Answer",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QuizQuestionTypeLongAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/QuizQuestionResponse"
+              }
+            ]
+          }
+        ]
+      },
+      "QuizQuestionTypeTrueFalse": {
+        "title": "True / False",
+        "description": "True / False quiz question type",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/QuizQuestion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "question_type": {
+                "description": "The type of question.",
+                "type": "string",
+                "default": "true_false"
+              },
+              "choices": {
+                "description": "A collection of choices available for the question.",
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "example": [
+                  {
+                    "marker": "A",
+                    "choice": "True",
+                    "correct": false
+                  },
+                  {
+                    "marker": "B",
+                    "choice": "False",
+                    "correct": true
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Unique resource identifier for the choice.",
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "marker": {
+                      "description": "The marker used to visually identify and order the choices.",
+                      "type": "string",
+                      "enum": [
+                        "A",
+                        "B"
+                      ],
+                      "default": "A"
+                    },
+                    "choice": {
+                      "description": "Raw choice text.",
+                      "type": "string"
+                    },
+                    "correct": {
+                      "description": "Determines if the choice is correct.",
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "QuizRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Quiz"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Raw title.",
+                "example": "Final Exam"
+              },
+              "content": {
+                "type": "string",
+                "description": "Raw content.",
+                "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+              }
+            }
+          }
+        ]
+      },
+      "QuizResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Quiz"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "description": "Quiz title.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "type": "string",
+                    "description": "Rendered title.",
+                    "example": "Final Exam"
+                  },
+                  "raw": {
+                    "type": "string",
+                    "description": "Raw title. Useful when displaying title in the WP Editor. Only returned in `edit` context.",
+                    "example": "Final Exam"
+                  }
+                }
+              },
+              "content": {
+                "description": "Post content.",
+                "type": "object",
+                "properties": {
+                  "rendered": {
+                    "type": "string",
+                    "description": "Rendered content.",
+                    "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+                  },
+                  "raw": {
+                    "type": "string",
+                    "description": "Raw content. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.",
+                    "example": "<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"
+                  }
+                }
+              },
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the lesson.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/quizzes/234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the lesson collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/quizzes"
+                        }
+                      }
+                    }
+                  },
+                  "course": {
+                    "description": "REST URI to the lesson's parent course.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/1234"
+                        }
+                      }
+                    }
+                  },
+                  "parent": {
+                    "description": "REST URI to the quiz's parent.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "course"
+                        },
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/lessons/789"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "ResourceId": {
         "description": "Unique Resource Identifier.",
