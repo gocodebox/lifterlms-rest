@@ -71,6 +71,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$get_item_args = array(
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
+
 		if ( isset( $schema['properties']['password'] ) ) {
 			$get_item_args['password'] = array(
 				'description' => __( 'Post password. Required if the post is password protected.', 'lifterlms' ),
@@ -171,6 +172,10 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) )
 		);
 
+		// Add first page.
+		$first_link = add_query_arg( 'page', 1, $base );
+		$response->link_header( 'first', $first_link );
+
 		if ( $page > 1 ) {
 			$prev_page = $page - 1;
 			if ( $prev_page > $max_pages ) {
@@ -184,6 +189,9 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			$next_link = add_query_arg( 'page', $next_page, $base );
 			$response->link_header( 'next', $next_link );
 		}
+		// Add last page.
+		$last_link = add_query_arg( 'page', $max_pages, $base );
+		$response->link_header( 'last', $last_link );
 
 		return $response;
 	}
@@ -343,7 +351,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Updates a single post.
+	 * Updates a single llms post.
 	 *
 	 * @since [version]
 	 *
@@ -520,7 +528,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			}
 		}
 
-		// Allow access to all password protected posts if the context is edit.
+		// Reset filter.
 		if ( 'edit' === $request['context'] ) {
 			remove_filter( 'post_password_required', '__return_false' );
 		}
@@ -1037,18 +1045,24 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $object ) {
+		$object_id = $object->get( 'id' );
 
 		$links = array(
 			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get( 'id' ) ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object_id ) ),
 			),
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
 			),
 		);
 
+		// Content.
+		$links['content'] = array(
+			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $object_id, 'content' ) ),
+		);
+
 		// If we have a featured media, add that.
-		$featured_media = get_post_thumbnail_id( $object->get( 'id' ) );
+		$featured_media = get_post_thumbnail_id( $object_id );
 		if ( $featured_media ) {
 			$image_url = rest_url( 'wp/v2/media/' . $featured_media );
 
@@ -1075,7 +1089,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 				$terms_url = add_query_arg(
 					'post',
-					$object->get( 'id' ),
+					$object_id,
 					rest_url( 'wp/v2/' . $tax_base )
 				);
 
@@ -1145,6 +1159,18 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get action/filters to be removed before preparing the item for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object LLMS_Post_Model object.
+	 * @return array Array of action/filters to be removed for response.
+	 */
+	protected function get_filters_to_be_removed_for_response( $object ) {
+		return array();
 	}
 
 	/**

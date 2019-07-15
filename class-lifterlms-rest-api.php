@@ -102,6 +102,7 @@ final class LifterLMS_REST_API {
 			'abstracts/class-llms-rest-posts-controller',
 
 			'class-llms-rest-courses-controller',
+			'class-llms-rest-sections-controller',
 		);
 
 		foreach ( $includes as $include ) {
@@ -120,6 +121,7 @@ final class LifterLMS_REST_API {
 
 		$controllers = array(
 			'LLMS_REST_Courses_Controller',
+			'LLMS_REST_Sections_Controller',
 		);
 
 		foreach ( $controllers as $controller ) {

@@ -469,7 +469,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$data['capacity_limit']   = $course->get( 'capacity' );
 		$data['capacity_message'] = array(
 			'raw'      => $course->get( 'capacity_message', $raw = true ),
-			'rendered' => $course->get( 'capacity_message' ),
+			'rendered' => do_shortcode( $course->get( 'capacity_message' ) ),
 		);
 
 		// Prerequisite.
@@ -481,13 +481,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Length.
 		$data['length'] = array(
 			'raw'      => $course->get( 'length', $raw = true ),
-			'rendered' => $course->get( 'length' ),
+			'rendered' => do_shortcode( $course->get( 'length' ) ),
 		);
 
 		// Restricted message.
 		$data['restricted_message'] = array(
 			'raw'      => $course->get( 'content_restricted_message', $raw = true ),
-			'rendered' => $course->get( 'content_restricted_message' ),
+			'rendered' => do_shortcode( $course->get( 'content_restricted_message' ) ),
 		);
 
 		// Enrollment open/closed.
@@ -496,18 +496,12 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$data['access_opens_message'] = array(
 			'raw'      => $course->get( 'course_opens_message', $raw = true ),
-			/**
-			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
-			 */
-			'rendered' => do_shortcode( $course->get( 'course_opens_message' ) ), // we need shortcodes to be processed.
+			'rendered' => do_shortcode( $course->get( 'course_opens_message' ) ),
 		);
 
 		$data['access_closes_message'] = array(
 			'raw'      => $course->get( 'course_closed_message', $raw = true ),
-			/**
-			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
-			 */
-			'rendered' => do_shortcode( $course->get( 'course_closed_message' ) ), // we need shortcodes to be processed.
+			'rendered' => do_shortcode( $course->get( 'course_closed_message' ) ),
 		);
 
 		// Enrollment open/closed.
@@ -516,18 +510,12 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$data['enrollment_opens_message'] = array(
 			'raw'      => $course->get( 'enrollment_opens_message', $raw = true ),
-			/**
-			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
-			 */
-			'rendered' => do_shortcode( $course->get( 'enrollment_opens_message' ) ), // we need shortcodes to be processed.
+			'rendered' => do_shortcode( $course->get( 'enrollment_opens_message' ) ),
 		);
 
 		$data['enrollment_closes_message'] = array(
 			'raw'      => $course->get( 'enrollment_closed_message', $raw = true ),
-			/**
-			 *  Note: Wanted to use the llms_content util here, but it added unwanted paraphs and new lines.
-			 */
-			'rendered' => do_shortcode( $course->get( 'enrollment_closed_message' ) ), // we need shortcodes to be processed.
+			'rendered' => do_shortcode( $course->get( 'enrollment_closed_message' ) ),
 		);
 
 		// Sales page page type.
@@ -633,11 +621,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				$course_id,
 				rest_url( sprintf( '%s/%s', 'llms/v1', 'access-plans' ) )
 			),
-		);
-
-		// Content.
-		$course_links['content'] = array(
-			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $course_id, 'content' ) ),
 		);
 
 		// Enrollments.
