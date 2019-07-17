@@ -1,11 +1,9 @@
 version: 2
-
 references:
 
   common_env_vars: &common_env_vars
     environment:
       - MYSQL_ROOT_HOST: "%"
-      # - CC_TEST_REPORTER_ID: arstarst
 
   common: &common
     working_directory: ~/repo
