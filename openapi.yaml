@@ -1,14 +1,18 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
+  version: 1.0.0-alpha.1
   title: LifterLMS REST API
   description: |-
     # Introduction
     LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.
+    ## We're Under Construction
+    This is a working specification for the LifterLMS Rest API scheduled to be released as part of the free LifterLMS core plugin in August 2019.
+    We are currently accepting feedback from any interested party. Please review this specification and provide your feedback via [this form](https://docs.google.com/forms/d/e/1FAIpQLSeQTBN-TOG9kPyccWJ_agZWmxuUwdaz7PGforoXRwW3IYscbA/viewform).
+    If you're interested in contributing, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack) to find out how you can contribute.
     ## Requirements
     To use the latest version of the REST API you must be using the following:
 
-      + LifterLMS [@version]+.
+      + LifterLMS Version ??+.
       + WordPress 5.2+.
       + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**
       + An SSL certificate.
@@ -698,9 +702,7 @@ paths:
             enum:
               - date_updated
               - date_created
-              - enrollment
             default: date_updated
-        - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/PostPassword'
         - name: status
           description: Filter results to records matching the specified status.
@@ -708,6 +710,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/EnrollmentStatus'
+        - name: student
+          in: query
+          description: Limit results to a specific student or a list of students. Accepts a single student `id` or a comma separated list of student `id`s.
+          schema:
+            type: string
+            example: '1,2,3'
       responses:
         '200':
           description: Successfully retrieved the course's enrollments.
@@ -3123,7 +3131,7 @@ components:
                     properties:
                       href:
                         type: string
-                        example: /wp-json/llms/v1/enrollments?post=1234
+                        example: /wp-json/llms/v1/courses/1234/enrollments
                 instructors:
                   description: REST URI to the collection of the course's instructors.
                   type: array
