@@ -138,7 +138,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/enrollments?post=1234
+                  example: /wp-json/llms/v1/courses/1234/enrollments
           instructors:
             description: REST URI to the collection of the course's instructors.
             type: array
