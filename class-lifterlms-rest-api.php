@@ -78,11 +78,19 @@ final class LifterLMS_REST_API {
 	 * @return void
 	 */
 	public function includes() {
+
 		// Authentication needs to run early to handle basic auth.
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
+		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-install.php';
+
+		// Include admin classes.
+		if ( is_admin() ) {
+			include_once dirname( __FILE__ ) . '/includes/admin/class-llms-rest-admin-settings.php';
+		}
 
 		add_action( 'rest_api_init', array( $this, 'rest_api_includes' ), 5 );
 		add_action( 'rest_api_init', array( $this, 'rest_api_controllers_init' ), 10 );
+
 	}
 
 	/**
