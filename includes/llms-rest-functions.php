@@ -2,7 +2,7 @@
 /**
  * REST functions
  *
- * @package LLMS_REST
+ * @package LifterLMS_REST/Functions
  *
  * @since [version]
  * @version [version]

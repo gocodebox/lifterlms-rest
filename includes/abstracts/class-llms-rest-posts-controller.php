@@ -2,7 +2,7 @@
 /**
  * REST LLMS Posts Controller Class
  *
- * @package LLMS_REST
+ * @package LifterLMS_REST/Abstracts
  *
  * @since [version]
  * @version [version]

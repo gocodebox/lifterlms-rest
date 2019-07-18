@@ -2,7 +2,7 @@
 /**
  * REST Sections Controller Class
  *
- * @package LLMS_REST
+ * @package LifterLMS_REST/Classes/Controllers
  *
  * @since [version]
  * @version [version]
