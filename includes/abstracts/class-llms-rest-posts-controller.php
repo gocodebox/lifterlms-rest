@@ -564,14 +564,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
 
-		$has_password_filter = false;
-
-		if ( $this->can_access_password_content( $object, $request ) ) {
-			// Allow access to the post, permissions already checked before.
-			add_filter( 'post_password_required', '__return_false' );
-
-			$has_password_filter = true;
-		}
+		$password_required = post_password_required( $object->get( 'id' ) );
 
 		$data = array(
 			'id'               => $object->get( 'id' ),
@@ -594,18 +587,13 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			'ping_status'      => $object->get( 'ping_status' ),
 			'content'          => array(
 				'raw'      => $object->get( 'content', true ),
-				'rendered' => post_password_required( $object->get( 'id' ) ) ? '' : apply_filters( 'the_content', $object->get( 'content', true ) ),
+				'rendered' => $password_required ? '' : apply_filters( 'the_content', $object->get( 'content', true ) ),
 			),
 			'excerpt'          => array(
 				'raw'      => $object->get( 'excerpt', true ),
-				'rendered' => post_password_required( $object->get( 'id' ) ) ? '' : apply_filters( 'the_excerpt', $object->get( 'excerpt' ) ),
+				'rendered' => $password_required ? '' : apply_filters( 'the_excerpt', $object->get( 'excerpt' ) ),
 			),
 		);
-
-		if ( $has_password_filter ) {
-			// Reset filter.
-			remove_filter( 'post_password_required', '__return_false' );
-		}
 
 		return $data;
 
@@ -631,7 +619,21 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		setup_postdata( $post );
 
 		$removed_filters_for_response = $this->maybe_remove_filters_for_response( $object );
-		$data                         = $this->prepare_object_for_response( $object, $request );
+		$has_password_filter = false;
+
+		if ( $this->can_access_password_content( $object, $request ) ) {
+			// Allow access to the post, permissions already checked before.
+			add_filter( 'post_password_required', '__return_false' );
+			$has_password_filter = true;
+		}
+
+		$data = $this->prepare_object_for_response( $object, $request );
+
+		if ( $has_password_filter ) {
+			// Reset filter.
+			remove_filter( 'post_password_required', '__return_false' );
+		}
+
 		$this->maybe_add_removed_filters_for_response( $removed_filters_for_response );
 		$post = $temp; // phpcs:ignore
 		wp_reset_postdata();
@@ -777,7 +779,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'               => array(
-					'description' => __( 'Unique Course Identifier. The WordPress Post ID.', 'lifterlms' ),
+					'description' => __( 'Unique Identifier. The WordPress Post ID.', 'lifterlms' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,

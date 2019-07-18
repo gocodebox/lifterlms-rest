@@ -32,7 +32,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	protected $post_type = 'course';
 
-
 	/**
 	 * Get object.
 	 *
@@ -403,6 +402,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		$schema['properties'] = array_merge( (array) $schema['properties'], $course_properties );
+
 		return $schema;
 
 	}
@@ -625,11 +625,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Enrollments.
 		$course_links['enrollments'] = array(
-			'href' => add_query_arg(
-				'post',
-				$course_id,
-				rest_url( sprintf( '%s/%s', 'llms/v1', 'enrollments' ) )
-			),
+			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $course_id, 'enrollments' ) ),
 		);
 
 		// Insturctors.
