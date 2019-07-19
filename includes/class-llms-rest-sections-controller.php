@@ -77,6 +77,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
 			),
+			'required'    => true,
 		);
 
 		// Setion order.
@@ -87,12 +88,14 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
 			),
+			'required'    => true,
 		);
 
 		// remove unnecessary properties.
 		$unnecessary_properties = array(
 			'permalink',
 			'slug',
+			'content',
 			'menu_order',
 			'excerpt',
 			'featured_media',
