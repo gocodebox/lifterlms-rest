@@ -26,7 +26,6 @@ get:
           - date_updated
           - date_created
         default: date_updated
-    - $ref: '#/components/parameters/PostPassword'
     - name: status
       description: Filter results to records matching the specified status.
       in: query
@@ -38,8 +37,7 @@ get:
       description: Limit results to a specific student or a list of students. Accepts a single student `id` or a comma separated list of student `id`s.
       schema:
         type: string
-        example: 1,2,3
-
+        example: [1,2,3]
   responses:
     200:
       description: Successfully retrieved the course's enrollments.

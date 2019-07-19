@@ -25,16 +25,20 @@ get:
         enum:
           - date_updated
           - date_created
-          - enrollment
         default: date_updated
     - $ref: '#/components/parameters/Include'
-    - $ref: '#/components/parameters/PostPassword'
     - name: status
       description: Filter results to records matching the specified status.
       in: query
       required: false
       schema:
         $ref: '#/components/schemas/EnrollmentStatus'
+    - name: student
+      in: query
+      description: Limit results to a specific student or a list of students. Accepts a single student `id` or a comma separated list of student `id`s.
+      schema:
+        type: string
+        example: [1,2,3]
   responses:
     200:
       description: Successfully retrieved the membership's enrollments.
