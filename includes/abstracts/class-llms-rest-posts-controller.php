@@ -215,6 +215,46 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		return true;
 	}
 
+
+	/**
+	 * Creates a single LLMS post.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
+
+		$prepared_object = $this->prepare_object_for_database( $request );
+
+		if ( is_wp_error( $prepared_object ) ) {
+			return $prepared_object;
+		}
+
+		$object = $this->create_llms_post( $prepared_object );
+
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
+
+		$fields_update = $this->update_additional_fields_for_object( $object, $request );
+
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		$response = $this->prepare_item_for_response( $object, $request );
+
+		$response->set_status( 201 );
+
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $object->get( 'id' ) ) ) );
+
+		return $response;
+	}
+
 	/**
 	 * Check if a given request has access to read an item.
 	 *
@@ -237,7 +277,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		if ( ! empty( $request['password'] ) ) {
 			// Check post password, and return error if invalid.
 			if ( ! hash_equals( $object->get( 'password' ), $request['password'] ) ) {
-				return llms_rest_authorization_required_error();
+				return llms_rest_authorization_required_error( __( 'Incorrect password.', 'lifterlms' ) );
 			}
 		}
 
@@ -565,6 +605,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	protected function prepare_object_for_response( $object, $request ) {
 
 		$password_required = post_password_required( $object->get( 'id' ) );
+		$password          = $object->get( 'password' );
 
 		$data = array(
 			'id'               => $object->get( 'id' ),
@@ -577,7 +618,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				'raw'      => $object->get( 'title', 'raw' ),
 				'rendered' => $object->get( 'title' ),
 			),
-			'password'         => $object->get( 'password' ),
+			'password'         => $password,
 			'slug'             => $object->get( 'name' ),
 			'post_type'        => $this->post_type,
 			'permalink'        => get_permalink( $object->get( 'id' ) ),
@@ -586,12 +627,14 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			'comment_status'   => $object->get( 'comment_status' ),
 			'ping_status'      => $object->get( 'ping_status' ),
 			'content'          => array(
-				'raw'      => $object->get( 'content', true ),
-				'rendered' => $password_required ? '' : apply_filters( 'the_content', $object->get( 'content', true ) ),
+				'raw'       => $object->get( 'content', true ),
+				'rendered'  => $password_required ? '' : apply_filters( 'the_content', $object->get( 'content', true ) ),
+				'protected' => (bool) $password,
 			),
 			'excerpt'          => array(
-				'raw'      => $object->get( 'excerpt', true ),
-				'rendered' => $password_required ? '' : apply_filters( 'the_excerpt', $object->get( 'excerpt' ) ),
+				'raw'       => $object->get( 'excerpt', true ),
+				'rendered'  => $password_required ? '' : apply_filters( 'the_excerpt', $object->get( 'excerpt' ) ),
+				'protected' => (bool) $password,
 			),
 		);
 
@@ -619,6 +662,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		setup_postdata( $post );
 
 		$removed_filters_for_response = $this->maybe_remove_filters_for_response( $object );
+
 		$has_password_filter = false;
 
 		if ( $this->can_access_password_content( $object, $request ) ) {
@@ -848,16 +892,22 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					),
 					'required'    => true,
 					'properties'  => array(
-						'rendered' => array(
+						'rendered'  => array(
 							'description' => __( 'Rendered HTML content.', 'lifterlms' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'raw'      => array(
+						'raw'       => array(
 							'description' => __( 'Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in edit context.', 'lifterlms' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
+						),
+						'protected' => array(
+							'description' => __( 'Whether the content is protected with a password.', 'lifterlms' ),
+							'type'        => 'boolean',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
 						),
 					),
 				),
@@ -870,16 +920,22 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 						'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
 					),
 					'properties'  => array(
-						'rendered' => array(
+						'rendered'  => array(
 							'description' => __( 'Rendered HTML excerpt.', 'lifterlms' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'raw'      => array(
+						'raw'       => array(
 							'description' => __( 'Raw HTML excerpt. Useful when displaying title in the WP Block Editor. Only returned in edit context.', 'lifterlms' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
+						),
+						'protected' => array(
+							'description' => __( 'Whether the excerpt is protected with a password.', 'lifterlms' ),
+							'type'        => 'boolean',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
 						),
 					),
 				),
@@ -989,45 +1045,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		);
 
 		return $query_params;
-	}
-
-	/**
-	 * Creates a single LLMS post.
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
-	 */
-	public function create_item( $request ) {
-
-		$prepared_object = $this->prepare_object_for_database( $request );
-
-		if ( is_wp_error( $prepared_object ) ) {
-			return $prepared_object;
-		}
-
-		$object = $this->create_llms_post( $prepared_object );
-
-		if ( is_wp_error( $object ) ) {
-			return $object;
-		}
-
-		$fields_update = $this->update_additional_fields_for_object( $object, $request );
-
-		if ( is_wp_error( $fields_update ) ) {
-			return $fields_update;
-		}
-
-		$request->set_param( 'context', 'edit' );
-
-		$response = $this->prepare_item_for_response( $object, $request );
-
-		$response->set_status( 201 );
-
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $object->get( 'id' ) ) ) );
-
-		return $response;
 	}
 
 	/**
