@@ -18,7 +18,8 @@
 		"svn": false
 	},
 	"slush": {
-		"shortname": "REST"
+		"shortname": "REST",
+		"package_main": "LifterLMS_REST"
 	},
 	"zip": {
 		"composer": true,
