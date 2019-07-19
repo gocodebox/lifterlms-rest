@@ -17,7 +17,7 @@
  *  TODO:
  *  - update tests with the new params, e.g. rendered/raw content
  */
-class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case {
+class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 	/**
 	 * Route.
@@ -67,6 +67,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case {
 
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
+
+		// assume all courses have been migrated to the block editor
+		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );
 	}
 
 	/**
@@ -777,7 +780,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case {
 			'status'           => $course->get( 'status' ),
 			'content'          => array(
 				'raw'      => $post->post_content,
-				'rendered' => do_blocks( $course->get( 'content' ) ),
+				'rendered' => apply_filters( 'the_content', $course->get( 'content' ) ),
 			),
 			'date_created'     => $course->get( 'date', 'Y-m-d H:i:s' ),
 			'date_created_gmt' => $post->post_date_gmt,
