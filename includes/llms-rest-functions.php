@@ -15,18 +15,22 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  *
+ * @param string $message Optional. The custom error message. Default empty string.
+ *                        When no custom message is passed a predefined message will be used.
  * @return WP_Error
  */
-function llms_rest_authorization_required_error() {
+function llms_rest_authorization_required_error( $message = '' ) {
 	if ( is_user_logged_in() ) {
 		// 403
 		$error_code = 'llms_rest_forbidden_request';
-		$message    = __( 'You are not authorized to perform this request.', 'lifterlms' );
+		$_message   = __( 'You are not authorized to perform this request.', 'lifterlms' );
 	} else {
-		// 400
+		// 401
 		$error_code = 'llms_rest_unauthorized_request';
-		$message    = __( 'The API credentials were invalid.', 'lifterlms' );
+		$_message   = __( 'The API credentials were invalid.', 'lifterlms' );
 	}
+
+	$message = ! $message ? $_message : $message;
 	return new WP_Error( $error_code, $message, array( 'status' => rest_authorization_required_code() ) );
 }
 
@@ -35,11 +39,13 @@ function llms_rest_authorization_required_error() {
  *
  * @since [version]
  *
+ * @param string $message Optional. The custom error message. Default empty string.
+ *                        When no custom message is passed a predefined message will be used.
  * @return WP_Error
  */
-function llms_rest_not_found_error() {
-	// 404
-	return new WP_Error( 'llms_rest_not_found', __( 'The requested resource could not be found.', 'lifterlms' ), array( 'status' => 404 ) );
+function llms_rest_not_found_error( $message = '' ) {
+	$message = ! $message ? __( 'The requested resource could not be found.', 'lifterlms' ) : $message;
+	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => 404 ) );
 }
 
 /**
@@ -47,9 +53,11 @@ function llms_rest_not_found_error() {
  *
  * @since [version]
  *
+ * @param string $message Optional. The custom error message. Default empty string.
+ *                        When no custom message is passed a predefined message will be used.
  * @return WP_Error
  */
-function llms_rest_bad_request_error() {
-	// 400
-	return new WP_Error( 'llms_rest_bad_request', __( 'Invalid or malformed request syntax.', 'lifterlms' ), array( 'status' => 400 ) );
+function llms_rest_bad_request_error( $message = '' ) {
+	$message = ! $message ? __( 'Invalid or malformed request syntax.', 'lifterlms' ) : $message;
+	return new WP_Error( 'llms_rest_bad_request', $message, array( 'status' => 400 ) );
 }
