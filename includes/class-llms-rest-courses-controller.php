@@ -10,7 +10,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * LLMS_REST_Courses_Controller
  *
@@ -33,6 +32,66 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected $post_type = 'course';
 
 	/**
+	 * Enrollments controller
+	 *
+	 * @var LLMS_REST_Enrollments_Controller
+	 */
+	protected $enrollments_controller;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since [version]
+	 */
+	public function __construct() {
+
+		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
+		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
+
+	}
+
+	/**
+	 * Register routes.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function register_routes() {
+
+		parent::register_routes();
+
+		$schema = $this->get_item_schema();
+
+		$get_item_args = array(
+			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
+		);
+
+		$get_item_args = array_merge( $get_item_args, $this->enrollments_controller->get_collection_params() );
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/enrollments',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique Course Identifier. The WordPress Post ID', 'lifterlms' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this->enrollments_controller, 'get_items' ),
+					'permission_callback' => array( $this->enrollments_controller, 'get_items_permissions_check' ),
+					'args'                => $get_item_args,
+				),
+				'schema' => array( $this->enrollments_controller, 'get_public_item_schema' ),
+			)
+		);
+
+	}
+
+	/**
 	 * Get object.
 	 *
 	 * @since [version]
@@ -44,7 +103,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$course = llms_get_post( $id );
 		return $course && is_a( $course, 'LLMS_Course' ) ? $course : llms_rest_not_found_error();
 	}
-
 
 	/**
 	 * Get an LLMS_Course
@@ -754,6 +812,24 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		return array_merge( $links, $course_links );
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_enrollments_collection_params() {
+		$query_params = $this->enrollments_controller->get_collection_params();
+
+		$query_params['student_id'] = array(
+			'description' => __( 'Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids.', 'lifterlms' ),
+			'type'        => 'string',
+		);
+
+		return $query_params;
 	}
 
 }

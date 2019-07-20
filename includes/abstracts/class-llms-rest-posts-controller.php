@@ -31,7 +31,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	protected $post_type;
 
-
 	/**
 	 * Register routes.
 	 *
@@ -651,7 +650,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			remove_filter( 'post_password_required', '__return_false' );
 		}
 
-		$page        = (int) $query_args['paged'];
 		$total_posts = $query->found_posts;
 
 		if ( $total_posts < 1 ) {
