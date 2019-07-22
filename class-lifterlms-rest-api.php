@@ -83,7 +83,7 @@ final class LifterLMS_REST_API {
 		// Functions.
 		include_once dirname( __FILE__ ) . '/includes/llms-rest-functions.php';
 
-		// Models
+		// Models.
 		include_once dirname( __FILE__ ) . '/includes/models/class-llms-rest-api-key.php';
 
 		// Classes.

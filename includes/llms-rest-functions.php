@@ -51,10 +51,10 @@ function llms_rest_authorization_required_error() {
  * @return string
  */
 function llms_rest_random_hash() {
-    if ( ! function_exists( 'openssl_random_pseudo_bytes' ) ) {
-        return sha1( wp_rand() );
-    }
-    return bin2hex( openssl_random_pseudo_bytes( 20 ) );
+	if ( ! function_exists( 'openssl_random_pseudo_bytes' ) ) {
+		return sha1( wp_rand() );
+	}
+	return bin2hex( openssl_random_pseudo_bytes( 20 ) );
 }
 
 /**

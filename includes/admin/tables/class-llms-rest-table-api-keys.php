@@ -31,21 +31,28 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	 */
 	protected $is_large = true;
 
+	/**
+	 * Retrieve information for a the api key title/description <td>
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_REST_API_Key $api_key API Key object.
+	 * @return string
+	 */
 	protected function get_description_cell( $api_key ) {
 
 		$html = esc_html( $api_key->get( 'description' ) );
 		if ( current_user_can( 'edit_user', $api_key->get( 'user_id' ) ) ) {
 			$edit_link = esc_url( $api_key->get_edit_link() );
-			$html = '<a href="' . $edit_link . '">' . $html . '</a>';
-			$html .= '<div class="llms-rest-actions">';
-			$html .= '<small class="llms-action-icon">ID: ' . $api_key->get( 'id' ) . '</small> | ';
-			$html .= '<small><a class="llms-action-icon" href="' . $edit_link . '">View/Edit</a></small> | ';
-			$html .= '<small><a class="llms-action-icon danger" href="' . esc_url( $api_key->get_delete_link() ) . '">Revoke</a></small>';
-			$html .= '</div>';
+			$html      = '<a href="' . $edit_link . '">' . $html . '</a>';
+			$html     .= '<div class="llms-rest-actions">';
+			$html     .= '<small class="llms-action-icon">ID: ' . $api_key->get( 'id' ) . '</small> | ';
+			$html     .= '<small><a class="llms-action-icon" href="' . $edit_link . '">View/Edit</a></small> | ';
+			$html     .= '<small><a class="llms-action-icon danger" href="' . esc_url( $api_key->get_delete_link() ) . '">Revoke</a></small>';
+			$html     .= '</div>';
 		}
 
 		return $html;
-
 
 	}
 
@@ -54,7 +61,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	 *
 	 * @since [version]
 	 *
-	 * @param string $key the column id / key.
+	 * @param string            $key the column id / key.
 	 * @param LLMS_REST_API_Key $api_key API key object.
 	 * @return mixed
 	 */
@@ -75,7 +82,6 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 				break;
 
 			case 'user_id':
-
 				$user = get_user_by( 'id', $api_key->get( $key ) );
 				if ( ! $user ) {
 					$value = '';
@@ -98,9 +104,10 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 
 	/**
 	 * Execute a query to retrieve results from the table
-	 * @param    array      $args  array of query args
 	 *
 	 * @since [version]
+	 *
+	 * @param array $args Array of query args.
 	 *
 	 * @return void
 	 */
@@ -112,7 +119,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 
 		$tbody_data = array();
 		foreach ( $rows as $data ) {
-			$key = new LLMS_REST_API_Key( $data['id'], false );
+			$key          = new LLMS_REST_API_Key( $data['id'], false );
 			$tbody_data[] = $key->setup( $data );
 		}
 
@@ -141,11 +148,11 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	public function set_columns() {
 
 		return array(
-			'description' => __( 'Description', 'lifterlms' ),
+			'description'   => __( 'Description', 'lifterlms' ),
 			'truncated_key' => __( 'Consumer key', 'lifterlms' ),
-			'user_id' => __( 'User', 'lifterlms' ),
-			'permissions' => __( 'Permissions', 'lifterlms' ),
-			'last_access' => __( 'Last Access', 'lifterlms' ),
+			'user_id'       => __( 'User', 'lifterlms' ),
+			'permissions'   => __( 'Permissions', 'lifterlms' ),
+			'last_access'   => __( 'Last Access', 'lifterlms' ),
 		);
 
 	}

@@ -33,19 +33,21 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 
 	/**
 	 * Array of table column name => format
+	 *
 	 * @var  array
 	 */
 	protected $columns = array(
-		'user_id' => '%d',
-		'description' => '%s',
-		'consumer_key' => '%s',
+		'user_id'         => '%d',
+		'description'     => '%s',
+		'consumer_key'    => '%s',
 		'consumer_secret' => '%s',
-		'truncated_key' => '%s',
-		'last_access' => '%s',
+		'truncated_key'   => '%s',
+		'last_access'     => '%s',
 	);
 
 	/**
 	 * Database Table Name
+	 *
 	 * @var  string
 	 */
 	protected $table = 'api_keys';
@@ -64,7 +66,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id API Key ID.
+	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, hydrates the object on instantiation if an ID is supplied.
 	 */
 	public function __construct( $id = null, $hydrate = true ) {
@@ -85,10 +87,13 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	 */
 	public function get_delete_link() {
 
-		return add_query_arg( array(
-			'revoke-key' => $this->get( 'id' ),
-			'key-revoke-nonce' => wp_create_nonce( 'revoke' ),
-		), LLMS_REST_API()->keys()->get_admin_url() );
+		return add_query_arg(
+			array(
+				'revoke-key'       => $this->get( 'id' ),
+				'key-revoke-nonce' => wp_create_nonce( 'revoke' ),
+			),
+			LLMS_REST_API()->keys()->get_admin_url()
+		);
 
 	}
 
@@ -101,9 +106,12 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	 * @return string
 	 */
 	public function get_edit_link() {
-		return add_query_arg( array(
-			'edit-key' => $this->get( 'id' ),
-		), LLMS_REST_API()->keys()->get_admin_url() );
+		return add_query_arg(
+			array(
+				'edit-key' => $this->get( 'id' ),
+			),
+			LLMS_REST_API()->keys()->get_admin_url()
+		);
 	}
 
 	/**
@@ -120,7 +128,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 		$date = __( 'None', 'lifterlms' );
 		if ( ! empty( $this->get( 'last_access' ) ) ) {
 			$time = strtotime( $this->get( 'last_access' ) );
-			// Translators: %1$s: Last access date; %2$s: Last access time
+			// Translators: %1$s: Last access date; %2$s: Last access time.
 			$date = sprintf( __( '%1$s at %2$s', 'lifterlms' ), date_i18n( get_option( 'date_format' ), $time ), date_i18n( get_option( 'time_format' ), $time ) );
 		}
 

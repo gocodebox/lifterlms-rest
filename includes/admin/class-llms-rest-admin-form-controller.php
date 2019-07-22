@@ -35,10 +35,9 @@ class LLMS_REST_Admin_Form_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @return false|void
 	 */
 	public function handle_events() {
-
 
 		if ( llms_verify_nonce( 'key-revoke-nonce', 'revoke', 'GET' ) ) {
 			$delete = LLMS_REST_API()->keys()->delete( llms_filter_input( INPUT_GET, 'revoke-key', FILTER_VALIDATE_INT ) );

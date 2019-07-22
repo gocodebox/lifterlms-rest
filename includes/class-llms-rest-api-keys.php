@@ -65,10 +65,13 @@ class LLMS_REST_API_Keys {
 		 *
 		 * @param array $properties An associative array of key properties.
 		 */
-		$defaults = apply_filters( 'llms_rest_api_key_default_properties', array(
-			'permissions' => 'read',
-		) );
-		$data = wp_parse_args( $data, $defaults );
+		$defaults = apply_filters(
+			'llms_rest_api_key_default_properties',
+			array(
+				'permissions' => 'read',
+			)
+		);
+		$data     = wp_parse_args( $data, $defaults );
 
 		// Required Fields.
 		if ( empty( $data['description'] ) ) {
@@ -102,14 +105,11 @@ class LLMS_REST_API_Keys {
 	}
 
 	/**
-	 * [delete description]
+	 * Delete an API key.
 	 *
 	 * @since [version]
 	 *
-	 * @see {Reference}
-	 * @link {URL}
-	 *
-	 * @param [type] $id
+	 * @param int $id API Key ID.
 	 * @return bool  `true` on success, `false` if the key couldn't be found or an error was encountered during deletion.
 	 */
 	public function delete( $id ) {
@@ -125,7 +125,7 @@ class LLMS_REST_API_Keys {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id API Key ID.
+	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return LLMS_REST_API_Key|false
 	 */
@@ -145,11 +145,14 @@ class LLMS_REST_API_Keys {
 	 * @return string
 	 */
 	public function get_admin_url() {
-		return add_query_arg( array(
-			'page' => 'llms-settings',
-			'tab' => 'rest-api',
-			'section' => 'keys',
-		), admin_url( 'admin.php' ) );
+		return add_query_arg(
+			array(
+				'page'    => 'llms-settings',
+				'tab'     => 'rest-api',
+				'section' => 'keys',
+			),
+			admin_url( 'admin.php' )
+		);
 	}
 
 	/**
@@ -161,8 +164,8 @@ class LLMS_REST_API_Keys {
 	 */
 	public function get_permissions() {
 		return array(
-			'read' => __( 'Read', 'lifterlms' ),
-			'write' => __( 'Write', 'lifterlms' ),
+			'read'       => __( 'Read', 'lifterlms' ),
+			'write'      => __( 'Write', 'lifterlms' ),
 			'read_write' => __( 'Read / Write', 'lifterlms' ),
 		);
 	}
@@ -186,16 +189,18 @@ class LLMS_REST_API_Keys {
 
 		// First conditions prevents '', '0', 0, etc... & second prevents invalid / non existant user ids.
 		if ( ( isset( $data['user_id'] ) && empty( $data['user_id'] ) ) || ( ! empty( $data['user_id'] ) && ! get_user_by( 'id', $data['user_id'] ) ) ) {
+			// Translators: %s = Invalid user id.
 			return new WP_Error( 'llms_rest_key_invalid_user', sprintf( __( '"%s" is not a valid user ID.', 'lifterlms' ), $data['user_id'] ) );
 		}
 
 		// Prevent blank/empty descriptions.
 		if ( isset( $data['description'] ) && empty( $data['description'] ) ) {
-			return new WP_Error( 'llms_rest_key_invalid_description', sprintf( __( '"%s" is not a valid description.', 'lifterlms' ), $data['description'] ) );
+			return new WP_Error( 'llms_rest_key_invalid_description', __( 'An API Description is required.', 'lifterlms' ) );
 		}
 
 		// Validate Permissions.
 		if ( ! empty( $data['permissions'] ) && ! in_array( $data['permissions'], array_keys( $this->get_permissions() ), true ) ) {
+			// Translators: %s = Invalid permission string.
 			return new WP_Error( 'llms_rest_key_invalid_permissions', sprintf( __( '"%s" is not a valid permission.', 'lifterlms' ), $data['permissions'] ) );
 		}
 
@@ -230,12 +235,15 @@ class LLMS_REST_API_Keys {
 		}
 
 		// Filter out write-protected keys.
-		$data = array_diff_key( $data, array(
-			'id' => false,
-			'consumer_key' => false,
-			'consumer_secret' => false,
-			'truncated_key' => false
-		) );
+		$data = array_diff_key(
+			$data,
+			array(
+				'id'              => false,
+				'consumer_key'    => false,
+				'consumer_secret' => false,
+				'truncated_key'   => false,
+			)
+		);
 
 		$err = $this->is_data_valid( $data );
 		if ( is_wp_error( $err ) ) {

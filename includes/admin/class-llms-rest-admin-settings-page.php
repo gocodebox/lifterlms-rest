@@ -42,7 +42,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		add_action( 'lifterlms_settings_save_' . $this->id, array( $this, 'save' ) );
 
 		add_filter( 'llms_settings_rest-api_has_save_button', '__return_false' );
-		add_filter( 'llms_table_get_table_classes', array( $this, 'get_table_classes'), 10, 2 );
+		add_filter( 'llms_table_get_table_classes', array( $this, 'get_table_classes' ), 10, 2 );
 
 		add_action( 'lifterlms_admin_field_title-with-html', array( $this, 'output_title_field' ), 10 );
 
@@ -55,7 +55,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @return string
 	 */
 	protected function get_current_section() {
 
@@ -91,7 +91,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 *
 	 * @since [version]
 	 *
-	 * @return   array
+	 * @return array
 	 */
 	public function get_settings() {
 
@@ -117,22 +117,22 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 		require_once 'tables/class-llms-rest-table-api-keys.php';
 
-		$add_key = '1' == llms_filter_input( INPUT_GET, 'add-key', FILTER_SANITIZE_NUMBER_INT );
+		$add_key = '1' === llms_filter_input( INPUT_GET, 'add-key', FILTER_SANITIZE_NUMBER_INT );
 		$key_id  = llms_filter_input( INPUT_GET, 'edit-key', FILTER_SANITIZE_NUMBER_INT );
 
 		$settings = array();
 
 		$settings[] = array(
 			'class' => 'top',
-			'id' => 'rest_keys_options_start',
-			'type' => 'sectionstart',
+			'id'    => 'rest_keys_options_start',
+			'type'  => 'sectionstart',
 		);
 
 		$settings[] = array(
 			'title' => $key_id || $add_key ? __( 'API Key Details', 'lifterlms' ) : __( 'API Keys', 'lifterlms' ),
-			'type' => 'title-with-html',
-			'id' => 'rest_keys_options_title',
-			'html' => $key_id || $add_key ? '' : '<a href="' . esc_url( admin_url( 'admin.php?page=llms-settings&tab=rest-api&section=keys&add-key=1' ) ) . '" class="llms-button-primary small" type="submit" style="top:-2px;">' . __( 'Add API Key', 'lifterlms' ) . '</a>',
+			'type'  => 'title-with-html',
+			'id'    => 'rest_keys_options_title',
+			'html'  => $key_id || $add_key ? '' : '<a href="' . esc_url( admin_url( 'admin.php?page=llms-settings&tab=rest-api&section=keys&add-key=1' ) ) . '" class="llms-button-primary small" type="submit" style="top:-2px;">' . __( 'Add API Key', 'lifterlms' ) . '</a>',
 		);
 
 		if ( $add_key || $key_id ) {
@@ -147,78 +147,78 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 				$settings[] = array(
 					'title' => __( 'Description', 'lifterlms' ),
-					'desc' 	=> '<br>' . __( 'A friendly, human-readable, name used to identify the key.', 'lifterlms' ),
-					'id' 	=> 'llms_rest_key_description',
+					'desc'  => '<br>' . __( 'A friendly, human-readable, name used to identify the key.', 'lifterlms' ),
+					'id'    => 'llms_rest_key_description',
 					'type'  => 'text',
 					'value' => $key ? $key->get( 'description' ) : '',
 				);
 
 				$settings[] = array(
-					'title' => __( 'User', 'lifterlms' ),
-					'class' => 'llms-select2-student',
+					'title'             => __( 'User', 'lifterlms' ),
+					'class'             => 'llms-select2-student',
 					'custom_attributes' => array(
 						'data-placeholder' => __( 'Select a user', 'lifterlms' ),
 					),
-					'id' => 'llms_rest_key_user_id',
-					'options' => llms_make_select2_student_array( array( $user_id ) ),
-					'type' => 'select',
+					'id'                => 'llms_rest_key_user_id',
+					'options'           => llms_make_select2_student_array( array( $user_id ) ),
+					'type'              => 'select',
 				);
 
 				$settings[] = array(
-					'title' => __( 'Permissions', 'lifterlms' ),
-					'id' => 'llms_rest_key_permissions',
-					'type' => 'select',
+					'title'   => __( 'Permissions', 'lifterlms' ),
+					'id'      => 'llms_rest_key_permissions',
+					'type'    => 'select',
 					'options' => LLMS_REST_API()->keys()->get_permissions(),
-					'value' => $key ? $key->get( 'permissions' ) : '',
+					'value'   => $key ? $key->get( 'permissions' ) : '',
 				);
 
 				if ( $key && ! $this->generated_key ) {
 
 					$settings[] = array(
-						'title' => __( 'Consumer key ending in', 'lifterlms' ),
+						'title'             => __( 'Consumer key ending in', 'lifterlms' ),
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
 						),
-						'class' => 'code',
-						'id' => 'llms_rest_key__read_only_key',
-						'type' => 'text',
-						'value' => '&hellip;' . $key->get( 'truncated_key' ),
+						'class'             => 'code',
+						'id'                => 'llms_rest_key__read_only_key',
+						'type'              => 'text',
+						'value'             => '&hellip;' . $key->get( 'truncated_key' ),
 					);
 
 					$settings[] = array(
-						'title' => __( 'Last accessed at', 'lifterlms' ),
+						'title'             => __( 'Last accessed at', 'lifterlms' ),
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
 						),
-						'id' => 'llms_rest_key__read_only_date',
-						'type' => 'text',
-						'value' => $key->get_last_access_date(),
+						'id'                => 'llms_rest_key__read_only_date',
+						'type'              => 'text',
+						'value'             => $key->get_last_access_date(),
 					);
 
 				} elseif ( $this->generated_key ) {
 
 					$settings[] = array(
-						'title' => __( 'Consumer key', 'lifterlms' ),
+						'title'             => __( 'Consumer key', 'lifterlms' ),
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
 						),
-						'css' => 'width:400px',
-						'class' => 'code widefat',
-						'id' => 'llms_rest_key__read_only_key',
-						'type' => 'text',
-						'value' => $key->get( 'consumer_key_one_time' ),
+						'css'               => 'width:400px',
+						'class'             => 'code widefat',
+						'id'                => 'llms_rest_key__read_only_key',
+						'type'              => 'text',
+						'value'             => $key->get( 'consumer_key_one_time' ),
 					);
 
 					$settings[] = array(
-						'title' => __( 'Consumer secret', 'lifterlms' ),
+						'title'             => __( 'Consumer secret', 'lifterlms' ),
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
 						),
-						'css' => 'width:400px',
-						'class' => 'code widefat',
-						'id' => 'llms_rest_key__read_only_secret',
-						'type' => 'text',
-						'value' => $key->get( 'consumer_secret' ),
+						'css'               => 'width:400px',
+						'class'             => 'code widefat',
+						'id'                => 'llms_rest_key__read_only_secret',
+						'type'              => 'text',
+						'value'             => $key->get( 'consumer_secret' ),
 					);
 
 				}
@@ -230,35 +230,33 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 				}
 				$buttons .= wp_nonce_field( 'lifterlms-settings', '_wpnonce', true, false );
 
-
 				$settings[] = array(
-					'type' => 'custom-html',
-					'id' => 'llms_rest_key_buttons',
+					'type'  => 'custom-html',
+					'id'    => 'llms_rest_key_buttons',
 					'value' => $buttons,
 				);
 
 			} else {
 
 				$settings[] = array(
-					'id' => 'rest_keys_options_invalid_error',
-					'type' => 'custom-html',
+					'id'    => 'rest_keys_options_invalid_error',
+					'type'  => 'custom-html',
 					'value' => __( 'Invalid api key.', 'lifterlms' ),
 				);
 
 			}
-
 		} else {
 
 			$settings[] = array(
-				'id' => 'llms_api_keys_table',
+				'id'    => 'llms_api_keys_table',
 				'table' => new LLMS_REST_Table_API_Keys(),
-				'type' => 'table',
+				'type'  => 'table',
 			);
 
 		}
 
 		$settings[] = array(
-			'id' => 'rest_keys_options_end',
+			'id'   => 'rest_keys_options_end',
 			'type' => 'sectionend',
 		);
 
@@ -272,7 +270,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 * @since [version]
 	 *
 	 * @param string[] $classes Array of css class names.
-	 * @param string $id Table ID.
+	 * @param string   $id Table ID.
 	 * @return string[]
 	 */
 	public function get_table_classes( $classes, $id ) {
@@ -299,6 +297,13 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 	}
 
+	/**
+	 * Form handler to save Create / Update an API key.
+	 *
+	 * @since [version]
+	 *
+	 * @return null|LLMS_REST_API_Key|WP_Error
+	 */
 	public function save() {
 
 		$ret = null;
@@ -315,6 +320,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		}
 
 		if ( is_wp_error( $ret ) ) {
+			// Translators: %1$s = Error message; %2$s = Error code.
 			LLMS_Admin_Settings::set_error( sprintf( __( 'Error: %1$s [Code: %2$s]', 'lifterlms' ), $ret->get_error_message(), $ret->get_error_code() ) );
 		}
 
@@ -322,32 +328,51 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 	}
 
+	/**
+	 * Form handler to create a new API key.
+	 *
+	 * @since [version]
+	 *
+	 * @return LLMS_REST_API_Key|WP_Error
+	 */
 	protected function save_create() {
 
-		$create = LLMS_REST_API()->keys()->create( array(
-			'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
-			'user_id' => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
-			'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
-		) );
+		$create = LLMS_REST_API()->keys()->create(
+			array(
+				'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
+				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
+				'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
+			)
+		);
 
 		return $create;
 
-
 	}
 
+	/**
+	 * Form handler to save an API key.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $key_id API Key ID.
+	 * @return LLMS_REST_API_Key|WP_Error
+	 */
 	protected function save_update( $key_id ) {
 
 		$key = LLMS_REST_API()->keys()->get( $key_id );
 		if ( ! $key ) {
+			// Translators: %s = Invalid API Key ID.
 			return new WP_Error( 'llms_rest_api_key_not_found', sprintf( __( '"%s" is not a valid API Key.', 'lifterlms' ), $key_id ) );
 		}
 
-		$update = LLMS_REST_API()->keys()->update( array(
-			'id' => $key_id,
-			'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
-			'user_id' => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
-			'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
-		) );
+		$update = LLMS_REST_API()->keys()->update(
+			array(
+				'id'          => $key_id,
+				'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
+				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
+				'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
+			)
+		);
 
 		return $update;
 
