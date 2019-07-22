@@ -2,7 +2,7 @@
 /**
  * Plugin installation scripts.
  *
- * @package LifterLMS_rest/Classes
+ * @package LifterLMS_REST/Classes
  *
  * @since [version]
  * @version [version]
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  */
-class LLMS_rest_Install {
+class LLMS_REST_Install {
 
 	/**
 	 * Initialize the install class.
@@ -61,20 +61,22 @@ class LLMS_rest_Install {
 
 		$schema .= "
 CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys` (
-  `key_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL,
   `description` varchar(200) DEFAULT NULL,
   `permissions` varchar(10) NOT NULL,
   `consumer_key` char(64) NOT NULL,
   `consumer_secret` char(43) NOT NULL,
+  `truncated_key` char(7) NOT NULL,
   `last_access` datetime DEFAULT NULL,
-  PRIMARY KEY (`key_id`),
+  PRIMARY KEY (`id`),
   KEY `consumer_key` (`consumer_key`),
   KEY `consumer_secret` (`consumer_secret`)
 ) $collate;
 		";
 
 		return $schema;
+
 	}
 
 	/**
@@ -82,7 +84,7 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys` (
 	 *
 	 * @since [version]
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	public static function install() {
 
@@ -115,4 +117,4 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys` (
 
 }
 
-LLMS_rest_Install::init();
+LLMS_REST_Install::init();
