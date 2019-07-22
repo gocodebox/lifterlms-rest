@@ -30,6 +30,14 @@ class LLMS_REST_Admin_Settings {
 
 	}
 
+	/**
+	 * Register the REST API settings page with the LifterLMS Core.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $pages Array of settings page classes.
+	 * @return array
+	 */
 	public function add_pages( $pages ) {
 
 		$pages[] = include 'class-llms-rest-admin-settings-page.php';
