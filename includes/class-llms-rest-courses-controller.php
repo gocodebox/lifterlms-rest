@@ -153,8 +153,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -185,8 +185,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -207,8 +207,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -242,8 +242,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -276,8 +276,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -310,8 +310,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
@@ -344,8 +344,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 				),
 				'properties'  => array(
 					'raw'      => array(
