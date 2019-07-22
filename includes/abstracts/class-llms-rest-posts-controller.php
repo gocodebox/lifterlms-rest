@@ -11,12 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- *  TODO:
- * - do we really want to reply with "Bad request" for llms_rest_bad_request ?
- * - Implement everything :D
- */
-
-/**
  * LLMS_REST_Posts_Controller
  *
  * @since [version]
@@ -158,7 +152,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$objects     = $query_results['objects'];
 
 		if ( $page > $max_pages && $total_posts > 0 ) {
-			return llms_rest_bad_request_error();
+			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
 		}
 
 		$response = rest_ensure_response( $objects );
@@ -204,12 +198,21 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	public function create_item_permissions_check( $request ) {
 
+		$post_type_object = get_post_type_object( $this->post_type );
+		$post_type_name   = $post_type_object->labels->name;
+
 		if ( ! empty( $request['id'] ) ) {
-			return llms_rest_bad_request_error();
+			// translators: The post type name.
+			return llms_rest_bad_request_error( sprintf( __( 'Cannot create existing %s.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
-			return llms_rest_authorization_required_error();
+			// translators: The post type name.
+			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
+		}
+
+		if ( ! $this->check_assign_terms_permission( $request ) ) {
+			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to assign the provided terms.', 'lifterlms' ) );
 		}
 
 		return true;
@@ -226,16 +229,37 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 
-		$prepared_object = $this->prepare_object_for_database( $request );
+		$prepared_item = $this->prepare_item_for_database( $request );
 
-		if ( is_wp_error( $prepared_object ) ) {
-			return $prepared_object;
+		if ( is_wp_error( $prepared_item ) ) {
+			return $prepared_item;
 		}
 
-		$object = $this->create_llms_post( $prepared_object );
+		$object = $this->create_llms_post( $prepared_item );
 
-		if ( is_wp_error( $object ) ) {
-			return $object;
+		if ( is_wp_error( $prepared_item ) ) {
+
+			if ( 'db_insert_error' === $prepared_item->get_error_code() ) {
+				$prepared_item->add_data( array( 'status' => 500 ) );
+			} else {
+				$prepared_item->add_data( array( 'status' => 400 ) );
+			}
+
+			return $prepared_item;
+		}
+
+		$object_id = $object->get( 'id' );
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['featured_media'] ) && isset( $request['featured_media'] ) ) {
+			$this->handle_featured_media( $request['featured_media'], $object_id );
+		}
+
+		$terms_update = $this->handle_terms( $object_id, $request );
+
+		if ( is_wp_error( $terms_update ) ) {
+			return $terms_update;
 		}
 
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
@@ -250,7 +274,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$response->set_status( 201 );
 
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $object->get( 'id' ) ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $object_id ) ) );
 
 		return $response;
 	}
@@ -383,8 +407,16 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
+		$post_type_object = get_post_type_object( $this->post_type );
+		$post_type_name   = $post_type_object->labels->name;
+
 		if ( ! $this->check_update_permission( $object ) ) {
-			return llms_rest_authorization_required_error();
+			// translators: The post type name.
+			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
+		}
+
+		if ( ! $this->check_assign_terms_permission( $request ) ) {
+			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to assign the provided terms.', 'lifterlms' ) );
 		}
 
 		return true;
@@ -406,25 +438,38 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
-		$prepared_object = $this->prepare_object_for_database( $request );
+		$prepared_item = $this->prepare_item_for_database( $request, true );
 
-		if ( is_wp_error( $prepared_object ) ) {
-			return $prepared_object;
+		if ( is_wp_error( $prepared_item ) ) {
+			return $prepared_item;
 		}
 
-		// convert the post object to an array, otherwise wp_update_post will expect non-escaped input.
-		$object_id = wp_update_post( wp_slash( (array) $prepared_object ), true );
+		$update_result = $object->set_bulk( $prepared_item, true );
 
-		if ( is_wp_error( $object_id ) ) {
-			if ( 'db_update_error' === $object_id->get_error_code() ) {
-				$object_id->add_data( array( 'status' => 500 ) );
+		if ( is_wp_error( $update_result ) ) {
+
+			if ( 'db_update_error' === $update_result->get_error_code() ) {
+				$update_result->add_data( array( 'status' => 500 ) );
 			} else {
-				$object_id->add_data( array( 'status' => 400 ) );
+				$update_result->add_data( array( 'status' => 400 ) );
 			}
-			return $object_id;
+
+			return $update_result;
 		}
 
-		$object = $this->get_object( $object_id );
+		$object_id = $object->get( 'id' );
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['featured_media'] ) && isset( $request['featured_media'] ) ) {
+			$this->handle_featured_media( $request['featured_media'], $object_id );
+		}
+
+		$terms_update = $this->handle_terms( $object_id, $request );
+
+		if ( is_wp_error( $terms_update ) ) {
+			return $terms_update;
+		}
 
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 
@@ -604,7 +649,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
 
-		$password_required = post_password_required( $object->get( 'id' ) );
+		$object_id         = $object->get( 'id' );
+		$password_required = post_password_required( $object_id );
 		$password          = $object->get( 'password' );
 
 		$data = array(
@@ -621,9 +667,9 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			'password'         => $password,
 			'slug'             => $object->get( 'name' ),
 			'post_type'        => $this->post_type,
-			'permalink'        => get_permalink( $object->get( 'id' ) ),
+			'permalink'        => get_permalink( $object_id ),
 			'status'           => $object->get( 'status' ),
-			'featured_media'   => (int) get_post_thumbnail_id( $object->get( 'id' ) ),
+			'featured_media'   => (int) get_post_thumbnail_id( $object_id ),
 			'comment_status'   => $object->get( 'comment_status' ),
 			'ping_status'      => $object->get( 'ping_status' ),
 			'content'          => array(
@@ -718,7 +764,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		if ( isset( $query_args['orderby'] ) && isset( $request['orderby'] ) ) {
 			$orderby_mappings = array(
 				'id'           => 'ID',
-				'title'        => 'post_name',
+				'title'        => 'title',
 				'data_created' => 'post_date',
 				'date_updated' => 'post_modified',
 			);
@@ -744,12 +790,12 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return stdClass|WP_Error Post object or WP_Error.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param bool            $updating Optional. Whether or not the item should be prepared for updating. Default false.
+	 *                                  When an item must be prepared for updating some WP_Post post properties must not be prefixed with 'post_'.
+	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
-	protected function prepare_object_for_database( $request ) {
-
-		$prepared_object = new stdClass();
+	protected function prepare_item_for_database( $request, $updating = false ) {
 
 		// LLMS Post ID.
 		if ( isset( $request['id'] ) ) {
@@ -758,53 +804,124 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				return $existing_object;
 			}
 
-			$prepared_object->ID = absint( $request['id'] );
+			$prepared_item['id'] = absint( $request['id'] );
 		}
 
-		$schema = $this->get_item_schema();
+		$schema    = $this->get_item_schema();
+		$post_keys = $this->get_object_wp_post_fields( $updating );
 
 		// LLMS Post title.
-		if ( ! empty( $schema['properties']['title'] ) && isset( $request['title'] ) ) {
+		if ( ! empty( $schema['properties']['title'] ) && isset( $request['title'], $post_keys['post_title'] ) ) {
 			if ( is_string( $request['title'] ) ) {
-				$prepared_object->post_title = $request['title'];
+				$prepared_item[ $post_keys['post_title'] ] = $request['title'];
 			} elseif ( ! empty( $request['title']['raw'] ) ) {
-				$prepared_object->post_title = $request['title']['raw'];
+				$prepared_item[ $post_keys['post_title'] ] = $request['title']['raw'];
 			}
 		}
 
 		// LLMS Post content.
-		if ( ! empty( $schema['properties']['content'] ) && isset( $request['content'] ) ) {
+		if ( ! empty( $schema['properties']['content'] ) && isset( $request['content'], $post_keys['post_content'] ) ) {
 			if ( is_string( $request['content'] ) ) {
-				$prepared_object->post_content = $request['content'];
+				$prepared_item[ $post_keys['post_content'] ] = $request['content'];
 			} elseif ( isset( $request['content']['raw'] ) ) {
-				$prepared_object->post_content = $request['content']['raw'];
+				$prepared_item[ $post_keys['post_content'] ] = $request['content']['raw'];
 			}
 		}
 
 		// LLMS Post excerpt.
-		if ( ! empty( $schema['properties']['excerpt'] ) && isset( $request['excerpt'] ) ) {
+		if ( ! empty( $schema['properties']['excerpt'] ) && isset( $request['excerpt'], $post_keys['post_excerpt'] ) ) {
 			if ( is_string( $request['excerpt'] ) ) {
-				$prepared_object->post_excerpt = $request['excerpt'];
+				$prepared_item[ $post_keys['post_excerpt'] ] = $request['excerpt'];
 			} elseif ( isset( $request['excerpt']['raw'] ) ) {
-				$prepared_object->post_excerpt = $request['excerpt']['raw'];
+				$prepared_item[ $post_keys['post_excerpt'] ] = $request['excerpt']['raw'];
 			}
 		}
 
 		// LLMS Post status.
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
-			$prepared_object->post_status = $request['status'];
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'], $post_keys['post_status'] ) ) {
+			$status = $this->handle_status_param( $request['status'] );
+
+			if ( is_wp_error( $status ) ) {
+				return $status;
+			}
+
+			$prepared_item[ $post_keys['post_status'] ] = $status;
 		}
 
 		// LLMS Post date.
-		if ( ! empty( $schema['properties']['date_created'] ) && ! empty( $request['date_created'] ) ) {
+		if ( ! empty( $schema['properties']['date_created'] ) && ! empty( $request['date_created'] ) && isset( $post_keys['post_date'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created'] );
 
 			if ( ! empty( $date_data ) ) {
-				list( $prepared_object->post_date, $prepared_object->post_date_gmt ) = $date_data;
+				list( $prepared_item[ $post_keys['post_date'] ], $prepared_item[ $post_keys['post_date_gmt'] ] ) = $date_data;
+			}
+		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) && isset( $post_keys['post_date_gmt'] ) ) {
+			$date_data = rest_get_date_with_gmt( $request['date_created_gmt'], true );
+
+			if ( ! empty( $date_data ) ) {
+				list( $prepared_item[ $post_keys['post_date'] ], $prepared_item[ $post_keys['post_date_gmt'] ] ) = $date_data;
 			}
 		}
 
-		return $prepared_object;
+		// LLMS Post slug.
+		if ( ! empty( $schema['properties']['slug'] ) && isset( $request['slug'], $post_keys['post_name'] ) ) {
+			$prepared_item[ $post_keys['post_name'] ] = $request['slug'];
+		}
+
+		// LLMS Post password.
+		if ( ! empty( $schema['properties']['password'] ) && isset( $request['password'], $post_keys['post_password'] ) ) {
+			$prepared_item[ $post_keys['post_password'] ] = $request['password'];
+		}
+
+		// LLMS Post Menu order.
+		if ( ! empty( $schema['properties']['menu_order'] ) && isset( $request['menu_order'], $post_keys['menu_order'] ) ) {
+			$prepared_item[ $post_keys['menu_order'] ] = (int) $request['menu_order'];
+		}
+
+		// LLMS Post Comment status.
+		if ( ! empty( $schema['properties']['comment_status'] ) && ! empty( $request['comment_status'] ) && isset( $post_keys['comment_status'] ) ) {
+			$prepared_item[ $post_keys['comment_status'] ] = $request['comment_status'];
+		}
+
+		// LLMS Post Ping status.
+		if ( ! empty( $schema['properties']['ping_status'] ) && ! empty( $request['ping_status'] ) && isset( $post_keys['ping_status'] ) ) {
+			$prepared_item[ $post_keys['ping_status'] ] = $request['ping_status'];
+		}
+
+		return $prepared_item;
+
+	}
+
+	/**
+	 * Get the WP Post properties keys
+	 *
+	 * @since [version]
+	 *
+	 * @param boolean $updating Optional. Whether or not in updating phase. Default false.
+	 * @return array  Array of WP Post keys.
+	 */
+	protected function get_object_wp_post_fields( $updating = false ) {
+
+		$map = array(
+			'post_title'     => 'title',
+			'post_content'   => 'content',
+			'post_excerpt'   => 'excerpt',
+			'post_password'  => 'password',
+			'post_date'      => 'date',
+			'post_date_gmt'  => 'date_gmt',
+			'post_status'    => 'status',
+			'post_name'      => 'name',
+			'menu_order'     => 'menu_orer',
+			'comment_status' => 'comment_status',
+			'ping_status'    => 'ping_status',
+		);
+
+		if ( ! $updating ) {
+			$keys = array_keys( $map );
+			return array_combine( $keys, $keys );
+		}
+
+		return $map;
 
 	}
 
@@ -864,8 +981,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-						'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+						'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 					),
 					'required'    => true,
 					'properties'  => array(
@@ -887,8 +1004,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					'description' => __( 'The HTML content of the post.', 'lifterlms' ),
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-						'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+						'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 					),
 					'required'    => true,
 					'properties'  => array(
@@ -916,8 +1033,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					'description' => __( 'The HTML excerpt of the post.', 'lifterlms' ),
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_object_for_database().
-						'validate_callback' => null, // Note: validation implemented in self::prepare_object_for_database().
+						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+						'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 					),
 					'properties'  => array(
 						'rendered'  => array(
@@ -970,7 +1087,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				'password'         => array(
 					'description' => __( 'Password used to protect access to the content.', 'lifterlms' ),
 					'type'        => 'string',
-					'enum'        => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) ),
 					'context'     => array( 'edit' ),
 				),
 				'featured_media'   => array(
@@ -995,7 +1111,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			),
 		);
 
-		return $schema;
+		return $this->add_additional_fields_schema( $schema );
 	}
 
 	/**
@@ -1190,6 +1306,134 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	protected function get_filters_to_be_removed_for_response( $object ) {
 		return array();
+	}
+
+	/**
+	 * Determines validity and normalizes the given status parameter.
+	 * Heavily based on WP_REST_Posts_Controller::handle_status_param().
+	 *
+	 * @since [version]
+	 *
+	 * @param string $status Status.
+	 * @return string|WP_Error Status or WP_Error if lacking the proper permission.
+	 */
+	protected function handle_status_param( $status ) {
+
+		$post_type_object = get_post_type_object( $this->post_type );
+		$post_type_name   = $post_type_object->labels->name;
+
+		switch ( $status ) {
+			case 'draft':
+			case 'pending':
+				break;
+			case 'private':
+				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
+					// translators: The post type name.
+					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a private %s.', 'lifterlms' ), $post_type_name ) );
+				}
+				break;
+			case 'publish':
+			case 'future':
+				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
+					// translators: The post type name.
+					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to publish a %s.', 'lifterlms' ), $post_type_name ) );
+				}
+				break;
+			default:
+				if ( ! get_post_status_object( $status ) ) {
+					$status = 'draft';
+				}
+				break;
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Determines the featured media based on a request param.
+	 * Heavily based on WP_REST_Posts_Controller::handle_featured_media().
+	 *
+	 * @since [version]
+	 *
+	 * @param int $featured_media Featured Media ID.
+	 * @param int $object_id      LLMS object ID.
+	 * @return bool|WP_Error Whether the post thumbnail was successfully deleted, otherwise WP_Error.
+	 */
+	protected function handle_featured_media( $featured_media, $object_id ) {
+
+		$featured_media = (int) $featured_media;
+		if ( $featured_media ) {
+			$result = set_post_thumbnail( $object_id, $featured_media );
+			if ( $result ) {
+				return true;
+			} else {
+				return llms_bad_request_error( __( 'Invalid featured media ID.', 'lifterlms' ) );
+			}
+		} else {
+			return delete_post_thumbnail( $object_id );
+		}
+
+	}
+
+	/**
+	 * Updates the post's terms from a REST request.
+	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
+	 *
+	 * @since [version]
+	 *
+	 * @param int             $object_id The post ID to update the terms form.
+	 * @param WP_REST_Request $request   The request object with post and terms data.
+	 * @return null|WP_Error  WP_Error on an error assigning any of the terms, otherwise null.
+	 */
+	protected function handle_terms( $object_id, $request ) {
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
+
+		foreach ( $taxonomies as $taxonomy ) {
+			$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
+			if ( ! isset( $request[ $base ] ) ) {
+				continue;
+			}
+
+			$result = wp_set_object_terms( $object_id, $request[ $base ], $taxonomy->name );
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+		}
+	}
+
+	/**
+	 * Checks whether current user can assign all terms sent with the current request.
+	 * Heavily based on WP_REST_Posts_Controller::check_assign_terms_permission().
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request The request object with post and terms data.
+	 * @return bool Whether the current user can assign the provided terms.
+	 */
+	protected function check_assign_terms_permission( $request ) {
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
+		foreach ( $taxonomies as $taxonomy ) {
+			$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
+			if ( ! isset( $request[ $base ] ) ) {
+				continue;
+			}
+
+			foreach ( $request[ $base ] as $term_id ) {
+				// Invalid terms will be rejected later.
+				if ( ! get_term( $term_id, $taxonomy->name ) ) {
+					continue;
+				}
+
+				if ( ! current_user_can( 'assign_term', (int) $term_id ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
