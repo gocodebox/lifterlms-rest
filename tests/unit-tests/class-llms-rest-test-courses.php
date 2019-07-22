@@ -2,7 +2,7 @@
 /**
  * Tests for Courses API.
  *
- * @package LifterLMS-Rest/Tests
+ * @package LifterLMS_Rest/Tests
  *
  * @group REST
  * @group rest_courses
