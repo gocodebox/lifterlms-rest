@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST_API/Classes
  *
- * @since 1.0.0
- * @version 1.0.0
+ * @since [version]
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LifterLMS_REST_API class.
  *
- * @since 1.0.0
+ * @since [version]
  */
 final class LifterLMS_REST_API {
 
@@ -22,7 +22,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = '[version]';
 
 	/**
 	 * Singleton instance of the class.
@@ -34,7 +34,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Singleton Instance of the LifterLMS_REST_API class.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return obj instance of the LifterLMS_REST_API class.
 	 */
@@ -51,7 +51,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
@@ -68,12 +68,10 @@ final class LifterLMS_REST_API {
 
 	}
 
-
-
 	/**
 	 * Include files and instantiate classes.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
@@ -81,11 +79,21 @@ final class LifterLMS_REST_API {
 
 		// Authentication needs to run early to handle basic auth.
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
+
+		// Functions.
+		include_once dirname( __FILE__ ) . '/includes/llms-rest-functions.php';
+
+		// Models
+		include_once dirname( __FILE__ ) . '/includes/models/class-llms-rest-api-key.php';
+
+		// Classes.
+		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys.php';
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-install.php';
 
 		// Include admin classes.
 		if ( is_admin() ) {
 			include_once dirname( __FILE__ ) . '/includes/admin/class-llms-rest-admin-settings.php';
+			include_once dirname( __FILE__ ) . '/includes/admin/class-llms-rest-admin-form-controller.php';
 		}
 
 		add_action( 'rest_api_init', array( $this, 'rest_api_includes' ), 5 );
@@ -94,17 +102,28 @@ final class LifterLMS_REST_API {
 	}
 
 	/**
+	 * Retrieve an instance of the API Keys management singleton.
+	 *
+	 * @example $keys = LLMS_REST_API()->keys();
+	 *
+	 * @since [version]
+	 *
+	 * @return LLMS_REST_API_Keys
+	 */
+	public function keys() {
+		return LLMS_REST_API_Keys::instance();
+	}
+
+	/**
 	 * Include REST api specific files.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
 	public function rest_api_includes() {
 
 		$includes = array(
-			// Functions.
-			'llms-rest-functions',
 
 			// Abstracts first.
 			'abstracts/class-llms-rest-posts-controller',
@@ -121,7 +140,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Instantiate REST api Controllers.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
@@ -142,7 +161,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Include all required files and classes.
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
@@ -166,7 +185,7 @@ final class LifterLMS_REST_API {
 	 *      WP_LANG_DIR/lifterlms/lifterlms-LOCALE.mo
 	 *      WP_LANG_DIR/plugins/lifterlms-LOCALE.mo
 	 *
-	 * @since 1.0.0
+	 * @since [version]
 	 *
 	 * @return void
 	 */
