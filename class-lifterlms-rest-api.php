@@ -128,6 +128,9 @@ final class LifterLMS_REST_API {
 			// Abstracts first.
 			'abstracts/class-llms-rest-posts-controller',
 
+			// Functios.
+			'llms-rest-server-functions',
+
 			'class-llms-rest-courses-controller',
 			'class-llms-rest-sections-controller',
 		);
