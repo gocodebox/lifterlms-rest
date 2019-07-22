@@ -32,6 +32,19 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 	 */
 	public $plugin_main = 'lifterlms-rest.php';
 
+	/**
+	 * Install the plugin
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function install() {
+		// Adds filters so tables will be created during LLMS Core installs.
+		LLMS_REST_Install::init();
+		parent::install();
+	}
+
 }
 
 return new LLMS_REST_Tests_Bootstrap();
