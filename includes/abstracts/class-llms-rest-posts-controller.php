@@ -1386,10 +1386,11 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 * @return null|WP_Error  WP_Error on an error assigning any of the terms, otherwise null.
 	 */
 	protected function handle_terms( $object_id, $request ) {
+
 		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
-			$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+			$base = $this->get_taxonomy_rest_base( $taxonomy );
 
 			if ( ! isset( $request[ $base ] ) ) {
 				continue;
@@ -1415,7 +1416,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	protected function check_assign_terms_permission( $request ) {
 		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
 		foreach ( $taxonomies as $taxonomy ) {
-			$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+			$base = $this->get_taxonomy_rest_base( $taxonomy );
 
 			if ( ! isset( $request[ $base ] ) ) {
 				continue;
@@ -1434,6 +1435,20 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Maps a taxonomy name to the relative rest base
+	 *
+	 * @since [version]
+	 *
+	 * @param object $taxonomy The taxonomy object.
+	 * @return string The taxonomy rest base.
+	 */
+	protected function get_taxonomy_rest_base( $taxonomy ) {
+
+		return ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
 	}
 
 	/**

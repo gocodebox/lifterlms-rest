@@ -475,6 +475,100 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 	}
 
 	/**
+	 * Test creating a single course with taxonomies
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_with_taxonomies() {
+
+		wp_set_current_user( $this->user_allowed );
+		$taxonomies = array(
+			'categories' => array(
+				1,
+				2,
+				3
+			),
+			'tags' => array(
+				6,
+				4,
+				8
+			),
+			'difficulties' => array(
+				9
+			),
+			'tracks' => array(
+				7,
+				5,
+				6
+			),
+		);
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			$taxonomies
+		);
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$request->set_body_params( $this->prepare_for_request( $course_args ) );
+		$response = $this->server->dispatch( $request );
+
+		// Terms have not ben created, I expect the course is created with empty taxonomies
+		$this->assertEquals( 201, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		foreach ( $taxonomies as $tax => $tid ) {
+			$this->assertEquals( array(), $res_data[$tax] );
+		}
+
+		//let's create the terms
+		$taxonomies = array(
+			'categories' => $this->factory()->term->create_many(
+				3,
+				array(
+					'taxonomy' => 'course_cat',
+				)
+			),
+			'tags' => $this->factory()->term->create_many(
+				3,
+				array(
+					'taxonomy' => 'course_tag',
+				)
+			),
+			'difficulties' => $this->factory()->term->create_many(
+				1,
+				array(
+					'taxonomy' => 'course_difficulty'
+				)
+			),
+			'tracks' => $this->factory()->term->create_many(
+				3,
+				array(
+					'taxonomy' => 'course_track',
+				)
+			),
+		);
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			$taxonomies
+		);
+
+		$request->set_body_params( $this->prepare_for_request( $course_args ) );
+		$response = $this->server->dispatch( $request );
+
+		// Terms have been created, I expect the course is created with taxonomies set
+		$this->assertEquals( 201, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		foreach ( $taxonomies as $tax => $tid ) {
+			$this->assertEquals( $tid, $res_data[$tax] );
+		}
+	}
+
+	/**
 	 * Test producing bad request error when creating a single course.
 	 *
 	 * @since [version]

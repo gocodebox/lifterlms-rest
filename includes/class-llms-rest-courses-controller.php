@@ -438,8 +438,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		// Difficulties.
-		$difficulties         = get_the_terms( $course->get( 'id' ), 'course_difficulty' );
-		$difficulties         = empty( $difficulties ) ? array() : $difficulties;
+		$difficulties         = $course->get_difficulty( 'term_id' );
+		$difficulties         = empty( $difficulties ) ? array() : array( $difficulties );
 		$data['difficulties'] = $difficulties;
 
 		// Tracks.
@@ -529,6 +529,47 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $data;
+
+	}
+
+	/**
+	 * Prepares a single post for create or update.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request  Request object.
+	 * @param bool            $updating Optional. Whether or not the item should be prepared for updating. Default false.
+	 *                                  When an item must be prepared for updating some WP_Post post properties must not be prefixed with 'post_'.
+	 * @return array|WP_Error Array of llms post args or WP_Error.
+	 */
+	protected function prepare_item_for_database( $request, $updating = false ) {
+
+		$prepared_item = parent::prepare_item_for_database( $request, $updating );
+
+		return $prepared_item;
+
+	}
+
+	/**
+	 * Maps a taxonomy name to the relative rest base
+	 *
+	 * @since [version]
+	 *
+	 * @param object $taxonomy The taxonomy object.
+	 * @return string The taxonomy rest base.
+	 */
+	protected function get_taxonomy_rest_base( $taxonomy ) {
+
+		$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
+		$taxonomy_base_map = array(
+			'course_cat'        => 'categories',
+			'course_difficulty' => 'difficulties',
+			'course_tag'        => 'tags',
+			'course_track'      => 'tracks',
+		);
+
+		return isset( $taxonomy_base_map[ $base ] ) ? $taxonomy_base_map[ $base ] : $base;
 
 	}
 
