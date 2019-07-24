@@ -596,13 +596,11 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request  Request object.
-	 * @param bool            $updating Optional. Whether or not the item should be prepared for updating. Default false.
-	 *                                  When an item must be prepared for updating some WP_Post post properties must not be prefixed with 'post_'.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
-	protected function prepare_item_for_database( $request, $updating = false ) {
+	protected function prepare_item_for_database( $request ) {
 
-		$prepared_item = parent::prepare_item_for_database( $request, $updating );
+		$prepared_item = parent::prepare_item_for_database( $request );
 		$schema        = $this->get_item_schema();
 
 		/*

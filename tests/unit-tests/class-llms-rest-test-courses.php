@@ -446,7 +446,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 	/**
 	 * Test creating a single course.
 	 *
-	 * @group create
 	 *
 	 * @since [version]
 	 */
@@ -630,7 +629,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		// status param must respect the item scehma, hence one of "publish" "pending" "draft" "auto-draft" "future" "private" "trash".
 		$course_args           = $this->sample_course_args;
 		$status                = array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) );
-		$course_args['status'] = $status[0] . rand(10) . 'not_in_enum';
+		$course_args['status'] = $status[0] . rand() . 'not_in_enum';
 
 		$request->set_body_params( $course_args );
 		$response = $this->server->dispatch( $request );
@@ -642,7 +641,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		// catalog_visibility param must respect the item schema, hence one of array_keys( llms_get_product_visibility_options() )
 		$course_args           = $this->sample_course_args;
 		$catalog_visibility    = array_keys( llms_get_product_visibility_options() );
-		$course_args['catalog_visibility'] = $catalog_visibility[0] . rand(10) . 'not_in_enum';
+		$course_args['catalog_visibility'] = $catalog_visibility[0] . rand() . 'not_in_enum';
 
 		$request->set_body_params( $course_args );
 		$response = $this->server->dispatch( $request );

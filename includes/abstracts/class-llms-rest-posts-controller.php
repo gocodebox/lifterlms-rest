@@ -455,7 +455,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return $object;
 		}
 
-		$prepared_item = $this->prepare_item_for_database( $request, true );
+		$prepared_item = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $prepared_item ) ) {
 			return $prepared_item;
 		}
@@ -823,11 +823,9 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request  Request object.
-	 * @param bool            $updating Optional. Whether or not the item should be prepared for updating. Default false.
-	 *                                  When an item must be prepared for updating some WP_Post post properties must not be prefixed with 'post_'.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
-	protected function prepare_item_for_database( $request, $updating = false ) {
+	protected function prepare_item_for_database( $request ) {
 
 		// LLMS Post ID.
 		if ( isset( $request['id'] ) ) {
@@ -839,120 +837,86 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			$prepared_item['id'] = absint( $request['id'] );
 		}
 
-		$schema    = $this->get_item_schema();
-		$post_keys = $this->get_object_wp_post_fields( $updating );
+		$schema = $this->get_item_schema();
 
 		// LLMS Post title.
-		if ( ! empty( $schema['properties']['title'] ) && isset( $request['title'], $post_keys['post_title'] ) ) {
+		if ( ! empty( $schema['properties']['title'] ) && isset( $request['title'] ) ) {
 			if ( is_string( $request['title'] ) ) {
-				$prepared_item[ $post_keys['post_title'] ] = $request['title'];
+				$prepared_item['post_title'] = $request['title'];
 			} elseif ( ! empty( $request['title']['raw'] ) ) {
-				$prepared_item[ $post_keys['post_title'] ] = $request['title']['raw'];
+				$prepared_item['post_title'] = $request['title']['raw'];
 			}
 		}
 
 		// LLMS Post content.
-		if ( ! empty( $schema['properties']['content'] ) && isset( $request['content'], $post_keys['post_content'] ) ) {
+		if ( ! empty( $schema['properties']['content'] ) && isset( $request['content'] ) ) {
 			if ( is_string( $request['content'] ) ) {
-				$prepared_item[ $post_keys['post_content'] ] = $request['content'];
+				$prepared_item['post_content'] = $request['content'];
 			} elseif ( isset( $request['content']['raw'] ) ) {
-				$prepared_item[ $post_keys['post_content'] ] = $request['content']['raw'];
+				$prepared_item['post_content'] = $request['content']['raw'];
 			}
 		}
 
 		// LLMS Post excerpt.
-		if ( ! empty( $schema['properties']['excerpt'] ) && isset( $request['excerpt'], $post_keys['post_excerpt'] ) ) {
+		if ( ! empty( $schema['properties']['excerpt'] ) && isset( $request['excerpt'] ) ) {
 			if ( is_string( $request['excerpt'] ) ) {
-				$prepared_item[ $post_keys['post_excerpt'] ] = $request['excerpt'];
+				$prepared_item['post_excerpt'] = $request['excerpt'];
 			} elseif ( isset( $request['excerpt']['raw'] ) ) {
-				$prepared_item[ $post_keys['post_excerpt'] ] = $request['excerpt']['raw'];
+				$prepared_item['post_excerpt'] = $request['excerpt']['raw'];
 			}
 		}
 
 		// LLMS Post status.
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'], $post_keys['post_status'] ) ) {
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 			$status = $this->handle_status_param( $request['status'] );
 			if ( is_wp_error( $status ) ) {
 				return $status;
 			}
 
-			$prepared_item[ $post_keys['post_status'] ] = $status;
+			$prepared_item['post_status'] = $status;
 		}
 
 		// LLMS Post date.
-		if ( ! empty( $schema['properties']['date_created'] ) && ! empty( $request['date_created'] ) && isset( $post_keys['post_date'] ) ) {
+		if ( ! empty( $schema['properties']['date_created'] ) && ! empty( $request['date_created'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created'] );
 
 			if ( ! empty( $date_data ) ) {
-				list( $prepared_item[ $post_keys['post_date'] ], $prepared_item[ $post_keys['post_date_gmt'] ] ) = $date_data;
+				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
 			}
-		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) && isset( $post_keys['post_date_gmt'] ) ) {
+		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created_gmt'], true );
 
 			if ( ! empty( $date_data ) ) {
-				list( $prepared_item[ $post_keys['post_date'] ], $prepared_item[ $post_keys['post_date_gmt'] ] ) = $date_data;
+				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
 			}
 		}
 
 		// LLMS Post slug.
-		if ( ! empty( $schema['properties']['slug'] ) && isset( $request['slug'], $post_keys['post_name'] ) ) {
-			$prepared_item[ $post_keys['post_name'] ] = $request['slug'];
+		if ( ! empty( $schema['properties']['slug'] ) && isset( $request['slug'] ) ) {
+			$prepared_item['post_name'] = $request['slug'];
 		}
 
 		// LLMS Post password.
-		if ( ! empty( $schema['properties']['password'] ) && isset( $request['password'], $post_keys['post_password'] ) ) {
-			$prepared_item[ $post_keys['post_password'] ] = $request['password'];
+		if ( ! empty( $schema['properties']['password'] ) && isset( $request['password'] ) ) {
+			$prepared_item['post_password'] = $request['password'];
 		}
 
 		// LLMS Post Menu order.
-		if ( ! empty( $schema['properties']['menu_order'] ) && isset( $request['menu_order'], $post_keys['menu_order'] ) ) {
-			$prepared_item[ $post_keys['menu_order'] ] = (int) $request['menu_order'];
+		if ( ! empty( $schema['properties']['menu_order'] ) && isset( $request['menu_order'] ) ) {
+			$prepared_item['menu_order'] = (int) $request['menu_order'];
 		}
 
 		// LLMS Post Comment status.
-		if ( ! empty( $schema['properties']['comment_status'] ) && ! empty( $request['comment_status'] ) && isset( $post_keys['comment_status'] ) ) {
-			$prepared_item[ $post_keys['comment_status'] ] = $request['comment_status'];
+		if ( ! empty( $schema['properties']['comment_status'] ) && ! empty( $request['comment_status'] ) ) {
+			$prepared_item['comment_status'] = $request['comment_status'];
 		}
 
 		// LLMS Post Ping status.
-		if ( ! empty( $schema['properties']['ping_status'] ) && ! empty( $request['ping_status'] ) && isset( $post_keys['ping_status'] ) ) {
-			$prepared_item[ $post_keys['ping_status'] ] = $request['ping_status'];
+		if ( ! empty( $schema['properties']['ping_status'] ) && ! empty( $request['ping_status'] ) ) {
+			$prepared_item['ping_status'] = $request['ping_status'];
 		}
 
 		return $prepared_item;
-
-	}
-
-	/**
-	 * Get the WP Post properties keys
-	 *
-	 * @since [version]
-	 *
-	 * @param boolean $updating Optional. Whether or not in updating phase. Default false.
-	 * @return array  Array of WP Post keys.
-	 */
-	protected function get_object_wp_post_fields( $updating = false ) {
-
-		$map = array(
-			'post_title'     => 'title',
-			'post_content'   => 'content',
-			'post_excerpt'   => 'excerpt',
-			'post_password'  => 'password',
-			'post_date'      => 'date',
-			'post_date_gmt'  => 'date_gmt',
-			'post_status'    => 'status',
-			'post_name'      => 'name',
-			'menu_order'     => 'menu_orer',
-			'comment_status' => 'comment_status',
-			'ping_status'    => 'ping_status',
-		);
-
-		if ( ! $updating ) {
-			$keys = array_keys( $map );
-			return array_combine( $keys, $keys );
-		}
-
-		return $map;
 
 	}
 
