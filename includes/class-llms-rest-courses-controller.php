@@ -545,8 +545,56 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected function prepare_item_for_database( $request, $updating = false ) {
 
 		$prepared_item = parent::prepare_item_for_database( $request, $updating );
+		$schema        = $this->get_item_schema();
+
+		/*
+		 * TODO:
+		 * Prepare specfic course properties that can be directly put into the db via set_bulk() (e.g. as post metas )
+		 */
 
 		return $prepared_item;
+
+	}
+
+	/**
+	 * Updates a single llms post.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Course     $course        LLMS_Course instance.
+	 * @param array           $prepared_item Array.
+	 * @param WP_REST_Request $request       Full details about the request.
+	 * @param array           $schema        The item schema.
+	 * @return bool|WP_Error True on success, WP_Error object otherwise.
+	 */
+	protected function update_additional_object_fields( $course, $prepared_item, $request, $schema ) {
+
+		$error = new WP_Error();
+
+		// Course catalog visibility.
+		if ( ! empty( $schema['properties']['catalog_visibility'] ) && isset( $request['catalog_visibility'] ) ) {
+			$course->get_product()->set_catalog_visibility( $request['catalog_visibility'] );
+		}
+
+		// Instructors.
+		if ( ! empty( $schema['properties']['instructors'] ) && isset( $request['instructors'] ) ) {
+
+			$instructors = array();
+
+			foreach ( $request['instructors'] as $instructor_id ) {
+				$user_data = get_userdata( $instructor_id );
+				if ( ! empty( $user_data ) ) {
+					$instructors[] = array(
+						'id'   => $instructor_id,
+						'name' => $user_data->display_name,
+					);
+				}
+			}
+
+			$course->set_instructors( $instructors );
+		}
+
+		return $error->has_errors() ? $error : true;
 
 	}
 

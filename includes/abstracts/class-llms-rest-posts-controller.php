@@ -222,6 +222,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	/**
 	 * Creates a single LLMS post.
 	 *
+	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields()
+	 *
 	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -230,44 +232,61 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function create_item( $request ) {
 
 		$prepared_item = $this->prepare_item_for_database( $request );
-
 		if ( is_wp_error( $prepared_item ) ) {
 			return $prepared_item;
 		}
 
 		$object = $this->create_llms_post( $prepared_item );
+		if ( is_wp_error( $object ) ) {
 
-		if ( is_wp_error( $prepared_item ) ) {
-
-			if ( 'db_insert_error' === $prepared_item->get_error_code() ) {
-				$prepared_item->add_data( array( 'status' => 500 ) );
+			if ( 'db_insert_error' === $object->get_error_code() ) {
+				$object->add_data( array( 'status' => 500 ) );
 			} else {
-				$prepared_item->add_data( array( 'status' => 400 ) );
+				$object->add_data( array( 'status' => 400 ) );
 			}
 
-			return $prepared_item;
+			return $object;
+		}
+
+		// Set all the other properties.
+		// TODO: maybe we want to filter the post properties that have already been inserted before.
+		$set_bulk_result = $object->set_bulk( $prepared_item, true );
+		if ( is_wp_error( $set_bulk_result ) ) {
+
+			if ( 'db_update_error' === $set_bulk_result->get_error_code() ) {
+				$set_bulk_result->add_data( array( 'status' => 500 ) );
+			} else {
+				$set_bulk_result->add_data( array( 'status' => 400 ) );
+			}
+
+			return $set_bulk_result;
 		}
 
 		$object_id = $object->get( 'id' );
 
 		$schema = $this->get_item_schema();
 
+		$additional_fields = $this->update_additional_object_fields( $object, $prepared_item, $request, $schema );
+		if ( is_wp_error( $additional_fields ) ) {
+			return $additional_fields;
+		}
+
 		if ( ! empty( $schema['properties']['featured_media'] ) && isset( $request['featured_media'] ) ) {
 			$this->handle_featured_media( $request['featured_media'], $object_id );
 		}
 
 		$terms_update = $this->handle_terms( $object_id, $request );
-
 		if ( is_wp_error( $terms_update ) ) {
 			return $terms_update;
 		}
 
-		$fields_update = $this->update_additional_fields_for_object( $object, $request );
-
-		if ( is_wp_error( $fields_update ) ) {
-			return $fields_update;
-		}
-
+		/**
+		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks
+		 */
+		// $fields_update = $this->update_additional_fields_for_object( $object, $request );
+		// if ( is_wp_error( $fields_update ) ) {
+		// return $fields_update;
+		// }
 		$request->set_param( 'context', 'edit' );
 
 		$response = $this->prepare_item_for_response( $object, $request );
@@ -288,8 +307,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		$object = $this->get_object( (int) $request['id'] );
 
+		$object = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -328,7 +347,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function get_item( $request ) {
 
 		$object = $this->get_object( (int) $request['id'] );
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -402,7 +420,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 
 		$object = $this->get_object( (int) $request['id'] );
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -425,6 +442,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	/**
 	 * Updates a single llms post.
 	 *
+	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields().
+	 *
 	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -433,19 +452,16 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function update_item( $request ) {
 
 		$object = $this->get_object( (int) $request['id'] );
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
 		$prepared_item = $this->prepare_item_for_database( $request, true );
-
 		if ( is_wp_error( $prepared_item ) ) {
 			return $prepared_item;
 		}
 
 		$update_result = $object->set_bulk( $prepared_item, true );
-
 		if ( is_wp_error( $update_result ) ) {
 
 			if ( 'db_update_error' === $update_result->get_error_code() ) {
@@ -461,26 +477,46 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$schema = $this->get_item_schema();
 
+		$additional_fields = $this->update_additional_object_fields( $object, $prepared_item, $request, $schema );
+		if ( is_wp_error( $additional_fields ) ) {
+			return $additional_fields;
+		}
+
 		if ( ! empty( $schema['properties']['featured_media'] ) && isset( $request['featured_media'] ) ) {
 			$this->handle_featured_media( $request['featured_media'], $object_id );
 		}
 
 		$terms_update = $this->handle_terms( $object_id, $request );
-
 		if ( is_wp_error( $terms_update ) ) {
 			return $terms_update;
 		}
 
-		$fields_update = $this->update_additional_fields_for_object( $object, $request );
-
-		if ( is_wp_error( $fields_update ) ) {
-			return $fields_update;
-		}
-
+		/**
+		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks
+		 */
+		// $fields_update = $this->update_additional_fields_for_object( $object, $request );
+		// if ( is_wp_error( $fields_update ) ) {
+		// return $fields_update;
+		// }
 		$request->set_param( 'context', 'edit' );
 
 		return $this->prepare_item_for_response( $object, $request );
 
+	}
+
+	/**
+	 * Updates a single llms post.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post_Model $object        LMMS_Post_Model instance.
+	 * @param array           $prepared_item Array.
+	 * @param WP_REST_Request $request       Full details about the request.
+	 * @param array           $schema        The item schema.
+	 * @return bool|WP_Error True on success, WP_Error object otherwise.
+	 */
+	protected function update_additional_object_fields( $object, $prepared_item, $request, $schema ) {
+		return true;
 	}
 
 	/**
@@ -494,7 +530,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 
 		$object = $this->get_object( (int) $request['id'] );
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -518,7 +553,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function delete_item( $request ) {
 
 		$object = $this->get_object( (int) $request['id'] );
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -607,7 +641,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			}
 
 			$response_object = $this->prepare_item_for_response( $object, $request );
-
 			if ( ! is_wp_error( $response_object ) ) {
 				$objects[] = $this->prepare_response_for_collection( $response_object );
 			}
@@ -661,7 +694,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			'date_updated_gmt' => $object->get_date( 'modified_gmt', 'Y-m-d H:i:s' ),
 			'menu_order'       => $object->get( 'menu_order' ),
 			'title'            => array(
-				'raw'      => $object->get( 'title', 'raw' ),
+				'raw'      => $object->get( 'title', true ),
 				'rendered' => $object->get( 'title' ),
 			),
 			'password'         => $password,
@@ -730,6 +763,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		// Filter data including only schema props.
 		$data = array_intersect_key( $data, array_flip( $this->get_fields_for_response( $request ) ) );
+
 		// Filter data by context. E.g. in "view" mode the password property won't be allowed.
 		$data = $this->filter_response_by_context( $data, $context );
 
@@ -840,7 +874,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		// LLMS Post status.
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'], $post_keys['post_status'] ) ) {
 			$status = $this->handle_status_param( $request['status'] );
-
 			if ( is_wp_error( $status ) ) {
 				return $status;
 			}
@@ -1111,7 +1144,11 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			),
 		);
 
-		return $this->add_additional_fields_schema( $schema );
+		/**
+		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks.
+		 */
+		// $schema = $this->add_additional_fields_schema( $schema );
+		return $schema;
 	}
 
 	/**
@@ -1164,7 +1201,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Get an LLMS_Course
+	 * Create an LLMS_Post_Model
 	 *
 	 * @since [version]
 	 *
@@ -1396,8 +1433,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				continue;
 			}
 
+			// We could use LLMS_Post_Model::set_terms() but it doesn't return a WP_Error which can be useful here.
 			$result = wp_set_object_terms( $object_id, $request[ $base ], $taxonomy->name );
-
 			if ( is_wp_error( $result ) ) {
 				return $result;
 			}

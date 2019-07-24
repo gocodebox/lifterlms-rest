@@ -446,6 +446,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 	/**
 	 * Test creating a single course.
 	 *
+	 * @group create
+	 *
 	 * @since [version]
 	 */
 	public function test_create_course() {
@@ -454,7 +456,22 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->route );
 
-		$request->set_body_params( $this->prepare_for_request( $this->sample_course_args ) );
+		$catalog_visibility = array_keys( llms_get_product_visibility_options() )[2];
+		$sample_course_args = array_merge( $this->sample_course_args,
+			array(
+				'catalog_visibility' => $catalog_visibility,
+				'instructors'        => array(
+					get_current_user_id(),
+					$this->factory->user->create(
+						array(
+							'role' => 'instructor',
+						)
+					)
+				),
+			)
+		);
+
+		$request->set_body_params( $this->prepare_for_request( $sample_course_args ) );
 		$response = $this->server->dispatch( $request );
 
 		// Success.
@@ -462,16 +479,18 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		$res_data = $response->get_data();
 
-		$this->assertEquals( $this->sample_course_args['title']['rendered'], $res_data['title']['rendered'] );
-
+		$this->assertEquals( $sample_course_args['title']['rendered'], $res_data['title']['rendered'] );
 		/**
 		 * The rtrim below is not ideal but at the moment we have templates printed after the course summary (e.g. prerequisites) that,
 		 * even when printing no data they still print "\n". Let's pretend we're not interested in testing the trailing "\n" presence.
 		 */
-		$this->assertEquals( rtrim( $this->sample_course_args['content']['rendered'], "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
+		$this->assertEquals( rtrim( $sample_course_args['content']['rendered'], "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 
-		$this->assertEquals( $this->sample_course_args['date_created'], $res_data['date_created'] );
-		$this->assertEquals( $this->sample_course_args['status'], $res_data['status'] );
+		$this->assertEquals( $sample_course_args['date_created'], $res_data['date_created'] );
+		$this->assertEquals( $sample_course_args['status'], $res_data['status'] );
+		$this->assertEquals( $sample_course_args['catalog_visibility'], $res_data['catalog_visibility'] );
+		$this->assertEquals( $sample_course_args['instructors'], $res_data['instructors'] );
+
 	}
 
 	/**
@@ -610,7 +629,20 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		// status param must respect the item scehma, hence one of "publish" "pending" "draft" "auto-draft" "future" "private" "trash".
 		$course_args           = $this->sample_course_args;
-		$course_args['status'] = 'not_in_enum';
+		$status                = array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) );
+		$course_args['status'] = $status[0] . rand(10) . 'not_in_enum';
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+
+		// catalog_visibility param must respect the item schema, hence one of array_keys( llms_get_product_visibility_options() )
+		$course_args           = $this->sample_course_args;
+		$catalog_visibility    = array_keys( llms_get_product_visibility_options() );
+		$course_args['catalog_visibility'] = $catalog_visibility[0] . rand(10) . 'not_in_enum';
 
 		$request->set_body_params( $course_args );
 		$response = $this->server->dispatch( $request );
