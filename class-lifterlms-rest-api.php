@@ -27,9 +27,9 @@ final class LifterLMS_REST_API {
 	/**
 	 * Singleton instance of the class.
 	 *
-	 * @var     obj
+	 * @var obj
 	 */
-	private static $_instance = null;
+	private static $instance = null;
 
 	/**
 	 * Singleton Instance of the LifterLMS_REST_API class.
@@ -40,11 +40,11 @@ final class LifterLMS_REST_API {
 	 */
 	public static function instance() {
 
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
 		}
 
-		return self::$_instance;
+		return self::$instance;
 
 	}
 

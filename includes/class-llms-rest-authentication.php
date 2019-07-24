@@ -63,7 +63,7 @@ class LLMS_REST_Authentication {
 	 * @link https://developer.wordpress.org/reference/hooks/determine_current_user/
 	 *
 	 * @param int|false $user_id WP_User ID of an already authenticated user or false.
-	 * @return void
+	 * @return int|false
 	 */
 	public function authenticate( $user_id ) {
 
@@ -74,7 +74,7 @@ class LLMS_REST_Authentication {
 			return $user_id;
 		}
 
-		$creds = $this->get_credentials();
+		$creds = $this->locate_credentials();
 		if ( ! $creds ) {
 			return false;
 		}
@@ -169,31 +169,6 @@ class LLMS_REST_Authentication {
 	}
 
 	/**
-	 * Get api credentials from headers and then basic auth.
-	 *
-	 * @since [version]
-	 *
-	 * @return array|false
-	 */
-	protected function get_credentials() {
-
-		// Attempt to get creds from headers.
-		$creds = $this->_get_credentials( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' );
-		if ( $creds ) {
-			return $creds;
-		}
-
-		// Attempt to get creds from basic auth.
-		$creds = $this->_get_credentials( 'PHP_AUTH_USER', 'PHP_AUTH_PW' );
-		if ( $creds ) {
-			return $creds;
-		}
-
-		return false;
-
-	}
-
-	/**
 	 * Locate credentials in the $_SERVER superglobal.
 	 *
 	 * @since [version]
@@ -202,11 +177,11 @@ class LLMS_REST_Authentication {
 	 * @param string $secret_var Variable name for the consumer secret.
 	 * @return array|false
 	 */
-	private function _get_credentials( $key_var, $secret_var ) {
+	private function get_credentials( $key_var, $secret_var ) {
 
 		// Use `filter_var()` instead of `llms_filter_input()` due to PHP bug with `filter_input()`: https://bugs.php.net/bug.php?id=44779.
-		$key    = isset( $_SERVER[ $key_var ] ) ? filter_var( $_SERVER[ $key_var ], FILTER_SANITIZE_STRING ) : null;
-		$secret = isset( $_SERVER[ $secret_var ] ) ? filter_var( $_SERVER[ $secret_var ], FILTER_SANITIZE_STRING ) : null;
+		$key    = isset( $_SERVER[ $key_var ] ) ? filter_var( wp_unslash( $_SERVER[ $key_var ] ), FILTER_SANITIZE_STRING ) : null;
+		$secret = isset( $_SERVER[ $secret_var ] ) ? filter_var( wp_unslash( $_SERVER[ $secret_var ] ), FILTER_SANITIZE_STRING ) : null;
 
 		if ( ! $key || ! $secret ) {
 			return false;
@@ -250,6 +225,31 @@ class LLMS_REST_Authentication {
 		$external = ( false !== strpos( $request, $prefix . 'llms-' ) );
 
 		return apply_filters( 'llms_is_rest_request', $core || $external, $request );
+
+	}
+
+	/**
+	 * Get api credentials from headers and then basic auth.
+	 *
+	 * @since [version]
+	 *
+	 * @return array|false
+	 */
+	protected function locate_credentials() {
+
+		// Attempt to get creds from headers.
+		$creds = $this->get_credentials( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' );
+		if ( $creds ) {
+			return $creds;
+		}
+
+		// Attempt to get creds from basic auth.
+		$creds = $this->get_credentials( 'PHP_AUTH_USER', 'PHP_AUTH_PW' );
+		if ( $creds ) {
+			return $creds;
+		}
+
+		return false;
 
 	}
 

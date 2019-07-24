@@ -123,20 +123,20 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case {
 		);
 
 		// No key or secret.
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
 
 		// Key, no secret.
 		$_SERVER['HTTP_X_LLMS_CONSUMER_KEY'] = $expect['key'];
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
 
 		// Secret, no key.
 		unset( $_SERVER['HTTP_X_LLMS_CONSUMER_KEY'] );
 		$_SERVER['HTTP_X_LLMS_CONSUMER_SECRET'] = $expect['secret'];
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
 
 		// Key & Secret
 		$_SERVER['HTTP_X_LLMS_CONSUMER_KEY'] = $expect['key'];
-		$this->assertEquals( $expect, LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
+		$this->assertEquals( $expect, LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'HTTP_X_LLMS_CONSUMER_KEY', 'HTTP_X_LLMS_CONSUMER_SECRET' ) ) );
 
 		unset( $_SERVER['HTTP_X_LLMS_CONSUMER_KEY'], $_SERVER['HTTP_X_LLMS_CONSUMER_SECRET'] );
 
@@ -157,20 +157,20 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case {
 		);
 
 		// No key or secret.
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
 
 		// Key, no secret.
 		$_SERVER['PHP_AUTH_USER'] = $expect['key'];
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
 
 		// Secret, no key.
 		unset( $_SERVER['PHP_AUTH_USER'] );
 		$_SERVER['PHP_AUTH_PW'] = $expect['secret'];
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
 
 		// Key & Secret
 		$_SERVER['PHP_AUTH_USER'] = $expect['key'];
-		$this->assertEquals( $expect, LLMS_Unit_Test_Util::call_method( $this->auth, 'get_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
+		$this->assertEquals( $expect, LLMS_Unit_Test_Util::call_method( $this->auth, 'locate_credentials', array( 'PHP_AUTH_USER', 'PHP_AUTH_PW' ) ) );
 
 		unset( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] );
 
