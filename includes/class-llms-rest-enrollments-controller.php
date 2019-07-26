@@ -113,26 +113,31 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 
 		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
 		$query_params['order'] = array(
-			'description' => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'asc',
-			'enum'        => array( 'asc', 'desc' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'asc',
+			'enum'              => array( 'asc', 'desc' ),
+			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['orderby'] = array(
-			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'date_updated',
-			'enum'        => array(
+			'description'       => __( 'Sort collection by object attribute.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'date_updated',
+			'enum'              => array(
 				'date_created',
 				'date_updated',
 			),
+			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['status'] = array(
-			'description' => __( 'Filter results to records matching the specified status.', 'lifterlms' ),
-			'enum'        => array_keys( llms_get_enrollment_statuses() ),
-			'type'        => 'string',
+			'description'       => __( 'Filter results to records matching the specified status.', 'lifterlms' ),
+			'enum'              => array_keys( llms_get_enrollment_statuses() ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;
@@ -574,7 +579,7 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	 * @return bool Whether the enrollment can be read.
 	 */
 	protected function check_read_permission( $enrollment ) {
-		// TODO.
+		// TODO: who can read this enrollment?
 		return true;
 	}
 

@@ -71,7 +71,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
 
-		// assume all courses have been migrated to the block editor
+		// assume all courses have been migrated to the block editor.
 		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );
 	}
 
@@ -446,7 +446,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 	/**
 	 * Test creating a single course.
 	 *
-	 *
 	 * @since [version]
 	 */
 	public function test_create_course() {
@@ -456,7 +455,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$request = new WP_REST_Request( 'POST', $this->route );
 
 		$catalog_visibility = array_keys( llms_get_product_visibility_options() )[2];
-		$sample_course_args = array_merge( $this->sample_course_args,
+		$sample_course_args = array_merge(
+			$this->sample_course_args,
 			array(
 				'catalog_visibility' => $catalog_visibility,
 				'instructors'        => array(
@@ -465,12 +465,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 						array(
 							'role' => 'instructor',
 						)
-					)
+					),
 				),
+				'video_tile'         => true,
 			)
 		);
 
-		$request->set_body_params( $this->prepare_for_request( $sample_course_args ) );
+		$request->set_body_params( $sample_course_args );
 		$response = $this->server->dispatch( $request );
 
 		// Success.
@@ -489,7 +490,60 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$this->assertEquals( $sample_course_args['status'], $res_data['status'] );
 		$this->assertEquals( $sample_course_args['catalog_visibility'], $res_data['catalog_visibility'] );
 		$this->assertEquals( $sample_course_args['instructors'], $res_data['instructors'] );
+		$this->assertEquals( $sample_course_args['video_tile'], $res_data['video_tile'] );
 
+	}
+
+	/**
+	 * Test creating a single course special props.
+	 * These props, when set, alter the rendered content so we test them separetaly.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_special() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$sample_course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'audio_embed'            => 'https://www.youtube.com/abc',
+				'video_embed'            => 'www.youtube.com/efg',
+				'capacity_limit'         => 22,
+				'capacity_enabled'       => true,
+				'capacity_message'       => 'Enrollment has closed because the maximum number of allowed students has been reached.',
+				'access_opens_date'      => '2019-05-22 17:20:05',
+				'access_closes_date'     => '2019-05-22 17:23:08',
+				'enrollment_opens_date'  => '2019-05-22 17:22:05',
+				'enrollment_closes_date' => '2019-05-22 17:22:08',
+			)
+		);
+
+		$request->set_body_params( $sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 201, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		$this->assertEquals( esc_url_raw( $sample_course_args['audio_embed'] ), $res_data['audio_embed'] );
+		$this->assertEquals( esc_url_raw( $sample_course_args['video_embed'] ), $res_data['video_embed'] );
+		$this->assertEquals( $sample_course_args['capacity_enabled'], $res_data['capacity_enabled'] );
+		$this->assertEquals( do_shortcode( $sample_course_args['capacity_message'] ), $res_data['capacity_message']['rendered'] );
+		$this->assertEquals( $sample_course_args['capacity_limit'], $res_data['capacity_limit'] );
+
+		// No enrollments message set, hence we should see the default message.
+		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
+
+		// Dates
+		$this->assertEquals( $sample_course_args['access_opens_date'], $res_data['access_opens_date'] );
+		$this->assertEquals( $sample_course_args['access_closes_date'], $res_data['access_closes_date'] );
+		$this->assertEquals( $sample_course_args['enrollment_opens_date'], $res_data['enrollment_opens_date'] );
+		$this->assertEquals( $sample_course_args['enrollment_closes_date'], $res_data['enrollment_closes_date'] );
 	}
 
 	/**
@@ -501,23 +555,23 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		wp_set_current_user( $this->user_allowed );
 		$taxonomies = array(
-			'categories' => array(
+			'categories'   => array(
 				1,
 				2,
-				3
+				3,
 			),
-			'tags' => array(
+			'tags'         => array(
 				6,
 				4,
-				8
+				8,
 			),
 			'difficulties' => array(
-				9
+				9,
 			),
-			'tracks' => array(
+			'tracks'       => array(
 				7,
 				5,
-				6
+				6,
 			),
 		);
 
@@ -528,27 +582,27 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->route );
 
-		$request->set_body_params( $this->prepare_for_request( $course_args ) );
+		$request->set_body_params( $course_args );
 		$response = $this->server->dispatch( $request );
 
-		// Terms have not ben created, I expect the course is created with empty taxonomies
+		// Terms have not ben created, I expect the course is created with empty taxonomies.
 		$this->assertEquals( 201, $response->get_status() );
 
 		$res_data = $response->get_data();
 
 		foreach ( $taxonomies as $tax => $tid ) {
-			$this->assertEquals( array(), $res_data[$tax] );
+			$this->assertEquals( array(), $res_data[ $tax ] );
 		}
 
-		//let's create the terms
+		// let's create the terms.
 		$taxonomies = array(
-			'categories' => $this->factory()->term->create_many(
+			'categories'   => $this->factory()->term->create_many(
 				3,
 				array(
 					'taxonomy' => 'course_cat',
 				)
 			),
-			'tags' => $this->factory()->term->create_many(
+			'tags'         => $this->factory()->term->create_many(
 				3,
 				array(
 					'taxonomy' => 'course_tag',
@@ -557,10 +611,10 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 			'difficulties' => $this->factory()->term->create_many(
 				1,
 				array(
-					'taxonomy' => 'course_difficulty'
+					'taxonomy' => 'course_difficulty',
 				)
 			),
-			'tracks' => $this->factory()->term->create_many(
+			'tracks'       => $this->factory()->term->create_many(
 				3,
 				array(
 					'taxonomy' => 'course_track',
@@ -573,16 +627,16 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 			$taxonomies
 		);
 
-		$request->set_body_params( $this->prepare_for_request( $course_args ) );
+		$request->set_body_params( $course_args );
 		$response = $this->server->dispatch( $request );
 
-		// Terms have been created, I expect the course is created with taxonomies set
+		// Terms have been created, I expect the course is created with taxonomies set.
 		$this->assertEquals( 201, $response->get_status() );
 
 		$res_data = $response->get_data();
 
 		foreach ( $taxonomies as $tax => $tid ) {
-			$this->assertEquals( $tid, $res_data[$tax] );
+			$this->assertEquals( $tid, $res_data[ $tax ] );
 		}
 	}
 
@@ -637,10 +691,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		// Bad request.
 		$this->assertEquals( 400, $response->get_status() );
 
-
-		// catalog_visibility param must respect the item schema, hence one of array_keys( llms_get_product_visibility_options() )
-		$course_args           = $this->sample_course_args;
-		$catalog_visibility    = array_keys( llms_get_product_visibility_options() );
+		// catalog_visibility param must respect the item schema, hence one of array_keys( llms_get_product_visibility_options() ).
+		$course_args                       = $this->sample_course_args;
+		$catalog_visibility                = array_keys( llms_get_product_visibility_options() );
 		$course_args['catalog_visibility'] = $catalog_visibility[0] . rand() . 'not_in_enum';
 
 		$request->set_body_params( $course_args );
@@ -720,7 +773,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$res_data = $response->get_data();
 
 		$this->assertEquals( $update_data['title'], $res_data['title']['rendered'] );
-		$this->assertEquals( rtrim( $update_data['content'], "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
+		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
 		$this->assertEquals( $update_data['status'], $res_data['status'], $update_data['status'] );
 
@@ -879,23 +932,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		// Unauthorized.
 		$this->assertEquals( 401, $response->get_status() );
 
-	}
-
-	/**
-	 * Utility to prepare a course array to be sent for creation
-	 *
-	 * @since [version]
-	 *
-	 * @param array $course An array of course data.
-	 */
-	private function prepare_for_request( $course ) {
-		foreach ( array( 'title', 'content', 'excerpt' ) as $key ) {
-			if ( isset( $course[ $key ] ) && is_array( $course[ $key ] ) && isset( $course[ $key ]['raw'] ) ) {
-				$course[ $key ] = $course[ $key ]['raw'];
-			}
-		}
-
-		return $course;
 	}
 
 	/**

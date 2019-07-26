@@ -271,18 +271,18 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'properties'  => array(
 					'raw'      => array(
 						'description' => __( 'Raw message content.', 'lifterlms' ),
-						'type'        => 'string',
 						'default'     => __( 'You must enroll in this course to access course content.', 'lifterlms' ),
+						'type'        => 'string',
 						'context'     => array( 'edit' ),
 					),
 					'rendered' => array(
 						'description' => __( 'Rendered message content.', 'lifterlms' ),
 						'type'        => 'string',
-						'default'     => __( 'You must enroll in this course to access course content.', 'lifterlms' ),
 						'context'     => array( 'view', 'edit' ),
 						'readonly'    => true,
 					),
 				),
+				'default'     => __( 'You must enroll in this course to access course content.', 'lifterlms' ),
 			),
 			'access_closes_date'        => array(
 				'description' => __(
@@ -307,7 +307,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'raw'      => array(
 						'description' => __( 'Raw message content.', 'lifterlms' ),
 						'type'        => 'string',
-						'default'     => __( 'This course closed on [lifterlms_course_info key="end_date"].', 'lifterlms' ),
 						'context'     => array( 'edit' ),
 					),
 					'rendered' => array(
@@ -317,6 +316,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
+				'default'     => __( 'This course closed on [lifterlms_course_info id={{course_id}} key="end_date"].', 'lifterlms' ),
 			),
 			'access_opens_date'         => array(
 				'description' => __(
@@ -341,7 +341,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'raw'      => array(
 						'description' => __( 'Raw message content.', 'lifterlms' ),
 						'type'        => 'string',
-						'default'     => __( 'This course opens on [lifterlms_course_info key="start_date"].', 'lifterlms' ),
 						'context'     => array( 'edit' ),
 					),
 					'rendered' => array(
@@ -351,6 +350,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
+				'default'     => __( 'This course opens on [lifterlms_course_info id={{course_id}} key="start_date"].', 'lifterlms' ),
 			),
 			'enrollment_closes_date'    => array(
 				'description' => __(
@@ -375,7 +375,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'raw'      => array(
 						'description' => __( 'Raw message content.', 'lifterlms' ),
 						'type'        => 'string',
-						'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info key="enrollment_end_date"].', 'lifterlms' ),
 						'context'     => array( 'edit' ),
 					),
 					'rendered' => array(
@@ -385,6 +384,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
+				'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info id={{course_id}} key="enrollment_end_date"].', 'lifterlms' ),
 			),
 			'enrollment_opens_date'     => array(
 				'description' => __(
@@ -409,7 +409,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'raw'      => array(
 						'description' => __( 'Raw message content.', 'lifterlms' ),
 						'type'        => 'string',
-						'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info key="enrollment_start_date"].', 'lifterlms' ),
 						'context'     => array( 'edit' ),
 					),
 					'rendered' => array(
@@ -419,6 +418,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
+				'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info id={{course_id}} key="enrollment_start_date"].', 'lifterlms' ),
 			),
 			'sales_page_page_id'        => array(
 				'description' => __(
@@ -548,7 +548,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'rendered' => do_shortcode( $course->get( 'content_restricted_message' ) ),
 		);
 
-		// Enrollment open/closed.
+		// Access open/closed.
 		$data['access_opens_date']  = $course->get_date( 'start_date', 'Y-m-d H:i:s' );
 		$data['access_closes_date'] = $course->get_date( 'end_date', 'Y-m-d H:i:s' );
 
@@ -603,10 +603,79 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$prepared_item = parent::prepare_item_for_database( $request );
 		$schema        = $this->get_item_schema();
 
-		/*
-		 * TODO:
-		 * Prepare specfic course properties that can be directly put into the db via set_bulk() (e.g. as post metas )
-		 */
+		// Course Audio embed URL.
+		if ( ! empty( $schema['properties']['audio_embed'] ) && isset( $request['audio_embed'] ) ) {
+			$prepared_item['audio_embed'] = $request['audio_embed'];
+		}
+
+		// Course Video embed URL.
+		if ( ! empty( $schema['properties']['video_embed'] ) && isset( $request['video_embed'] ) ) {
+			$prepared_item['video_embed'] = $request['video_embed'];
+		}
+
+		// Video tile.
+		if ( ! empty( $schema['properties']['video_tile'] ) && isset( $request['video_tile'] ) ) {
+			$prepared_item['tile_featured_video'] = empty( $request['video_tile'] ) ? 'no' : 'yes';
+		}
+
+		// Capacity enabled.
+		if ( ! empty( $schema['properties']['capacity_enabled'] ) && isset( $request['capacity_enabled'] ) ) {
+			$prepared_item['enable_capacity'] = empty( $request['capacity_enabled'] ) ? 'no' : 'yes';
+		}
+
+		// Capacity message.
+		if ( ! empty( $schema['properties']['capacity_message'] ) && isset( $request['capacity_message'] ) ) {
+			if ( is_string( $request['capacity_message'] ) ) {
+				$prepared_item['capacity_message'] = $request['capacity_message'];
+			} elseif ( isset( $request['capacity_message']['raw'] ) ) {
+				$prepared_item['capacity_message'] = $request['capacity_message']['raw'];
+			}
+		}
+
+		// Capacity limit.
+		if ( ! empty( $schema['properties']['capacity_limit'] ) && isset( $request['capacity_limit'] ) ) {
+			$prepared_item['capacity'] = $request['capacity_limit'];
+		}
+
+		// Restricted message.
+		if ( ! empty( $schema['properties']['restricted_message'] ) && isset( $request['restricted_message'] ) ) {
+			if ( is_string( $request['restricted_message'] ) ) {
+				$prepared_item['content_restricted_message'] = $request['restricted_message'];
+			} elseif ( isset( $request['restricted_message']['raw'] ) ) {
+				$prepared_item['content_restricted_message'] = $request['restricted_message']['raw'];
+			}
+		}
+
+		// Length.
+		if ( ! empty( $schema['properties']['length'] ) && isset( $request['length'] ) ) {
+			if ( is_string( $request['length'] ) ) {
+				$prepared_item['length'] = $request['length'];
+			} elseif ( isset( $request['length']['raw'] ) ) {
+				$prepared_item['length'] = $request['length']['raw'];
+			}
+		}
+
+		// Access dates.
+		if ( ! empty( $schema['properties']['access_opens_date'] ) && ! empty( $request['access_opens_date'] ) ) {
+			$enrollment_opens_date       = rest_parse_date( $request['access_opens_date'] );
+			$prepared_item['start_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		}
+
+		if ( ! empty( $schema['properties']['access_closes_date'] ) && ! empty( $request['access_closes_date'] ) ) {
+			$enrollment_opens_date     = rest_parse_date( $request['access_closes_date'] );
+			$prepared_item['end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		}
+
+		// Enrollment dates.
+		if ( ! empty( $schema['properties']['enrollment_opens_date'] ) && ! empty( $request['enrollment_opens_date'] ) ) {
+			$enrollment_opens_date                  = rest_parse_date( $request['enrollment_opens_date'] );
+			$prepared_item['enrollment_start_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		}
+
+		if ( ! empty( $schema['properties']['enrollment_closes_date'] ) && ! empty( $request['enrollment_closes_date'] ) ) {
+			$enrollment_opens_date                = rest_parse_date( $request['enrollment_closes_date'] );
+			$prepared_item['enrollment_end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		}
 
 		return $prepared_item;
 
@@ -648,6 +717,91 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 
 			$course->set_instructors( $instructors );
+		}
+
+		$to_set = array();
+
+		// Prerequisite.
+		if ( ! empty( $schema['properties']['prerequisite'] ) && isset( $request['prerequisite'] ) ) {
+			// check if course exists.
+			$prerequisite = llms_get_post( $request['prerequisite'] );
+			if ( is_a( $prerequisite, 'LLMS_Course' ) ) {
+				$to_set['prerequisite'] = $request['prerequisite'];
+			}
+		}
+
+		// Prerequisite track.
+		if ( ! empty( $schema['properties']['prerequisite_track'] ) && isset( $request['prerequisite_track'] ) ) {
+			// check if the track exists.
+			$track = new LLMS_Track( $request['prerequisite_track'] );
+			if ( $track->term ) {
+				$to_set['prerequisite_track'] = $request['prerequisite_track'];
+			}
+		}
+
+		/**
+		 * The following properties have a default value that contains a placeholder ({{course_id}}) that can be "expanded" only
+		 * after the course has been created.
+		 */
+		// Access opens/closes messages.
+		if ( ! empty( $schema['properties']['access_opens_message'] ) && isset( $request['access_opens_message'] ) ) {
+			if ( is_string( $request['access_opens_message'] ) ) {
+				$to_set['course_opens_message'] = $request['access_opens_message'];
+			} elseif ( isset( $request['access_opens_message']['raw'] ) ) {
+				$to_set['course_opens_message'] = $request['access_opens_message']['raw'];
+			}
+		}
+
+		if ( ! empty( $schema['properties']['access_closes_message'] ) && isset( $request['access_closes_message'] ) ) {
+			if ( is_string( $request['access_closes_message'] ) ) {
+				$to_set['course_closed_message'] = $request['access_closes_message'];
+			} elseif ( isset( $request['access_closes_message']['raw'] ) ) {
+				$to_set['course_closed_message'] = $request['access_closes_message']['raw'];
+			}
+		}
+
+		// Enrolmments opens/closes messages.
+		if ( ! empty( $schema['properties']['enrollment_opens_message'] ) && isset( $request['enrollment_opens_message'] ) ) {
+			if ( is_string( $request['enrollment_opens_message'] ) ) {
+				$to_set['enrollment_opens_message'] = $request['enrollment_opens_message'];
+			} elseif ( isset( $request['enrollment_opens_message']['raw'] ) ) {
+				$to_set['enrollment_opens_message'] = $request['enrollment_opens_message']['raw'];
+			}
+		}
+
+		if ( ! empty( $schema['properties']['enrollment_closes_message'] ) && isset( $request['enrollment_closes_message'] ) ) {
+			if ( is_string( $request['enrollment_closes_message'] ) ) {
+				$to_set['enrollment_closed_message'] = $request['enrollment_closes_message'];
+			} elseif ( isset( $request['enrollment_closes_message']['raw'] ) ) {
+				$to_set['enrollment_closed_message'] = $request['enrollment_closes_message']['raw'];
+			}
+		}
+
+		// Are we creating a course?
+		if ( WP_REST_Server::CREATABLE === $request->get_method() && '/' . $this->namespace . '/' . $this->rest_base === $request->get_route() ) {
+
+			$_to_expand_props = array(
+				'course_opens_message',
+				'course_closed_message',
+				'enrollment_opens_message',
+				'enrollment_closed_message',
+			);
+
+			$course_id = $course->get( 'id' );
+
+			foreach ( $_to_expand_props as $prop ) {
+				if ( ! empty( $to_set[ $prop ] ) ) {
+					$to_set[ $prop ] = str_replace( '{{course_id}}', $course_id, $to_set[ $prop ] );
+				}
+			}
+		}
+
+		// Set bulk.
+		if ( ! empty( $to_set ) ) {
+			$update = $course->set_bulk( $to_set );
+			if ( is_wp_error( $update ) ) {
+				$error = $update;
+			}
 		}
 
 		return $error->has_errors() ? $error : true;
@@ -823,8 +977,9 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$query_params = $this->enrollments_controller->get_collection_params();
 
 		$query_params['student_id'] = array(
-			'description' => __( 'Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids.', 'lifterlms' ),
-			'type'        => 'string',
+			'description'       => __( 'Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

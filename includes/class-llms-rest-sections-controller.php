@@ -50,12 +50,12 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param array $object_args Object args.
+	 * @param array $section_args Section args.
 	 * @return LLMS_Post_Model|WP_Error
 	 */
-	protected function create_llms_post( $object_args ) {
-		$object = new LLMS_Section( 'new', $object_args );
-		return $object && is_a( $object, 'LLMS_Section' ) ? $object : llms_rest_not_found_error();
+	protected function create_llms_post( $section_args ) {
+		$section = new LLMS_Section( 'new', $section_args );
+		return $section && is_a( $section, 'LLMS_Section' ) ? $section : llms_rest_not_found_error();
 	}
 
 	/**
