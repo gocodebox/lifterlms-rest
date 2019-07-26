@@ -55,4 +55,60 @@ class LLMS_REST_Test_API_Key extends LLMS_REST_Unit_Test_Case {
 
 	}
 
+	/**
+	 * Test has_permissions() method.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_has_permission() {
+
+		$key = $this->get_mock_api_key( 'read' );
+		$tests = array(
+			'HEAD' => true,
+			'GET' => true,
+			'POST' => false,
+			'PUT' => false,
+			'PATCH' => false,
+			'DELETE' => false,
+			'OPTIONS' => true,
+			'FAKE' => false,
+		);
+		foreach ( $tests as $method => $expect ) {
+			$this->assertEquals( $expect, $key->has_permission( $method ), $method );
+		}
+
+		$key = $this->get_mock_api_key( 'write' );
+		$tests = array(
+			'HEAD' => false,
+			'GET' => false,
+			'POST' => true,
+			'PUT' => true,
+			'PATCH' => true,
+			'DELETE' => true,
+			'OPTIONS' => true,
+			'FAKE' => false,
+		);
+		foreach ( $tests as $method => $expect ) {
+			$this->assertEquals( $expect, $key->has_permission( $method ), $method );
+		}
+
+		$key = $this->get_mock_api_key( 'read_write' );
+		$tests = array(
+			'HEAD' => true,
+			'GET' => true,
+			'POST' => true,
+			'PUT' => true,
+			'PATCH' => true,
+			'DELETE' => true,
+			'OPTIONS' => true,
+			'FAKE' => false,
+		);
+		foreach ( $tests as $method => $expect ) {
+			$this->assertEquals( $expect, $key->has_permission( $method ), $method );
+		}
+
+	}
+
 }

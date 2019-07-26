@@ -20,9 +20,9 @@ class LLMS_REST_API_Keys {
 	/**
 	 * Singleton instance
 	 *
-	 * @var  null
+	 * @var LLMS_REST_API_Keys
 	 */
-	protected static $_instance = null;
+	protected static $instance = null;
 
 	/**
 	 * Get Main Singleton Instance.
@@ -32,10 +32,10 @@ class LLMS_REST_API_Keys {
 	 * @return LLMS_REST
 	 */
 	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
 		}
-		return self::$_instance;
+		return self::$instance;
 	}
 
 	/**

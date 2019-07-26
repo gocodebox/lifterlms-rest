@@ -136,7 +136,43 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 
 	}
 
+	/**
+	 * Determine if the key has the permissions required by the HTTP Request Method.
+	 *
+	 * @since [version]
+	 *
+	 * @param string $method The HTTP request method.
+	 * @return bool
+	 */
+	public function has_permission( $method ) {
 
+		$permissions = $this->get( 'permissions' );
+
+		switch ( $method ) {
+			case 'HEAD':
+			case 'GET':
+				$ret = ( 'read' === $permissions || 'read_write' === $permissions );
+				break;
+
+			case 'POST':
+			case 'PUT':
+			case 'PATCH':
+			case 'DELETE':
+				$ret = ( 'write' === $permissions || 'read_write' === $permissions );
+				break;
+
+			case 'OPTIONS':
+				$ret = true;
+				break;
+
+			default:
+				$ret = false;
+
+		}
+
+		return $ret;
+
+	}
 
 
 }

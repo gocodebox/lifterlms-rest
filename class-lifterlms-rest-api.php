@@ -27,9 +27,9 @@ final class LifterLMS_REST_API {
 	/**
 	 * Singleton instance of the class.
 	 *
-	 * @var     obj
+	 * @var obj
 	 */
-	private static $_instance = null;
+	private static $instance = null;
 
 	/**
 	 * Singleton Instance of the LifterLMS_REST_API class.
@@ -40,11 +40,11 @@ final class LifterLMS_REST_API {
 	 */
 	public static function instance() {
 
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
 		}
 
-		return self::$_instance;
+		return self::$instance;
 
 	}
 
@@ -61,9 +61,10 @@ final class LifterLMS_REST_API {
 			define( 'LLMS_REST_API_VERSION', $this->version );
 		}
 
+		// i18n.
 		add_action( 'init', array( $this, 'load_textdomain' ), 0 );
 
-		// get started.
+		// Load everything else.
 		add_action( 'plugins_loaded', array( $this, 'init' ), 10 );
 
 	}
@@ -81,6 +82,7 @@ final class LifterLMS_REST_API {
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
 
 		// Functions.
+		include_once dirname( __FILE__ ) . '/includes/llms-rest-server-functions.php';
 		include_once dirname( __FILE__ ) . '/includes/llms-rest-functions.php';
 
 		// Models.
@@ -131,9 +133,11 @@ final class LifterLMS_REST_API {
 			// Functions.
 			'llms-rest-server-functions',
 
+			// Controllers.
 			'class-llms-rest-enrollments-controller',
 			'class-llms-rest-courses-controller',
 			'class-llms-rest-sections-controller',
+
 		);
 
 		foreach ( $includes as $include ) {
@@ -175,7 +179,7 @@ final class LifterLMS_REST_API {
 		if ( function_exists( 'LLMS' ) && version_compare( '3.32.0', LLMS()->version, '<=' ) ) {
 
 			// load includes.
-			add_action( 'plugins_loaded', array( $this, 'includes' ), 100 );
+			add_action( 'plugins_loaded', array( $this, 'includes' ), 15 );
 
 		}
 

@@ -52,8 +52,8 @@ info:
 
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
-        -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
+        -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
+        -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
     ```
 
   x-logo:

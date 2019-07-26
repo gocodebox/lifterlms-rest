@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Return a WP_Error with proper code, message and status for unauthorized requets.
+ * Return a WP_Error with proper code, message and status for unauthorized requests.
  *
  * @since [version]
  *
@@ -21,11 +21,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function llms_rest_authorization_required_error( $message = '' ) {
 	if ( is_user_logged_in() ) {
-		// 403
+		// 403.
 		$error_code = 'llms_rest_forbidden_request';
 		$_message   = __( 'You are not authorized to perform this request.', 'lifterlms' );
 	} else {
-		// 401
+		// 401.
 		$error_code = 'llms_rest_unauthorized_request';
 		$_message   = __( 'The API credentials were invalid.', 'lifterlms' );
 	}
