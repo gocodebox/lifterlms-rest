@@ -19,18 +19,10 @@ get:
           - title
           - date_created
           - date_updated
-          - menu_order
+          - order
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
-    - name: parent
-      description: Filter sections by the parent post (section) ID.
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        example: 789
 
   responses:
     200:
