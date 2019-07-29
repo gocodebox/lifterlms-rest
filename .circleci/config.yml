@@ -113,6 +113,14 @@ jobs:
           name: Build Docs
           command: npm run build
       - run:
+          name: Run Git Commands
+          command: |
+            git config user.email "circleci@lifterlms.com"
+            git config user.name "CircleCI Deployment"
+            git add -A
+            git commit -m "Deploy docs [ci-skip]"
+            git push origin master
+      - run:
           name: Deploy Docs
           command: npm run gh-pages
 
@@ -120,10 +128,26 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - test-php-71
-      - test-php-72
-      - test-php-73
-      - test-openapi-spec
+      - test-php-71:
+          filters:
+            branches:
+              only: /.*/
+      - test-php-72:
+          filters:
+            branches:
+              only: /.*/
+      - test-php-73:
+          filters:
+            branches:
+              only: /.*/
+      - test-openapi-spec:
+          filters:
+            branches:
+              only: /.*/
       - deploy-gh-pages:
           requires:
             - test-openapi-spec
+          filters:
+            branches:
+              only:
+                - master
