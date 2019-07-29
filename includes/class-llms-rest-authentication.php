@@ -120,7 +120,7 @@ class LLMS_REST_Authentication {
 	}
 
 	/**
-	 * Check if the API Key can preform the request.
+	 * Check if the API Key can perform the request.
 	 *
 	 * @param mixed           $result  Response to replace the requested version with.
 	 * @param WP_REST_Server  $server  Server instance.
