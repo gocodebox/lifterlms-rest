@@ -103,7 +103,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8"
+            - "77:bf:34:73:f8:80:cd:45:26:e0:49:d1:e0:5a:3b:9f"
       - attach_workspace:
           at: ~/repo
       - run:
