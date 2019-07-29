@@ -162,7 +162,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$request_params = $request->get_query_params();
 		$base           = add_query_arg(
 			urlencode_deep( $request_params ),
-			rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) )
+			rest_url( sprintf( '%s/%s', $this->namespace, str_replace( '(?P<id>[\d]+)', $request['id'], $this->rest_base ) ) )
 		);
 
 		// Add first page.
@@ -265,7 +265,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$schema = $this->get_item_schema();
 
-		$additional_fields = $this->update_additional_object_fields( $object, $prepared_item, $request, $schema );
+		$additional_fields = $this->update_additional_object_fields( $object, $request, $schema, $prepared_item );
 		if ( is_wp_error( $additional_fields ) ) {
 			return $additional_fields;
 		}
@@ -476,7 +476,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$schema = $this->get_item_schema();
 
-		$additional_fields = $this->update_additional_object_fields( $object, $prepared_item, $request, $schema );
+		$additional_fields = $this->update_additional_object_fields( $object, $request, $schema, $prepared_item, false );
 		if ( is_wp_error( $additional_fields ) ) {
 			return $additional_fields;
 		}
@@ -792,6 +792,30 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			$query_args[ $key ] = $value;
 		}
 
+		$query_args = $this->prepare_items_query_orderby_mappings( $query_args, $request );
+
+		// Turn exclude and include params into proper arrays.
+		foreach ( array( 'post__in', 'post__not_in' ) as $arg ) {
+			if ( isset( $query_args[ $arg ] ) && ! is_array( $query_args[ $arg ] ) ) {
+				$query_args[ $arg ] = array_map( 'absint', explode( ',', $query_args[ $arg ] ) );
+			}
+		}
+
+		return $query_args;
+
+	}
+
+	/**
+	 * Map to proper WP_Query orderby param.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $query_args WP_Query arguments.
+	 * @param WP_REST_Request $request    Full details about the request.
+	 * @return array Query arguments.
+	 */
+	protected function prepare_items_query_orderby_mappings( $query_args, $request ) {
+
 		// Map to proper WP_Query orderby param.
 		if ( isset( $query_args['orderby'] ) && isset( $request['orderby'] ) ) {
 			$orderby_mappings = array(
@@ -803,13 +827,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 			if ( isset( $orderby_mappings[ $request['orderby'] ] ) ) {
 				$query_args['orderby'] = $orderby_mappings[ $request['orderby'] ];
-			}
-		}
-
-		// Turn exclude and include params into proper arrays.
-		foreach ( array( 'post__in', 'post__not_in' ) as $arg ) {
-			if ( isset( $query_args[ $arg ] ) && ! is_array( $query_args[ $arg ] ) ) {
-				$query_args[ $arg ] = array_map( 'absint', explode( ',', $query_args[ $arg ] ) );
 			}
 		}
 
@@ -882,12 +899,15 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 			if ( ! empty( $date_data ) ) {
 				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
+				$prepared_item['edit_date'] = true;
 			}
-		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
+		}
+		if ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created_gmt'], true );
 
 			if ( ! empty( $date_data ) ) {
 				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
+				$prepared_item['edit_date'] = true;
 			}
 		}
 
