@@ -101,6 +101,7 @@ jobs:
       - image: circleci/node:lts
     working_directory: ~/repo
     steps:
+      - add_ssh_keys
       - attach_workspace:
           at: ~/repo
       - run:
