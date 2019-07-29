@@ -33,6 +33,58 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	protected $post_type = 'section';
 
 	/**
+	 * Parent id.
+	 *
+	 * @var int
+	 */
+	protected $parent_id;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since [version]
+	 *
+	 * @param string $namespace Optional. Namespace. Default null.
+	 * @param string $rest_base Optional. Rest base. Default null.
+	 */
+	public function __construct( $namespace = null, $rest_base = null ) {
+
+		if ( ! is_null( $namespace ) ) {
+			$this->$namespace = $namespace;
+		}
+
+		if ( ! is_null( $rest_base ) ) {
+			$this->$rest_base = $rest_base;
+		}
+
+		$this->collection_params = $this->build_collection_params();
+	}
+
+	/**
+	 * Set parent id.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $parent_id Course parent id.
+	 * @return void
+	 */
+	public function set_parent_id( $parent_id ) {
+		$this->parent_id = $parent_id;
+	}
+
+	/**
+	 * Get parent id.
+	 *
+	 * @since [version]
+	 *
+	 * @return int|null Course parent id. Null if not set.
+	 */
+	public function get_parent_id() {
+		return isset( $this->parent_id ) ? $this->parent_id : null;
+	}
+
+
+	/**
 	 * Get object.
 	 *
 	 * @since [version]
@@ -119,9 +171,32 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @return array Collection parameters.
+	 * @return array The Enrollments collection parameters.
 	 */
 	public function get_collection_params() {
+		return $this->collection_params;
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $collection_params The Enrollments collection parameters to be set.
+	 * @return void
+	 */
+	public function set_collection_params( $collection_params ) {
+		$this->collection_params = $collection_params;
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function build_collection_params() {
 		$query_params = parent::get_collection_params();
 
 		$query_params['parent'] = array(
@@ -164,18 +239,27 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array
 	 */
 	protected function prepare_objects_query( $request ) {
+
 		$query_args = parent::prepare_objects_query( $request );
 
-		// Maybe filter by parent.
-		if ( ! empty( $request['parent'] ) && $request['parent'] > 1 ) {
+		$parent_id = 0;
+
+		if ( isset( $this->parent_id ) ) {
+			$parent_id = $this->parent_id;
+		} elseif ( ! empty( $request['parent'] ) && $request['parent'] > 1 ) {
+			$parent_id = $request['parent'];
+		}
+
+		// Filter by parent.
+		if ( ! empty( $parent_id ) ) {
 			/**
-			 * Note: we can improve the core Section class in order to ask it the meta query we need here.
+			 * Note: we can improve the core Section class in order to ask to it the meta query we need here.
 			 */
 			$query_args = array_merge(
 				$query_args,
 				array(
 					'meta_key'   => '_llms_parent_course',
-					'meta_value' => absint( $request['parent'] ),
+					'meta_value' => absint( $parent_id ),
 				)
 			);
 		}
