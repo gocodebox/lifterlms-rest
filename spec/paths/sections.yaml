@@ -19,7 +19,7 @@ get:
           - title
           - date_created
           - date_updated
-          - menu_order
+          - order
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
