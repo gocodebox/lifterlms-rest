@@ -113,21 +113,18 @@ jobs:
           name: Build Docs
           command: npm run build
       - run:
-          name: Setup Git
+          name: Deploy docs
           command: |
             if [[ -z $(git status -s) ]]; then
               echo "No changes to deploy"
-              exit 0
             else
               git config user.email "circleci@lifterlms.com"
               git config user.name "CircleCI Deployment"
               git add -A
               git commit -m "Deploy docs [ci-skip]"
               git push origin master
+              npm run gh-pages
             fi
-      - run:
-          name: Deploy Docs
-          command: npm run gh-pages
 
 workflows:
   version: 2
