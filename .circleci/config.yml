@@ -66,6 +66,7 @@ jobs:
   test-openapi-spec:
     docker:
       - image: circleci/node:lts
+    working_directory: ~/repo
     steps:
       - checkout
 
@@ -98,6 +99,7 @@ jobs:
   deploy-gh-pages:
     docker:
       - image: circleci/node:lts
+    working_directory: ~/repo
     steps:
       - attach_workspace:
           at: ~/repo
