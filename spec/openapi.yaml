@@ -69,11 +69,17 @@ security:
 
 tags:
 
+  - name: API Keys
+    description: |
+      API Keys are used to authenticate REST API requests.
+
+      The API keys API allows you to create, view, update, and delete API keys.
+
   - name: Access Plans
     description: |
       Access plans allow you to define how LMS content is purchased and accessed by your students.
 
-      The access plans API allows you to create, view, update, and delete courses.
+      The access plans API allows you to create, view, update, and delete access plans.
 
   - name: Courses
     description: |
@@ -269,6 +275,10 @@ tags:
 
 
 x-tagGroups:
+
+  - name: API Keys
+    tags:
+      - API Keys
 
   - name: Courses
     tags:
