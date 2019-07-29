@@ -30,7 +30,6 @@ get:
         default: order
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
-    - $ref: '#/components/parameters/PostPassword'
   responses:
     200:
       description: Successfully retrieved the course outline.
