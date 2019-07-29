@@ -42,10 +42,23 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	 * Constructor.
 	 *
 	 * @since [version]
+	 *
+	 * @param string $namespace Optional. Namespace. Default null.
+	 * @param string $rest_base Optional. Rest base. Default null.
 	 */
-	public function __construct() {
+	public function __construct( $namespace = null, $rest_base = null ) {
+
+		if ( ! is_null( $namespace ) ) {
+			$this->$namespace = $namespace;
+		}
+
+		if ( ! is_null( $rest_base ) ) {
+			$this->$rest_base = $rest_base;
+		}
+
 		$this->collection_params = $this->build_collection_params();
 	}
+
 
 	/**
 	 * Register routes.
@@ -238,7 +251,7 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 		$request_params = $request->get_query_params();
 		$base           = add_query_arg(
 			urlencode_deep( $request_params ),
-			rest_url( sprintf( '%s/%s/%d/%s', $this->namespace, $this->rest_base, $request['id'], 'enrollments' ) )
+			rest_url( sprintf( '%s/%s', $this->namespace, str_replace( '(?P<id>[\d]+)', $request['id'], $this->rest_base ) ) )
 		);
 
 		// Add first page.
@@ -422,13 +435,14 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 		 * Filter the enrollments by user_id or post_id param
 		 */
 		if ( isset( $query_args['student_id'] ) ) {
-			$filter = sprintf( ' AND upm.user_id IN ( %s )', implode( ', ', $query_args['ustudent_id'] ) );
+			$filter = sprintf( ' AND upm.user_id IN ( %s )', implode( ', ', $query_args['student_id'] ) );
 		} elseif ( isset( $query_args['post_id'] ) ) {
 			$filter = sprintf( ' AND upm.post_id IN ( %s )', implode( ', ', $query_args['post_id'] ) );
 		} else {
 			$filter = '';
 		}
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$updated_date_status = $wpdb->prepare(
 			"(
 				SELECT user_id, post_id, updated_date, meta_value
@@ -464,13 +478,14 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
 				WHERE upm.meta_key = '_start_date' AND upm.{$id_column} = %d $filter
 				ORDER BY {$query_args['orderby']} {$query_args['order']}
-				${limit};
+				{$limit};
 				",
 				array(
 					$query_args['id'],
 				)
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$query->found_items = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
 
