@@ -34,8 +34,8 @@ info:
     Alternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -H X-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
-        -H X-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
+        -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
+        -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
     ```
   x-logo:
     altText: LifterLMS
@@ -640,15 +640,7 @@ paths:
               - title
             default: order
         - $ref: '#/components/parameters/Include'
-        - $ref: '#/components/parameters/PostPassword'
-        - name: parent
-          description: Filter results to those belonging to the specified parent.
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            example: 987
+        - $ref: '#/components/parameters/Exclude'
       responses:
         '200':
           description: Successfully retrieved the course outline.
@@ -703,7 +695,6 @@ paths:
               - date_updated
               - date_created
             default: date_updated
-        - $ref: '#/components/parameters/PostPassword'
         - name: status
           description: Filter results to records matching the specified status.
           in: query
@@ -715,7 +706,10 @@ paths:
           description: Limit results to a specific student or a list of students. Accepts a single student `id` or a comma separated list of student `id`s.
           schema:
             type: string
-            example: '1,2,3'
+            example:
+              - 1
+              - 2
+              - 3
       responses:
         '200':
           description: Successfully retrieved the course's enrollments.
@@ -994,18 +988,10 @@ paths:
               - title
               - date_created
               - date_updated
-              - menu_order
+              - order
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
-        - name: parent
-          description: Filter sections by the parent post (section) ID.
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            example: 789
       responses:
         '200':
           description: Successfully returned a list of lessons.
@@ -1330,16 +1316,23 @@ paths:
             enum:
               - date_updated
               - date_created
-              - enrollment
             default: date_updated
         - $ref: '#/components/parameters/Include'
-        - $ref: '#/components/parameters/PostPassword'
         - name: status
           description: Filter results to records matching the specified status.
           in: query
           required: false
           schema:
             $ref: '#/components/schemas/EnrollmentStatus'
+        - name: student
+          in: query
+          description: Limit results to a specific student or a list of students. Accepts a single student `id` or a comma separated list of student `id`s.
+          schema:
+            type: string
+            example:
+              - 1
+              - 2
+              - 3
       responses:
         '200':
           description: Successfully retrieved the membership's enrollments.
@@ -1788,7 +1781,7 @@ paths:
               - title
               - date_created
               - date_updated
-              - menu_order
+              - order
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
@@ -2173,7 +2166,6 @@ paths:
             enum:
               - date_updated
               - date_created
-              - enrollment
             default: date_updated
         - name: status
           description: Filter results to records matching the specified status.
@@ -2181,6 +2173,15 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/EnrollmentStatus'
+        - name: post
+          in: query
+          description: Limit results to a specific course or membership or a list of courses and/or memberships. Accepts a single post `id` or a comma separated list of post `id`s.
+          schema:
+            type: string
+            example:
+              - 1
+              - 2
+              - 3
       responses:
         '200':
           description: Successfully returned a list of a student's enrollment records.
@@ -3195,20 +3196,19 @@ components:
                         type: string
     Enrollment:
       type: object
-      required:
-        - student_id
-        - post_id
       properties:
         student_id:
           description: The ID of the student.
           type: integer
           minimum: 1
           example: 123
+          readOnly: true
         post_id:
           description: The ID of the course/membership.
           type: integer
           minimum: 1
           example: 456
+          readOnly: true
         date_created:
           description: 'The enrollment creation date. Format: `Y-m-d H:i:s`'
           type: string
@@ -3585,6 +3585,15 @@ components:
                       href:
                         type: string
                         example: /wp-json/llms/v1/courses/1234
+                next:
+                  description: REST URI to the next sibling lesson in the section.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/lessons/4567
                 prerequisite:
                   description: REST URIs to lesson prerequisite resources.
                   type: array
@@ -3597,6 +3606,15 @@ components:
                       href:
                         type: string
                         example: /wp-json/llms/v1/lessons/321
+                previous:
+                  description: REST URI to the previous sibling lesson in the section.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/lessons/8910
                 parent:
                   description: REST URI to the lessons's parent.
                   type: array
@@ -4723,6 +4741,15 @@ components:
                       href:
                         type: string
                         example: /wp-json/llms/v1/sections/1234/content?parent=987
+                next:
+                  description: REST URI to the next sibling section in the course.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/sections/3456
                 parent:
                   description: REST URI to the section's parent.
                   type: array
@@ -4735,6 +4762,15 @@ components:
                       href:
                         type: string
                         example: /wp-json/llms/v1/courses/1234
+                prevous:
+                  description: REST URI to the prevous sibling section in the course.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/sections/7891
                 siblings:
                   description: REST URI to the collection of the section's siblings within its parent.
                   type: array
@@ -5057,14 +5093,20 @@ components:
       description: Exclude a list of `id`s from results. Accepts a single `id` or a comma separated list of `id`s.
       schema:
         type: string
-        example: '10,11,12'
+        example:
+          - 10
+          - 11
+          - 12
     Include:
       name: include
       in: query
       description: Limit results to a list of `id`s. Accepts a single `id` or a comma separated list of `id`s.
       schema:
         type: string
-        example: '1,2,3'
+        example:
+          - 1
+          - 2
+          - 3
     Order:
       name: order
       in: query
