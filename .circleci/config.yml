@@ -118,7 +118,7 @@ jobs:
           if [[ -z $(git status -s) ]]; then
             echo "No changes to deploy"
             exit 0
-          else
+          else:
             git config user.email "circleci@lifterlms.com"
             git config user.name "CircleCI Deployment"
             git add -A
