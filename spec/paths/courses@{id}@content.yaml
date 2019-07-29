@@ -29,15 +29,8 @@ get:
           - title
         default: order
     - $ref: '#/components/parameters/Include'
+    - $ref: '#/components/parameters/Exclude'
     - $ref: '#/components/parameters/PostPassword'
-    - name: parent
-      description: Filter results to those belonging to the specified parent.
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        example: 987
   responses:
     200:
       description: Successfully retrieved the course outline.
