@@ -39,14 +39,24 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected $enrollments_controller;
 
 	/**
+	 * Sections controller
+	 *
+	 * @var LLMS_REST_Sections_Controller
+	 */
+	protected $sections_controller;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since [version]
 	 */
 	public function __construct() {
 
-		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
+		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/enrollments' );
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
+
+		$this->sections_controller = new LLMS_REST_Sections_Controller( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/content' );
+		$this->sections_controller->set_collection_params( $this->get_enrollments_collection_params() );
 
 	}
 
@@ -67,7 +77,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
 
-		$get_item_args = array_merge( $get_item_args, $this->enrollments_controller->get_collection_params() );
+		$get_enrollments_item_args = array_merge( $get_item_args, $this->get_enrollments_collection_params() );
 
 		register_rest_route(
 			$this->namespace,
@@ -83,12 +93,32 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this->enrollments_controller, 'get_items' ),
 					'permission_callback' => array( $this->enrollments_controller, 'get_items_permissions_check' ),
-					'args'                => $get_item_args,
+					'args'                => $get_enrollments_item_args,
 				),
 				'schema' => array( $this->enrollments_controller, 'get_public_item_schema' ),
 			)
 		);
 
+		$get_course_content_item_args = array_merge( $get_item_args, $this->get_course_content_collection_params() );
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/content',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique Course Identifier. The WordPress Post ID', 'lifterlms' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_course_content_items' ),
+					'permission_callback' => array( $this->sections_controller, 'get_items_permissions_check' ),
+					'args'                => $get_course_content_item_args,
+				),
+				'schema' => array( $this->sections_controller, 'get_public_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -656,25 +686,43 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Access dates.
-		if ( ! empty( $schema['properties']['access_opens_date'] ) && ! empty( $request['access_opens_date'] ) ) {
-			$enrollment_opens_date       = rest_parse_date( $request['access_opens_date'] );
-			$prepared_item['start_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		if ( ! empty( $schema['properties']['access_opens_date'] ) && isset( $request['access_opens_date'] ) ) {
+			$access_opens_date           = rest_parse_date( $request['access_opens_date'] );
+			$prepared_item['start_date'] = date_i18n( 'Y-m-d H:i:s', $access_opens_date );
 		}
 
-		if ( ! empty( $schema['properties']['access_closes_date'] ) && ! empty( $request['access_closes_date'] ) ) {
-			$enrollment_opens_date     = rest_parse_date( $request['access_closes_date'] );
-			$prepared_item['end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		if ( ! empty( $schema['properties']['access_closes_date'] ) && isset( $request['access_closes_date'] ) ) {
+			$access_closes_date        = rest_parse_date( $request['access_closes_date'] );
+			$prepared_item['end_date'] = date_i18n( 'Y-m-d H:i:s', $access_closes_date );
 		}
 
 		// Enrollment dates.
-		if ( ! empty( $schema['properties']['enrollment_opens_date'] ) && ! empty( $request['enrollment_opens_date'] ) ) {
+		if ( ! empty( $schema['properties']['enrollment_opens_date'] ) && isset( $request['enrollment_opens_date'] ) ) {
 			$enrollment_opens_date                  = rest_parse_date( $request['enrollment_opens_date'] );
 			$prepared_item['enrollment_start_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
 		}
 
-		if ( ! empty( $schema['properties']['enrollment_closes_date'] ) && ! empty( $request['enrollment_closes_date'] ) ) {
-			$enrollment_opens_date                = rest_parse_date( $request['enrollment_closes_date'] );
-			$prepared_item['enrollment_end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+		if ( ! empty( $schema['properties']['enrollment_closes_date'] ) && isset( $request['enrollment_closes_date'] ) ) {
+			$enrollment_closes_date               = rest_parse_date( $request['enrollment_closes_date'] );
+			$prepared_item['enrollment_end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_closes_date );
+		}
+
+		// Sales page.
+		if ( ! empty( $schema['properties']['sales_page_page_type'] ) && isset( $request['sales_page_page_type'] ) ) {
+			$prepared_item['sales_page_content_type'] = $request['sales_page_page_type'];
+		}
+
+		if ( ! empty( $schema['properties']['sales_page_page_id'] ) && isset( $request['sales_page_page_id'] ) ) {
+			$sales_page = get_post( $request['sales_page_page_id'] );
+			if ( $sales_page && is_a( $sales_page, 'WP_Post' ) ) {
+				$prepared_item['sales_page_content_page_id'] = $request['sales_page_page_id']; // maybe allow only published pages?
+			} else {
+				$prepared_item['sales_page_content_page_id'] = 0;
+			}
+		}
+
+		if ( ! empty( $schema['properties']['sales_page_page_url'] ) && isset( $request['sales_page_page_url'] ) ) {
+			$prepared_item['sales_page_content_url'] = $request['sales_page_page_url'];
 		}
 
 		return $prepared_item;
@@ -687,12 +735,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since [version]
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
-	 * @param array           $prepared_item Array.
 	 * @param WP_REST_Request $request       Full details about the request.
 	 * @param array           $schema        The item schema.
+	 * @param array           $prepared_item Array.
+	 * @param bool            $creating      Optional. Whether we're in creation or update phase. Default true (create).
 	 * @return bool|WP_Error True on success, WP_Error object otherwise.
 	 */
-	protected function update_additional_object_fields( $course, $prepared_item, $request, $schema ) {
+	protected function update_additional_object_fields( $course, $request, $schema, $prepared_item, $creating = true ) {
 
 		$error = new WP_Error();
 
@@ -778,7 +827,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Are we creating a course?
-		if ( WP_REST_Server::CREATABLE === $request->get_method() && '/' . $this->namespace . '/' . $this->rest_base === $request->get_route() ) {
+		// If so, replace the placeholder with the actual course id.
+		if ( $creating ) {
 
 			$_to_expand_props = array(
 				'course_opens_message',
@@ -967,7 +1017,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Retrieves the query params for the objects collection.
+	 * Retrieves the query params for the enrollments objects collection.
 	 *
 	 * @since [version]
 	 *
@@ -985,4 +1035,43 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		return $query_params;
 	}
 
+	/**
+	 * Retrieves the query params for the sections objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_course_content_collection_params() {
+		$query_params = $this->sections_controller->get_collection_params();
+
+		$query_params['orderby'] = array(
+			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
+			'type'        => 'string',
+			'default'     => 'order',
+			'enum'        => array(
+				'order',
+				'id',
+				'title',
+			),
+		);
+
+		unset( $query_params['parent'] );
+
+		return $query_params;
+	}
+
+
+	/**
+	 * Get a collection of content items (sections).
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_course_content_items( $request ) {
+		$this->sections_controller->set_parent_id( $request['id'] );
+		return $this->sections_controller->get_items( $request );
+	}
 }
