@@ -1,18 +1,17 @@
 type: object
-required:
-  - student_id
-  - post_id
 properties:
   student_id:
     description: The ID of the student.
     type: integer
     minimum: 1
     example: 123
+    readOnly: true
   post_id:
     description: The ID of the course/membership.
     type: integer
     minimum: 1
     example: 456
+    readOnly: true
   date_created:
     description: 'The enrollment creation date. Format: `Y-m-d H:i:s`'
     type: string
