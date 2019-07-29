@@ -101,7 +101,9 @@ jobs:
       - image: circleci/node:lts
     working_directory: ~/repo
     steps:
-      - add_ssh_keys
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8"
       - attach_workspace:
           at: ~/repo
       - run:
