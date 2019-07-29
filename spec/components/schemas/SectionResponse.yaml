@@ -46,6 +46,15 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/sections/1234/content?parent=987
+          next:
+            description: REST URI to the next sibling section in the course.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/sections/3456
           parent:
             description: REST URI to the section's parent.
             type: array
@@ -58,6 +67,15 @@ allOf:
                 href:
                   type: string
                   example: /wp-json/llms/v1/courses/1234
+          prevous:
+            description: REST URI to the prevous sibling section in the course.
+            type: array
+            items:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example: /wp-json/llms/v1/sections/7891
           siblings:
             description: REST URI to the collection of the section's siblings within its parent.
             type: array
