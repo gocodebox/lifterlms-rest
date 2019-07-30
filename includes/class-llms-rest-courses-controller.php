@@ -52,10 +52,10 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function __construct() {
 
-		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/enrollments' );
+		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
 
-		$this->sections_controller = new LLMS_REST_Sections_Controller( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/content' );
+		$this->sections_controller = new LLMS_REST_Sections_Controller();
 		$this->sections_controller->set_collection_params( $this->get_enrollments_collection_params() );
 
 	}
@@ -1043,22 +1043,20 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Collection parameters.
 	 */
 	public function get_course_content_collection_params() {
+
 		$query_params = $this->sections_controller->get_collection_params();
 
-		$query_params['orderby'] = array(
-			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'order',
-			'enum'        => array(
-				'order',
-				'id',
-				'title',
-			),
+		$query_params['orderby']['enum']    = array(
+			'order',
+			'id',
+			'title',
 		);
+		$query_params['orderby']['default'] = 'order';
 
 		unset( $query_params['parent'] );
 
 		return $query_params;
+
 	}
 
 

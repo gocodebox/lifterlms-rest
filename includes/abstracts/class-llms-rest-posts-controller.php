@@ -32,6 +32,13 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	protected $post_type;
 
 	/**
+	 * Route base.
+	 *
+	 * @var string
+	 */
+	protected $collection_route_base_for_pagination;
+
+	/**
 	 * Register routes.
 	 *
 	 * @since [version]
@@ -162,7 +169,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$request_params = $request->get_query_params();
 		$base           = add_query_arg(
 			urlencode_deep( $request_params ),
-			rest_url( sprintf( '%s/%s', $this->namespace, str_replace( '(?P<id>[\d]+)', $request['id'], $this->rest_base ) ) )
+			rest_url( $request->get_route() )
 		);
 
 		// Add first page.

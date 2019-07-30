@@ -43,21 +43,11 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Constructor.
 	 *
 	 * @since [version]
-	 *
-	 * @param string $namespace Optional. Namespace. Default null.
-	 * @param string $rest_base Optional. Rest base. Default null.
 	 */
-	public function __construct( $namespace = null, $rest_base = null ) {
-
-		if ( ! is_null( $namespace ) ) {
-			$this->$namespace = $namespace;
-		}
-
-		if ( ! is_null( $rest_base ) ) {
-			$this->$rest_base = $rest_base;
-		}
+	public function __construct() {
 
 		$this->collection_params = $this->build_collection_params();
+
 	}
 
 	/**
@@ -197,11 +187,20 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Collection parameters.
 	 */
 	public function build_collection_params() {
+
 		$query_params = parent::get_collection_params();
 
 		$query_params['parent'] = array(
 			'description' => __( 'Filter sections by the parent post (course) ID.', 'lifterlms' ),
 			'type'        => 'integer',
+		);
+
+		$query_params['orderby']['enum'] = array(
+			'id',
+			'title',
+			'date_created',
+			'date_updated',
+			'order',
 		);
 
 		return $query_params;
@@ -274,36 +273,64 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $section ) {
-		$links      = parent::prepare_links( $section );
-		$section_id = $section->get( 'id' );
-
-		$section_links = array();
-
-		// Content.
-		$section_links['content'] = array(
-			'href' => add_query_arg(
-				'parent',
-				$section_id,
-				$links['content']['href']
-			),
-		);
+		$links            = parent::prepare_links( $section );
+		$section_id       = $section->get( 'id' );
+		$parent_course_id = $section->get( 'parent_course' );
+		$section_links    = array();
 
 		// Parent.
 		$section_links['parent'] = array(
 			'type' => 'course',
-			'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $section->get( 'parent_course' ) ) ),
+			'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $parent_course_id ) ),
 		);
 
 		// Siblings.
 		$section_links['siblings'] = array(
 			'href' => add_query_arg(
 				'parent',
-				$section_id,
-				$links['self']['href']
+				$parent_course_id,
+				$links['collection']['href']
 			),
 		);
 
+		// Next.
+		$next_section = $section->get_next();
+		if ( $next_section ) {
+			$section_links['next'] = array(
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $next_section->get( 'id' ) ) ),
+			);
+		}
+
+		// Previous.
+		$previous_section = $section->get_previous();
+		if ( $previous_section ) {
+			$section_links['previous'] = array(
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $previous_section->get( 'id' ) ) ),
+			);
+		}
+
 		return array_merge( $links, $section_links );
+	}
+
+	/**
+	 * Checks if a Section can be read
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Section $section The Section oject.
+	 * @return bool Whether the post can be read.
+	 */
+	protected function check_read_permission( $section ) {
+
+		/**
+		 * As of now, sections of password protected courses cannot be read
+		 */
+		if ( post_password_required( $section->get( 'parent_course' ) ) ) {
+			return false;
+		}
+
+		return parent::check_read_permission( $section );
+
 	}
 
 }
