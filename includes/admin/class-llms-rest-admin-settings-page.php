@@ -61,7 +61,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 		$current = parent::get_current_section();
 		if ( 'main' === $current ) {
-			$all = array_keys( $this->get_sections() );
+			$all     = array_keys( $this->get_sections() );
 			$current = $all ? $all[0] : 'main';
 		}
 		return $current;
