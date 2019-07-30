@@ -29,7 +29,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case {
 		$this->assertEquals( $actions, did_action( 'llms_rest_updated' ) );
 
 		// Should run if version is not equal to current version.
-		update_option( 'llms_rest_version', '0.0.1' );
+		update_option( 'llms_rest_version', '0.0.1-alpha.1' );
 		LLMS_REST_Install::check_version();
 		$actions++;
 		$this->assertEquals( $actions, did_action( 'llms_rest_updated' ) );
