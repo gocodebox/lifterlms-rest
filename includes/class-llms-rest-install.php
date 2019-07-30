@@ -94,6 +94,7 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys` (
 
 		do_action( 'llms_rest_before_install' );
 
+		LLMS_Roles::install();
 		LLMS_Install::create_tables();
 		self::update_version();
 

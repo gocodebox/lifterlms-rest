@@ -22,7 +22,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '[version]';
+	public $version = '0.0.1';
 
 	/**
 	 * Singleton instance of the class.
@@ -91,6 +91,7 @@ final class LifterLMS_REST_API {
 		// Classes.
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys.php';
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-install.php';
+		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-capabilities.php';
 
 		// Include admin classes.
 		if ( is_admin() ) {
@@ -134,6 +135,7 @@ final class LifterLMS_REST_API {
 			'llms-rest-server-functions',
 
 			// Controllers.
+			'class-llms-rest-api-keys-controller',
 			'class-llms-rest-enrollments-controller',
 			'class-llms-rest-courses-controller',
 			'class-llms-rest-sections-controller',

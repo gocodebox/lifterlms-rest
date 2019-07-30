@@ -61,7 +61,8 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 		$current = parent::get_current_section();
 		if ( 'main' === $current ) {
-			$current = 'keys';
+			$all = array_keys( $this->get_sections() );
+			$current = $all ? $all[0] : 'main';
 		}
 		return $current;
 
@@ -76,13 +77,22 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 */
 	public function get_sections() {
 
-		return apply_filters(
-			'llms_rest_api_settings_sections',
-			array(
-				'keys'     => __( 'API Keys', 'lifterlms' ),
-				'webhooks' => __( 'Webhooks', 'lifterlms' ),
-			)
-		);
+		$sections = array();
+
+		if ( current_user_can( 'manage_lifterlms_api_keys' ) ) {
+			$sections['keys'] = __( 'API Keys', 'lifterlms' );
+		}
+
+		$sections['webhooks'] = __( 'Webhooks', 'lifterlms' );
+
+		/**
+		 * Modify the available tabs on the REST API settings screen.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $sections Array of settings page tabs.
+		 */
+		return apply_filters( 'llms_rest_api_settings_sections', $sections );
 
 	}
 
@@ -98,7 +108,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		$curr_section = $this->get_current_section();
 
 		$settings = array();
-		if ( 'keys' === $curr_section ) {
+		if ( current_user_can( 'manage_lifterlms_api_keys' ) && 'keys' === $curr_section ) {
 			$settings = $this->get_settings_keys();
 		}
 
