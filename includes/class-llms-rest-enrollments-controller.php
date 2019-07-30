@@ -42,23 +42,12 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	 * Constructor.
 	 *
 	 * @since [version]
-	 *
-	 * @param string $namespace Optional. Namespace. Default null.
-	 * @param string $rest_base Optional. Rest base. Default null.
 	 */
-	public function __construct( $namespace = null, $rest_base = null ) {
-
-		if ( ! is_null( $namespace ) ) {
-			$this->$namespace = $namespace;
-		}
-
-		if ( ! is_null( $rest_base ) ) {
-			$this->$rest_base = $rest_base;
-		}
+	public function __construct() {
 
 		$this->collection_params = $this->build_collection_params();
-	}
 
+	}
 
 	/**
 	 * Register routes.
@@ -235,6 +224,7 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 		$query_results = $this->get_objects( $query_args, $request );
 
 		$page        = (int) $query_args['page'];
+		$page        = $page ? $page : 1;
 		$max_pages   = $query_results['pages'];
 		$total_posts = $query_results['total'];
 		$objects     = $query_results['objects'];
@@ -249,9 +239,10 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
 		$request_params = $request->get_query_params();
-		$base           = add_query_arg(
+
+		$base = add_query_arg(
 			urlencode_deep( $request_params ),
-			rest_url( sprintf( '%s/%s', $this->namespace, str_replace( '(?P<id>[\d]+)', $request['id'], $this->rest_base ) ) )
+			rest_url( $request->get_route() )
 		);
 
 		// Add first page.
@@ -266,6 +257,7 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 			$prev_link = add_query_arg( 'page', $prev_page, $base );
 			$response->link_header( 'prev', $prev_link );
 		}
+
 		if ( $max_pages > $page ) {
 			$next_page = $page + 1;
 			$next_link = add_query_arg( 'page', $next_page, $base );
@@ -594,6 +586,14 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	 * @return bool Whether the enrollment can be read.
 	 */
 	protected function check_read_permission( $enrollment ) {
+
+		/**
+		 * As of now, enrollments of password protected courses cannot be read
+		 */
+		if ( post_password_required( $enrollment->post_id ) ) {
+			return false;
+		}
+
 		// TODO: who can read this enrollment?
 		return true;
 	}
