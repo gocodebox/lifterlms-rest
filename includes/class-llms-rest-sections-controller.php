@@ -242,8 +242,18 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		$query_args = parent::prepare_objects_query( $request );
 
-		$parent_id = 0;
+		// Orderby 'order' requires a meta query.
+		if ( isset( $query_args['orderby'] ) && 'order' === $query_args['orderby'] ) {
+			$query_args = array_merge(
+				$query_args,
+				array(
+					'meta_key' => '_llms_order',
+					'orderby'  => 'meta_value_num',
+				)
+			);
+		}
 
+		$parent_id = 0;
 		if ( isset( $this->parent_id ) ) {
 			$parent_id = $this->parent_id;
 		} elseif ( ! empty( $request['parent'] ) && $request['parent'] > 1 ) {
@@ -252,14 +262,16 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		// Filter by parent.
 		if ( ! empty( $parent_id ) ) {
-			/**
-			 * Note: we can improve the core Section class in order to ask to it the meta query we need here.
-			 */
 			$query_args = array_merge(
 				$query_args,
 				array(
-					'meta_key'   => '_llms_parent_course',
-					'meta_value' => absint( $parent_id ),
+					'meta_query' => array(
+						array(
+							'key'     => '_llms_parent_course',
+							'value'   => absint( $parent_id ),
+							'compare' => '=',
+						),
+					),
 				)
 			);
 		}
@@ -274,10 +286,21 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $section ) {
-		$links            = parent::prepare_links( $section );
+
+		$links         = parent::prepare_links( $section );
+		$parent_course = $section->get_course();
+
+		/**
+		 * If the section has no course parent return earlier
+		 */
+		if ( ! is_a( $parent_course, 'LLMS_Course' ) ) {
+			return $links;
+		}
+
 		$section_id       = $section->get( 'id' );
-		$parent_course_id = $section->get( 'parent_course' );
-		$section_links    = array();
+		$parent_course_id = $parent_course->get( 'id' );
+
+		$section_links = array();
 
 		// Parent.
 		$section_links['parent'] = array(
