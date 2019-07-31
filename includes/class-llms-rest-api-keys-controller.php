@@ -59,7 +59,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-
+		// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar
 		// register_rest_route(
 		// $this->namespace,
 		// '/' . $this->rest_base . '/(?P<id>[\d]+)',
@@ -90,6 +90,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 		// 'schema' => array( $this, 'get_public_item_schema' ),
 		// )
 		// );
+		// phpcs:enable Squiz.Commenting.InlineComment.InvalidEndChar
 	}
 
 	/**
