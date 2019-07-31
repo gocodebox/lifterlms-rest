@@ -10,7 +10,7 @@
  * @since [version]
  * @version [version]
  */
-class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case {
+class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Set up the tests.

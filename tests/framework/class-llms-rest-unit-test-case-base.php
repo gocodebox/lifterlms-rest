@@ -7,7 +7,7 @@
  * @version [version]
  */
 
-class LLMS_REST_Unit_Test_Case extends LLMS_Unit_Test_Case {
+class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
 	/**
 	 * Generate a mock api key.

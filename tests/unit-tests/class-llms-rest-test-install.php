@@ -9,7 +9,7 @@
  * @since [version]
  * @version [version]
  */
-class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case {
+class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Test LLMS_REST_Install::check_version()

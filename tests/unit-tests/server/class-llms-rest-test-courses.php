@@ -12,7 +12,7 @@
  *
  * @todo update tests with the new params, e.g. rendered/raw content
  */
-class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
+class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Route.
