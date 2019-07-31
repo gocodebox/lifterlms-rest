@@ -1157,33 +1157,37 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
 		$query_params['order'] = array(
-			'description' => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'asc',
-			'enum'        => array( 'asc', 'desc' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'asc',
+			'enum'              => array( 'asc', 'desc' ),
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['orderby'] = array(
-			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'id',
-			'enum'        => array(
+			'description'       => __( 'Sort collection by object attribute.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'id',
+			'enum'              => array(
 				'id',
 				'title',
 				'date_created',
 				'date_updated',
 				'menu_order',
 			),
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['include'] = array(
-			'description' => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
+			'description'       => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['exclude'] = array(
-			'description' => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
+			'description'       => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

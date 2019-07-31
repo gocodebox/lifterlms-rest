@@ -191,8 +191,9 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$query_params = parent::get_collection_params();
 
 		$query_params['parent'] = array(
-			'description' => __( 'Filter sections by the parent post (course) ID.', 'lifterlms' ),
-			'type'        => 'integer',
+			'description'       => __( 'Filter sections by the parent post (course) ID.', 'lifterlms' ),
+			'type'              => 'integer',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['orderby']['enum'] = array(

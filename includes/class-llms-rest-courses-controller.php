@@ -56,7 +56,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
 
 		$this->sections_controller = new LLMS_REST_Sections_Controller();
-		$this->sections_controller->set_collection_params( $this->get_enrollments_collection_params() );
+		$this->sections_controller->set_collection_params( $this->get_course_content_collection_params() );
 
 	}
 
@@ -77,7 +77,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
 
-		$get_enrollments_item_args = array_merge( $get_item_args, $this->get_enrollments_collection_params() );
+		$get_enrollments_item_args = array_merge( $get_item_args, $this->enrollments_controller->get_collection_params() );
 
 		register_rest_route(
 			$this->namespace,
@@ -91,7 +91,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				),
 				array(
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this->enrollments_controller, 'get_items' ),
+					'callback'            => array( $this, 'get_enrollments_items' ),
 					'permission_callback' => array( $this->enrollments_controller, 'get_items_permissions_check' ),
 					'args'                => $get_enrollments_item_args,
 				),
@@ -99,7 +99,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			)
 		);
 
-		$get_course_content_item_args = array_merge( $get_item_args, $this->get_course_content_collection_params() );
+		$get_course_content_item_args = array_merge( $get_item_args, $this->sections_controller->get_collection_params() );
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)/content',
@@ -1059,6 +1060,30 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 	}
 
+	/**
+	 * Get a collection of enrollment items (sections).
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_enrollments_items( $request ) {
+
+		$result = $this->enrollments_controller->get_items( $request );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		// Specs require 404 when no course enrollments are found.
+		if ( ! is_wp_error( $result ) && empty( $result->data ) ) {
+			return llms_rest_not_found_error();
+		}
+
+		return $result;
+
+	}
 
 	/**
 	 * Get a collection of content items (sections).
@@ -1069,7 +1094,17 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_course_content_items( $request ) {
+
 		$this->sections_controller->set_parent_id( $request['id'] );
-		return $this->sections_controller->get_items( $request );
+		$result = $this->sections_controller->get_items( $request );
+
+		// Specs require 404 when no course's sections are found.
+		if ( ! is_wp_error( $result ) && empty( $result->data ) ) {
+			return llms_rest_not_found_error();
+		}
+
+		return $result;
+
 	}
+
 }
