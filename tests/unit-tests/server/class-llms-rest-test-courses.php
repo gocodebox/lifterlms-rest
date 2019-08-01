@@ -861,15 +861,35 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$request->set_param( 'force', true );
 		$response = $this->server->dispatch( $request );
 
-		$this->assertEquals( 200, $response->get_status() );
-
-		// check the deleted post is the correct one.
-		$this->courses_fields_match( $course, $response->get_data()['previous'], $with_modified_date = false );
-
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+		// Success.
+		$this->assertEquals( 204, $response->get_status() );
 
 		// Cannot find just deleted post.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertFalse( get_post_status( $course->get('id') ) );
+
+	}
+
+	/**
+	 * Test trashing a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_trash_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', false );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 204, $response->get_status() );
+
+		// Deleted post status should be 'trash'
+		$this->assertEquals( 'trash' ,get_post_status( $course->get('id') ) );
 
 	}
 
@@ -883,14 +903,34 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		wp_set_current_user( $this->user_allowed );
 
 		$request = new WP_REST_Request( 'DELETE', $this->route . '/747484940' );
-		$request->set_param( 'force', true );
+
 		$response = $this->server->dispatch( $request );
 
-		// Post not found.
-		$this->assertEquals( 404, $response->get_status() );
-
+		// Post not found, so it's "deleted"
+		$this->assertEquals( 204, $response->get_status() );
+		$this->assertEquals( '', $response->get_data() );
 	}
 
+	/**
+	 * Test getting bad request response when deleting a course.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_bad_request_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', 'bad_parameter_value' );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request because of a bad parameter
+		$this->assertEquals( 400, $response->get_status() );
+
+	}
 
 	/**
 	 * Test single course update without authorization.

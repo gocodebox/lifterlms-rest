@@ -205,15 +205,15 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		if ( ! empty( $request['id'] ) ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_bad_request_error( sprintf( __( 'Cannot create existing %s.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
@@ -431,10 +431,10 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		}
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		if ( ! $this->check_update_permission( $object ) ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
@@ -537,6 +537,11 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$object = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes() ) ) {
+				return true;
+			}
+
 			return $object;
 		}
 
@@ -558,10 +563,21 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$object = $this->get_object( (int) $request['id'] );
+		$object   = $this->get_object( (int) $request['id'] );
+		$response = new WP_REST_Response();
+		$response->set_status( 204 );
+
 		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes() ) ) {
+				return $response;
+			}
+
 			return $object;
 		}
+
+		$post_type_object = get_post_type_object( $this->post_type );
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		$id    = $object->get( 'id' );
 		$force = (bool) $request['force'];
@@ -572,37 +588,37 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		// If we're forcing, then delete permanently.
 		if ( $force ) {
-			$previous = $this->prepare_item_for_response( $object, $request );
-			$result   = wp_delete_post( $id, true );
-			$response = new WP_REST_Response();
-			$response->set_data(
-				array(
-					'deleted'  => true,
-					'previous' => $previous->get_data(),
-				)
-			);
+			$result = wp_delete_post( $id, true );
 		} else {
+
 			// If we don't support trashing for this type, error out.
 			if ( ! $supports_trash ) {
-				/* translators: %s: force=true */
-				return new WP_Error( 'llms_rest_trash_not_supported', sprintf( __( "The post does not support trashing. Set '%s' to delete.", 'lifterlms' ), 'force=true' ), array( 'status' => 501 ) );
+				return new WP_Error(
+					'llms_rest_trash_not_supported',
+					/* translators: %1$s: post type name, %2$s: force=true */
+					sprintf( __( 'The %1$s does not support trashing. Set \'%2$s\' to delete.', 'lifterlms' ), $post_type_name, 'force=true' ),
+					array( 'status' => 501 )
+				);
 			}
 
 			// Otherwise, only trash if we haven't already.
 			if ( 'trash' === $object->get( 'status' ) ) {
-				return new WP_Error( 'llms_rest_already_trashed', __( 'The post has already been deleted.', 'lifterlms' ), array( 'status' => 410 ) );
+				return $response;
 			}
 
 			// (Note that internally this falls through to `wp_delete_post` if
 			// the trash is disabled.)
 			$result = wp_trash_post( $id );
-			$object = $this->get_object( $id );
-
-			$response = $this->prepare_item_for_response( $object, $request );
 		}
 
 		if ( ! $result ) {
-			return llms_rest_bad_request_error();
+			/* translators: %s: post type */
+			return new WP_Error(
+				'llms_rest_cannot_delete',
+				/* translators: %s: post type name, */
+				sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $post_type_name ),
+				array( 'status' => 500 )
+			);
 		}
 
 		return $response;
@@ -1350,7 +1366,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	protected function handle_status_param( $status ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		switch ( $status ) {
 			case 'draft':
@@ -1358,14 +1374,14 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				break;
 			case 'private':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type name.
+					// translators: The post type singular name.
 					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a private %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;
 			case 'publish':
 			case 'future':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type name.
+					// translators: The post type singular name.
 					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to publish a %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;
