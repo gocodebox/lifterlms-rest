@@ -24,6 +24,7 @@ properties:
   status:
     $ref: '#/components/schemas/EnrollmentStatus'
   _links:
+    description: A map of links to other related API resources.
     readOnly: true
     type: object
     properties:

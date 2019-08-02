@@ -29,6 +29,7 @@ allOf:
             description: Raw description. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
             example: \n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\n
       _links:
+        description: A map of links to other related API resources.
         type: object
         readOnly: true
         properties:

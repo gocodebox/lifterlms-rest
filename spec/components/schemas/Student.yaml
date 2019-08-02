@@ -15,6 +15,7 @@ allOf:
         default: student
         readOnly: true
       _links:
+        description: A map of links to other related API resources.
         type: object
         readOnly: true
         properties:
