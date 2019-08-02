@@ -1,3 +1,18 @@
-test:
-  override:
-    - echo "don't test"
+version: 2
+references:
+
+jobs:
+  test:
+    steps:
+      - run:
+          name: Skip
+          command: echo "Doing nothing"
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: gh-pages
