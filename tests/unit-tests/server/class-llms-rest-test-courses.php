@@ -863,9 +863,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		// Success.
 		$this->assertEquals( 204, $response->get_status() );
+		// empty body.
+		$this->assertEquals( null, $response->get_data() );
 
 		// Cannot find just deleted post.
-		$this->assertFalse( get_post_status( $course->get('id') ) );
+		$this->assertFalse( get_post_status( $course->get( 'id' ) ) );
 
 	}
 
@@ -886,10 +888,24 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$response = $this->server->dispatch( $request );
 
 		// Success.
-		$this->assertEquals( 204, $response->get_status() );
+		$this->assertEquals( 200, $response->get_status() );
 
-		// Deleted post status should be 'trash'
-		$this->assertEquals( 'trash' ,get_post_status( $course->get('id') ) );
+		$res_data = $response->get_data();
+		// Not empty body.
+		$this->assertTrue( ! empty( $res_data ) );
+		// Deleted post status should be 'trash'.
+		$this->assertEquals( 'trash', get_post_status( $course->get( 'id' ) ) );
+		// check the trashed post returned into the response is the correct one.
+		$this->assertEquals( $course->get( 'id' ), $res_data['id'] );
+		// check the trashed post returned into the response has the correct status 'trash'.
+		$this->assertEquals( 'trash', $res_data['status'] );
+
+		// Trash again I expect 410.
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', false );
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 410, $response->get_status() );
 
 	}
 
@@ -906,7 +922,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 
 		$response = $this->server->dispatch( $request );
 
-		// Post not found, so it's "deleted"
+		// Post not found, so it's "deleted".
 		$this->assertEquals( 204, $response->get_status() );
 		$this->assertEquals( '', $response->get_data() );
 	}
@@ -927,7 +943,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$request->set_param( 'force', 'bad_parameter_value' );
 		$response = $this->server->dispatch( $request );
 
-		// Bad request because of a bad parameter
+		// Bad request because of a bad parameter.
 		$this->assertEquals( 400, $response->get_status() );
 
 	}

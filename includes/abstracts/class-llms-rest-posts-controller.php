@@ -105,17 +105,29 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(
-						// added even if not in the specs.
-						'force' => array(
-							'description' => __( 'Bypass the trash and force course deletion.', 'lifterlms' ),
-							'type'        => 'boolean',
-							'default'     => false,
-						),
-					),
+					'args'                => $this->get_delete_item_args(),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
+		);
+
+	}
+
+	/**
+	 * Retrieves an array of arguments for the delete endpoint.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Delete endpoint arguments.
+	 */
+	public function get_delete_item_args() {
+
+		return array(
+			'force' => array(
+				'description' => __( 'Bypass the trash and force course deletion.', 'lifterlms' ),
+				'type'        => 'boolean',
+				'default'     => false,
+			),
 		);
 
 	}
@@ -538,7 +550,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $object ) ) {
 			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes() ) ) {
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
 				return true;
 			}
 
@@ -569,7 +581,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		if ( is_wp_error( $object ) ) {
 			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes() ) ) {
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
 				return $response;
 			}
 
@@ -580,9 +592,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		$post_type_name   = $post_type_object->labels->singular_name;
 
 		$id    = $object->get( 'id' );
-		$force = (bool) $request['force'];
-
-		$supports_trash = ( EMPTY_TRASH_DAYS > 0 );
+		$force = $this->is_delete_forced( $request );
 
 		$request->set_param( 'context', 'edit' );
 
@@ -590,6 +600,8 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		if ( $force ) {
 			$result = wp_delete_post( $id, true );
 		} else {
+
+			$supports_trash = $this->is_trash_supported();
 
 			// If we don't support trashing for this type, error out.
 			if ( ! $supports_trash ) {
@@ -603,12 +615,19 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 			// Otherwise, only trash if we haven't already.
 			if ( 'trash' === $object->get( 'status' ) ) {
-				return $response;
+				return new WP_Error(
+					'llms_rest_already_trashed',
+					/* translators: %s: post type name, */
+					sprintf( __( 'The %s has already been deleted.', 'lifterlms' ), $post_type_name ),
+					array( 'status' => 410 )
+				);
 			}
 
 			// (Note that internally this falls through to `wp_delete_post` if
 			// the trash is disabled.)
-			$result = wp_trash_post( $id );
+			$result   = wp_trash_post( $id );
+			$object   = $this->get_object( $id );
+			$response = $this->prepare_item_for_response( $object, $request );
 		}
 
 		if ( ! $result ) {
@@ -616,13 +635,36 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			return new WP_Error(
 				'llms_rest_cannot_delete',
 				/* translators: %s: post type name, */
-				sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $post_type_name ),
+				sprintf( __( 'The %s cannot be deleted.', 'lifterlms' ), $post_type_name ),
 				array( 'status' => 500 )
 			);
 		}
 
 		return $response;
 
+	}
+
+	/**
+	 * Whether the delete should be forced.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return bool True if the delete should be forced, false otherwise.
+	 */
+	protected function is_delete_forced( $request ) {
+		return isset( $request['force'] ) && (bool) $request['force'];
+	}
+
+	/**
+	 * Whether the trash is supported.
+	 *
+	 * @since [version]
+	 *
+	 * @return bool True if the trash is supported, false otherwise.
+	 */
+	protected function is_trash_supported() {
+		return ( EMPTY_TRASH_DAYS > 0 );
 	}
 
 	/**

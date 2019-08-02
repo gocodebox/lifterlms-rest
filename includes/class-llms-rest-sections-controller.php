@@ -51,6 +51,39 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
+	 * Retrieves an array of arguments for the delete endpoint.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Delete endpoint arguments.
+	 */
+	public function get_delete_item_args() {
+		return array();
+	}
+	/**
+	 * Whether the delete should be forced.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return bool True if the delete should be forced, false otherwise.
+	 */
+	protected function is_delete_forced( $request ) {
+		return true;
+	}
+
+	/**
+	 * Whether the trash is supported.
+	 *
+	 * @since [version]
+	 *
+	 * @return bool True if the trash is supported, false otherwise.
+	 */
+	protected function is_trash_supported() {
+		return false;
+	}
+
+	/**
 	 * Set parent id.
 	 *
 	 * @since [version]
