@@ -155,7 +155,7 @@ tags:
 
       Sections are used within courses to organize content (lessons) into groups.
 
-      ## Sectino Properties
+      ## Section Properties
 
       <SchemaDefinition schemaRef="#/components/schemas/SectionResponse" showReadOnly={true} showWriteOnly={true} />
 
