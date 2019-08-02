@@ -212,6 +212,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'description' => __( 'URL to an oEmbed enable audio URL.', 'lifterlms' ),
 				'type'        => 'string',
 				'context'     => array( 'view', 'edit' ),
+				'format'      => 'uri',
 				'arg_options' => array(
 					'sanitize_callback' => 'esc_url_raw',
 				),
@@ -220,6 +221,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'description' => __( 'URL to an oEmbed enable video URL.', 'lifterlms' ),
 				'type'        => 'string',
 				'context'     => array( 'view', 'edit' ),
+				'format'      => 'uri',
 				'arg_options' => array(
 					'sanitize_callback' => 'esc_url_raw',
 				),
@@ -478,6 +480,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				),
 				'type'        => 'string',
 				'context'     => array( 'view', 'edit' ),
+				'format'      => 'uri',
 				'arg_options' => array(
 					'sanitize_callback' => 'esc_url_raw',
 				),

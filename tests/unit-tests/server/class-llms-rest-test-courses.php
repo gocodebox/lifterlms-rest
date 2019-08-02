@@ -775,7 +775,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$this->assertEquals( $update_data['title'], $res_data['title']['rendered'] );
 		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
-		$this->assertEquals( $update_data['status'], $res_data['status'], $update_data['status'] );
+		$this->assertEquals( $update_data['status'], $res_data['status'] );
 
 	}
 
@@ -891,7 +891,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$res_data = $response->get_data();
-		// Not empty body.
+		// Non empty body.
 		$this->assertTrue( ! empty( $res_data ) );
 		// Deleted post status should be 'trash'.
 		$this->assertEquals( 'trash', get_post_status( $course->get( 'id' ) ) );
@@ -900,12 +900,23 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
 		// check the trashed post returned into the response has the correct status 'trash'.
 		$this->assertEquals( 'trash', $res_data['status'] );
 
-		// Trash again I expect 410.
+		// Trash again I expect the same as above
 		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
 		$request->set_param( 'force', false );
 		$response = $this->server->dispatch( $request );
 
-		$this->assertEquals( 410, $response->get_status() );
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		// Non empty body.
+		$this->assertTrue( ! empty( $res_data ) );
+		// Deleted post status should be 'trash'.
+		$this->assertEquals( 'trash', get_post_status( $course->get( 'id' ) ) );
+		// check the trashed post returned into the response is the correct one.
+		$this->assertEquals( $course->get( 'id' ), $res_data['id'] );
+		// check the trashed post returned into the response has the correct status 'trash'.
+		$this->assertEquals( 'trash', $res_data['status'] );
 
 	}
 

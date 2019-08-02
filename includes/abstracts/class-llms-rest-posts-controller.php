@@ -614,20 +614,17 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 			}
 
 			// Otherwise, only trash if we haven't already.
-			if ( 'trash' === $object->get( 'status' ) ) {
-				return new WP_Error(
-					'llms_rest_already_trashed',
-					/* translators: %s: post type name, */
-					sprintf( __( 'The %s has already been deleted.', 'lifterlms' ), $post_type_name ),
-					array( 'status' => 410 )
-				);
+			if ( 'trash' !== $object->get( 'status' ) ) {
+				// (Note that internally this falls through to `wp_delete_post` if
+				// the trash is disabled.)
+				$result = wp_trash_post( $id );
+			} else {
+				$result = true;
 			}
 
-			// (Note that internally this falls through to `wp_delete_post` if
-			// the trash is disabled.)
-			$result   = wp_trash_post( $id );
 			$object   = $this->get_object( $id );
 			$response = $this->prepare_item_for_response( $object, $request );
+
 		}
 
 		if ( ! $result ) {
@@ -966,8 +963,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
 				$prepared_item['edit_date'] = true;
 			}
-		}
-		if ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
+		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created_gmt'], true );
 
 			if ( ! empty( $date_data ) ) {
