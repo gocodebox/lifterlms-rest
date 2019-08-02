@@ -31,6 +31,7 @@ properties:
     example: '2019-05-21 19:22:05'
     readOnly: true
   _links:
+    description: A map of links to other related API resources.
     type: object
     readOnly: true
     properties:

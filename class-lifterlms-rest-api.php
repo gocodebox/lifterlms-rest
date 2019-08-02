@@ -90,6 +90,7 @@ final class LifterLMS_REST_API {
 
 		// Classes.
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys.php';
+		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys-query.php';
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-install.php';
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-capabilities.php';
 
@@ -157,6 +158,7 @@ final class LifterLMS_REST_API {
 	public function rest_api_controllers_init() {
 
 		$controllers = array(
+			'LLMS_REST_API_Keys_Controller',
 			'LLMS_REST_Courses_Controller',
 			'LLMS_REST_Sections_Controller',
 		);

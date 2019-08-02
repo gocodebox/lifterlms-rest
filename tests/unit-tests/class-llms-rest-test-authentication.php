@@ -9,7 +9,7 @@
  * @since [version]
  * @version [version]
  */
-class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case {
+class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 
 	public function setUp() {
 

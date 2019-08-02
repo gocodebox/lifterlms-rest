@@ -13,7 +13,7 @@
  * @todo update tests to check headers, e.g. X-WP-Total X-WP-TotalPages.
  * @todo do more tests on the courses update/delete.
  */
-class LLMS_REST_Test_Courses extends LLMS_REST_Server_Unit_Test_Case {
+class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Route.

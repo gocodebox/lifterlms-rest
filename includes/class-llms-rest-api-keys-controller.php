@@ -31,6 +31,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 */
 	protected $rest_base = 'api-keys';
 
+
 	/**
 	 * Register routes.
 	 *
@@ -47,50 +48,122 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
 					'args'                => $this->get_collection_params(),
 				),
 				array(
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), // see class-wp-rest-controller.php.
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-		// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar
-		// register_rest_route(
-		// $this->namespace,
-		// '/' . $this->rest_base . '/(?P<id>[\d]+)',
-		// array(
-		// 'args'   => array(
-		// 'id' => array(
-		// 'description' => __( 'Unique identifier for the object.', 'lifterlms' ),
-		// 'type'        => 'integer',
-		// ),
-		// ),
-		// array(
-		// 'methods'             => WP_REST_Server::READABLE,
-		// 'callback'            => array( $this, 'get_item' ),
-		// 'permission_callback' => array( $this, 'get_item_permissions_check' ),
-		// 'args'                => $get_item_args,
-		// ),
-		// array(
-		// 'methods'             => WP_REST_Server::EDITABLE,
-		// 'callback'            => array( $this, 'update_item' ),
-		// 'permission_callback' => array( $this, 'update_item_permissions_check' ),
-		// 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
-		// ),
-		// array(
-		// 'methods'             => WP_REST_Server::DELETABLE,
-		// 'callback'            => array( $this, 'delete_item' ),
-		// 'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-		// ),
-		// 'schema' => array( $this, 'get_public_item_schema' ),
-		// )
-		// );
-		// phpcs:enable Squiz.Commenting.InlineComment.InvalidEndChar
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'API Key Identifier.', 'lifterlms' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+					'args'                => array(),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+					'args'                => array(),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+	}
+
+	/**
+	 * Check if the authenticated user can perform the request action.
+	 *
+	 * @since [version]
+	 *
+	 * @return boolean
+	 */
+	public function check_permissions() {
+		return current_user_can( 'manage_lifterlms_api_keys' ) ? true : llms_rest_authorization_required_error();
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+
+		$params = parent::get_collection_params();
+		unset( $params['search'] );
+
+		$params['order'] = array(
+			'description' => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
+			'type'        => 'string',
+			'default'     => 'asc',
+			'enum'        => array( 'asc', 'desc' ),
+		);
+
+		$params['orderby'] = array(
+			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
+			'type'        => 'string',
+			'default'     => 'id',
+			'enum'        => array(
+				'id',
+				'description',
+				'last_access',
+			),
+		);
+
+		$params['include'] = array(
+			'description' => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'        => 'string',
+		);
+
+		$params['exclude'] = array(
+			'description' => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'        => 'string',
+		);
+
+		$params['permissions'] = array(
+			'description' => __( 'Include only API keys matching a specific permission.', 'lifterlms' ),
+			'type'        => 'string',
+			'enum'        => array_keys( LLMS_REST_API()->keys()->get_permissions() ),
+		);
+
+		$params['user'] = array(
+			'description' => __( 'Include only keys for the specified user(s). Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'        => 'string',
+		);
+
+		$params['user_not_in'] = array(
+			'description' => __( 'Exclude keys for the specified user(s). Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'        => 'string',
+		);
+
+		return $params;
+
 	}
 
 	/**
@@ -110,20 +183,27 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 				'description'   => array(
 					'description' => __( 'Friendly, human-readable name or description.', 'lifterlms' ),
 					'type'        => 'string',
+					'required'    => true,
 					'context'     => array( 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 				'permissions'   => array(
 					'description' => __( 'Determines the capabilities and permissions of the key.', 'lifterlms' ),
 					'type'        => 'string',
+					'required'    => true,
 					'context'     => array( 'view', 'edit' ),
 					'enum'        => array_keys( LLMS_REST_API()->keys()->get_permissions() ),
 				),
 				'user_id'       => array(
 					'description' => __( 'The WordPress User ID of the key owner.', 'lifterlms' ),
-					'type'        => 'string',
+					'type'        => 'integer',
+					'required'    => true,
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_user_exists' ),
 					),
 				),
 				'truncated_key' => array(
@@ -140,6 +220,345 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 				),
 			),
 		);
+
+	}
+
+	/**
+	 * Retrieve An API Key object by ID.
+	 *
+	 * @since [version]
+	 *
+	 * @param int  $id API Key ID.
+	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
+	 * @return WP_Error|LLMS_REST_API_Key
+	 */
+	protected function get_key( $id, $hydrate = true ) {
+
+		$key = LLMS_REST_API()->keys()->get( $id, $hydrate );
+		return $key ? $key : llms_rest_not_found_error();
+
+	}
+
+	/**
+	 * Create an API Key
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function create_item( $request ) {
+
+		$prepared = $this->prepare_item_for_database( $request );
+		$key      = LLMS_REST_API()->keys()->create( $prepared );
+		if ( is_wp_error( $request ) ) {
+			$request->add_data( array( 'status' => 400 ) );
+			return $request;
+		}
+
+		$response = $this->prepare_item_for_response( $key, $request );
+		$response->set_status( 201 );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $key->get( 'id' ) ) ) );
+
+		return $response;
+
+	}
+
+	/**
+	 * Delete API Key
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function delete_item( $request ) {
+
+		$key = $this->get_key( $request['id'], false );
+		if ( ! is_wp_error( $key ) ) {
+			$key->delete();
+		}
+
+		$response = rest_ensure_response( null );
+		$response->set_status( 204 );
+
+		return $response;
+
+	}
+
+	/**
+	 * Get an API Key
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item( $request ) {
+
+		$key = $this->get_key( (int) $request['id'] );
+		if ( is_wp_error( $key ) ) {
+			return $key;
+		}
+
+		$response = $this->prepare_item_for_response( $key, $request );
+
+		return $response;
+
+	}
+
+	/**
+	 * Get API Key List
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_items( $request ) {
+
+		$args  = $this->prepare_collection_query_args( $request );
+		$query = new LLMS_REST_API_Keys_Query( $args );
+
+		$page      = (int) $args['page'];
+		$max_pages = (int) $query->max_pages;
+		$total     = (int) $query->found_results;
+
+		if ( $total < 1 ) {
+
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $args['page'] );
+			$count_query = new LLMS_REST_API_Keys_Query( $args );
+			$total       = (int) $count_query->found_results;
+			$max_pages   = (int) $query->max_pages;
+
+		}
+
+		if ( $page > $max_pages && $total > 0 ) {
+			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
+		}
+
+		$results = array();
+		foreach ( $query->get_keys() as $key ) {
+			$response_object = $this->prepare_item_for_response( $key, $request );
+			if ( ! is_wp_error( $response_object ) ) {
+				$results[] = $this->prepare_response_for_collection( $response_object );
+			}
+		}
+
+		$response = rest_ensure_response( $results );
+
+		$response->header( 'X-WP-Total', $total );
+		$response->header( 'X-WP-TotalPages', $max_pages );
+
+		$request_params = $request->get_query_params();
+		$base           = add_query_arg(
+			urlencode_deep( $request_params ),
+			rest_url( $request->get_route() )
+		);
+
+		// Add first page.
+		$first_link = add_query_arg( 'page', 1, $base );
+		$response->link_header( 'first', $first_link );
+
+		if ( $page > 1 ) {
+			$prev_page = $page - 1;
+			if ( $prev_page > $max_pages ) {
+				$prev_page = $max_pages;
+			}
+			$prev_link = add_query_arg( 'page', $prev_page, $base );
+			$response->link_header( 'prev', $prev_link );
+		}
+		if ( $max_pages > $page ) {
+			$next_page = $page + 1;
+			$next_link = add_query_arg( 'page', $next_page, $base );
+			$response->link_header( 'next', $next_link );
+		}
+		// Add last page.
+		$last_link = add_query_arg( 'page', $max_pages, $base );
+		$response->link_header( 'last', $last_link );
+
+		return $response;
+
+	}
+
+	/**
+	 * Update an API Key
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function update_item( $request ) {
+
+		$prepared = $this->prepare_item_for_database( $request );
+		$key      = LLMS_REST_API()->keys()->update( $prepared );
+		if ( is_wp_error( $request ) ) {
+			$request->add_data( array( 'status' => 400 ) );
+			return $request;
+		}
+
+		$response = $this->prepare_item_for_response( $key, $request );
+
+		return $response;
+
+	}
+
+	/**
+	 * Format query arguments from a collection GET request to be passed to a LLMS_REST_API_Keys_Query
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return array
+	 */
+	protected function prepare_collection_query_args( $request ) {
+
+		$args   = array();
+		$params = $this->get_collection_params();
+
+		foreach ( array_keys( $params ) as $param ) {
+
+			if ( ! isset( $request[ $param ] ) || in_array( $param, array( 'order', 'orderby' ), true ) ) {
+				continue;
+			}
+
+			$args[ $param ] = $request[ $param ];
+
+			if ( in_array( $param, array( 'include', 'exclude', 'user', 'user_not_in' ), true ) ) {
+				$args[ $param ] = array_map( 'absint', explode( ',', $args[ $param ] ) );
+			}
+		}
+
+		if ( isset( $request['orderby'] ) || isset( $request['order'] ) ) {
+			$orderby      = isset( $request['orderby'] ) ? $request['orderby'] : $params['orderby']['default'];
+			$order        = isset( $request['order'] ) ? $request['order'] : $params['order']['default'];
+			$args['sort'] = array( $orderby => $order );
+		}
+
+		return $args;
+
+	}
+
+	/**
+	 * Prepare API Key for insert/update
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_Error|array
+	 */
+	protected function prepare_item_for_database( $request ) {
+
+		$prepared = array();
+
+		if ( isset( $request['id'] ) ) {
+			$existing = $this->get_key( $request['id'] );
+			if ( is_wp_error( $existing ) ) {
+				return $existing;
+			}
+			$prepared['id'] = $existing->get( 'id' );
+		}
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['description'] ) && isset( $request['description'] ) ) {
+			$prepared['description'] = $request['description'];
+		}
+
+		if ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
+			$prepared['user_id'] = (int) $request['user_id'];
+		}
+
+		if ( ! empty( $schema['properties']['permissions'] ) && isset( $request['permissions'] ) ) {
+			$prepared['permissions'] = $request['permissions'];
+		}
+
+		return $prepared;
+
+	}
+
+	/**
+	 * Prepare an API Key for a REST response.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_REST_API_Key $item API Key object.
+	 * @param WP_REST_Request   $request Request object.
+	 * @return WP_REST_Response
+	 */
+	public function prepare_item_for_response( $item, $request ) {
+
+		$data = array(
+			'id' => $item->get( 'id' ),
+		);
+
+		// Add all readable properties.
+		foreach ( $this->get_fields_for_response( $request ) as $field ) {
+			$data[ $field ] = $item->get( $field );
+		}
+
+		// Is a creation request, return consumer key & secret.
+		if ( 'POST' === $request->get_method() && sprintf( '/%1$s/%2$s', $this->namespace, $this->rest_base ) === $request->get_route() ) {
+			$data['consumer_key']    = $item->get( 'consumer_key_one_time' );
+			$data['consumer_secret'] = $item->get( 'consumer_secret' );
+		}
+
+		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+		$data    = $this->filter_response_by_context( $data, $context );
+
+		// Wrap the data in a response object.
+		$response = rest_ensure_response( $data );
+
+		// Add links.
+		$links = $this->prepare_links( $item );
+		$response->add_links( $links );
+
+		return $response;
+
+	}
+
+	/**
+	 * Prepare a `_links` object for an API Key.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_REST_API_Key $item API Key object.
+	 * @return array
+	 */
+	protected function prepare_links( $item ) {
+
+		$id = $item->get( 'id' );
+
+		$links = array(
+			'self'       => array(
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ),
+			),
+			'collection' => array(
+				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+			),
+			'user'       => array(
+				'href' => rest_url( 'wp/v2/users/' . $item->get( 'user_id' ) ),
+			),
+		);
+
+		return $links;
+
+	}
+
+	/**
+	 * Validate submitted user IDs are real user ids.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $value User-submitted value.
+	 * @return boolean
+	 */
+	public function validate_user_exists( $value ) {
+
+		$user = get_user_by( 'id', $value );
+		return $user ? true : false;
 
 	}
 

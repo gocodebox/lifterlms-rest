@@ -75,15 +75,27 @@ tags:
 
       The API keys API allows you to create, view, update, and delete API keys.
 
+      ## API Key Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/APIKey" showReadOnly={true} showWriteOnly={true} />
+
   - name: Access Plans
     description: |
       Access plans allow you to define how LMS content is purchased and accessed by your students.
 
       The access plans API allows you to create, view, update, and delete access plans.
 
+      ## Access Plan Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/AccessPlanResponse" showReadOnly={true} showWriteOnly={true} />
+
   - name: Courses
     description: |
       The courses API allows you to create, view, update, and delete courses.
+
+      ## Course Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/CourseResponse" showReadOnly={true} showWriteOnly={true} />
 
   - name: Instructors
     description: |
@@ -91,9 +103,17 @@ tags:
 
       The instructors API allows you to create, view, update, and delete student accounts.
 
+      ## Instructor Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Instructor" showReadOnly={true} showWriteOnly={true} />
+
   - name: Memberships
     description: |
       The memberships API allows you to create, view, update, and delete memberships.
+
+      ## Membership Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/MembershipResponse" showReadOnly={true} showWriteOnly={true} />
 
   - name: Quiz Questions
     description: |
@@ -125,11 +145,19 @@ tags:
     description: |
       The quizzes API allows you to create, view, update, and delete quizzes.
 
+      ## Quiz Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/QuizResponse" showReadOnly={true} showWriteOnly={true} />
+
   - name: Sections
     description: |
       The sections API allows you to create, view, update, and delete sections.
 
       Sections are used within courses to organize content (lessons) into groups.
+
+      ## Section Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/SectionResponse" showReadOnly={true} showWriteOnly={true} />
 
   - name: Students
     description: |
@@ -137,9 +165,17 @@ tags:
 
       The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
 
+      ## Student Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Student" showReadOnly={true} showWriteOnly={true} />
+
   - name: Student Enrollments
     description: |
       The Student Enrollments API allows you to create, view, update, and delete records of a student's enrollment into courses and memberships.
+
+      ## Enrollment Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Enrollment" showReadOnly={true} showWriteOnly={true} />
 
   - name: Student Progress
     description: |
@@ -150,6 +186,10 @@ tags:
       When updating the status of a course or a section, the status of the lessons within that course or section will be automatically updated to match the status of the course or section. For example, when updating a course's status to `complete` a new `complete` progress record will be created/updated for each incomplete lesson in the course.
 
       Finally, the `progress` property of a lesson will _always_ be either `0` _or_ `100` whereas the `progress` of courses and sections will range from `0` _to_ `100`.
+
+      ## Progress Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Progress" showReadOnly={true} showWriteOnly={true} />
 
   - name: Webhooks
     description: |
@@ -273,6 +313,9 @@ tags:
 
       Compare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.
 
+      ## Webook Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Webhook" showReadOnly={true} showWriteOnly={true} />
 
 x-tagGroups:
 

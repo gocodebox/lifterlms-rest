@@ -16,6 +16,7 @@ allOf:
           - instructors_assistant
         default: instructor
       _links:
+        description: A map of links to other related API resources.
         type: object
         readOnly: true
         properties:

@@ -7,7 +7,7 @@
  * @version [version]
  */
 
-class LLMS_REST_Unit_Test_Case extends LLMS_Unit_Test_Case {
+class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
 	/**
 	 * Generate a mock api key.
@@ -35,6 +35,33 @@ class LLMS_REST_Unit_Test_Case extends LLMS_Unit_Test_Case {
 		}
 
 		return $key;
+
+	}
+
+	/**
+	 * Create multiple API Keys
+	 *
+	 * @since [version]
+	 *
+	 * @param int $count Number of keys to create.
+	 * @param string $permissions Define permissions for the keys. If not specified assigns a random permission to each key.
+	 * @param int $user WP_User Id to assign the key to. If not supplied uses the user factory to create a new admin user for each created key.
+	 * @return void
+	 */
+	protected function create_many_api_keys( $count, $permissions = 'rand', $user = null ) {
+
+		$pems_available = array_keys( LLMS_REST_API()->keys()->get_permissions() );
+		$num_pems = count( $pems_available ) - 1;
+
+		$i = 1;
+		while ( $i <= $count ) {
+
+			$pem = 'rand' === $permissions ? $pems_available[ rand( 0, $num_pems ) ] : $permissions;
+			$uid = $user ? $user : $this->factory->user->create( array( 'role' => 'administrator' ) );
+
+			$this->get_mock_api_key( $pem, $uid, false );
+			$i++;
+		}
 
 	}
 

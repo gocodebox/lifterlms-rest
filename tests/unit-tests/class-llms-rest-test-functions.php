@@ -9,7 +9,7 @@
  * @since [version]
  * @version [version]
  */
-class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case {
+class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Test the llms_rest_api_hash() function

@@ -18,3 +18,6 @@ theme:
 noAutoAuth: true
 requiredPropsFirst: true
 sortPropsAlphabetically: true
+
+# Use a specific build version
+# redocURL: https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.11/bundles/redoc.standalone.js

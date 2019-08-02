@@ -11,6 +11,8 @@ get:
   description: Retrieve the details of an existing API key.
   tags:
     - API Keys
+  parameters:
+    - $ref: '#/components/parameters/Context'
   responses:
     200:
       description: Successfully retrieved the API key.
@@ -70,5 +72,3 @@ delete:
       $ref: '#/components/responses/Error401'
     403:
       $ref: '#/components/responses/Error403'
-    404:
-      $ref: '#/components/responses/Error404'
