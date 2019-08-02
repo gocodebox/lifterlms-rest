@@ -6,6 +6,7 @@ LifterLMS REST API
 [![Test Coverage](https://api.codeclimate.com/v1/badges/e284255ac949d5764421/test_coverage)](https://codeclimate.com/github/gocodebox/lifterlms-rest/test_coverage)
 
 A REST API feature plugin for [LifterLMS](https://github.com/gocodebox/lifterlms).
+<<<<<<< HEAD
 
 **This specification (and repository) is currently under construction. It is not yet a functional API.**
 
@@ -32,3 +33,5 @@ To build the docs locally for development:
 + `npm run build`: Bundles the spec and prepares web_deploy folder with static assets.
 + `npm test`: Validates the spec.
 + `npm run gh-pages`: Deploys docs to GitHub Pages. You don't need to run it manually if you have Travis CI configured.
+=======
+>>>>>>> 23fd7f0ce0ad0e269cc00c629ff4f1ec8f96a66a

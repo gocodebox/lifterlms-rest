@@ -1,0 +1,18 @@
+type: object
+properties:
+  code:
+    description: The API error code.
+    type: string
+    example: llms_rest_bad_request
+  message:
+    description: The API error message.
+    type: string
+    example: Bad request.
+  data:
+    description: Additional response data.
+    type: object
+    properties:
+      status:
+        description: The HTTP status code.
+        type: integer
+        example: 400
