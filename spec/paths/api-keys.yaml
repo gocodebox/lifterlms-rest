@@ -22,14 +22,14 @@ get:
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
     - name: user
-      description: Include only keys for the specified user(s). Acceps a single id or a comma separated list of ids.
+      description: Include only keys for the specified user(s). Accepts a single id or a comma separated list of ids.
       in: query
       required: false
       schema:
         type: integer
         example: [ 123, 456 ]
     - name: user_not_in
-      description: Exclude keys for the specified user(s). Acceps a single id or a comma separated list of ids.
+      description: Exclude keys for the specified user(s). Accepts a single id or a comma separated list of ids.
       in: query
       required: false
       schema:
