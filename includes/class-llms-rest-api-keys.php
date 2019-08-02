@@ -50,7 +50,7 @@ class LLMS_REST_API_Keys {
 	 *     @type int $user_id WP_User (Required) ID of the key's owner.
 	 *     @type string $permissions (Required) Permission string for the key. Accepts `read`, `write`, or `read_write`.
 	 * }
-	 * @return [type]
+	 * @return WP_Error|LLMS_REST_API_Key
 	 */
 	public function create( $data ) {
 
