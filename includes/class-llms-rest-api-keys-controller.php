@@ -93,20 +93,6 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 			)
 		);
 
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/self',
-			array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => array(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
-
 	}
 
 	/**
