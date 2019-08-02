@@ -46,22 +46,47 @@ servers:
 security:
   - Basic-Authentication: []
 tags:
+  - name: API Keys
+    description: |
+      API Keys are used to authenticate REST API requests.
+
+      The API keys API allows you to create, view, update, and delete API keys.
+
+      ## API Key Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/APIKey" showReadOnly={true} showWriteOnly={true} />
   - name: Access Plans
     description: |
       Access plans allow you to define how LMS content is purchased and accessed by your students.
 
-      The access plans API allows you to create, view, update, and delete courses.
+      The access plans API allows you to create, view, update, and delete access plans.
+
+      ## Access Plan Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/AccessPlanResponse" showReadOnly={true} showWriteOnly={true} />
   - name: Courses
     description: |
       The courses API allows you to create, view, update, and delete courses.
+
+      ## Course Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/CourseResponse" showReadOnly={true} showWriteOnly={true} />
   - name: Instructors
     description: |
       Instructors are members of your site who have the ability to create and manage LMS content and students. Instructors may be Adminstators, LMS Managers, Instructors, and Instructors Assistants.
 
       The instructors API allows you to create, view, update, and delete student accounts.
+
+      ## Instructor Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Instructor" showReadOnly={true} showWriteOnly={true} />
   - name: Memberships
     description: |
       The memberships API allows you to create, view, update, and delete memberships.
+
+      ## Membership Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/MembershipResponse" showReadOnly={true} showWriteOnly={true} />
   - name: Quiz Questions
     description: |
       The quiz questions API allows you to create, view, update, and delete quiz questions.
@@ -90,19 +115,35 @@ tags:
   - name: Quizzes
     description: |
       The quizzes API allows you to create, view, update, and delete quizzes.
+
+      ## Quiz Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/QuizResponse" showReadOnly={true} showWriteOnly={true} />
   - name: Sections
     description: |
       The sections API allows you to create, view, update, and delete sections.
 
       Sections are used within courses to organize content (lessons) into groups.
+
+      ## Section Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/SectionResponse" showReadOnly={true} showWriteOnly={true} />
   - name: Students
     description: |
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
 
       The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
+
+      ## Student Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Student" showReadOnly={true} showWriteOnly={true} />
   - name: Student Enrollments
     description: |
       The Student Enrollments API allows you to create, view, update, and delete records of a student's enrollment into courses and memberships.
+
+      ## Enrollment Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Enrollment" showReadOnly={true} showWriteOnly={true} />
   - name: Student Progress
     description: |
       The Student Progress API allows you to create, view, update, and delete a student's progress through courses.
@@ -112,6 +153,10 @@ tags:
       When updating the status of a course or a section, the status of the lessons within that course or section will be automatically updated to match the status of the course or section. For example, when updating a course's status to `complete` a new `complete` progress record will be created/updated for each incomplete lesson in the course.
 
       Finally, the `progress` property of a lesson will _always_ be either `0` _or_ `100` whereas the `progress` of courses and sections will range from `0` _to_ `100`.
+
+      ## Progress Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Progress" showReadOnly={true} showWriteOnly={true} />
   - name: Webhooks
     description: |
       Webhooks can be created to notify you about LMS-related events that happen on your site.
@@ -233,7 +278,14 @@ tags:
       #### Step 4: Compare the signatures
 
       Compare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.
+
+      ## Webook Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/Webhook" showReadOnly={true} showWriteOnly={true} />
 x-tagGroups:
+  - name: API Keys
+    tags:
+      - API Keys
   - name: Courses
     tags:
       - Courses
@@ -448,6 +500,193 @@ paths:
           source: |
             curl https://example.tld/wp-json/llms/v1/access-plans/1234 \
               -X DELETE
+  /api-keys:
+    get:
+      summary: List API keys
+      description: Retrieve a list of API keys.
+      tags:
+        - API Keys
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - description
+              - last_access
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+        - name: user
+          description: Include only keys for the specified user(s). Accepts a single id or a comma separated list of ids.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example:
+              - 123
+              - 456
+        - name: user_not_in
+          description: Exclude keys for the specified user(s). Accepts a single id or a comma separated list of ids.
+          in: query
+          required: false
+          schema:
+            type: integer
+            example:
+              - 123
+              - 456
+        - name: permissions
+          description: Include only API keys matching a specific permission.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - read
+              - write
+              - read_write
+      responses:
+        '200':
+          description: Successfully returned a list of API keys.
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: '</wp-json/llms/v1/api-keys?page=1>; rel="first", </wp-json/llms/v1/api-keys?page=2>; rel="prev", </wp-json/llms/v1/api-keys?page=4>; rel="next", </wp-json/llms/v1/api-keys?page=5>; rel="last"'
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/APIKey'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create an API key
+      description: Create a new API key.
+      tags:
+        - API Keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/APIKey'
+                - required:
+                    - user_id
+                    - description
+                    - permissions
+      responses:
+        '201':
+          description: Successfully created the student.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      consumer_key:
+                        description: The Consumer Key. Only returned once with the initial creation request.
+                        type: string
+                        example: ck_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                      consumer_secret:
+                        description: The Consumer Secret. Only returned once with the initial creation request.
+                        type: string
+                        example: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                  - $ref: '#/components/schemas/APIKey'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/api-keys/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: Unique API Key Identifier.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Retrieve an API key
+      description: Retrieve the details of an existing API key.
+      tags:
+        - API Keys
+      parameters:
+        - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Successfully retrieved the API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update an API key
+      description: Update the specified API key by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - API Keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/APIKey'
+      responses:
+        '200':
+          description: Successfully updated the API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete an API key
+      description: Delete an existing API key.
+      tags:
+        - API Keys
+      responses:
+        '204':
+          description: Successfully deleted the API key.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
   /courses:
     get:
       summary: List courses
@@ -2800,6 +3039,7 @@ components:
                   description: Raw description. Useful when displaying title in the WP Block Editor. Only returned in `edit` context.
                   example: '\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\n'
             _links:
+              description: A map of links to other related API resources.
               type: object
               readOnly: true
               properties:
@@ -2866,6 +3106,71 @@ components:
           description: ISO country code.
           type: string
           example: US
+    APIKey:
+      type: object
+      properties:
+        id:
+          allOf:
+            - description: Unique API Key Identifier.
+            - $ref: '#/components/schemas/ResourceId'
+        user_id:
+          description: The WordPress User ID of the API Key's owner.
+          type: integer
+          minimum: 1
+          example: 456
+        description:
+          description: 'A friendly, human-readable name description of the key.'
+          type: string
+          example: My API Key
+        permissions:
+          description: Determines the key's permissions and capabilities.
+          type: string
+          enum:
+            - read
+            - write
+            - read_write
+        truncated_key:
+          description: The last 7 characters of the Consumer Key.
+          type: string
+          example: 61913f3
+          readOnly: true
+        last_access:
+          description: 'The date the key was last used. Format: `Y-m-d H:i:s`'
+          type: string
+          example: '2019-05-21 19:22:05'
+          readOnly: true
+        _links:
+          description: A map of links to other related API resources.
+          type: object
+          readOnly: true
+          properties:
+            self:
+              description: REST URI to the API key.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/api-keys/123
+            collection:
+              description: REST URI to the API key collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/api-keys
+            user:
+              description: REST URI to the API key's owner.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/wp/v2/users/456
     Course:
       allOf:
         - type: object
@@ -3221,6 +3526,7 @@ components:
         status:
           $ref: '#/components/schemas/EnrollmentStatus'
         _links:
+          description: A map of links to other related API resources.
           readOnly: true
           type: object
           properties:
@@ -3367,6 +3673,7 @@ components:
                 - instructors_assistant
               default: instructor
             _links:
+              description: A map of links to other related API resources.
               type: object
               readOnly: true
               properties:
@@ -4033,6 +4340,7 @@ components:
             - complete
           default: incomplete
         _links:
+          description: A map of links to other related API resources.
           readOnly: true
           type: object
           properties:
@@ -4859,6 +5167,7 @@ components:
               default: student
               readOnly: true
             _links:
+              description: A map of links to other related API resources.
               type: object
               readOnly: true
               properties:
@@ -5018,6 +5327,7 @@ components:
           example: '2019-05-20 13:25:05'
           readOnly: true
         _links:
+          description: A map of links to other related API resources.
           readOnly: true
           type: object
           properties:
