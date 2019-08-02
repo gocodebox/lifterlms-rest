@@ -3,6 +3,8 @@ get:
   description: Retrieve the details of the currently authenticated API key.
   tags:
     - API Keys
+  parameters:
+    - $ref: '#/components/parameters/Context'
   responses:
     200:
       description: Successfully retrieved the API key.

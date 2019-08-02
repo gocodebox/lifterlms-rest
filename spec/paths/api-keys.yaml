@@ -4,6 +4,7 @@ get:
   tags:
     - API Keys
   parameters:
+    - $ref: '#/components/parameters/Context'
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
     - $ref: '#/components/parameters/Order'
@@ -20,6 +21,30 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
+    - name: user
+      description: Include only keys for the specified user(s). Acceps a single id or a comma separated list of ids.
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: [ 123, 456 ]
+    - name: user_not_in
+      description: Exclude keys for the specified user(s). Acceps a single id or a comma separated list of ids.
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: [ 123, 456 ]
+    - name: permissions
+      description: Include only API keys matching a specific permission.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - read
+          - write
+          - read_write
   responses:
     200:
       description: Successfully returned a list of API keys.
