@@ -1,7 +1,0 @@
-specFileName: ./api.yml
-apiTitle: LifterLMS REST API
-splitSpec: true
-codeSamples: true
-swaggerUI: true
-travis: false
-oasVersion: 3.0.0
