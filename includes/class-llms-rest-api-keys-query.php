@@ -34,11 +34,11 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	protected function get_default_args() {
 
 		$args = array(
-			'include' => array(),
-			'exclude' => array(),
-			'per_page' => 10,
+			'include'     => array(),
+			'exclude'     => array(),
+			'per_page'    => 10,
 			'permissions' => '',
-			'user' => array(),
+			'user'        => array(),
 			'user_not_in' => array(),
 		);
 
@@ -61,7 +61,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 */
 	public function get_keys() {
 
-		$keys = array();
+		$keys    = array();
 		$results = $this->get_results();
 
 		if ( $results ) {
@@ -69,7 +69,6 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 			foreach ( $results as $result ) {
 				$keys[] = LLMS_REST_API()->keys()->get( $result->id, true );
 			}
-
 		}
 
 		if ( $this->get( 'suppress_filters' ) ) {
@@ -89,7 +88,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 */
 	protected function parse_args() {
 
-		// sanitize post & user ids
+		// sanitize post & user ids.
 		foreach ( array( 'include', 'exclude', 'user', 'user_not_in' ) as $key ) {
 			$this->arguments[ $key ] = $this->sanitize_id_array( $this->arguments[ $key ] );
 		}
@@ -137,33 +136,33 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 		// "IN" clauses for id fields.
 		$ids_include = array(
 			'include' => 'id',
-			'user' => 'user_id',
+			'user'    => 'user_id',
 		);
 		foreach ( $ids_include as $query_key => $db_key ) {
 			$ids = $this->get( $query_key );
 			if ( $ids ) {
 				$prepared = implode( ',', $ids );
-				$sql .= " AND {$db_key} IN ({$prepared})";
+				$sql     .= " AND {$db_key} IN ({$prepared})";
 			}
 		}
 
 		// "NOT IN" clauses for id fields.
 		$ids_exclude = array(
-			'exclude' => 'id',
+			'exclude'     => 'id',
 			'user_not_in' => 'user_id',
 		);
 		foreach ( $ids_exclude as $query_key => $db_key ) {
 			$ids = $this->get( $query_key );
 			if ( $ids ) {
 				$prepared = implode( ',', $ids );
-				$sql .= " AND {$db_key} NOT IN ({$prepared})";
+				$sql     .= " AND {$db_key} NOT IN ({$prepared})";
 			}
 		}
 
 		// Permission match.
 		$permissions = $this->get( 'permissions' );
 		if ( $permissions ) {
-			$sql .= $wpdb->prepare( " AND permissions = %s", $permissions );
+			$sql .= $wpdb->prepare( ' AND permissions = %s', $permissions );
 		}
 
 		if ( $this->get( 'suppress_filters' ) ) {

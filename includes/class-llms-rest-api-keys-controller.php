@@ -227,7 +227,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id API Key ID.
+	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return WP_Error|LLMS_REST_API_Key
 	 */
@@ -249,7 +249,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	public function create_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key = LLMS_REST_API()->keys()->create( $prepared );
+		$key      = LLMS_REST_API()->keys()->create( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
@@ -323,15 +323,15 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 		$max_pages = (int) $query->max_pages;
 		$total     = (int) $query->found_results;
 
-        if ( $total < 1 ) {
+		if ( $total < 1 ) {
 
-            // Out-of-bounds, run the query again without LIMIT for total count.
-            unset( $args['page'] );
-            $count_query = new LLMS_REST_API_Keys_Query( $args );
-            $total       = (int) $count_query->found_results;
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $args['page'] );
+			$count_query = new LLMS_REST_API_Keys_Query( $args );
+			$total       = (int) $count_query->found_results;
 			$max_pages   = (int) $query->max_pages;
 
-        }
+		}
 
 		if ( $page > $max_pages && $total > 0 ) {
 			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
@@ -392,7 +392,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	public function update_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key = LLMS_REST_API()->keys()->update( $prepared );
+		$key      = LLMS_REST_API()->keys()->update( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
@@ -428,12 +428,11 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 			if ( in_array( $param, array( 'include', 'exclude', 'user', 'user_not_in' ), true ) ) {
 				$args[ $param ] = array_map( 'absint', explode( ',', $args[ $param ] ) );
 			}
-
 		}
 
 		if ( isset( $request['orderby'] ) || isset( $request['order'] ) ) {
-			$orderby = isset( $request['orderby'] ) ? $request['orderby'] : $params['orderby']['default'];
-			$order = isset( $request['order'] ) ? $request['order'] : $params['order']['default'];
+			$orderby      = isset( $request['orderby'] ) ? $request['orderby'] : $params['orderby']['default'];
+			$order        = isset( $request['order'] ) ? $request['order'] : $params['order']['default'];
 			$args['sort'] = array( $orderby => $order );
 		}
 
@@ -485,7 +484,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 * @since [version]
 	 *
 	 * @param LLMS_REST_API_Key $item API Key object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request   $request Request object.
 	 * @return WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -501,17 +500,17 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 
 		// Is a creation request, return consumer key & secret.
 		if ( 'POST' === $request->get_method() && sprintf( '/%1$s/%2$s', $this->namespace, $this->rest_base ) === $request->get_route() ) {
-			$data['consumer_key'] = $item->get( 'consumer_key_one_time' );
+			$data['consumer_key']    = $item->get( 'consumer_key_one_time' );
 			$data['consumer_secret'] = $item->get( 'consumer_secret' );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data = $this->filter_response_by_context( $data, $context );
+		$data    = $this->filter_response_by_context( $data, $context );
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
 
-		// Add links
+		// Add links.
 		$links = $this->prepare_links( $item );
 		$response->add_links( $links );
 
@@ -538,7 +537,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
 			),
-			'user' => array(
+			'user'       => array(
 				'href' => rest_url( 'wp/v2/users/' . $item->get( 'user_id' ) ),
 			),
 		);
