@@ -115,16 +115,9 @@ jobs:
       - run:
           name: Deploy docs
           command: |
-            if [[ -z $(git status -s) ]]; then
-              echo "No changes to deploy"
-            else
-              git config user.email "circleci@lifterlms.com"
-              git config user.name "CircleCI Deployment"
-              git add -A
-              git commit -m "Deploy docs [ci-skip]"
-              git push origin master
-              npm run gh-pages
-            fi
+            git config user.email "circleci@lifterlms.com"
+            git config user.name "CircleCI Deployment"
+            npm run gh-pages
 
 workflows:
   version: 2
