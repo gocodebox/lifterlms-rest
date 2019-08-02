@@ -10,7 +10,8 @@
  * @since [version]
  * @version [version]
  *
- * @todo update tests with the new params, e.g. rendered/raw content
+ * @todo update tests to check headers, e.g. X-WP-Total X-WP-TotalPages.
+ * @todo do more tests on the courses update/delete.
  */
 class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -81,6 +82,10 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertArrayHasKey( $this->route, $routes );
 		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)', $routes );
 
+		// Enrollments.
+		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)/enrollments', $routes );
+		// Child sections.
+		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)/content', $routes );
 	}
 
 
@@ -98,10 +103,10 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
 
-		$res_data = $response->get_data();
-
 		// Success.
 		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
 		$this->assertEquals( 10, count( $res_data ) ); // default per_page is 10.
 
 		// Check retrieved courses are the same as the generated ones.
@@ -534,7 +539,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
 		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
 
-		// Dates
+		// Dates.
 		$this->assertEquals( $sample_course_args['access_opens_date'], $res_data['access_opens_date'] );
 		$this->assertEquals( $sample_course_args['access_closes_date'], $res_data['access_closes_date'] );
 		$this->assertEquals( $sample_course_args['enrollment_opens_date'], $res_data['enrollment_opens_date'] );
@@ -770,7 +775,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $update_data['title'], $res_data['title']['rendered'] );
 		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
-		$this->assertEquals( $update_data['status'], $res_data['status'], $update_data['status'] );
+		$this->assertEquals( $update_data['status'], $res_data['status'] );
 
 	}
 
@@ -856,15 +861,62 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$request->set_param( 'force', true );
 		$response = $this->server->dispatch( $request );
 
-		$this->assertEquals( 200, $response->get_status() );
-
-		// check the deleted post is the correct one.
-		$this->courses_fields_match( $course, $response->get_data()['previous'], $with_modified_date = false );
-
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+		// Success.
+		$this->assertEquals( 204, $response->get_status() );
+		// empty body.
+		$this->assertEquals( null, $response->get_data() );
 
 		// Cannot find just deleted post.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertFalse( get_post_status( $course->get( 'id' ) ) );
+
+	}
+
+	/**
+	 * Test trashing a single course.
+	 *
+	 * @since [version]
+	 */
+	public function test_trash_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', false );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		// Non empty body.
+		$this->assertTrue( ! empty( $res_data ) );
+		// Deleted post status should be 'trash'.
+		$this->assertEquals( 'trash', get_post_status( $course->get( 'id' ) ) );
+		// check the trashed post returned into the response is the correct one.
+		$this->assertEquals( $course->get( 'id' ), $res_data['id'] );
+		// check the trashed post returned into the response has the correct status 'trash'.
+		$this->assertEquals( 'trash', $res_data['status'] );
+
+		// Trash again I expect the same as above
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', false );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		// Non empty body.
+		$this->assertTrue( ! empty( $res_data ) );
+		// Deleted post status should be 'trash'.
+		$this->assertEquals( 'trash', get_post_status( $course->get( 'id' ) ) );
+		// check the trashed post returned into the response is the correct one.
+		$this->assertEquals( $course->get( 'id' ), $res_data['id'] );
+		// check the trashed post returned into the response has the correct status 'trash'.
+		$this->assertEquals( 'trash', $res_data['status'] );
 
 	}
 
@@ -878,14 +930,34 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		$request = new WP_REST_Request( 'DELETE', $this->route . '/747484940' );
-		$request->set_param( 'force', true );
+
 		$response = $this->server->dispatch( $request );
 
-		// Post not found.
-		$this->assertEquals( 404, $response->get_status() );
-
+		// Post not found, so it's "deleted".
+		$this->assertEquals( 204, $response->get_status() );
+		$this->assertEquals( '', $response->get_data() );
 	}
 
+	/**
+	 * Test getting bad request response when deleting a course.
+	 *
+	 * @since [version]
+	 */
+	public function test_delete_bad_request_course() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course first.
+		$course = $this->factory->course->create_and_get();
+
+		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
+		$request->set_param( 'force', 'bad_parameter_value' );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request because of a bad parameter.
+		$this->assertEquals( 400, $response->get_status() );
+
+	}
 
 	/**
 	 * Test single course update without authorization.
@@ -926,6 +998,89 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Unauthorized.
 		$this->assertEquals( 401, $response->get_status() );
+
+	}
+
+
+	/**
+	 * Test list course content.
+	 *
+	 * @since [version]
+	 *
+	 * @todo test order and orderby
+	 */
+	public function test_get_course_content() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 1 course with no sections.
+		$course = $this->factory->course->create(
+			array(
+				'sections' => 0,
+			)
+		);
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/content' ) );
+
+		// We have no sections for this course so we expect a 404.
+		$this->assertEquals( 404, $response->get_status() );
+
+		// create 1 course with 20 sections.
+		$course = $this->factory->course->create(
+			array(
+				'sections' => 5,
+			)
+		);
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/content' ) );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		$this->assertEquals( 5, count( $res_data ) );
+
+	}
+
+	/**
+	 * Test list course content.
+	 *
+	 * @since [version]
+	 *
+	 * @todo test order and orderby
+	 */
+	public function test_get_course_enrollments() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 1 course.
+		$course   = $this->factory->course->create();
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' ) );
+
+		// We have no students enrolled for this course so we expect a 404.
+		$this->assertEquals( 404, $response->get_status() );
+
+		// create 5 students and enroll them.
+		$student_ids = $this->factory->student->create_and_enroll_many( 5, $course );
+		$response    = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' ) );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		$this->assertEquals( 5, count( $res_data ) );
+
+		// Filter by student_id.
+		$request = new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' );
+		$request->set_param( 'student_id', "$student_ids[0]" );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		$this->assertEquals( 1, count( $res_data ) );
+		$this->assertEquals( $student_ids[0], $res_data[0]['student_id'] );
 
 	}
 

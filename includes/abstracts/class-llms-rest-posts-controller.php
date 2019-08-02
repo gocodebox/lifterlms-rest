@@ -105,17 +105,29 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(
-						// added even if not in the specs.
-						'force' => array(
-							'description' => __( 'Bypass the trash and force course deletion.', 'lifterlms' ),
-							'type'        => 'boolean',
-							'default'     => false,
-						),
-					),
+					'args'                => $this->get_delete_item_args(),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
+		);
+
+	}
+
+	/**
+	 * Retrieves an array of arguments for the delete endpoint.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Delete endpoint arguments.
+	 */
+	public function get_delete_item_args() {
+
+		return array(
+			'force' => array(
+				'description' => __( 'Bypass the trash and force course deletion.', 'lifterlms' ),
+				'type'        => 'boolean',
+				'default'     => false,
+			),
 		);
 
 	}
@@ -205,15 +217,15 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		if ( ! empty( $request['id'] ) ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_bad_request_error( sprintf( __( 'Cannot create existing %s.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
@@ -431,10 +443,10 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		}
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		if ( ! $this->check_update_permission( $object ) ) {
-			// translators: The post type name.
+			// translators: The post type singular name.
 			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
@@ -537,6 +549,11 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		$object = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
+				return true;
+			}
+
 			return $object;
 		}
 
@@ -558,55 +575,93 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$object = $this->get_object( (int) $request['id'] );
+		$object   = $this->get_object( (int) $request['id'] );
+		$response = new WP_REST_Response();
+		$response->set_status( 204 );
+
 		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
+				return $response;
+			}
+
 			return $object;
 		}
 
-		$id    = $object->get( 'id' );
-		$force = (bool) $request['force'];
+		$post_type_object = get_post_type_object( $this->post_type );
+		$post_type_name   = $post_type_object->labels->singular_name;
 
-		$supports_trash = ( EMPTY_TRASH_DAYS > 0 );
+		$id    = $object->get( 'id' );
+		$force = $this->is_delete_forced( $request );
 
 		$request->set_param( 'context', 'edit' );
 
 		// If we're forcing, then delete permanently.
 		if ( $force ) {
-			$previous = $this->prepare_item_for_response( $object, $request );
-			$result   = wp_delete_post( $id, true );
-			$response = new WP_REST_Response();
-			$response->set_data(
-				array(
-					'deleted'  => true,
-					'previous' => $previous->get_data(),
-				)
-			);
+			$result = wp_delete_post( $id, true );
 		} else {
+
+			$supports_trash = $this->is_trash_supported();
+
 			// If we don't support trashing for this type, error out.
 			if ( ! $supports_trash ) {
-				/* translators: %s: force=true */
-				return new WP_Error( 'llms_rest_trash_not_supported', sprintf( __( "The post does not support trashing. Set '%s' to delete.", 'lifterlms' ), 'force=true' ), array( 'status' => 501 ) );
+				return new WP_Error(
+					'llms_rest_trash_not_supported',
+					/* translators: %1$s: post type name, %2$s: force=true */
+					sprintf( __( 'The %1$s does not support trashing. Set \'%2$s\' to delete.', 'lifterlms' ), $post_type_name, 'force=true' ),
+					array( 'status' => 501 )
+				);
 			}
 
 			// Otherwise, only trash if we haven't already.
-			if ( 'trash' === $object->get( 'status' ) ) {
-				return new WP_Error( 'llms_rest_already_trashed', __( 'The post has already been deleted.', 'lifterlms' ), array( 'status' => 410 ) );
+			if ( 'trash' !== $object->get( 'status' ) ) {
+				// (Note that internally this falls through to `wp_delete_post` if
+				// the trash is disabled.)
+				$result = wp_trash_post( $id );
+			} else {
+				$result = true;
 			}
 
-			// (Note that internally this falls through to `wp_delete_post` if
-			// the trash is disabled.)
-			$result = wp_trash_post( $id );
-			$object = $this->get_object( $id );
-
+			$object   = $this->get_object( $id );
 			$response = $this->prepare_item_for_response( $object, $request );
+
 		}
 
 		if ( ! $result ) {
-			return llms_rest_bad_request_error();
+			/* translators: %s: post type */
+			return new WP_Error(
+				'llms_rest_cannot_delete',
+				/* translators: %s: post type name, */
+				sprintf( __( 'The %s cannot be deleted.', 'lifterlms' ), $post_type_name ),
+				array( 'status' => 500 )
+			);
 		}
 
 		return $response;
 
+	}
+
+	/**
+	 * Whether the delete should be forced.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return bool True if the delete should be forced, false otherwise.
+	 */
+	protected function is_delete_forced( $request ) {
+		return isset( $request['force'] ) && (bool) $request['force'];
+	}
+
+	/**
+	 * Whether the trash is supported.
+	 *
+	 * @since [version]
+	 *
+	 * @return bool True if the trash is supported, false otherwise.
+	 */
+	protected function is_trash_supported() {
+		return ( EMPTY_TRASH_DAYS > 0 );
 	}
 
 	/**
@@ -908,8 +963,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				list( $prepared_item['post_date'], $prepared_item['post_date_gmt'] ) = $date_data;
 				$prepared_item['edit_date'] = true;
 			}
-		}
-		if ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
+		} elseif ( ! empty( $schema['properties']['date_gmt'] ) && ! empty( $request['date_gmt'] ) ) {
 			$date_data = rest_get_date_with_gmt( $request['date_created_gmt'], true );
 
 			if ( ! empty( $date_data ) ) {
@@ -1157,33 +1211,37 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 
 		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
 		$query_params['order'] = array(
-			'description' => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'asc',
-			'enum'        => array( 'asc', 'desc' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'asc',
+			'enum'              => array( 'asc', 'desc' ),
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['orderby'] = array(
-			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'id',
-			'enum'        => array(
+			'description'       => __( 'Sort collection by object attribute.', 'lifterlms' ),
+			'type'              => 'string',
+			'default'           => 'id',
+			'enum'              => array(
 				'id',
 				'title',
 				'date_created',
 				'date_updated',
 				'menu_order',
 			),
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['include'] = array(
-			'description' => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
+			'description'       => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['exclude'] = array(
-			'description' => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
+			'description'       => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;
@@ -1346,7 +1404,7 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	protected function handle_status_param( $status ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->name;
+		$post_type_name   = $post_type_object->labels->singular_name;
 
 		switch ( $status ) {
 			case 'draft':
@@ -1354,14 +1412,14 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 				break;
 			case 'private':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type name.
+					// translators: The post type singular name.
 					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a private %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;
 			case 'publish':
 			case 'future':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type name.
+					// translators: The post type singular name.
 					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to publish a %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;

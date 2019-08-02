@@ -163,6 +163,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 		);
 
 		return $params;
+
 	}
 
 	/**
