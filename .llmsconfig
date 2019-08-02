@@ -17,9 +17,10 @@
 		"img": "https://lifterlms.com/wp-content/uploads/2018/08/img.jpg",
 		"svn": false
 	},
-	"slush": {
+	"scaffold": {
 		"shortname": "REST",
-		"package_main": "LifterLMS_REST"
+		"package_main": "LifterLMS_REST",
+		"testcase_class_name": "LLMS_REST_Unit_Test_Case_Base"
 	},
 	"zip": {
 		"composer": true,
