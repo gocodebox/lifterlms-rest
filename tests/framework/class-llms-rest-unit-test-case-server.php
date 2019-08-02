@@ -3,12 +3,18 @@
  * LifterLMS REST API Server Unit Test Case Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
+ *
  * @since [version]
  * @version [version]
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
+	/**
+	 * Server object
+	 *
+	 * @var WP_REST_Server
+	 */
 	protected $server;
 
 	/**
@@ -54,6 +60,26 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected function assertResponseStatusEquals( $expected, $response ) {
 
 		$this->assertEquals( $expected, $response->get_status() );
+
+	}
+
+	/**
+	 * Preform a mock WP_REST_Request
+	 *
+	 * @since [version]
+	 *
+	 * @param string $method Request method.
+	 * @param string $route Request route, eg: '/llms/v1/courses'.
+	 * @param array $body Optional request body.
+	 * @return WP_REST_Response.
+	 */
+	protected function perform_mock_request( $method, $route, $body = array() ) {
+
+		$request = new WP_REST_Request( $method, $route );
+		if ( $body ) {
+			$request->set_body_params( $body );
+		}
+		return $this->server->dispatch( $request );
 
 	}
 
