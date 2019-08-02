@@ -61,7 +61,6 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 		$routes = $this->server->get_routes();
 		$this->assertArrayHasKey( $this->route, $routes );
 		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)', $routes );
-		$this->assertArrayHasKey( $this->route . '/self', $routes );
 
 	}
 
