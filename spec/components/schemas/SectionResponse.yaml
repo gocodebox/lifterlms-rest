@@ -84,5 +84,5 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/sections?parent=1234
+                  example: /wp-json/llms/v1/sections/7891/content
 
