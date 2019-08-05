@@ -71,8 +71,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		parent::register_routes();
 
-		$schema = $this->get_item_schema();
-
 		$get_item_args = array(
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
