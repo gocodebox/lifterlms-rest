@@ -82,7 +82,7 @@ final class LifterLMS_REST_API {
 		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
 
 		// Functions.
-		include_once dirname( __FILE__ ) . '/includes/llms-rest-server-functions.php';
+		include_once dirname( __FILE__ ) . '/includes/server/llms-rest-server-functions.php';
 		include_once dirname( __FILE__ ) . '/includes/llms-rest-functions.php';
 
 		// Models.
@@ -130,16 +130,17 @@ final class LifterLMS_REST_API {
 		$includes = array(
 
 			// Abstracts first.
+			'abstracts/class-llms-rest-controller',
 			'abstracts/class-llms-rest-posts-controller',
 
 			// Functions.
-			'llms-rest-server-functions',
+			'server/llms-rest-server-functions',
 
 			// Controllers.
-			'class-llms-rest-api-keys-controller',
-			'class-llms-rest-enrollments-controller',
-			'class-llms-rest-courses-controller',
-			'class-llms-rest-sections-controller',
+			'server/class-llms-rest-api-keys-controller',
+			'server/class-llms-rest-enrollments-controller',
+			'server/class-llms-rest-courses-controller',
+			'server/class-llms-rest-sections-controller',
 
 		);
 

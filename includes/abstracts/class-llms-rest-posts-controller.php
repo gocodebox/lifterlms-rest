@@ -15,14 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  */
-abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
-
-	/**
-	 * Endpoint namespace.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'llms/v1';
+abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Post type.
@@ -37,6 +30,19 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	 * @var string
 	 */
 	protected $collection_route_base_for_pagination;
+
+	/**
+	 * Schema properties available for ordering the collection.
+	 *
+	 * @var string[]
+	 */
+	protected $orderby_properties = array(
+		'id',
+		'title',
+		'date_created',
+		'date_updated',
+		'menu_order',
+	);
 
 	/**
 	 * Register routes.
@@ -665,16 +671,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Get object.
-	 *
-	 * @since [version]
-	 *
-	 * @param int $id Object ID.
-	 * @return LLMS_Post_Model|WP_Error
-	 */
-	abstract protected function get_object( $id );
-
-	/**
 	 * Get objects.
 	 *
 	 * @since [version]
@@ -1192,59 +1188,6 @@ abstract class LLMS_REST_Posts_Controller extends WP_REST_Controller {
 		 */
 		// $schema = $this->add_additional_fields_schema( $schema );
 		return $schema;
-	}
-
-	/**
-	 * Retrieves the query params for the objects collection.
-	 *
-	 * @since [version]
-	 *
-	 * @return array Collection parameters.
-	 */
-	public function get_collection_params() {
-		$query_params = parent::get_collection_params();
-
-		$query_params['context']['default'] = 'view';
-
-		// unset search for the moment.
-		unset( $query_params['search'] );
-
-		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
-		$query_params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'              => 'string',
-			'default'           => 'asc',
-			'enum'              => array( 'asc', 'desc' ),
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$query_params['orderby'] = array(
-			'description'       => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'              => 'string',
-			'default'           => 'id',
-			'enum'              => array(
-				'id',
-				'title',
-				'date_created',
-				'date_updated',
-				'menu_order',
-			),
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$query_params['include'] = array(
-			'description'       => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$query_params['exclude'] = array(
-			'description'       => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		return $query_params;
 	}
 
 	/**

@@ -15,14 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  */
-class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
-
-	/**
-	 * Endpoint namespace.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'llms/v1';
+class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Route base.
@@ -31,6 +24,16 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 */
 	protected $rest_base = 'api-keys';
 
+	/**
+	 * Schema properties available for ordering the collection.
+	 *
+	 * @var string[]
+	 */
+	protected $orderby_properties = array(
+		'id',
+		'description',
+		'last_access',
+	);
 
 	/**
 	 * Register routes.
@@ -116,35 +119,6 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	public function get_collection_params() {
 
 		$params = parent::get_collection_params();
-		unset( $params['search'] );
-
-		$params['order'] = array(
-			'description' => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'asc',
-			'enum'        => array( 'asc', 'desc' ),
-		);
-
-		$params['orderby'] = array(
-			'description' => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'        => 'string',
-			'default'     => 'id',
-			'enum'        => array(
-				'id',
-				'description',
-				'last_access',
-			),
-		);
-
-		$params['include'] = array(
-			'description' => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
-		);
-
-		$params['exclude'] = array(
-			'description' => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'        => 'string',
-		);
 
 		$params['permissions'] = array(
 			'description' => __( 'Include only API keys matching a specific permission.', 'lifterlms' ),
@@ -232,7 +206,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return WP_Error|LLMS_REST_API_Key
 	 */
-	protected function get_key( $id, $hydrate = true ) {
+	protected function get_object( $id, $hydrate = true ) {
 
 		$key = LLMS_REST_API()->keys()->get( $id, $hydrate );
 		return $key ? $key : llms_rest_not_found_error();
@@ -274,7 +248,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$key = $this->get_key( $request['id'], false );
+		$key = $this->get_object( $request['id'], false );
 		if ( ! is_wp_error( $key ) ) {
 			$key->delete();
 		}
@@ -296,7 +270,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$key = $this->get_key( (int) $request['id'] );
+		$key = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $key ) ) {
 			return $key;
 		}
@@ -454,7 +428,7 @@ class LLMS_REST_API_Keys_Controller extends WP_REST_Controller {
 		$prepared = array();
 
 		if ( isset( $request['id'] ) ) {
-			$existing = $this->get_key( $request['id'] );
+			$existing = $this->get_object( $request['id'] );
 			if ( is_wp_error( $existing ) ) {
 				return $existing;
 			}

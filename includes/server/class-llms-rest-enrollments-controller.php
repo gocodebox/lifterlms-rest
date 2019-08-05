@@ -15,14 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  */
-class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
-
-	/**
-	 * Endpoint namespace.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'llms/v1';
+class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Route base.
@@ -37,6 +30,28 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	 * @var array()
 	 */
 	protected $collection_params;
+
+	/**
+	 * Schema properties available for ordering the collection.
+	 *
+	 * @var string[]
+	 */
+	protected $orderby_properties = array(
+		'date_created',
+		'date_updated',
+	);
+
+	/**
+	 * @todo implement this stub
+	 *
+	 * @since [version]
+	 *
+	 * @param int $id Object ID
+	 * @return object|WP_Error
+	 */
+	protected function get_object( $id ) {
+		return true;
+	}
 
 	/**
 	 * Constructor.
@@ -107,33 +122,6 @@ class LLMS_REST_Enrollments_Controller extends WP_REST_Controller {
 	protected function build_collection_params() {
 
 		$query_params = parent::get_collection_params();
-
-		$query_params['context']['default'] = 'view';
-
-		// unset search for the moment.
-		unset( $query_params['search'] );
-
-		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
-		$query_params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
-			'type'              => 'string',
-			'default'           => 'asc',
-			'enum'              => array( 'asc', 'desc' ),
-			'sanitize_callback' => 'sanitize_key',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$query_params['orderby'] = array(
-			'description'       => __( 'Sort collection by object attribute.', 'lifterlms' ),
-			'type'              => 'string',
-			'default'           => 'date_updated',
-			'enum'              => array(
-				'date_created',
-				'date_updated',
-			),
-			'sanitize_callback' => 'sanitize_key',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
 
 		$query_params['status'] = array(
 			'description'       => __( 'Filter results to records matching the specified status.', 'lifterlms' ),
