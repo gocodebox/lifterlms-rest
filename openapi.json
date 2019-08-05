@@ -7380,7 +7380,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/sections/1234/content?parent=987"
+                          "example": "/wp-json/llms/v1/sections/1234/content"
                         }
                       }
                     }
@@ -7436,7 +7436,7 @@
                       "properties": {
                         "href": {
                           "type": "string",
-                          "example": "/wp-json/llms/v1/sections/7891/content"
+                          "example": "/wp-json/llms/v1/courses/1234/content?exclude=7891"
                         }
                       }
                     }
