@@ -123,9 +123,11 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 	public function get_get_item_params() {
 
 		return array(
-			'context' => $this->get_context_param( array(
-				'default' => 'view'
-			) ),
+			'context' => $this->get_context_param(
+				array(
+					'default' => 'view',
+				)
+			),
 		);
 
 	}
