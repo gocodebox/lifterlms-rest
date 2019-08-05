@@ -42,11 +42,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	);
 
 	/**
-	 * @todo implement this stub
+	 * Get object
+	 *
+	 * @todo implement this stub.
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id Object ID
+	 * @param int $id Object ID.
 	 * @return object|WP_Error
 	 */
 	protected function get_object( $id ) {
