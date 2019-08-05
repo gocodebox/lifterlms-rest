@@ -495,6 +495,83 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test creating a single course defaults are correctly set.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_check_defaults() {
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$course_args = array(
+			'title' => 'Title',
+			'content' => 'Content',
+			'access_opens_date'      => '2019-05-22 17:20:05',
+			'access_closes_date'     => '2019-05-22 17:23:08',
+			'enrollment_opens_date'  => '2019-05-22 17:22:05',
+			'enrollment_closes_date' => '2019-05-22 17:22:08',
+		);
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		// Check defaults.
+		// Access period messages.
+		$this->assertEquals( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].', $res_data['access_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].' ), $res_data['access_opens_message']['rendered'] );
+		$this->assertEquals( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].', $res_data['access_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].' ), $res_data['access_closes_message']['rendered'] );
+
+		// Enrollment period messages.
+		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
+		$this->assertEquals( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].', $res_data['enrollment_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].' ), $res_data['enrollment_closes_message']['rendered'] );
+
+		// Capacity enabled.
+		$this->assertFalse( $res_data['capacity_enabled'] );
+
+		// Catalog visibility.
+		$this->assertEquals( 'catalog_search', $res_data['catalog_visibility'] );
+
+		// Categories.
+		$this->assertEquals( array(), $res_data['categories'] );
+
+		// Comment_status.
+		$this->assertEquals( 'open', $res_data['comment_status'] );
+
+		// Difficulties.
+		$this->assertEquals( array(), $res_data['difficulties'] );
+
+		// Instructors. If empty, llms core responds with the course author in an array.
+		$this->assertEquals( array( get_current_user_id() ), $res_data['instructors'] );
+
+		// Menu order.
+		$this->assertEquals( 0, $res_data['menu_order'] );
+
+		// Comment_status.
+		$this->assertEquals( 'open', $res_data['ping_status'] );
+
+		// Sales page type.
+		$this->assertEquals( 'none', $res_data['sales_page_page_type'] );
+
+		// Status.
+		$this->assertEquals( 'publish', $res_data['status'] );
+
+		// Tags.
+		$this->assertEquals( array(), $res_data['tags'] );
+
+		// Tracks.
+		$this->assertEquals( array(), $res_data['tracks'] );
+
+		// Video tile.
+		$this->assertFalse( $res_data['video_tile'] );
+	}
+
+	/**
 	 * Test creating a single course special props.
 	 * These props, when set, alter the rendered content so we test them separetaly.
 	 *
@@ -534,10 +611,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $sample_course_args['capacity_enabled'], $res_data['capacity_enabled'] );
 		$this->assertEquals( do_shortcode( $sample_course_args['capacity_message'] ), $res_data['capacity_message']['rendered'] );
 		$this->assertEquals( $sample_course_args['capacity_limit'], $res_data['capacity_limit'] );
-
-		// No enrollments message set, hence we should see the default message.
-		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
 
 		// Dates.
 		$this->assertEquals( $sample_course_args['access_opens_date'], $res_data['access_opens_date'] );
@@ -638,6 +711,71 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		foreach ( $taxonomies as $tax => $tid ) {
 			$this->assertEquals( $tid, $res_data[ $tax ] );
 		}
+	}
+
+	/**
+	 * Test course "periods".
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_and_periods() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'access_opens_date'      => '2019-05-22 17:20:05',
+				'enrollment_closes_date'  => '2019-05-22 17:22:05',
+			)
+		);
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		$course = new LLMS_Course( $res_data['id'] );
+
+		// Check that the created course's 'time_period' is enabled, since one of access_opens_date and access_closes_date is set.
+		$this->assertEquals( 'yes', $course->get( 'time_period' ) );
+		// Check that the created course's 'enrollment_period' is enabled, since one of enrollment_opens_date and enrollment_closes_date is set.
+		$this->assertEquals( 'yes', $course->get( 'enrollment_period' ) );
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'access_closes_date'      => '2019-05-22 17:20:05',
+				'enrollment_opens_date'  => '2019-05-22 17:22:05',
+			)
+		);
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		$course = new LLMS_Course( $res_data['id'] );
+
+		// Check that the created course's 'time_period' is enabled, since one of access_opens_date and access_closes_date is set.
+		$this->assertEquals( 'yes', $course->get( 'time_period' ) );
+		// Check that the created course's 'enrollment_period' is enabled, since one of enrollment_opens_date and enrollment_closes_date is set.
+		$this->assertEquals( 'yes', $course->get( 'enrollment_period' ) );
+
+		$request->set_body_params( $this->sample_course_args );
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		$course = new LLMS_Course( $res_data['id'] );
+
+		// Check that the created course's 'time_period' is not enabled, since none of access_opens_date and access_closes_date is set.
+		$this->assertEquals( 'no', $course->get( 'time_period' ) );
+		// Check that the created course's 'enrollment_period' is not enabled, since none of enrollment_opens_date and enrollment_closes_date is set.
+		$this->assertEquals( 'no', $course->get( 'enrollment_period' ) );
+
 	}
 
 	/**
