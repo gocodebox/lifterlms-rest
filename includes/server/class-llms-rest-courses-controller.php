@@ -470,6 +470,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'lifterlms'
 				),
 				'type'        => 'string',
+				'default'     => 'none',
 				'enum'        => array_keys( llms_get_sales_page_types() ),
 				'context'     => array( 'view', 'edit' ),
 			),
@@ -700,6 +701,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['end_date'] = date_i18n( 'Y-m-d H:i:s', $access_closes_date );
 		}
 
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		if ( ! empty( $prepared_item['start_date'] ) || ! empty( $prepared_item['end_date'] ) ) {
+			$prepared_item['time_period'] = 'yes';
+		} else {
+			$prepared_item['time_period'] = 'no';
+		}
+
 		// Enrollment dates.
 		if ( ! empty( $schema['properties']['enrollment_opens_date'] ) && isset( $request['enrollment_opens_date'] ) ) {
 			$enrollment_opens_date                  = rest_parse_date( $request['enrollment_opens_date'] );
@@ -709,6 +717,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		if ( ! empty( $schema['properties']['enrollment_closes_date'] ) && isset( $request['enrollment_closes_date'] ) ) {
 			$enrollment_closes_date               = rest_parse_date( $request['enrollment_closes_date'] );
 			$prepared_item['enrollment_end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_closes_date );
+		}
+
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		if ( ! empty( $prepared_item['enrollment_start_date'] ) || ! empty( $prepared_item['enrollment_end_date'] ) ) {
+			$prepared_item['enrollment_period'] = 'yes';
+		} else {
+			$prepared_item['enrollment_period'] = 'no';
 		}
 
 		// Sales page.
