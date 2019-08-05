@@ -261,27 +261,6 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get an API Key
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function get_item( $request ) {
-
-		$key = $this->get_object( (int) $request['id'] );
-		if ( is_wp_error( $key ) ) {
-			return $key;
-		}
-
-		$response = $this->prepare_item_for_response( $key, $request );
-
-		return $response;
-
-	}
-
-	/**
 	 * Get API Key List
 	 *
 	 * @since [version]

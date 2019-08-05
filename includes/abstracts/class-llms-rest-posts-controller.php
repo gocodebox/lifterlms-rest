@@ -361,27 +361,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get a single item.
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function get_item( $request ) {
-
-		$object = $this->get_object( (int) $request['id'] );
-		if ( is_wp_error( $object ) ) {
-			return $object;
-		}
-
-		$response = $this->prepare_item_for_response( $object, $request );
-
-		return $response;
-
-	}
-
-	/**
 	 * Prepare objects query.
 	 *
 	 * @since [version]
