@@ -36,77 +36,36 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	);
 
 	/**
-	 * Register routes.
-	 *
-	 * @since [version]
-	 *
-	 * @return void
-	 */
-	public function register_routes() {
-
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base,
-			array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => $this->get_collection_params(),
-				),
-				array(
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), // see class-wp-rest-controller.php.
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
-
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/(?P<id>[\d]+)',
-			array(
-				'args'   => array(
-					'id' => array(
-						'description' => __( 'API Key Identifier.', 'lifterlms' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => array(),
-				),
-				array(
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
-				),
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'check_permissions' ),
-					'args'                => array(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
-
-	}
-
-	/**
 	 * Check if the authenticated user can perform the request action.
 	 *
 	 * @since [version]
 	 *
 	 * @return boolean
 	 */
-	public function check_permissions() {
+	protected function check_permissions() {
 		return current_user_can( 'manage_lifterlms_api_keys' ) ? true : llms_rest_authorization_required_error();
+	}
+
+	/**
+	 * Check if a given request has access to create an item.
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function create_item_permissions_check( $request ) {
+		return $this->check_permissions();
+	}
+
+	/**
+	 * Check if a given request has access to delete an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return bool|WP_Error
+	 */
+	public function delete_item_permissions_check( $request ) {
+		return $this->check_permissions();
 	}
 
 	/**
@@ -195,6 +154,30 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			),
 		);
 
+	}
+
+	/**
+	 * Check if a given request has access to read an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function get_item_permissions_check( $request ) {
+		return $this->check_permissions();
+	}
+
+	/**
+	 * Check if a given request has access to read items.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function get_items_permissions_check( $request ) {
+		return $this->check_permissions();
 	}
 
 	/**
@@ -501,6 +484,18 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to update an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function update_item_permissions_check( $request ) {
+		return $this->check_permissions();
+	}
+
+	/**
 	 * Validate submitted user IDs are real user ids.
 	 *
 	 * @since [version]
@@ -516,5 +511,3 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 }
-
-return new LLMS_REST_API_Keys_Controller();

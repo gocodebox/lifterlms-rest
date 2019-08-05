@@ -45,81 +45,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	);
 
 	/**
-	 * Register routes.
-	 *
-	 * @since [version]
-	 *
-	 * @return void
-	 */
-	public function register_routes() {
-
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base,
-			array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => $this->get_collection_params(),
-				),
-				array(
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => array( $this, 'create_item_permissions_check' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), // see class-wp-rest-controller.php.
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
-
-		$schema        = $this->get_item_schema();
-		$get_item_args = array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
-
-		if ( isset( $schema['properties']['password'] ) ) {
-			$get_item_args['password'] = array(
-				'description' => __( 'Post password. Required if the post is password protected.', 'lifterlms' ),
-				'type'        => 'string',
-			);
-		}
-
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/(?P<id>[\d]+)',
-			array(
-				'args'   => array(
-					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'lifterlms' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => $get_item_args,
-				),
-				array(
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
-				),
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => $this->get_delete_item_args(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
-		);
-
-	}
-
-	/**
 	 * Retrieves an array of arguments for the delete endpoint.
 	 *
 	 * @since [version]
@@ -135,6 +60,29 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				'default'     => false,
 			),
 		);
+
+	}
+
+	/**
+	 * Retrieves the query params for retrieving a single resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_get_item_params() {
+
+		$params = parent::get_get_item_params();
+		$schema = $this->get_item_schema();
+
+		if ( isset( $schema['properties']['password'] ) ) {
+			$params['password'] = array(
+				'description' => __( 'Post password. Required if the post is password protected.', 'lifterlms' ),
+				'type'        => 'string',
+			);
+		}
+
+		return $params;
 
 	}
 

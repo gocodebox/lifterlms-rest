@@ -17,4 +17,7 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
+
+
+
 }
