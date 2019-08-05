@@ -45,7 +45,7 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/sections/1234/content?parent=987
+                  example: /wp-json/llms/v1/sections/1234/content
           next:
             description: REST URI to the next sibling section in the course.
             type: array
@@ -84,5 +84,5 @@ allOf:
               properties:
                 href:
                   type: string
-                  example: /wp-json/llms/v1/sections/7891/content
+                  example: /wp-json/llms/v1/courses/1234/content?exclude=7891
 
