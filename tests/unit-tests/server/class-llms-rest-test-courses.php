@@ -99,7 +99,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 12 courses.
-		$courses = $this->factory->course->create_many( 12 );
+		$courses = $this->factory->course->create_many( 12, array( 'sections' => 0 ) );
 
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
 
@@ -127,7 +127,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 15 courses.
-		$courses = $this->factory->course->create_many( 15 );
+		$courses = $this->factory->course->create_many( 15, array( 'sections' => 0 ) );
 		$request = new WP_REST_Request( 'GET', $this->route );
 		$request->set_param( 'page', 2 );
 
@@ -157,7 +157,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 15 courses.
-		$courses = $this->factory->course->create_many( 5 );
+		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
 		$request = new WP_REST_Request( 'GET', $this->route );
 
 		// get only the 2nd and 3rd course.
@@ -188,7 +188,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 15 courses.
-		$courses = $this->factory->course->create_many( 5 );
+		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
 		$request = new WP_REST_Request( 'GET', $this->route );
 
 		// get only the 2nd and 3rd course.
@@ -215,7 +215,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 5 courses.
-		$courses = $this->factory->course->create_many( 5 );
+		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
 		$request = new WP_REST_Request( 'GET', $this->route );
 		$request->set_param( 'order', 'desc' ); // default is 'asc'.
 
@@ -245,7 +245,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 3 courses.
-		$courses = $this->factory->course->create_many( 3 );
+		$courses = $this->factory->course->create_many( 3, array( 'sections' => 0 ) );
 
 		$course_first = new LLMS_Course( $courses[0] );
 		$course_first->set( 'title', 'Course B' );
@@ -277,7 +277,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 3 courses.
-		$courses = $this->factory->course->create_many( 3 );
+		$courses = $this->factory->course->create_many( 3, array( 'sections' => 0 ) );
 
 		$course_first = new LLMS_Course( $courses[0] );
 		$course_first->set( 'title', 'Course B' );
@@ -348,7 +348,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// create 5 courses.
-		$courses = $this->factory->course->create_many( 5 );
+		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
 		$request = new WP_REST_Request( 'GET', $this->route );
 
 		// Bad request, there's no page 2.
