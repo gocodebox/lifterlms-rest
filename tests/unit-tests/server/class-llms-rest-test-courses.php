@@ -714,6 +714,70 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test creating a single course with taxonomies
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_with_prerequisites() {
+		wp_set_current_user( $this->user_allowed );
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'prerequisite'       => 2,
+				'prerequisite_track' => 5,
+			)
+		);
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+		$res_data = $response->get_data();
+
+		// Courses with id 2 do not exist, hence I expect an empty prerequisite property.
+		$this->assertEquals( 0, $res_data['prerequisite'] );
+		// Tracks with id 5 do not exist, hence I expect an empty prerequisite track.
+		$this->assertEquals( 0, $res_data['prerequisite_track'] );
+
+		$course = new LLMS_Course( $res_data['id'] );
+
+		// Check that the created course's has_prerequisite is set accordingly.
+		$this->assertEquals( 'no', $course->get('has_prerequisite') );
+
+
+		// Create a course and a track
+		$prereq_course = $this->factory->course->create( array('sections' => 0 ) );
+		$prereq_track = $this->factory()->term->create(
+			array(
+				'taxonomy' => 'course_track',
+			)
+		);
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'prerequisite'       => $prereq_course,
+				'prerequisite_track' => $prereq_track,
+			)
+		);
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+		$res_data = $response->get_data();
+
+		// I expect prerequisites now match.
+		$this->assertEquals( $prereq_course, $res_data['prerequisite'] );
+		$this->assertEquals( $prereq_track, $res_data['prerequisite_track'] );
+
+		$course = new LLMS_Course( $res_data['id'] );
+
+		// Check that the created course's has_prerequisite is set accordingly.
+		$this->assertEquals( 'yes', $course->get('has_prerequisite') );
+
+	}
+
+	/**
 	 * Test course "periods".
 	 *
 	 * @since [version]
@@ -775,6 +839,57 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( 'no', $course->get( 'time_period' ) );
 		// Check that the created course's 'enrollment_period' is not enabled, since none of enrollment_opens_date and enrollment_closes_date is set.
 		$this->assertEquals( 'no', $course->get( 'enrollment_period' ) );
+
+	}
+
+	/**
+	 * Test create course with raw properties.
+	 * Check textual properties are still set when supplying them as 'raw'.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_and_raws() {
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		$course_raw_messages = 	array(
+			'length' => array(
+				'raw' => 'Length raw message'
+			),
+			'restricted_message' => array(
+				'raw' => 'Restricted raw message'
+			),
+			'capacity_message'  => array(
+				'raw' => 'Capacity raw message'
+			),
+			'access_opens_message' => array(
+				'raw' => 'Access opens raw message'
+			),
+			'access_closes_message' => array(
+				'raw' => 'Access closes raw message'
+			),
+			'enrollment_opens_message' => array(
+				'raw' => 'Enrollment opens raw message'
+			),
+			'enrollment_closes_message' => array(
+				'raw' => 'Enrollment closess raw message'
+			),
+		);
+
+		$course_args = array_merge(
+			$this->sample_course_args,
+			$course_raw_messages
+		);
+
+		$request->set_body_params( $course_args );
+		$response = $this->server->dispatch( $request );
+
+		$res_data = $response->get_data();
+
+		foreach ( $course_raw_messages as $property => $content ) {
+			$this->assertEquals( $content['raw'], $res_data[$property]['raw'] );
+		}
 
 	}
 
