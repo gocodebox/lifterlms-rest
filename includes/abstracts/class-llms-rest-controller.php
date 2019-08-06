@@ -113,4 +113,97 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 
 	}
 
+	/**
+	 * Retrieves the query params for retrieving a single resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_get_item_params() {
+
+		return array(
+			'context' => $this->get_context_param(
+				array(
+					'default' => 'view',
+				)
+			),
+		);
+
+	}
+
+	/**
+	 * Retrieve arguments for deleting a resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_delete_item_args() {
+		return array();
+	}
+
+	/**
+	 * Register routes.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function register_routes() {
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base,
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the resource.', 'lifterlms' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_get_item_params(),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+					'args'                => $this->get_delete_item_args(),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+	}
+
 }

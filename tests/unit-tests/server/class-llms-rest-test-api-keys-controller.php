@@ -159,6 +159,48 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	}
 
 	/**
+	 * Test the permissions check methods.
+	 *
+	 * @return void
+	 */
+	public function test_check_permissions() {
+
+		$request = new WP_REST_Request( 'GET', $this->route );
+
+		$methods = array(
+			'create_item_permissions_check',
+			'delete_item_permissions_check',
+			'get_item_permissions_check',
+			'get_items_permissions_check',
+			'update_item_permissions_check',
+		);
+
+		// No user.
+		wp_set_current_user( null );
+		foreach ( $methods as $method ) {
+			$res = $this->endpoint->{$method}( $request );
+			$this->assertIsWPError( $res );
+			$this->assertWPErrorCodeEquals( 'llms_rest_unauthorized_request', $res );
+		}
+
+
+		// Disallowed User.
+		wp_set_current_user( $this->user_forbidden );
+		foreach ( $methods as $method ) {
+			$res = $this->endpoint->{$method}( $request );
+			$this->assertIsWPError( $res );
+			$this->assertWPErrorCodeEquals( 'llms_rest_forbidden_request', $res );
+		}
+
+		// Allowed User.
+		wp_set_current_user( $this->user_allowed );
+		foreach ( $methods as $method ) {
+			$this->assertTrue( $this->endpoint->{$method}( $request ) );
+		}
+
+	}
+
+	/**
 	 * test the delete_item() method.
 	 *
 	 * @since [version]
