@@ -7,14 +7,17 @@ allOf:
   - $ref: '#/components/schemas/User'
   - type: object
     properties:
-      role:
+      roles:
         description: The user's WordPress user role.
-        type: string
-        enum:
-          - lms_manager
-          - instructor
-          - instructors_assistant
-        default: instructor
+        type: array
+        default: [ instructor ]
+        items:
+          type: string
+          enum:
+            - administrator
+            - lms_manager
+            - instructor
+            - instructors_assistant
       _links:
         description: A map of links to other related API resources.
         type: object
