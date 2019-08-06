@@ -1219,7 +1219,11 @@
               "type": "string",
               "enum": [
                 "id",
-                "email"
+                "email",
+                "display_name",
+                "last_name",
+                "first_name",
+                "registered_date"
               ],
               "default": "id"
             }
@@ -1231,23 +1235,44 @@
             "$ref": "#/components/parameters/Exclude"
           },
           {
-            "name": "post",
-            "description": "Include only instructors for the specified post(s). Acceps a single `id` or a comma separated list of `ids`.",
+            "name": "post_in",
+            "description": "Retrieve only instructors for the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "example": "8,9,10"
+              "example": [
+                1,
+                2,
+                3
+              ]
             }
           },
           {
             "name": "post_not_in",
-            "description": "Exclude instructors for the specified post(s). Acceps a single `id` or a comma separated list of `ids`.",
+            "description": "Retrieve only instructors for in the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "example": "11,12,13"
+              "example": [
+                4,
+                5,
+                6
+              ]
+            }
+          },
+          {
+            "name": "roles",
+            "description": "Retrieve instructors by a specific role.\n\nAccepts a single role name or a comma separated list of role names.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": [
+                "instructor",
+                "lms_manager"
+              ]
             }
           }
         ],
@@ -3298,7 +3323,11 @@
               "type": "string",
               "enum": [
                 "id",
-                "email"
+                "email",
+                "display_name",
+                "last_name",
+                "first_name",
+                "registered_date"
               ],
               "default": "id"
             }
@@ -3311,26 +3340,43 @@
           },
           {
             "name": "enrolled_in",
-            "description": "Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.",
+            "description": "Retrieve only students not enrolled in the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer"
-              }
+              "type": "string",
+              "example": [
+                1,
+                2,
+                3
+              ]
             }
           },
           {
             "name": "enrolled_not_in",
-            "description": "Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts an array of [WP_Post](https://codex.wordpress.org/Class_Reference/WP_Post) IDs.",
+            "description": "Retrieve only students not enrolled in the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer"
-              }
+              "type": "string",
+              "example": [
+                4,
+                5,
+                6
+              ]
+            }
+          },
+          {
+            "name": "roles",
+            "description": "Retrieve students by a specific role.\n\nAccepts a single role name or a comma separated list of role names.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": [
+                "student",
+                "customer"
+              ]
             }
           }
         ],
@@ -3342,7 +3388,7 @@
                 "description": "Pagination links for the collection.",
                 "schema": {
                   "type": "string",
-                  "example": "</wp-json/llms/v1/students?page=1>; rel=\"first\", </wp-json/llms/v1/students?page=2>; rel=\"prev\", </wp-json/llms/v1/students?page=4>; rel=\"next\", </wp-json/llms/v1/students?page=5>; rel=\"last\""
+                  "example": "</wp-json/llms/v1/students?page=1>; rel=\"first\",\n</wp-json/llms/v1/students?page=2>; rel=\"prev\",\n</wp-json/llms/v1/students?page=4>; rel=\"next\",\n</wp-json/llms/v1/students?page=5>; rel=\"last\"\n"
                 }
               },
               "X-WP-Total": {
@@ -5446,15 +5492,21 @@
           {
             "type": "object",
             "properties": {
-              "role": {
+              "roles": {
                 "description": "The user's WordPress user role.",
-                "type": "string",
-                "enum": [
-                  "lms_manager",
-                  "instructor",
-                  "instructors_assistant"
+                "type": "array",
+                "default": [
+                  "instructor"
                 ],
-                "default": "instructor"
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "administrator",
+                    "lms_manager",
+                    "instructor",
+                    "instructors_assistant"
+                  ]
+                }
               },
               "_links": {
                 "description": "A map of links to other related API resources.",
@@ -7542,14 +7594,15 @@
           {
             "type": "object",
             "properties": {
-              "role": {
+              "roles": {
                 "description": "The user's WordPress user role.",
-                "type": "string",
-                "enum": [
+                "type": "array",
+                "default": [
                   "student"
                 ],
-                "default": "student",
-                "readOnly": true
+                "items": {
+                  "type": "string"
+                }
               },
               "_links": {
                 "description": "A map of links to other related API resources.",
@@ -7645,11 +7698,89 @@
             "example": "my_l337-p@$5w0rd!",
             "writeOnly": true
           },
-          "name": {
-            "$ref": "#/components/schemas/UserName"
+          "description": {
+            "description": "The user's biography or description.",
+            "type": "string",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
           },
-          "billing_address": {
-            "$ref": "#/components/schemas/Address"
+          "registered_date": {
+            "description": "The user's original site registration date.",
+            "type": "string",
+            "example": "2019-05-03 19:25:01"
+          },
+          "avatar_urls": {
+            "description": "A list of the Gravatars available for the user.\n\nThe object key is the size (in pixels) of the avatar and the value is the Gravatar's URL.\n",
+            "type": "object",
+            "readOnly": true,
+            "properties": {
+              "24": {
+                "type": "string",
+                "example": "https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=24&d=mm&r=g"
+              },
+              "48": {
+                "type": "string",
+                "example": "https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=48&d=mm&r=g"
+              },
+              "96": {
+                "type": "string",
+                "example": "https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=48&d=mm&r=g"
+              }
+            }
+          },
+          "url": {
+            "description": "The user's URL.",
+            "type": "string",
+            "example": "https://myawesomewebsite.tld"
+          },
+          "first_name": {
+            "description": "The user's first name.",
+            "type": "string",
+            "example": "Jamie"
+          },
+          "last_name": {
+            "description": "The user's last name.",
+            "type": "string",
+            "example": "Cook"
+          },
+          "nickname": {
+            "description": "The user's chosen nickname.",
+            "type": "string",
+            "example": "JamieC"
+          },
+          "display_name": {
+            "description": "The user's public display name.",
+            "type": "string",
+            "example": "Jamie Cook"
+          },
+          "billing_address_1": {
+            "description": "Address line 1.",
+            "type": "string",
+            "example": "1234 Somewhere Place"
+          },
+          "billing_address_2": {
+            "description": "Address line 2.",
+            "type": "string",
+            "example": "Suite ABC"
+          },
+          "billing_city": {
+            "description": "City name.",
+            "type": "string",
+            "example": "Anywhere"
+          },
+          "billing_state": {
+            "description": "ISO code or state, province, or district name.",
+            "type": "string",
+            "example": "CA"
+          },
+          "billing_postcode": {
+            "description": "Postal code.",
+            "type": "string",
+            "example": "12345-678"
+          },
+          "billing_country": {
+            "description": "ISO country code.",
+            "type": "string",
+            "example": "US"
           }
         }
       },
