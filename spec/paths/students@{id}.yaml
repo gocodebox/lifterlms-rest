@@ -12,6 +12,8 @@ get:
   description: Retrieve the details of an existing student.
   tags:
     - Students
+  parameters:
+    - $ref: '#/components/parameters/Context'
   responses:
     200:
       description: Successfully retrieved the student.
