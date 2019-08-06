@@ -805,6 +805,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		if ( ! empty( $to_set['prerequisite'] ) || ! empty( $to_set['prerequisite_track'] ) ) {
+			$to_set['has_prerequisite'] = 'yes';
+		} else {
+			$to_set['has_prerequisite'] = 'no';
+		}
+
 		/**
 		 * The following properties have a default value that contains a placeholder ({{course_id}}) that can be "expanded" only
 		 * after the course has been created.
