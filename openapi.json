@@ -967,6 +967,29 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Successfully moved the course to the trash.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CourseResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "trash"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "204": {
             "description": "Successfully deleted the course."
           },
@@ -978,9 +1001,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
