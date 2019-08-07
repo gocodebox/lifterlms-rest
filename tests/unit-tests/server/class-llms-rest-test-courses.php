@@ -1325,7 +1325,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Filter by student_id.
 		$request = new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' );
-		$request->set_param( 'student_id', "$student_ids[0]" );
+		$request->set_param( 'student', "$student_ids[0]" );
 		$response = $this->server->dispatch( $request );
 
 		// Success.
