@@ -61,13 +61,10 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 			'status'       => 'publish',
 		);
 
-		// To avoid adding parts to the content.
-		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );
-
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
 
-		// assume all courses have been migrated to the block editor.
+		// assume all courses have been migrated to the block editor to avoid adding parts to the content.
 		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );
 	}
 

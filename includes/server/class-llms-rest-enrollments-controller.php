@@ -42,70 +42,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	);
 
 	/**
-	 * Get object.
-	 *
-	 * @since [version]
-	 *
-	 * @param int             $student_id Student ID.
-	 * @param int             $post_id The course/membership ID.
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return object|WP_Error
-	 */
-	protected function get_object( $student_id, $post_id = null, $request = null ) {
-
-		$query_args = $this->prepare_object_query( $request );
-		$result     = $this->enrollments_query( $query_args );
-
-		if ( $result->items ) {
-			return $result->items[0];
-		}
-
-		return llms_rest_not_found_error();
-	}
-
-	/**
-	 * Prepare enrollments objects query.
-	 *
-	 * @since [version]
-	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return array
-	 */
-	protected function prepare_object_query( $request ) {
-
-		$args = array();
-
-		$args['id']   = $request['id'];
-		$args['post'] = $request['post_id'];
-
-		$args = $this->prepare_items_query( $args, $request );
-
-		return $args;
-
-	}
-
-	/**
-	 * Get a single item.
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function get_item( $request ) {
-
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'], $request );
-		if ( is_wp_error( $object ) ) {
-			return $object;
-		}
-
-		$response = $this->prepare_item_for_response( $object, $request );
-
-		return $response;
-
-	}
-
-	/**
 	 * Constructor.
 	 *
 	 * @since [version]
@@ -137,11 +73,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			)
 		);
 
-		$schema        = $this->get_item_schema();
-		$get_item_args = array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
-
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<post_id>[\d]+)',
@@ -156,7 +87,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => $get_item_args,
+					'args'                => $this->get_get_item_params(),
 				),
 				array(
 					'methods'             => WP_REST_Server::DELETABLE,
@@ -168,191 +99,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			)
 		);
 
-	}
-
-	/**
-	 * Check if a given request has access to delete an item.
-	 *
-	 * @since [version]
-	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return bool|WP_Error
-	 */
-	public function delete_item_permissions_check( $request ) {
-
-		$object = $this->get_object( (int) $request['id'] );
-		if ( is_wp_error( $object ) ) {
-			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
-				return true;
-			}
-
-			return $object;
-		}
-
-		if ( ! $this->check_delete_permission( $object ) ) {
-			return llms_rest_authorization_required_error();
-		}
-
-		return true;
-
-	}
-
-	/**
-	 * Deletes a single llms post.
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
-	 */
-	public function delete_item( $request ) {
-
-		$object   = $this->get_object( (int) $request['id'], (int) $request['post_id'], $request );
-		$response = new WP_REST_Response();
-		$response->set_status( 204 );
-
-		if ( is_wp_error( $object ) ) {
-			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
-				return $response;
-			}
-
-			return $object;
-		}
-
-		$result = llms_delete_student_enrollment( $object->student_id, $object->post_id, 'any' );
-
-		if ( ! $result ) {
-			return new WP_Error(
-				'llms_rest_cannot_delete',
-				__( 'The enrollment cannot be deleted.', 'lifterlms' ),
-				array( 'status' => 500 )
-			);
-		}
-
-		return $response;
-
-	}
-
-	/**
-	 * Check if a given request has access to update an item.
-	 *
-	 * @since [version]
-	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|boolean
-	 */
-	public function update_item_permissions_check( $request ) {
-
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'], $request );
-		if ( is_wp_error( $object ) ) {
-			return $object;
-		}
-
-		if ( ! $this->check_update_permission( $object ) ) {
-			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to update an enrollment as this user.', 'lifterlms' ) );
-		}
-
-		return true;
-	}
-
-	/**
-	 * Retrieves the query params for the objects collection.
-	 *
-	 * @since [version]
-	 *
-	 * @return array The Enrollments collection parameters.
-	 */
-	public function get_collection_params() {
-		return $this->collection_params;
-	}
-
-	/**
-	 * Retrieves the query params for the objects collection.
-	 *
-	 * @since [version]
-	 *
-	 * @param array $collection_params The Enrollments collection parameters to be set.
-	 * @return void
-	 */
-	public function set_collection_params( $collection_params ) {
-		$this->collection_params = $collection_params;
-	}
-
-	/**
-	 * Build the query params for the objects collection.
-	 *
-	 * @since [version]
-	 *
-	 * @return array Collection parameters.
-	 */
-	protected function build_collection_params() {
-
-		$query_params = parent::get_collection_params();
-
-		$query_params['status'] = array(
-			'description'       => __( 'Filter results to records matching the specified status.', 'lifterlms' ),
-			'enum'              => array_keys( llms_get_enrollment_statuses() ),
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		$query_params['post'] = array(
-			'description'       => __( 'Limit results to a specific course or membership or a list of courses and/or memberships. Accepts a single post id or a comma separated list of post ids.', 'lifterlms' ),
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
-		return $query_params;
-	}
-
-	/**
-	 * Get the Enrollments's schema, conforming to JSON Schema.
-	 *
-	 * @since [version]
-	 *
-	 * @return array
-	 */
-	public function get_item_schema() {
-
-		$schema = array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'students-enrollments',
-			'type'       => 'object',
-			'properties' => array(
-				'post_id'      => array(
-					'description' => __( 'The ID of the course/membership.', 'lifterlms' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'student_id'   => array(
-					'description' => __( 'The ID of the student.', 'lifterlms' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'date_created' => array(
-					'description' => __( 'Creation date. Format: Y-m-d H:i:s', 'lifterlms' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_updated' => array(
-					'description' => __( 'Date last modified. Format: Y-m-d H:i:s', 'lifterlms' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'status'       => array(
-					'description' => __( 'The status of the enrollment.', 'lifterlms' ),
-					'enum'        => array_keys( llms_get_enrollment_statuses() ),
-					'type'        => 'string',
-				),
-			),
-		);
-
-		return $schema;
 	}
 
 	/**
@@ -452,7 +198,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'], $request );
+		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
@@ -466,6 +212,262 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get a single item.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item( $request ) {
+
+		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
+
+		$response = $this->prepare_item_for_response( $object, $request );
+
+		return $response;
+
+	}
+
+	/**
+	 * Check if a given request has access to delete an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return bool|WP_Error
+	 */
+	public function delete_item_permissions_check( $request ) {
+
+		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
+				return true;
+			}
+
+			return $object;
+		}
+
+		if ( ! $this->check_delete_permission( $object ) ) {
+			return llms_rest_authorization_required_error();
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Deletes a single llms post.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function delete_item( $request ) {
+
+		$object   = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
+		$response = new WP_REST_Response();
+		$response->set_status( 204 );
+
+		if ( is_wp_error( $object ) ) {
+			// Course not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
+				return $response;
+			}
+
+			return $object;
+		}
+
+		$result = llms_delete_student_enrollment( $object->student_id, $object->post_id, 'any' );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'llms_rest_cannot_delete',
+				__( 'The enrollment cannot be deleted.', 'lifterlms' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		return $response;
+
+	}
+
+	/**
+	 * Check if a given request has access to update an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function update_item_permissions_check( $request ) {
+
+		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
+
+		if ( ! $this->check_update_permission( $object ) ) {
+			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to update an enrollment as this user.', 'lifterlms' ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get object.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $post_id The course/membership ID.
+	 * @return object|WP_Error
+	 */
+	protected function get_object( $student_id, $post_id = null ) {
+
+		if ( empty( $post_id ) ) {
+			return llms_rest_bad_request();
+		}
+
+		$query_args = $this->prepare_object_query( $student_id, $post_id );
+		$result     = $this->enrollments_query( $query_args );
+
+		if ( $result->items ) {
+			return $result->items[0];
+		}
+
+		return llms_rest_not_found_error();
+	}
+
+	/**
+	 * Prepare enrollments objects query.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $post_id The course/membership ID.
+	 * @return array
+	 */
+	protected function prepare_object_query( $student_id, $post_id ) {
+
+		$args = array();
+
+		$args['id']   = $student_id;
+		$args['post'] = $post_id;
+
+		$args = $this->prepare_items_query( $args );
+
+		return $args;
+
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array The Enrollments collection parameters.
+	 */
+	public function get_collection_params() {
+		return $this->collection_params;
+	}
+
+	/**
+	 * Retrieves the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $collection_params The Enrollments collection parameters to be set.
+	 * @return void
+	 */
+	public function set_collection_params( $collection_params ) {
+		$this->collection_params = $collection_params;
+	}
+
+	/**
+	 * Build the query params for the objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	protected function build_collection_params() {
+
+		$query_params = parent::get_collection_params();
+
+		unset( $query_params['include'], $query_params['exclude'] );
+
+		$query_params['status'] = array(
+			'description'       => __( 'Filter results to records matching the specified status.', 'lifterlms' ),
+			'enum'              => array_keys( llms_get_enrollment_statuses() ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$query_params['post'] = array(
+			'description'       => __( 'Limit results to a specific course or membership or a list of courses and/or memberships. Accepts a single post id or a comma separated list of post ids.', 'lifterlms' ),
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $query_params;
+	}
+
+	/**
+	 * Get the Enrollments's schema, conforming to JSON Schema.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_item_schema() {
+
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'students-enrollments',
+			'type'       => 'object',
+			'properties' => array(
+				'post_id'      => array(
+					'description' => __( 'The ID of the course/membership.', 'lifterlms' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'student_id'   => array(
+					'description' => __( 'The ID of the student.', 'lifterlms' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'date_created' => array(
+					'description' => __( 'Creation date. Format: Y-m-d H:i:s', 'lifterlms' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'date_updated' => array(
+					'description' => __( 'Date last modified. Format: Y-m-d H:i:s', 'lifterlms' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'status'       => array(
+					'description' => __( 'The status of the enrollment.', 'lifterlms' ),
+					'enum'        => array_keys( llms_get_enrollment_statuses() ),
+					'context'     => array( 'view', 'edit' ),
+					'type'        => 'string',
+				),
+			),
+		);
+
+		return $schema;
 	}
 
 	/**
@@ -663,7 +665,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		if ( isset( $query_args['orderby'], $query_args['order'] ) ) {
-			$order = "ORDER BY {$query_args['orderby']} {$query_args['order']}";
+			$order = sprintf( 'ORDER BY %1$s %2$s', esc_sql( $query_args['orderby'] ), esc_sql( $query_args['order'] ) );
 		} else {
 			$order = '';
 		}
