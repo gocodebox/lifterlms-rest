@@ -90,6 +90,18 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'args'                => $this->get_get_item_params(),
 				),
 				array(
+					'methods'             => 'POST',
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => array(),
+				),
+				array(
+					'methods'             => 'PATCH',
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( 'PATCH' ),
+				),
+				array(
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
@@ -241,12 +253,112 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to create an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function create_item_permissions_check( $request ) {
+
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], false );
+
+		if ( $enrollment_exists ) {
+			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment.', 'lifterlms' ) );
+		}
+
+		if ( ! $this->check_create_permission() ) {
+			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to create an enrollment as this user.', 'lifterlms' ) );
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Creates a single enrollment.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
+
+		$user_id = (int) $request['id'];
+		$post_id = (int) $request['post_id'];
+
+		// check both students and product exist.
+		$student = new LLMS_Student( $user_id );
+
+		if ( ! $student->exists() ) {
+			return llms_rest_bad_request_error();
+		}
+
+		// can only be enrolled in the following post types.
+		$product_type = get_post_type( $post_id );
+		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
+			return llms_rest_bad_request_error();
+		}
+
+		// Enroll.
+		$enroll = $student->enroll( $post_id, 'admin_' . get_current_user_id() );
+
+		// Something went wrong internally.
+		if ( ! $enroll ) {
+			return new WP_Error(
+				'llms_rest_cannot_enroll',
+				__( 'The enrollment could not be created', 'lifterlms' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+		$enrollment = $this->get_object( $user_id, $post_id );
+
+		$response = $this->prepare_item_for_response( $enrollment, $request );
+
+		$response->set_status( 201 );
+
+		$response->header(
+			'Location',
+			rest_url( sprintf( '/%s/%s/%d/%s/%d', 'llms/v1', 'students', $enrollment->student_id, 'enrollments', $enrollment->post_id ) )
+		);
+
+		return $response;
+
+	}
+
+	/**
+	 * Check if a given request has access to update an item.
+	 *
+	 * @since [version]
+	 *
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function update_item_permissions_check( $request ) {
+
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $enrollment_exists ) ) {
+			return $enrollment_exists;
+		}
+
+		if ( ! $this->check_update_permission() ) {
+			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to update an enrollment as this user.', 'lifterlms' ) );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Check if a given request has access to delete an item.
 	 *
 	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return bool|WP_Error
+	 * @return WP_Error|boolean
 	 */
 	public function delete_item_permissions_check( $request ) {
 
@@ -306,28 +418,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to update an item.
-	 *
-	 * @since [version]
-	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|boolean
-	 */
-	public function update_item_permissions_check( $request ) {
-
-		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
-		if ( is_wp_error( $enrollment_exists ) ) {
-			return $enrollment_exists;
-		}
-
-		if ( ! $this->check_update_permission() ) {
-			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to update an enrollment as this user.', 'lifterlms' ) );
-		}
-
-		return true;
-	}
-
-	/**
 	 * Check enrollment existence.
 	 *
 	 * @since [version]
@@ -335,7 +425,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @param int     $student_id Student ID.
 	 * @param int     $post_id The course/membership ID.
 	 * @param boolean $wp_error Optional. Whether return a WP_Error instance or a boolean. Default true (returns WP_Error).
-	 * @return boolean|WP_Error
+	 * @return WP_Error|boolean
 	 */
 	protected function enrollment_exists( $student_id, $post_id, $wp_error = true ) {
 
@@ -888,7 +978,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return false;
 		}
 
-		// TODO: who can read this enrollment?
+		// @TODO: who can read this enrollment?
 		return true;
 	}
 
