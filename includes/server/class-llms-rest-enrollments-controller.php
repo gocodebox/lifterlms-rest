@@ -198,14 +198,19 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
-		if ( is_wp_error( $object ) ) {
-			return $object;
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $enrollment_exists ) ) {
+			return $enrollment_exists;
 		}
 
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission( $object ) ) {
+		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
 			return llms_rest_authorization_required_error();
 		}
+
+		$object = new stdClass();
+
+		$object->id = (int) $request['id'];
+		$object->id = (int) $request['post_id'];
 
 		if ( ! $this->check_read_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
@@ -245,17 +250,17 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function delete_item_permissions_check( $request ) {
 
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
-		if ( is_wp_error( $object ) ) {
-			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $enrollment_exists ) ) {
+			// Enrollment not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $enrollment_exists->get_error_codes(), true ) ) {
 				return true;
 			}
 
-			return $object;
+			return $enrollment_exists;
 		}
 
-		if ( ! $this->check_delete_permission( $object ) ) {
+		if ( ! $this->check_delete_permission() ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -273,20 +278,20 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 
-		$object   = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
-		$response = new WP_REST_Response();
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		$response          = new WP_REST_Response();
 		$response->set_status( 204 );
 
-		if ( is_wp_error( $object ) ) {
-			// Course not found, we don't return a 404.
-			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
-				return $response;
+		if ( is_wp_error( $enrollment_exists ) ) {
+			// Enrollment not found, we don't return a 404.
+			if ( in_array( 'llms_rest_not_found', $enrollment_exists->get_error_codes(), true ) ) {
+				return true;
 			}
 
-			return $object;
+			return $enrollment_exists;
 		}
 
-		$result = llms_delete_student_enrollment( $object->student_id, $object->post_id, 'any' );
+		$result = llms_delete_student_enrollment( (int) $request['id'], (int) $request['post_id'] );
 
 		if ( ! $result ) {
 			return new WP_Error(
@@ -310,16 +315,44 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 
-		$object = $this->get_object( (int) $request['id'], (int) $request['post_id'] );
-		if ( is_wp_error( $object ) ) {
-			return $object;
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		if ( is_wp_error( $enrollment_exists ) ) {
+			return $enrollment_exists;
 		}
 
-		if ( ! $this->check_update_permission( $object ) ) {
+		if ( ! $this->check_update_permission() ) {
 			return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to update an enrollment as this user.', 'lifterlms' ) );
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check enrollment existence.
+	 *
+	 * @since [version]
+	 *
+	 * @param int     $student_id Student ID.
+	 * @param int     $post_id The course/membership ID.
+	 * @param boolean $wp_error Optional. Whether return a WP_Error instance or a boolean. Default true (returns WP_Error).
+	 * @return boolean|WP_Error
+	 */
+	protected function enrollment_exists( $student_id, $post_id, $wp_error = true ) {
+
+		$student = llms_get_student( $student_id );
+
+		if ( empty( $student ) ) {
+			return $wp_error ? llms_rest_bad_request_error() : false;
+		}
+
+		$current_status = $student->get_enrollment_status( $post_id );
+
+		if ( empty( $current_status ) ) {
+			return $wp_error ? llms_rest_not_found_error() : false;
+		}
+
+		return true;
+
 	}
 
 	/**
@@ -679,7 +712,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
 				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
-				WHERE upm.meta_key = '_start_date' AND upm.{$id_column} = %d {$filter}
+				JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
+				WHERE p.post_status = 'publish'
+				  AND upm.meta_key = '_start_date'
+				  AND upm.{$id_column} = %d
+				  {$filter}
 				{$order}
 				{$limit};
 				",
@@ -734,7 +771,19 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @return array
 	 */
 	public function prepare_object_for_response( $enrollment, $request ) {
-		return get_object_vars( $enrollment );
+
+		$prepared_enrollment = get_object_vars( $enrollment );
+
+		// Apply filters.
+		$prepared_enrollment['status'] = apply_filters(
+			'llms_get_enrollment_status',
+			$prepared_enrollment['status'],
+			$prepared_enrollment['student_id'],
+			$prepared_enrollment['post_id']
+		);
+
+		return $prepared_enrollment;
+
 	}
 
 	/**

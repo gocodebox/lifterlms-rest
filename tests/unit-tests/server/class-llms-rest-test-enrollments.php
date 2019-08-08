@@ -101,20 +101,20 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
     public function test_get_enrollment_filter_post() {
 
 		// create enrollments.
-	    $user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		 $user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
-	    // Create new courses
-	    $course_ids = $this->factory->post->create_many( 10, array( 'post_type' => 'course' ) );
+		// Create new courses
+		$course_ids = $this->factory->post->create_many( 10, array( 'post_type' => 'course' ) );
 
 		$j = 0;
 		$courses = array();
-	    foreach ( $course_ids as $course_id ) {
+		foreach ( $course_ids as $course_id ) {
 			if ( 0 === ( $j++ % 2 ) ) {
 				// Enroll Student in newly created course
 				llms_enroll_student( $user_id, $course_id, 'test_filter_enrollments' );
 				$courses[] = $course_id;
 			}
-	    }
+		}
 
 		$request = new WP_REST_Request( 'GET', $this->parse_route($user_id) );
 		$request->set_param( 'post', "$courses[1],$courses[2]" );
@@ -163,7 +163,50 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 	}
 
+	/**
+	 * Test protected enrollment_exists method
+	 *
+	 * @since [version]
+	 */
+	public function test_enrollment_exists() {
+
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( 789, 879 ) );
+		// enrollment doesn't exist because both student and course/membership do not exist.
+		$this->assertWPError( $result );
+
+		$student_id = $this->factory->user->create( array( 'role' => 'student' ) );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, 879 ) );
+		// enrollment doesn't exist because course/membership do not exist.
+		$this->assertWPError( $result );
+
+		// Create new course.
+		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
+		// enrollment doesn't exist because the $student has not been enrolled yet.
+		$this->assertWPError( $result );
+
+
+		// Enroll Student.
+		llms_enroll_student( $student_id, $course_id, 'test_exists' );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
+		// enrollment exists because the $student has been enrolled yet.
+		$this->assertTrue( $result );
+
+		// Unenroll Student.
+		llms_unenroll_student( $student_id, $course_id );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
+		// enrollment still exists because the $student has been unenrolled but not deleted
+		$this->assertTrue( $result );
+
+		// Delete student's enrollment
+		llms_delete_student_enrollment( $student_id, $course_id );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
+		// enrollment still exists because the $student has been unenrolled but not deleted
+		$this->assertWPError( $result );
+	}
+
 	private function parse_route( $student_id ) {
 		return str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 	}
+
 }
