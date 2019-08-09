@@ -53,6 +53,21 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 	abstract protected function get_object( $id );
 
 	/**
+	 * Determine if the current user can view the requested item.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $item_id WP_User id.
+	 * @return bool
+	 */
+	protected function check_read_item_permissions( $item_id ) {
+
+		// Translators: %s = method name.
+		return llms_rest_server_error( sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ) );
+
+	}
+
+	/**
 	 * Create an item.
 	 *
 	 * @since [version]
@@ -200,13 +215,19 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 
 		$query_params['include'] = array(
 			'description'       => __( 'Limit results to a list of ids. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'              => 'string',
+			'type'              => 'array',
+			'items'             => array(
+				'type' => 'integer',
+			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$query_params['exclude'] = array(
 			'description'       => __( 'Exclude a list of ids from results. Accepts a single id or a comma separated list of ids.', 'lifterlms' ),
-			'type'              => 'string',
+			'type'              => 'array',
+			'items'             => array(
+				'type' => 'integer',
+			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -232,6 +253,90 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 
 		return rest_ensure_response( $response );
 
+	}
+
+	/**
+	 * Retrieves all users.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function get_items( $request ) {
+
+		// Prepare all set args.
+		$params   = array_keys( $this->get_collection_params() );
+		$prepared = array();
+
+		foreach ( $params as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				$prepared[ $key ] = $request[ $key ];
+			}
+		}
+
+		$query   = $this->get_objects_query( $prepared, $request );
+		$objects = $this->get_objects_from_query( $query );
+		$items   = array();
+
+		foreach ( $objects as $object ) {
+
+			$object = $this->get_object( $object );
+			if ( ! $this->check_read_item_permissions( $this->get_object_id( $object ) ) ) {
+				continue;
+			}
+
+			$item    = $this->prepare_item_for_response( $object, $request );
+			$items[] = $this->prepare_response_for_collection( $item );
+		}
+
+		$response   = rest_ensure_response( $items );
+		$pagination = $this->get_pagination_data_from_query( $query, $prepared, $request );
+
+		// Out-of-bounds, run the query again on page one to get a proper total count.
+		if ( $pagination['total_results'] < 1 ) {
+
+			$prepared['page'] = 1;
+			$count_query      = $this->get_objects_query( $prepared, $request );
+			$count_results    = $this->get_pagination_data_from_query( $count_query, $prepared, $request );
+
+			$pagination['total_results'] = $count_results['total_results'];
+		}
+
+		$response->header( 'X-WP-Total', $pagination['total_results'] );
+		$response->header( 'X-WP-TotalPages', $pagination['total_pages'] );
+
+		$base = add_query_arg( urlencode_deep( $request->get_query_params() ), rest_url( $request->get_route() ) );
+
+		// First page link.
+		if ( 1 !== $pagination['current_page'] ) {
+			$first_link = add_query_arg( 'page', 1, $base );
+			$response->link_header( 'first', $first_link );
+		}
+
+		// Previous page link.
+		if ( $pagination['current_page'] > 1 ) {
+			$prev_page = $pagination['current_page'] - 1;
+			if ( $prev_page > $pagination['total_pages'] ) {
+				$prev_page = $pagination['total_pages'];
+			}
+			$prev_link = add_query_arg( 'page', $prev_page, $base );
+			$response->link_header( 'prev', $prev_link );
+		}
+
+		// Next page link.
+		if ( $pagination['total_pages'] > $pagination['current_page'] ) {
+			$next_link = add_query_arg( 'page', $pagination['current_page'] + 1, $base );
+			$response->link_header( 'next', $next_link );
+		}
+
+		// Last page link.
+		if ( $pagination['total_pages'] !== $pagination['current_page'] ) {
+			$last_link = add_query_arg( 'page', $pagination['total_pages'], $base );
+			$response->link_header( 'last', $last_link );
+		}
+
+		return $response;
 	}
 
 	/**
@@ -290,6 +395,79 @@ abstract class LLMS_REST_Controller extends WP_REST_Controller {
 
 		// For example.
 		return 0;
+
+	}
+
+	/**
+	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return object
+	 */
+	protected function get_objects_query( $prepared, $request ) {
+
+		// Todo: update version number.
+
+		// Translators: %s = method name.
+		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+
+		// For example.
+		return new WP_Query( $prepared );
+
+	}
+
+	/**
+	 * Retrieve an array of objects from the result of $this->get_objects_query().
+	 *
+	 * @since [version]
+	 *
+	 * @param obj $query Objects query result.
+	 * @return obj[]
+	 */
+	protected function get_objects_from_query( $query ) {
+
+		// Todo: update version number.
+
+		// Translators: %s = method name.
+		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+
+		// For example.
+		return array();
+
+	}
+
+	/**
+	 * Retrieve pagination information from an objects query.
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $query Objects query result.
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array {
+	 *     Array of pagination information.
+	 *
+	 *     @type int $current_page Current page number.
+	 *     @type int $total_results Total number of results.
+	 *     @type int $total_pages Total number of results pages.
+	 * }
+	 */
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
+
+		// Todo: update version number.
+
+		// Translators: %s = method name.
+		_doing_it_wrong( 'LLMS_REST_Controller::get_pagination_data_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+
+		// For example.
+		return array(
+			'current_page'  => 1,
+			'total_results' => 1,
+			'total_pages'   => 1,
+		);
 
 	}
 

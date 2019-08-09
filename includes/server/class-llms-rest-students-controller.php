@@ -32,6 +32,32 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	protected $rest_base = 'students';
 
 	/**
+	 * Temporary array of prepared query args used to filter WP_User_Query
+	 * when `enrolled_in` and `enrolled_not_in` args are present on the request.
+	 *
+	 * @var array
+	 */
+	private $prepared_query_args = array();
+
+	/**
+	 * Determine if the current user can view the requested student.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $item_id WP_User id.
+	 * @return bool
+	 */
+	protected function check_read_item_permissions( $item_id ) {
+
+		if ( get_current_user_id() === $item_id ) {
+			return true;
+		}
+
+		return current_user_can( 'view_students', $item_id );
+
+	}
+
+	/**
 	 * Determine if current user has permission to create a user.
 	 *
 	 * @since [version]
@@ -78,14 +104,22 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
 		$params = parent::get_collection_params();
 
+		// $params['roles']['default'] = 'student';
+
 		$params['enrolled_in'] = array(
 			'description' => __( 'Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs.', 'lifterlms' ),
-			'type'        => 'string',
+			'type'        => 'array',
+			'items'       => array(
+				'type' => 'integer',
+			),
 		);
 
 		$params['enrolled_not_in'] = array(
 			'description' => __( 'Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs.', 'lifterlms' ),
-			'type'        => 'string',
+			'type'        => 'array',
+			'items'       => array(
+				'type' => 'integer',
+			),
 		);
 
 		return $params;
@@ -108,7 +142,6 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
 	}
 
-
 	/**
 	 * Determine if current user has permission to get a user.
 	 *
@@ -119,13 +152,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 
-		$user_id = $request['id'];
-
-		if ( get_current_user_id() === $user_id ) {
-			return true;
-		}
-
-		if ( ! current_user_can( 'view_students', $user_id ) ) {
+		if ( ! $this->check_read_item_permissions( $request['id'] ) ) {
 			return llms_rest_authorization_required_error( __( 'You are not allowed to view this student.', 'lifterlms' ) );
 		}
 
@@ -167,6 +194,97 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
 		$student = llms_get_student( $id );
 		return $student ? $student : llms_rest_not_found_error();
+
+	}
+
+	/**
+	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_User_Query
+	 */
+	protected function get_objects_query( $prepared, $request ) {
+
+		$remove = false;
+		if ( ! empty( $prepared['enrolled_in'] ) || ! empty( $prepared['enrolled_not_in'] ) ) {
+
+			$this->prepared_query_args = $prepared;
+			add_action( 'pre_user_query', array( $this, 'get_objects_query_pre' ) );
+			$remove = true;
+
+		}
+
+		$query = parent::get_objects_query( $prepared, $request );
+
+		if ( $remove ) {
+
+			$this->prepared_query_args = array();
+
+			remove_action( 'pre_user_query', array( $this, 'get_objects_query_pre' ) );
+		}
+
+		return $query;
+
+	}
+
+	/**
+	 * Callback for WP_User_Query "pre_user_query" action.
+	 *
+	 * Adds select fields and a having clause to check against `enrolled_in` and `enrolled_not_in` collection query args.
+	 *
+	 * @since [version]
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/pre_user_query/
+	 *
+	 * @param WP_User_Query $query Query object.
+	 * @return void
+	 */
+	public function get_objects_query_pre( $query ) {
+
+		$query->query_where .= ' Having 1 ';
+
+		if ( ! empty( $this->prepared_query_args['enrolled_in'] ) ) {
+			foreach ( $this->prepared_query_args['enrolled_in'] as $post_id ) {
+				$post_id              = absint( $post_id );
+				$query->query_fields .= ", {$this->get_objects_query_status_subquery( $post_id )}";
+				$query->query_where  .= " AND p_{$post_id}_stat = 'enrolled'";
+			}
+		}
+
+		if ( ! empty( $this->prepared_query_args['enrolled_not_in'] ) ) {
+			foreach ( $this->prepared_query_args['enrolled_not_in'] as $post_id ) {
+				$post_id              = absint( $post_id );
+				$query->query_fields .= ", {$this->get_objects_query_status_subquery( $post_id )}";
+				$query->query_where  .= " AND (  p_{$post_id}_stat IS NULL OR  p_{$post_id}_stat != 'enrolled' )";
+			}
+		}
+
+	}
+
+	/**
+	 * Generates a subquery to check a user's enrollment status for a given course or membership.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $post_id Course or membership id.
+	 * @return string
+	 */
+	private function get_objects_query_status_subquery( $post_id ) {
+
+		global $wpdb;
+
+		return "(
+			SELECT meta_value
+			FROM {$wpdb->prefix}lifterlms_user_postmeta
+			WHERE user_id = {$wpdb->users}.ID
+			  AND post_id = {$post_id}
+			  AND meta_key = '_status'
+			ORDER BY updated_date DESC
+			LIMIT 1
+		) AS p_{$post_id}_stat";
 
 	}
 

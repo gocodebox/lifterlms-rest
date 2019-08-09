@@ -100,6 +100,22 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	}
 
 	/**
+	 * Teardown test
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function tearDown() {
+
+		parent::tearDown();
+
+		global $wpdb;
+		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
+
+	}
+
+	/**
 	 * Test the create_item method.
 	 *
 	 * @since [version]
@@ -190,6 +206,34 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 			wp_set_current_user( $this->factory->user->create( array( 'role' => $role ) ) );
 			$this->assertTrue( $this->endpoint->create_item_permissions_check( $request ) );
 		}
+
+	}
+
+	public function test_delete_item() {
+
+		$id = $this->factory->student->create();
+
+		// no user.
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertResponseStatusEquals( 401, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
+
+		// Forbidden user.
+		wp_set_current_user( $this->user_subscriber );
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+		// Good.
+		wp_set_current_user( $this->user_admin );
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertTrue( is_null( $res->get_data() ) );
+		$this->assertResponseStatusEquals( 204, $res );
+
+		// deleting the same user again has the same result.
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertTrue( is_null( $res->get_data() ) );
+		$this->assertResponseStatusEquals( 204, $res );
 
 	}
 
@@ -449,6 +493,212 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 		$res = $this->perform_mock_request( 'GET', $route );
 		$this->assertResponseStatusEquals( 200, $res );
+
+	}
+
+	public function test_get_items_errors() {
+
+
+		// No user.
+		$res = $this->perform_mock_request( 'GET', $this->route );
+		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
+		$this->assertResponseStatusEquals( 401, $res );
+
+		// Forbidden user.
+		wp_set_current_user( $this->user_subscriber );
+		$res = $this->perform_mock_request( 'GET', $this->route );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+		$this->assertResponseStatusEquals( 403, $res );
+
+
+	}
+
+	public function test_get_items_pagination() {
+
+		global $wpdb;
+
+		$this->factory->user->create_many( 5 );
+		$this->factory->student->create_many( 25 );
+		$db_total = absint( $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" ) );
+
+
+		$db_pages = ceil( $db_total / 10 );
+
+		wp_set_current_user( $this->user_admin );
+		$res = $this->perform_mock_request( 'GET', $this->route );
+
+		// Correct # of results to default 10 / page
+		$this->assertEquals( 10, count( $res->get_data() ) );
+
+		// Check Pagination headers.
+		$headers = $res->get_headers();
+		$this->assertEquals( $db_total, $headers['X-WP-Total'] );
+		$this->assertEquals( $db_pages, $headers['X-WP-TotalPages'] );
+
+		// Link headers.
+		$links = $this->parse_link_headers( $res );
+		$this->assertEquals( array( 'next', 'last' ), array_keys( $links ) );
+
+
+		// Page 2.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 2 ) );
+
+		// Link headers.
+		$links = $this->parse_link_headers( $res );
+		$this->assertEquals( array( 'first', 'prev', 'next', 'last' ), array_keys( $links ) );
+
+
+		// Last page.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => $db_pages ) );
+
+		// Link headers.
+		$links = $this->parse_link_headers( $res );
+		$this->assertEquals( array( 'first', 'prev' ), array_keys( $links ) );
+
+
+		// Big per page.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'per_page' => 100 ) );
+
+		// Check Pagination headers.
+		$headers = $res->get_headers();
+		$this->assertEquals( $db_total, $headers['X-WP-Total'] );
+		$this->assertEquals( 1, $headers['X-WP-TotalPages'] );
+
+		// No links because this is the only page.
+		$links = $this->parse_link_headers( $res );
+		$this->assertEquals( array(), array_keys( $links ) );
+
+		// Out of bounds.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 25, 'per_page' => 100 ) );
+		$this->assertEquals( array(), $res->get_data() );
+
+	}
+
+	public function test_get_items_orderby_id() {
+
+		wp_set_current_user( $this->user_admin );
+		$low = $this->factory->user->create( array() );
+		$high = $this->factory->user->create( array() );
+		$args = array( 'include' => array( $low, $high ), 'orderby' => 'id' );
+
+		// Default / asc.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $low, $res->get_data()[0]['id'] );
+
+		// Desc.
+		$args['order'] = 'desc';
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $high, $res->get_data()[0]['id'] );
+
+	}
+
+	public function test_get_items_orderby_email() {
+
+		wp_set_current_user( $this->user_admin );
+		$low = $this->factory->user->create( array( array( 'user_email' => 'aemail@mock.tld' ) ) );
+		$high = $this->factory->user->create( array( array( 'user_email' => 'bemail@mock.tld' ) ) );
+		$args = array( 'include' => array( $low, $high ), 'orderby' => 'email' );
+
+		// Default / asc.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $low, $res->get_data()[0]['id'] );
+
+		// Desc.
+		$args['order'] = 'desc';
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $high, $res->get_data()[0]['id'] );
+
+	}
+
+	public function test_get_items_orderby_name() {
+
+		wp_set_current_user( $this->user_admin );
+		$low = $this->factory->user->create( array( 'display_name' => 'A Name' ) );
+		$high = $this->factory->user->create( array( 'display_name' => 'B Name' ) );
+		$args = array( 'include' => array( $low, $high ), 'orderby' => 'name' );
+
+		// Default / asc.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $low, $res->get_data()[0]['id'] );
+
+		// Desc.
+		$args['order'] = 'desc';
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $high, $res->get_data()[0]['id'] );
+
+	}
+
+	public function test_get_items_orderby_registered_date() {
+
+		wp_set_current_user( $this->user_admin );
+		$low = $this->factory->user->create( array( 'user_registered' => date( 'Y-m-d h:i:s', strtotime( '-5 days', time() ) ) ) );
+		$high = $this->factory->user->create();
+		$args = array( 'include' => array( $low, $high ), 'orderby' => 'registered_date' );
+
+		// Default / asc.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $low, $res->get_data()[0]['id'] );
+
+		// Desc.
+		$args['order'] = 'desc';
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $high, $res->get_data()[0]['id'] );
+
+	}
+
+	public function test_get_items_enrollement_filters() {
+
+		wp_set_current_user( $this->user_admin );
+
+		$course = $this->factory->course->create( array( 'sections' => 0 ) );
+
+		$args = array(
+			'include' => array(),
+			'enrolled_in' => $course,
+		);
+		for ( $i = 1; $i <= 3; $i++ ) {
+			$args['include'][] = $this->factory->student->create();
+		}
+
+		// None are enrolled.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array(), $res->get_data() );
+
+		unset( $args['enrolled_in'] );
+		$args['enrolled_not_in'] = $course;
+
+		// All are not enrolled.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( $args['include'], wp_list_pluck( $res->get_data(), 'id' ) );
+
+		// Enroll a student.
+		llms_enroll_student( $args['include'][0], $course );
+
+		// Return only the non-enrolled students.
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array( $args['include'][1], $args['include'][2] ), wp_list_pluck( $res->get_data(), 'id' ) );
+
+		// Only return the enrolled student.
+		unset( $args['enrolled_not_in'] );
+		$args['enrolled_in'] = $course;
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array( $args['include'][0] ), wp_list_pluck( $res->get_data(), 'id' ) );
+
+		// No one's enrolled in both.
+		$course_2 = $this->factory->course->create( array( 'sections' => 0 ) );
+		$args['enrolled_in'] .= ',' . $course_2;
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array(), wp_list_pluck( $res->get_data(), 'id' ) );
+
+		// One enrolled in both.
+		llms_enroll_student( $args['include'][0], $course_2 );
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array( $args['include'][0] ), wp_list_pluck( $res->get_data(), 'id' ) );
+
+		unset( $args['enrolled_in'] );
+		$args['enrolled_not_in'] = array( $course, $course_2 );
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
+		$this->assertEquals( array( $args['include'][1], $args['include'][2] ), wp_list_pluck( $res->get_data(), 'id' ) );
 
 	}
 

@@ -164,9 +164,12 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		$params = parent::get_collection_params();
 
 		$params['roles'] = array(
-			'description' => __( 'Include only API keys matching a specific permission.', 'lifterlms' ),
-			'type'        => 'string',
-			'enum'        => $this->get_enum_roles(),
+			'description' => __( 'Include only users keys matching matching a specific role. Accepts a single role or a comma separated list of roles.', 'lifterlms' ),
+			'type'        => 'array',
+			'items'       => array(
+				'type' => 'string',
+				'enum' => $this->get_enum_roles(),
+			),
 		);
 
 		return $params;
@@ -383,6 +386,85 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		}
 
 		return $schema;
+
+	}
+
+	/**
+	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_User_Query
+	 */
+	protected function get_objects_query( $prepared, $request ) {
+
+		if ( 'id' === $prepared['orderby'] ) {
+			$prepared['orderby'] = 'ID';
+		} elseif ( 'registered_date' === $prepared['orderby'] ) {
+			$prepared['orderby'] = 'registered';
+		}
+
+		$args = array(
+			'paged'   => $prepared['page'],
+			'number'  => $prepared['per_page'],
+			'order'   => strtoupper( $prepared['order'] ),
+			'orderby' => $prepared['orderby'],
+		);
+
+		if ( ! empty( $prepared['roles'] ) ) {
+			$args['role__in'] = $prepared['roles'];
+		}
+
+		if ( ! empty( $prepared['include'] ) ) {
+			$args['include'] = $prepared['include'];
+		}
+
+		if ( ! empty( $prepared['exclude'] ) ) {
+			$args['exclude'] = $prepared['exclude'];
+		}
+
+		return new WP_User_Query( $args );
+
+	}
+
+
+	/**
+	 * Retrieve an array of objects from the result of $this->get_objects_query().
+	 *
+	 * @since [version]
+	 *
+	 * @param obj $query Objects query result.
+	 * @return WP_User[]
+	 */
+	protected function get_objects_from_query( $query ) {
+		return $query->get_results();
+	}
+
+	/**
+	 * Retrieve pagination information from an objects query.
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $query Objects query result.
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array {
+	 *     Array of pagination information.
+	 *
+	 *     @type int $current_page Current page number.
+	 *     @type int $total_results Total number of results.
+	 *     @type int $total_pages Total number of results pages.
+	 * }
+	 */
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
+
+		$current_page  = absint( $prepared['page'] );
+		$total_results = $query->get_total();
+		$total_pages   = absint( ceil( $total_results / $prepared['per_page'] ) );
+
+		return compact( 'current_page', 'total_results', 'total_pages' );
 
 	}
 
