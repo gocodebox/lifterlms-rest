@@ -79,7 +79,7 @@ delete:
                 LMS content and statuses (enrollments, for example), are not reassigned.
 
                 Default (passing `0` or nothing) delete's the users's content.
-              type: int
+              type: integer
               minimum: 0
               default: 0
               example: 456
