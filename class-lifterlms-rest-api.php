@@ -131,6 +131,7 @@ final class LifterLMS_REST_API {
 
 			// Abstracts first.
 			'abstracts/class-llms-rest-controller',
+			'abstracts/class-llms-rest-users-controller',
 			'abstracts/class-llms-rest-posts-controller',
 
 			// Functions.
@@ -138,9 +139,11 @@ final class LifterLMS_REST_API {
 
 			// Controllers.
 			'server/class-llms-rest-api-keys-controller',
-			'server/class-llms-rest-enrollments-controller',
 			'server/class-llms-rest-courses-controller',
+			'server/class-llms-rest-enrollments-controller',
+			'server/class-llms-rest-instructors-controller',
 			'server/class-llms-rest-sections-controller',
+			'server/class-llms-rest-students-controller',
 
 		);
 
@@ -161,7 +164,9 @@ final class LifterLMS_REST_API {
 		$controllers = array(
 			'LLMS_REST_API_Keys_Controller',
 			'LLMS_REST_Courses_Controller',
+			'LLMS_REST_Instructors_Controller',
 			'LLMS_REST_Sections_Controller',
+			'LLMS_REST_Students_Controller',
 		);
 
 		foreach ( $controllers as $controller ) {
