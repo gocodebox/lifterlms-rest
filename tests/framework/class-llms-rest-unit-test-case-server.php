@@ -25,10 +25,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	public function setUp() {
 
 		parent::setUp();
-
-		global $wp_rest_server;
-		$this->server = $wp_rest_server = new WP_REST_Server();
-		do_action( 'rest_api_init' );
+		$this->server = rest_get_server();
 
 	}
 
@@ -45,6 +42,22 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		$data = $response->get_data();
 		$this->assertEquals( $expected, $data['code'] );
+
+	}
+
+	/**
+	 * Assert a WP_REST_Response message equals an expected message.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $expected Expected response message.
+	 * @param WP_REST_Response $response Response object.
+	 * @return void
+	 */
+	protected function assertResponseMessageEquals( $expected, WP_REST_Response $response ) {
+
+		$data = $response->get_data();
+		$this->assertEquals( $expected, $data['message'] );
 
 	}
 
