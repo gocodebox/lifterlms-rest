@@ -16,7 +16,7 @@ get:
         enum:
           - id
           - email
-          - display_name
+          - name
           - registered_date
         default: id
     - $ref: '#/components/parameters/Include'
