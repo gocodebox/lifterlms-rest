@@ -293,11 +293,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$student = new LLMS_Student( $user_id );
 
 		if ( ! $student->exists() ) {
-			return llms_rest_bad_request_error();
+			return llms_rest_not_found_error();
 		}
 
 		// can only be enrolled in the following post types.
 		$product_type = get_post_type( $post_id );
+		if ( ! $product_type ) {
+			return llms_rest_not_found_error();
+		}
 		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
 			return llms_rest_bad_request_error();
 		}
@@ -307,11 +310,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		// Something went wrong internally.
 		if ( ! $enroll ) {
-			return new WP_Error(
-				'llms_rest_cannot_enroll',
-				__( 'The enrollment could not be created', 'lifterlms' ),
-				array( 'status' => 500 )
-			);
+			return llms_rest_server_error( __( 'The enrollment could not be created', 'lifterlms' ) );
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -406,14 +405,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$result = llms_delete_student_enrollment( (int) $request['id'], (int) $request['post_id'] );
 
 		if ( ! $result ) {
-			return new WP_Error(
-				'llms_rest_cannot_delete',
-				__( 'The enrollment cannot be deleted.', 'lifterlms' ),
-				array( 'status' => 500 )
-			);
+			return llms_rest_server_error( __( 'The enrollment cannot be deleted.', 'lifterlms' ) );
 		}
 
-		return $response;
+		return rest_ensure_response( $response );
 
 	}
 
@@ -461,7 +456,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		$query_args = $this->prepare_object_query( $student_id, $post_id );
-		$result     = $this->enrollments_query( $query_args );
+		$result     = $this->query_enrollments( $query_args );
 
 		if ( $result->items ) {
 			return $result->items[0];
@@ -684,7 +679,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	public function get_objects( $query_args, $request ) {
 
 		$objects = array();
-		$result  = $this->enrollments_query( $query_args );
+		$result  = $this->query_enrollments( $query_args );
 
 		foreach ( $result->items as $enrollment ) {
 
@@ -705,7 +700,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			// Out-of-bounds, run the query again without LIMIT for total count.
 			unset( $query_args['page'] );
 
-			$count_query = $this->enrollments_query( $query_args );
+			$count_query = $this->query_enrollments( $query_args );
 			$total_posts = $count_query->found_items;
 		}
 
@@ -724,7 +719,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @param array $query_args Query args.
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
 	 */
-	protected function enrollments_query( $query_args ) {
+	protected function query_enrollments( $query_args ) {
 		global $wpdb;
 
 		// Maybe limit the query results depending on the page param.
@@ -979,7 +974,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		// @TODO: who can read this enrollment?
-		return true;
+		return true; // current_user_can('view_others_lifterlms_reports');
 	}
 
 }
