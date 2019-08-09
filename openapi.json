@@ -3795,8 +3795,39 @@
         }
       },
       "post": {
-        "summary": "Create or update student enrollment",
-        "description": "Create or update a student's enrollment in a course or membership.",
+        "summary": "Create student enrollment",
+        "description": "Create a new enrollment for a student in a course or membership.",
+        "tags": [
+          "Student Enrollments"
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the student's enrollment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Enrollment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update student enrollment",
+        "description": "Update an enrollment for a student in a course or membership.",
         "tags": [
           "Student Enrollments"
         ],
@@ -3813,16 +3844,6 @@
         "responses": {
           "200": {
             "description": "Successfully updated student's enrollment.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Enrollment"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Successfully created the student's enrollment.",
             "content": {
               "application/json": {
                 "schema": {
