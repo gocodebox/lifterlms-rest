@@ -100,7 +100,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get the Course's schema, conforming to JSON Schema.
+	 * Get the API Key's schema, conforming to JSON Schema.
 	 *
 	 * @since [version]
 	 *
@@ -465,18 +465,9 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 */
 	protected function prepare_links( $item ) {
 
-		$id = $item->get( 'id' );
-
-		$links = array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-			'user'       => array(
-				'href' => rest_url( 'wp/v2/users/' . $item->get( 'user_id' ) ),
-			),
+		$links = parent::prepare_links( $item );
+		$links['user'] = array(
+			'href' => rest_url( sprintf( 'wp/v2/users/%d', $item->get( 'user_id' ) ) ),
 		);
 
 		return $links;
