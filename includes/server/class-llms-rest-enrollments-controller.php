@@ -123,13 +123,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 
-		// Everybody can list enrollments (in read mode)?
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
+		if ( ! current_user_can( 'view_others_lifterlms_reports' ) ) {
 			return llms_rest_authorization_required_error();
 		}
-
 		return true;
-
 	}
 
 	/**
@@ -141,6 +138,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
+
 		$query_args    = $this->prepare_objects_query( $request );
 		$query_results = $this->get_objects( $query_args, $request );
 
@@ -215,14 +213,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return $enrollment_exists;
 		}
 
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
-			return llms_rest_authorization_required_error();
-		}
-
 		$object = new stdClass();
 
-		$object->id = (int) $request['id'];
-		$object->id = (int) $request['post_id'];
+		$object->id      = (int) $request['id'];
+		$object->post_id = (int) $request['post_id'];
 
 		if ( ! $this->check_read_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
@@ -265,7 +259,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], false );
 
 		if ( $enrollment_exists ) {
-			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment.', 'lifterlms' ) );
+			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment. Use the PATCH method if you want to update an existing enrollment', 'lifterlms' ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
@@ -301,6 +295,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		if ( ! $product_type ) {
 			return llms_rest_not_found_error();
 		}
+
 		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
 			return llms_rest_bad_request_error();
 		}
@@ -349,6 +344,57 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Update item.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
+	 */
+	public function update_item( $request ) {
+
+		$user_id = (int) $request['id'];
+		$post_id = (int) $request['post_id'];
+
+		// check both students and product exist.
+		$student = new LLMS_Student( $user_id );
+
+		if ( ! $student->exists() ) {
+			return llms_rest_not_found_error();
+		}
+
+		// can only be enrolled in the following post types.
+		$product_type = get_post_type( $post_id );
+		if ( ! $product_type ) {
+			return llms_rest_not_found_error();
+		}
+		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
+			return llms_rest_bad_request_error();
+		}
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
+
+			$updated_status = $this->handle_status( $student, $post_id, $request['status'] );
+
+			// Something went wrong internally.
+			if ( ! $updated_status ) {
+				return llms_rest_server_error( __( 'The enrollment status could not be updated', 'lifterlms' ) );
+			}
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		$enrollment = $this->get_object( $user_id, $post_id );
+
+		$response = $this->prepare_item_for_response( $enrollment, $request );
+		$response = rest_ensure_response( $response );
+		return $response;
+
 	}
 
 	/**
@@ -427,7 +473,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$student = llms_get_student( $student_id );
 
 		if ( empty( $student ) ) {
-			return $wp_error ? llms_rest_bad_request_error() : false;
+			return $wp_error ? llms_rest_not_found_error() : false;
 		}
 
 		$current_status = $student->get_enrollment_status( $post_id );
@@ -535,6 +581,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		$query_params['context'] = 'view';
 
 		return $query_params;
 	}
@@ -817,36 +865,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare a single item for the REST response
-	 *
-	 * @since [version]
-	 *
-	 * @param object          $object  Enrollment data object.
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
-	 */
-	public function prepare_item_for_response( $object, $request ) {
-
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-
-		$data = $this->prepare_object_for_response( $object, $request );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		// Filter data by context. E.g. in "view" mode the password property won't be allowed.
-		$data = $this->filter_response_by_context( $data, $context );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		$links = $this->prepare_links( $object );
-		$response->add_links( $links );
-
-		return $response;
-	}
-
-	/**
 	 * Prepare a single object output for response.
 	 *
 	 * @since [version]
@@ -923,6 +941,29 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Determines the enrollments status.
+	 *
+	 * @since [version]
+	 * @param LLMS_Student $student Status.
+	 * @param integer      $post_id The post id.
+	 * @param string       $status Status.
+	 * @return boolean
+	 */
+	protected function handle_status( $student, $post_id, $status ) {
+
+		// Status.
+		switch ( $status ) :
+			case 'enrolled':
+				$updated = $student->enroll( $post_id, 'admin_' . get_current_user_id() );
+				break;
+			default:
+				$updated = $student->unenroll( $post_id, $trigger = 'any', $status );
+		endswitch;
+
+		return $updated;
+	}
+
+	/**
 	 * Checks if an enrollment can be edited.
 	 *
 	 * @since [version]
@@ -942,7 +983,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	protected function check_update_permission() {
 		return current_user_can( 'enroll' ) && current_user_can( 'unenroll' );
-
 	}
 
 	/**
@@ -973,8 +1013,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return false;
 		}
 
-		// @TODO: who can read this enrollment?
-		return true; // current_user_can('view_others_lifterlms_reports');
+		return current_user_can( 'view_others_lifterlms_reports' );
+
 	}
 
 }
