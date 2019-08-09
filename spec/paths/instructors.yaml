@@ -17,8 +17,6 @@ get:
           - id
           - email
           - display_name
-          - last_name
-          - first_name
           - registered_date
         default: id
     - $ref: '#/components/parameters/Include'
