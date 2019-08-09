@@ -89,7 +89,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				),
 				array(
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_enrollments_items' ),
+					'callback'            => array( $this->enrollments_controller, 'get_items' ),
 					'permission_callback' => array( $this->enrollments_controller, 'get_items_permissions_check' ),
 					'args'                => $get_enrollments_item_args,
 				),
@@ -1050,7 +1050,9 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	public function get_enrollments_collection_params() {
 		$query_params = $this->enrollments_controller->get_collection_params();
 
-		$query_params['student_id'] = array(
+		unset( $query_params['post'] );
+
+		$query_params['student'] = array(
 			'description'       => __( 'Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids.', 'lifterlms' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -1080,31 +1082,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		unset( $query_params['parent'] );
 
 		return $query_params;
-
-	}
-
-	/**
-	 * Get a collection of enrollment items (sections).
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function get_enrollments_items( $request ) {
-
-		$result = $this->enrollments_controller->get_items( $request );
-
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		// Specs require 404 when no course enrollments are found.
-		if ( ! is_wp_error( $result ) && empty( $result->data ) ) {
-			return llms_rest_not_found_error();
-		}
-
-		return $result;
 
 	}
 

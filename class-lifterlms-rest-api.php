@@ -167,6 +167,7 @@ final class LifterLMS_REST_API {
 			'LLMS_REST_Instructors_Controller',
 			'LLMS_REST_Sections_Controller',
 			'LLMS_REST_Students_Controller',
+			'LLMS_REST_Enrollments_Controller',
 		);
 
 		foreach ( $controllers as $controller ) {
