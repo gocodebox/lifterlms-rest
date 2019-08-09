@@ -1006,8 +1006,6 @@ paths:
               - id
               - email
               - display_name
-              - last_name
-              - first_name
               - registered_date
             default: id
         - $ref: '#/components/parameters/Include'
@@ -1166,6 +1164,25 @@ paths:
       description: Delete an existing instructor.
       tags:
         - Instructors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reassign:
+                  description: |
+                    ID of a WordPress User.
+
+                    Any posts owned by the deleted user will be reassigned to this user.
+
+                    LMS content and statuses (enrollments, for example), are not reassigned.
+
+                    Default (passing `0` or nothing) delete's the users's content.
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  example: 456
       responses:
         '204':
           description: Successfully deleted the instructor.
@@ -1175,8 +1192,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   '/instructors/{id}/content':
     parameters:
       - name: id
@@ -2193,8 +2208,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   '/sections/{id}/content':
     parameters:
       - name: id
@@ -2280,8 +2293,6 @@ paths:
               - id
               - email
               - display_name
-              - last_name
-              - first_name
               - registered_date
             default: id
         - $ref: '#/components/parameters/Include'
@@ -2444,6 +2455,25 @@ paths:
       description: Delete an existing student.
       tags:
         - Students
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reassign:
+                  description: |
+                    ID of a WordPress User.
+
+                    Any posts owned by the deleted user will be reassigned to this user.
+
+                    LMS content and statuses (enrollments, for example), are not reassigned.
+
+                    Default (passing `0` or nothing) delete's the users's content.
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  example: 456
       responses:
         '204':
           description: Successfully deleted the student.
@@ -2453,8 +2483,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   '/students/{id}/enrollments':
     parameters:
       - name: id

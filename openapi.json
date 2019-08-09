@@ -1241,8 +1241,6 @@
                 "id",
                 "email",
                 "display_name",
-                "last_name",
-                "first_name",
                 "registered_date"
               ],
               "default": "id"
@@ -1480,6 +1478,24 @@
         "tags": [
           "Instructors"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reassign": {
+                    "description": "ID of a WordPress User.\n\nAny posts owned by the deleted user will be reassigned to this user.\n\nLMS content and statuses (enrollments, for example), are not reassigned.\n\nDefault (passing `0` or nothing) delete's the users's content.\n",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0,
+                    "example": 456
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "Successfully deleted the instructor."
@@ -1492,9 +1508,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -3210,9 +3223,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -3350,8 +3360,6 @@
                 "id",
                 "email",
                 "display_name",
-                "last_name",
-                "first_name",
                 "registered_date"
               ],
               "default": "id"
@@ -3589,6 +3597,24 @@
         "tags": [
           "Students"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reassign": {
+                    "description": "ID of a WordPress User.\n\nAny posts owned by the deleted user will be reassigned to this user.\n\nLMS content and statuses (enrollments, for example), are not reassigned.\n\nDefault (passing `0` or nothing) delete's the users's content.\n",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0,
+                    "example": 456
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "Successfully deleted the student."
@@ -3601,9 +3627,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
