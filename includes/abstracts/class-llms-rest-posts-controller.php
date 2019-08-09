@@ -165,6 +165,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to create an item.
 	 *
+	 * @since [version]
+	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
 	 */
@@ -380,7 +382,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		if ( ! $this->check_update_permission( $object ) ) {
 			// translators: The post type singular name.
-			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
+			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to update a %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_assign_terms_permission( $request ) ) {
@@ -527,8 +529,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		$id    = $object->get( 'id' );
 		$force = $this->is_delete_forced( $request );
 
-		$request->set_param( 'context', 'edit' );
-
 		// If we're forcing, then delete permanently.
 		if ( $force ) {
 			$result = wp_delete_post( $id, true );
@@ -555,16 +555,16 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				$result = true;
 			}
 
+			$request->set_param( 'context', 'edit' );
 			$object   = $this->get_object( $id );
 			$response = $this->prepare_item_for_response( $object, $request );
 
 		}
 
 		if ( ! $result ) {
-			/* translators: %s: post type */
 			return new WP_Error(
 				'llms_rest_cannot_delete',
-				/* translators: %s: post type name, */
+				/* translators: %s: post type name */
 				sprintf( __( 'The %s cannot be deleted.', 'lifterlms' ), $post_type_name ),
 				array( 'status' => 500 )
 			);
