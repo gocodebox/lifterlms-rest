@@ -28,6 +28,7 @@
 				<directory suffix=".php">./dist/</directory>
 				<directory suffix=".php">./node_modules/</directory>
 				<directory suffix=".php">./vendor/</directory>
+				<file>./**/index.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
