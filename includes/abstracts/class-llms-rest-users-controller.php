@@ -88,7 +88,6 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 			if ( empty( $editable_roles[ $role ] ) ) {
 				return llms_rest_authorization_required_error( __( 'You are not allowed to give users this role.', 'lifterlms' ) );
 			}
-
 		}
 
 		return true;
@@ -100,7 +99,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param array $prepared Prepared item data.
+	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
@@ -125,7 +124,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param obj $object Instance of the object from $this->get_object().
+	 * @param obj             $object Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error true when the object is removed, WP_Error on failure.
 	 */
@@ -220,13 +219,13 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 			'title'      => $this->resource_name,
 			'type'       => 'object',
 			'properties' => array(
-				'id'                 => array(
+				'id'                => array(
 					'description' => __( 'Unique identifier for the user.', 'lifterlms' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'username'           => array(
+				'username'          => array(
 					'description' => __( 'Login name for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -234,7 +233,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => array( $this, 'sanitize_username' ),
 					),
 				),
-				'name'       => array(
+				'name'              => array(
 					'description' => __( 'Display name for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
@@ -242,7 +241,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'first_name'         => array(
+				'first_name'        => array(
 					'description' => __( 'First name for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -250,7 +249,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'last_name'          => array(
+				'last_name'         => array(
 					'description' => __( 'Last name for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -258,25 +257,25 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'email'              => array(
+				'email'             => array(
 					'description' => __( 'The email address for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'email',
 					'context'     => array( 'edit' ),
 					'required'    => true,
 				),
-				'url'                => array(
+				'url'               => array(
 					'description' => __( 'URL of the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'description'        => array(
+				'description'       => array(
 					'description' => __( 'Description of the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'nickname'           => array(
+				'nickname'          => array(
 					'description' => __( 'The nickname for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -284,14 +283,14 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'registered_date'    => array(
+				'registered_date'   => array(
 					'description' => __( 'Registration date for the user.', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'edit' ),
 					'readonly'    => true,
 				),
-				'roles'              => array(
+				'roles'             => array(
 					'description' => __( 'Roles assigned to the user.', 'lifterlms' ),
 					'type'        => 'array',
 					'items'       => array(
@@ -301,7 +300,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 					'context'     => array( 'edit' ),
 					'default'     => array( 'student' ),
 				),
-				'password'           => array(
+				'password'          => array(
 					'description' => __( 'Password for the user (never included).', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array(), // Password is never displayed.
@@ -309,7 +308,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => array( $this, 'sanitize_password' ),
 					),
 				),
-				'billing_address_1'           => array(
+				'billing_address_1' => array(
 					'description' => __( 'User address line 1.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -317,7 +316,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'billing_address_2'           => array(
+				'billing_address_2' => array(
 					'description' => __( 'User address line 2.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -325,7 +324,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'billing_city'           => array(
+				'billing_city'      => array(
 					'description' => __( 'User address city name.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -333,7 +332,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'billing_state'           => array(
+				'billing_state'     => array(
 					'description' => __( 'User address ISO code for the state, province, or district.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -341,7 +340,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'billing_postcode'           => array(
+				'billing_postcode'  => array(
 					'description' => __( 'User address postal code.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -349,7 +348,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'billing_country'           => array(
+				'billing_country'   => array(
 					'description' => __( 'User address ISO code for the country.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
@@ -401,11 +400,11 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
 		$map = parent::map_schema_to_database();
 
-		$map['username'] = 'user_login';
-		$map['password'] = 'user_pass';
-		$map['name'] = 'display_name';
-		$map['email'] = 'user_email';
-		$map['url'] = 'user_url';
+		$map['username']        = 'user_login';
+		$map['password']        = 'user_pass';
+		$map['name']            = 'display_name';
+		$map['email']           = 'user_email';
+		$map['url']             = 'user_url';
 		$map['registered_date'] = 'user_registered';
 
 		// Not inserted/read via database calls.
@@ -440,7 +439,6 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 			if ( empty( $prepared['user_login'] ) ) {
 				$prepared['user_login'] = LLMS_Person_Handler::generate_username( $prepared['user_email'] );
 			}
-
 		}
 
 		return $prepared;
@@ -453,7 +451,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * @since [version]
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request         $request Request object.
 	 * @return array
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
@@ -486,9 +484,9 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param string $value User-submitted username.
+	 * @param string          $value User-submitted username.
 	 * @param WP_REST_Request $request Request object.
-	 * @param string $param Parameter name.
+	 * @param string          $param Parameter name.
 	 * @return WP_Error|string Sanitized username if valid or error object.
 	 */
 	public function sanitize_password( $value, $request, $param ) {
@@ -510,9 +508,9 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param string $value User-submitted username.
+	 * @param string          $value User-submitted username.
 	 * @param WP_REST_Request $request Request object.
-	 * @param string $param Parameter name.
+	 * @param string          $param Parameter name.
 	 * @return WP_Error|string Sanitized username if valid or error object.
 	 */
 	public function sanitize_username( $value, $request, $param ) {
@@ -544,7 +542,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param array $prepared Prepared item data.
+	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
@@ -568,8 +566,8 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $object_id WP User id.
-	 * @param array $prepared Prepared item data.
+	 * @param int             $object_id WP User id.
+	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
 	 * @return LLMS_Abstract_User_Data|WP_error
 	 */

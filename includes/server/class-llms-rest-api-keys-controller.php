@@ -465,7 +465,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 */
 	protected function prepare_links( $item ) {
 
-		$links = parent::prepare_links( $item );
+		$links         = parent::prepare_links( $item );
 		$links['user'] = array(
 			'href' => rest_url( sprintf( 'wp/v2/users/%d', $item->get( 'user_id' ) ) ),
 		);

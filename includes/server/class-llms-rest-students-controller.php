@@ -101,7 +101,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 */
 	public function get_item_schema() {
 
-		$schema = parent::get_item_schema();
+		$schema                                   = parent::get_item_schema();
 		$schema['properties']['roles']['default'] = array( 'student' );
 
 		return $schema;
@@ -185,7 +185,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		$links['enrollments'] = array(
 			'href' => sprintf( '%s/enrollments', $links['self']['href'] ),
 		);
-		$links['progress'] = array(
+		$links['progress']    = array(
 			'href' => sprintf( '%s/progress', $links['self']['href'] ),
 		);
 

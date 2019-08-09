@@ -65,7 +65,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 */
 	public function get_item_schema() {
 
-		$schema = parent::get_item_schema();
+		$schema                                   = parent::get_item_schema();
 		$schema['properties']['roles']['default'] = array( 'instructor' );
 
 		return $schema;
