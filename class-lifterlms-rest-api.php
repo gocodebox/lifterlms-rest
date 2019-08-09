@@ -130,6 +130,7 @@ final class LifterLMS_REST_API {
 		$includes = array(
 
 			// Abstracts first.
+			'abstracts/class-llms-rest-controller-stubs',
 			'abstracts/class-llms-rest-controller',
 			'abstracts/class-llms-rest-users-controller',
 			'abstracts/class-llms-rest-posts-controller',
