@@ -126,7 +126,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		if ( ! current_user_can( 'view_others_lifterlms_reports' ) ) {
 			return llms_rest_authorization_required_error();
 		}
+
 		return true;
+
 	}
 
 	/**
@@ -344,6 +346,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
+
 	}
 
 	/**
@@ -524,8 +527,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$args = array();
 
-		$args['id']   = $student_id;
-		$args['post'] = $post_id;
+		$args['id']            = $student_id;
+		$args['post']          = $post_id;
+		$args['no_found_rows'] = true;
 
 		$args = $this->prepare_items_query( $args );
 
@@ -637,6 +641,50 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Get enrollments objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $query_args Query args.
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array
+	 */
+	public function get_objects( $query_args, $request ) {
+
+		$objects = array();
+		$result  = $this->query_enrollments( $query_args );
+
+		foreach ( $result->items as $enrollment ) {
+
+			if ( ! $this->check_read_permission( $enrollment ) ) {
+				continue;
+			}
+
+			$response_object = $this->prepare_item_for_response( $enrollment, $request );
+
+			if ( ! is_wp_error( $response_object ) ) {
+				$objects[] = $this->prepare_response_for_collection( $response_object );
+			}
+		}
+
+		$total_items = $result->found_items;
+
+		if ( $total_items < 1 ) {
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $query_args['page'] );
+
+			$count_query = $this->query_enrollments( $query_args );
+			$total_posts = $count_query->found_items;
+		}
+
+		return array(
+			'objects' => $objects,
+			'total'   => (int) $total_items,
+			'pages'   => (int) ceil( $total_items / (int) $query_args['per_page'] ),
+		);
+	}
+
+	/**
 	 * Prepare enrollments objects query.
 	 *
 	 * @since [version]
@@ -716,50 +764,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get enrollments objects.
-	 *
-	 * @since [version]
-	 *
-	 * @param array           $query_args Query args.
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return array
-	 */
-	public function get_objects( $query_args, $request ) {
-
-		$objects = array();
-		$result  = $this->query_enrollments( $query_args );
-
-		foreach ( $result->items as $enrollment ) {
-
-			if ( ! $this->check_read_permission( $enrollment ) ) {
-				continue;
-			}
-
-			$response_object = $this->prepare_item_for_response( $enrollment, $request );
-
-			if ( ! is_wp_error( $response_object ) ) {
-				$objects[] = $this->prepare_response_for_collection( $response_object );
-			}
-		}
-
-		$total_items = $result->found_items;
-
-		if ( $total_items < 1 ) {
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args['page'] );
-
-			$count_query = $this->query_enrollments( $query_args );
-			$total_posts = $count_query->found_items;
-		}
-
-		return array(
-			'objects' => $objects,
-			'total'   => (int) $total_items,
-			'pages'   => (int) ceil( $total_items / (int) $query_args['per_page'] ),
-		);
-	}
-
-	/**
 	 * Get enrollments query
 	 *
 	 * @since [version]
@@ -819,7 +823,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					AND upm2.post_id = upm.post_id
 					AND upm2.user_id = upm.user_id
 				)
-				$limit
 			)",
 			array(
 				$query_args['id'],
@@ -838,11 +841,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$query = new stdClass();
 
+		$select_found_rows = empty( $query_args['no_found_rows'] ) ? esc_sql( 'SQL_CALC_FOUND_ROWS' ) : '';
+
 		// the query.
 		$query->items = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
+				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
 				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
 				JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
@@ -859,9 +864,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			)
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$query->found_items = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+
+		$query->found_items = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : count( $query->items );
 
 		return $query;
+
 	}
 
 	/**

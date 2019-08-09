@@ -197,7 +197,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Create new courses.
 		$course_id = $this->factory->post->create_many( 2, array( 'post_type' => 'course' ) );
-		$dateNow   = date( 'Y-m-d H:i:s' );
+		$date_now  = date( 'Y-m-d H:i:s' );
 		llms_enroll_student( $user_id, $course_id[0], 'test_get_enrollment' );
 
 		$request = new WP_REST_Request( 'GET', $this->parse_route($user_id)  . '/' . $course_id[0] );
@@ -211,7 +211,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $user_id, $res_data['student_id'] );
 		$this->assertEquals( $course_id[0], $res_data['post_id'] );
 		$this->assertEquals( 'enrolled', $res_data['status'] );
-		$this->assertEquals( $dateNow, $res_data['date_created'], '', $this->date_delta );
+		$this->assertEquals( $date_now, $res_data['date_created'], '', $this->date_delta );
 		$this->assertEquals( $res_data['date_created'], $res_data['date_updated'] );
 
 		$student = new LLMS_Student($user_id);
@@ -286,7 +286,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		$request  = new WP_REST_Request( 'POST', $this->parse_route( $user_id ) . '/' . $course_id );
-		$dateNow  = date( 'Y-m-d H:i:s' );
+		$date_now  = date( 'Y-m-d H:i:s' );
 		$response = $this->server->dispatch( $request );
 
 		// Success.
@@ -297,7 +297,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $user_id, $res_data['student_id'] );
 		$this->assertEquals( $course_id, $res_data['post_id'] );
 		$this->assertEquals( 'enrolled', $res_data['status'] );
-		$this->assertEquals( $dateNow, $res_data['date_created'], '', $this->date_delta );
+		$this->assertEquals( $date_now, $res_data['date_created'], '', $this->date_delta );
 		$this->assertEquals( $res_data['date_created'], $res_data['date_updated'] );
 
 	}
@@ -323,23 +323,26 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
-	 * Test update enrollment.
+	 * Test update enrollment status.
 	 *
 	 * @since [version]
 	 */
-	public function test_update_enrollment() {
+	public function test_update_enrollment_status() {
 
 		wp_set_current_user( $this->user_allowed );
 
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+
 		// Enroll Student in newly created course/membership
-		llms_enroll_student( $user_id, $course_id, 'test_update' );
-		sleep(10);
+		llms_enroll_student( $user_id, $course_id, 'test_update_status' );
+
+		sleep(1); //<- to be sure the new status is subsequent the one set on creation.
 		$request  = new WP_REST_Request( 'PATCH', $this->parse_route( $user_id ) . '/' . $course_id );
 		$request->set_body_params( array(
 			'status' => 'expired'
 		) );
+
 		$response = $this->server->dispatch( $request );
 
 		// Success.
