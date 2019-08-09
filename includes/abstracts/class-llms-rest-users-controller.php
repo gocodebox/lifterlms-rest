@@ -620,30 +620,6 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	}
 
 	/**
-	 * Update the object in the database with prepared data.
-	 *
-	 * @since [version]
-	 *
-	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
-	 * @return obj Object Instance of object from $this->get_object().
-	 */
-	protected function update_object( $prepared, $request ) {
-
-		$prepared['ID'] = $prepared['id'];
-
-		$object_id = wp_update_user( $prepared );
-		if ( is_wp_error( $object_id ) ) {
-			return $object_id;
-		}
-
-		unset( $prepared['ID'] );
-
-		return $this->update_additional_data( $object_id, $prepared, $request );
-
-	}
-
-	/**
 	 * Updates additional information not handled by WP Core insert/update user functions.
 	 *
 	 * @since [version]
@@ -682,6 +658,61 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		}
 
 		return $object;
+
+	}
+
+	/**
+	 * Update item.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
+	 */
+	public function update_item( $request ) {
+
+		$object = $this->get_object( $request['id'] );
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
+
+		// Ensure we're not trying to update the email to an email that already exists.
+		$owner_id = email_exists( $request['email'] );
+
+		if ( $owner_id && $owner_id !== $request['id'] ) {
+			return llms_rest_bad_request_error( __( 'Invalid email address.', 'lifterlms' ) );
+		}
+
+		// Cannot change a username.
+		if ( ! empty( $request['username'] ) && $request['username'] !== $object->get( 'user_login' ) ) {
+			return llms_rest_bad_request_error( __( 'Username is not editable.', 'lifterlms' ) );
+		}
+
+		return parent::update_item( $request );
+
+	}
+
+	/**
+	 * Update the object in the database with prepared data.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared Prepared item data.
+	 * @param WP_REST_Request $request Request object.
+	 * @return obj Object Instance of object from $this->get_object().
+	 */
+	protected function update_object( $prepared, $request ) {
+
+		$prepared['ID'] = $prepared['id'];
+
+		$object_id = wp_update_user( $prepared );
+		if ( is_wp_error( $object_id ) ) {
+			return $object_id;
+		}
+
+		unset( $prepared['ID'] );
+
+		return $this->update_additional_data( $object_id, $prepared, $request );
 
 	}
 

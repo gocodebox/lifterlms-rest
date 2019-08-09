@@ -30,8 +30,11 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	public function setUp() {
 
 		parent::setUp();
-		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator', ) );
-		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber', ) );
+		$this->user_admin = $this->factory->user->create( array( 'role' => 'administrator', ) );
+		$this->user_subscriber = $this->factory->user->create( array( 'role' => 'subscriber', ) );
+		$this->user_instructor = $this->factory->user->create( array( 'role' => 'instructor', ) );
+		$this->user_assistant = $this->factory->user->create( array( 'role' => 'instructors_assistant', ) );
+		$asst = llms_get_instructor( $this->user_assistant )->add_parent( $this->user_instructor );
 		$this->endpoint = new LLMS_REST_Instructors_Controller();
 
 	}
@@ -141,5 +144,108 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 		$this->assertWPErrorCodeEquals( 'llms_rest_not_found', $error_404 );
 
 	}
+
+	// public function test_get_items_auth() {}
+	// public function test_get_items_exclude() {}
+	// public function test_get_items_include() {}
+	// public function test_get_items_orderby_id() {}
+	// public function test_get_items_orderby_email() {}
+	// public function test_get_items_orderby_name() {}
+	// public function test_get_items_orderby_registered_date() {}
+	// public function test_get_items_pagination() {}
+	// public function test_get_items_filter_by_posts() {}
+	// public function test_get_items_filter_by_roles() {}
+
+	public function test_create_item_missing_required() {
+
+		$res = $this->perform_mock_request( 'POST', $this->route );
+		$this->assertResponseStatusEquals( 400, $res );
+		$this->assertResponseCodeEquals( 'rest_missing_callback_param', $res );
+		$this->assertResponseMessageEquals( 'Missing parameter(s): email', $res );
+
+	}
+
+	public function test_create_item_auth_errors() {
+
+		// Unauthorized user.
+		wp_set_current_user( null );
+		$res = $this->perform_mock_request( 'POST', $this->route, array( 'email' => 'mock@mock.mock' ) );
+		$this->assertResponseStatusEquals( 401, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
+
+		// Forbidden user.
+		wp_set_current_user( $this->user_subscriber );
+		$res = $this->perform_mock_request( 'POST', $this->route, array( 'email' => 'mock@mock.mock' ) );
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+	}
+
+	public function test_create_item_as_instructor() {
+
+		// Instructor can only create assistants.
+		wp_set_current_user( $this->user_instructor );
+		$res = $this->perform_mock_request( 'POST', $this->route, array( 'email' => 'mock@mock.mock', ) );
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+		$this->assertResponseMessageEquals( 'You are not allowed to give users this role.', $res );
+
+		// Okay.
+		$res = $this->perform_mock_request( 'POST', $this->route, array(
+			'email' => 'mock@mock.mock',
+			'roles' => 'instructors_assistant',
+		) );
+		$this->assertResponseStatusEquals( 201, $res );
+
+	}
+
+	public function test_create_item_success() {
+
+		wp_set_current_user( $this->user_admin );
+		$args = array(
+			'email' => 'jamief@mockinstructor.tld',
+			'first_name' => 'Jamie',
+			'last_name' => 'Fitzgerald',
+			'name' => 'Jamie Fitzgerald',
+			'nickname' => 'JamieF1932',
+			'username' => 'jamief',
+			'url' => 'http://jamief.geocities.com',
+			'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+			'billing_address_1' => '123 Some Street',
+			'billing_address_2' => 'Suite A',
+			'billing_city' => 'Some City',
+			'billing_state' => 'NH',
+			'billing_postcode' => '32319',
+			'billing_country' => 'USA',
+		);
+		$res = $this->perform_mock_request( 'POST', $this->route, $args );
+
+		$this->assertResponseStatusEquals( 201, $res );
+
+		$data = $res->get_data();
+		foreach ( $args as $key => $expected ) {
+			$this->assertEquals( $expected, $data[ $key ] );
+		}
+
+		$this->assertEquals( array( 'instructor' ), $data['roles'] );
+
+		$this->assertArrayHasKey( 'id', $data );
+		$this->assertArrayHasKey( 'avatar_urls', $data );
+		$this->assertArrayHasKey( 'registered_date', $data );
+
+		$this->assertArrayHasKey( 'Location', $res->get_headers() );
+
+	}
+
+	// public function test_get_item_auth() {}
+	// public function test_get_item_not_found() {}
+	// public function test_get_item_success() {}
+
+	// public function test_update_item_auth() {}
+	// public function test_update_item_errors() {}
+	// public function test_update_item_success() {}
+
+	// public function test_delete_item_auth() {}
+	// public function test_delete_item_success() {}
 
 }

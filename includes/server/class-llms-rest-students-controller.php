@@ -68,7 +68,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	public function create_item_permissions_check( $request ) {
 
 		if ( ! current_user_can( 'create_students' ) ) {
-			return llms_rest_authorization_required_error( __( 'You are not allowed to create new users.', 'lifterlms' ) );
+			return llms_rest_authorization_required_error( __( 'You are not allowed to create new students.', 'lifterlms' ) );
 		}
 
 		return $this->check_roles_permissions( $request );
@@ -310,38 +310,6 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		return $links;
 
 	}
-
-	/**
-	 * Update item.
-	 *
-	 * @since [version]
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
-	 */
-	public function update_item( $request ) {
-
-		$object = $this->get_object( $request['id'] );
-		if ( is_wp_error( $object ) ) {
-			return $object;
-		}
-
-		// Ensure we're not trying to update the email to an email that already exists.
-		$owner_id = email_exists( $request['email'] );
-
-		if ( $owner_id && $owner_id !== $request['id'] ) {
-			return llms_rest_bad_request_error( __( 'Invalid email address.', 'lifterlms' ) );
-		}
-
-		// Cannot change a username.
-		if ( ! empty( $request['username'] ) && $request['username'] !== $object->get( 'user_login' ) ) {
-			return llms_rest_bad_request_error( __( 'Username is not editable.', 'lifterlms' ) );
-		}
-
-		return parent::update_item( $request );
-
-	}
-
 
 	/**
 	 * Determine if current user has permission to update a user.
