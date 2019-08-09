@@ -1240,7 +1240,7 @@
               "enum": [
                 "id",
                 "email",
-                "display_name",
+                "name",
                 "registered_date"
               ],
               "default": "id"
@@ -3359,7 +3359,7 @@
               "enum": [
                 "id",
                 "email",
-                "display_name",
+                "name",
                 "registered_date"
               ],
               "default": "id"
@@ -7821,7 +7821,7 @@
             "type": "string",
             "example": "JamieC"
           },
-          "display_name": {
+          "name": {
             "description": "The user's public display name.",
             "type": "string",
             "example": "Jamie Cook"

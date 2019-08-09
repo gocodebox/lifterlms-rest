@@ -1005,7 +1005,7 @@ paths:
             enum:
               - id
               - email
-              - display_name
+              - name
               - registered_date
             default: id
         - $ref: '#/components/parameters/Include'
@@ -2292,7 +2292,7 @@ paths:
             enum:
               - id
               - email
-              - display_name
+              - name
               - registered_date
             default: id
         - $ref: '#/components/parameters/Include'
@@ -5392,7 +5392,7 @@ components:
           description: The user's chosen nickname.
           type: string
           example: JamieC
-        display_name:
+        name:
           description: The user's public display name.
           type: string
           example: Jamie Cook
