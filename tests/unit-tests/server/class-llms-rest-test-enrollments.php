@@ -359,6 +359,43 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test update enrollment creation date.
+	 * @group lam
+	 * @since [version]
+	 */
+	public function test_update_enrollment_creation_date() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
+		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		// Enroll Student in newly created course/membership
+		llms_enroll_student( $user_id, $course_id, 'test_update_creation' );
+
+		$request  = new WP_REST_Request( 'PATCH', $this->parse_route( $user_id ) . '/' . $course_id );
+
+		$new_date = date( 'Y-m-d H:i:s', strtotime('+1 year') );
+
+		$request->set_body_params( array(
+			'date_created' => $new_date
+		) );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+		$res_data = $response->get_data();
+
+		// Check:
+		$this->assertEquals( $user_id, $res_data['student_id'] );
+		$this->assertEquals( $course_id, $res_data['post_id'] );
+		$this->assertEquals( $new_date, $res_data['date_created'] );
+
+		$student = new LLMS_Student( $user_id );
+		$this->assertEquals( $res_data['date_created'], $student->get_enrollment_date( $course_id, 'enrolled', 'Y-m-d H:i:s' ) );
+
+	}
+
+	/**
 	 * Test producing 404 request errort.
 	 *
 	 * @since [version]

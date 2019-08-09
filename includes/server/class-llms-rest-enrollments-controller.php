@@ -359,11 +359,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function update_item( $request ) {
 
-		$user_id = (int) $request['id'];
-		$post_id = (int) $request['post_id'];
+		$student_id = (int) $request['id'];
+		$post_id    = (int) $request['post_id'];
 
 		// check both students and product exist.
-		$student = new LLMS_Student( $user_id );
+		$student = new LLMS_Student( $student_id );
 
 		if ( ! $student->exists() ) {
 			return llms_rest_not_found_error();
@@ -390,9 +390,19 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			}
 		}
 
+		if ( ! empty( $schema['properties']['date_created'] ) && isset( $request['date_created'] ) ) {
+
+			$updated_date_created = $this->handle_creation_date( $student_id, $post_id, $request['date_created'] );
+
+			// Something went wrong internally.
+			if ( ! $updated_date_created ) {
+				return llms_rest_server_error( __( 'The enrollment creation date could not be updated', 'lifterlms' ) );
+			}
+		}
+
 		$request->set_param( 'context', 'edit' );
 
-		$enrollment = $this->get_object( $user_id, $post_id );
+		$enrollment = $this->get_object( $student_id, $post_id );
 
 		$response = $this->prepare_item_for_response( $enrollment, $request );
 		$response = rest_ensure_response( $response );
@@ -772,6 +782,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
 	 */
 	protected function query_enrollments( $query_args ) {
+
 		global $wpdb;
 
 		// Maybe limit the query results depending on the page param.
@@ -850,9 +861,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
 				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
-				JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
-				WHERE p.post_status = 'publish'
-				  AND upm.meta_key = '_start_date'
+				  WHERE upm.meta_key = '_start_date'
 				  AND upm.{$id_column} = %d
 				  {$filter}
 				{$order}
@@ -948,10 +957,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Determines the enrollments status.
+	 * Determines the enrollment status.
 	 *
 	 * @since [version]
-	 * @param LLMS_Student $student Status.
+	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.
 	 * @param string       $status Status.
 	 * @return boolean
@@ -968,6 +977,44 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		endswitch;
 
 		return $updated;
+
+	}
+
+
+	/**
+	 * Determines the enrollment creation date.
+	 *
+	 * @since [version]
+	 * @param integer $student_id Student id.
+	 * @param integer $post_id The post id.
+	 * @param string  $date Creation date.
+	 * @return boolean
+	 */
+	protected function handle_creation_date( $student_id, $post_id, $date ) {
+
+		$date_created = rest_parse_date( $date );
+		if ( ! $date_created ) {
+			return llms_bad_request_error();
+		}
+
+		$date_created = date_i18n( 'Y-m-d H:i:s', $date_created );
+
+		global $wpdb;
+
+		$inner_query = $wpdb->prepare(
+			"SELECT meta_id FROM {$wpdb->prefix}lifterlms_user_postmeta WHERE meta_key = '_start_date' AND user_id = %d AND post_id = %d ORDER BY updated_date DESC LIMIT 1",
+			$student_id,
+			$post_id
+		);
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = (${inner_query});",
+				$date_created
+			)
+		);
+
+		return $result;
 	}
 
 	/**
