@@ -360,7 +360,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Test update enrollment creation date.
-	 * @group lam
+	 *
 	 * @since [version]
 	 */
 	public function test_update_enrollment_creation_date() {

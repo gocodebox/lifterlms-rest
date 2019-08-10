@@ -382,7 +382,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 
-			$updated_status = $this->handle_status( $student, $post_id, $request['status'] );
+			$updated_status = $this->handle_status_update( $student, $post_id, $request['status'] );
 
 			// Something went wrong internally.
 			if ( ! $updated_status ) {
@@ -392,7 +392,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		if ( ! empty( $schema['properties']['date_created'] ) && isset( $request['date_created'] ) ) {
 
-			$updated_date_created = $this->handle_creation_date( $student_id, $post_id, $request['date_created'] );
+			$updated_date_created = $this->handle_creation_date_update( $student_id, $post_id, $request['date_created'] );
 
 			// Something went wrong internally.
 			if ( ! $updated_date_created ) {
@@ -957,7 +957,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Determines the enrollment status.
+	 * Handles the enrollment status update.
 	 *
 	 * @since [version]
 	 * @param LLMS_Student $student Student.
@@ -965,7 +965,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @param string       $status Status.
 	 * @return boolean
 	 */
-	protected function handle_status( $student, $post_id, $status ) {
+	protected function handle_status_update( $student, $post_id, $status ) {
 
 		// Status.
 		switch ( $status ) :
@@ -982,7 +982,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 
 	/**
-	 * Determines the enrollment creation date.
+	 * Handles the enrollment creation date.
 	 *
 	 * @since [version]
 	 * @param integer $student_id Student id.
@@ -990,7 +990,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @param string  $date Creation date.
 	 * @return boolean
 	 */
-	protected function handle_creation_date( $student_id, $post_id, $date ) {
+	protected function handle_creation_date_update( $student_id, $post_id, $date ) {
 
 		$date_created = rest_parse_date( $date );
 		if ( ! $date_created ) {
@@ -1002,7 +1002,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		global $wpdb;
 
 		$inner_query = $wpdb->prepare(
-			"SELECT meta_id FROM {$wpdb->prefix}lifterlms_user_postmeta WHERE meta_key = '_start_date' AND user_id = %d AND post_id = %d ORDER BY updated_date DESC LIMIT 1",
+			"SELECT upm2.meta_id FROM ( SELECT * FROM {$wpdb->prefix}lifterlms_user_postmeta ) AS upm2 WHERE upm2.meta_key = '_start_date' AND upm2.user_id = %d AND upm2.post_id = %d ORDER BY upm2.updated_date DESC LIMIT 1",
 			$student_id,
 			$post_id
 		);
