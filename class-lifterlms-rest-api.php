@@ -22,7 +22,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '0.0.1';
+	public $version = '0.0.3';
 
 	/**
 	 * Singleton instance of the class.

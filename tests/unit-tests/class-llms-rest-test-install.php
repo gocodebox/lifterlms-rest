@@ -75,6 +75,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 		$this->assertTrue( is_string( $schema ) );
 		$this->assertTrue( 0 === strpos( $schema, $default ) );
 		$this->assertTrue( false !== strpos( $schema, "CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys`" ) );
+		$this->assertTrue( false !== strpos( $schema, "CREATE TABLE `{$wpdb->prefix}lifterlms_webhooks`" ) );
 
 	}
 
@@ -99,6 +100,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 
 		global $wpdb;
 		$this->assertEquals( $wpdb->prefix . 'lifterlms_api_keys', $wpdb->get_var( "SHOW TABLES LIKE '%lifterlms_api_keys'" ) );
+		$this->assertEquals( $wpdb->prefix . 'lifterlms_webhooks', $wpdb->get_var( "SHOW TABLES LIKE '%lifterlms_webhooks'" ) );
 
 	}
 

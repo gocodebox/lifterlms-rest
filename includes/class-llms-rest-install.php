@@ -73,6 +73,24 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_api_keys` (
   KEY `consumer_key` (`consumer_key`),
   KEY `consumer_secret` (`consumer_secret`)
 ) $collate;
+CREATE TABLE `{$wpdb->prefix}lifterlms_webhooks` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(20) NOT NULL,
+  `name` text NOT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `delivery_url` text NOT NULL,
+  `secret` text NOT NULL,
+  `topic` varchar(255) NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_modified_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `failure_count` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `pending_delivery` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) $collate;
+
 		";
 
 		return $schema;
