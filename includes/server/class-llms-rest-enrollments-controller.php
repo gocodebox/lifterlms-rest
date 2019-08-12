@@ -123,8 +123,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 
-		// Everybody can list enrollments (in read mode)?
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
+		if ( ! current_user_can( 'view_others_lifterlms_reports' ) ) {
 			return llms_rest_authorization_required_error();
 		}
 
@@ -141,6 +140,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
+
 		$query_args    = $this->prepare_objects_query( $request );
 		$query_results = $this->get_objects( $query_args, $request );
 
@@ -215,14 +215,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return $enrollment_exists;
 		}
 
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
-			return llms_rest_authorization_required_error();
-		}
-
 		$object = new stdClass();
 
-		$object->id = (int) $request['id'];
-		$object->id = (int) $request['post_id'];
+		$object->id      = (int) $request['id'];
+		$object->post_id = (int) $request['post_id'];
 
 		if ( ! $this->check_read_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
@@ -265,7 +261,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], false );
 
 		if ( $enrollment_exists ) {
-			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment.', 'lifterlms' ) );
+			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment. Use the PATCH method if you want to update an existing enrollment', 'lifterlms' ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
@@ -293,11 +289,15 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$student = new LLMS_Student( $user_id );
 
 		if ( ! $student->exists() ) {
-			return llms_rest_bad_request_error();
+			return llms_rest_not_found_error();
 		}
 
 		// can only be enrolled in the following post types.
 		$product_type = get_post_type( $post_id );
+		if ( ! $product_type ) {
+			return llms_rest_not_found_error();
+		}
+
 		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
 			return llms_rest_bad_request_error();
 		}
@@ -307,11 +307,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		// Something went wrong internally.
 		if ( ! $enroll ) {
-			return new WP_Error(
-				'llms_rest_cannot_enroll',
-				__( 'The enrollment could not be created', 'lifterlms' ),
-				array( 'status' => 500 )
-			);
+			return llms_rest_server_error( __( 'The enrollment could not be created', 'lifterlms' ) );
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -350,6 +346,68 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
+
+	}
+
+	/**
+	 * Update item.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
+	 */
+	public function update_item( $request ) {
+
+		$student_id = (int) $request['id'];
+		$post_id    = (int) $request['post_id'];
+
+		// check both students and product exist.
+		$student = new LLMS_Student( $student_id );
+
+		if ( ! $student->exists() ) {
+			return llms_rest_not_found_error();
+		}
+
+		// can only be enrolled in the following post types.
+		$product_type = get_post_type( $post_id );
+		if ( ! $product_type ) {
+			return llms_rest_not_found_error();
+		}
+		if ( ! in_array( $product_type, array( 'course', 'llms_membership' ), true ) ) {
+			return llms_rest_bad_request_error();
+		}
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
+
+			$updated_status = $this->handle_status_update( $student, $post_id, $request['status'] );
+
+			// Something went wrong internally.
+			if ( ! $updated_status ) {
+				return llms_rest_server_error( __( 'The enrollment status could not be updated', 'lifterlms' ) );
+			}
+		}
+
+		if ( ! empty( $schema['properties']['date_created'] ) && isset( $request['date_created'] ) ) {
+
+			$updated_date_created = $this->handle_creation_date_update( $student_id, $post_id, $request['date_created'] );
+
+			// Something went wrong internally.
+			if ( ! $updated_date_created ) {
+				return llms_rest_server_error( __( 'The enrollment creation date could not be updated', 'lifterlms' ) );
+			}
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		$enrollment = $this->get_object( $student_id, $post_id );
+
+		$response = $this->prepare_item_for_response( $enrollment, $request );
+		$response = rest_ensure_response( $response );
+		return $response;
+
 	}
 
 	/**
@@ -406,14 +464,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$result = llms_delete_student_enrollment( (int) $request['id'], (int) $request['post_id'] );
 
 		if ( ! $result ) {
-			return new WP_Error(
-				'llms_rest_cannot_delete',
-				__( 'The enrollment cannot be deleted.', 'lifterlms' ),
-				array( 'status' => 500 )
-			);
+			return llms_rest_server_error( __( 'The enrollment cannot be deleted.', 'lifterlms' ) );
 		}
 
-		return $response;
+		return rest_ensure_response( $response );
 
 	}
 
@@ -432,7 +486,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$student = llms_get_student( $student_id );
 
 		if ( empty( $student ) ) {
-			return $wp_error ? llms_rest_bad_request_error() : false;
+			return $wp_error ? llms_rest_not_found_error() : false;
 		}
 
 		$current_status = $student->get_enrollment_status( $post_id );
@@ -461,7 +515,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		$query_args = $this->prepare_object_query( $student_id, $post_id );
-		$result     = $this->enrollments_query( $query_args );
+		$result     = $this->query_enrollments( $query_args );
 
 		if ( $result->items ) {
 			return $result->items[0];
@@ -483,8 +537,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$args = array();
 
-		$args['id']   = $student_id;
-		$args['post'] = $post_id;
+		$args['id']            = $student_id;
+		$args['post']          = $post_id;
+		$args['no_found_rows'] = true;
 
 		$args = $this->prepare_items_query( $args );
 
@@ -541,6 +596,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		$query_params['context'] = 'view';
+
 		return $query_params;
 	}
 
@@ -591,6 +648,50 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		);
 
 		return $schema;
+	}
+
+	/**
+	 * Get enrollments objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $query_args Query args.
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array
+	 */
+	public function get_objects( $query_args, $request ) {
+
+		$objects = array();
+		$result  = $this->query_enrollments( $query_args );
+
+		foreach ( $result->items as $enrollment ) {
+
+			if ( ! $this->check_read_permission( $enrollment ) ) {
+				continue;
+			}
+
+			$response_object = $this->prepare_item_for_response( $enrollment, $request );
+
+			if ( ! is_wp_error( $response_object ) ) {
+				$objects[] = $this->prepare_response_for_collection( $response_object );
+			}
+		}
+
+		$total_items = $result->found_items;
+
+		if ( $total_items < 1 ) {
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $query_args['page'] );
+
+			$count_query = $this->query_enrollments( $query_args );
+			$total_posts = $count_query->found_items;
+		}
+
+		return array(
+			'objects' => $objects,
+			'total'   => (int) $total_items,
+			'pages'   => (int) ceil( $total_items / (int) $query_args['per_page'] ),
+		);
 	}
 
 	/**
@@ -673,50 +774,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get enrollments objects.
-	 *
-	 * @since [version]
-	 *
-	 * @param array           $query_args Query args.
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return array
-	 */
-	public function get_objects( $query_args, $request ) {
-
-		$objects = array();
-		$result  = $this->enrollments_query( $query_args );
-
-		foreach ( $result->items as $enrollment ) {
-
-			if ( ! $this->check_read_permission( $enrollment ) ) {
-				continue;
-			}
-
-			$response_object = $this->prepare_item_for_response( $enrollment, $request );
-
-			if ( ! is_wp_error( $response_object ) ) {
-				$objects[] = $this->prepare_response_for_collection( $response_object );
-			}
-		}
-
-		$total_items = $result->found_items;
-
-		if ( $total_items < 1 ) {
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args['page'] );
-
-			$count_query = $this->enrollments_query( $query_args );
-			$total_posts = $count_query->found_items;
-		}
-
-		return array(
-			'objects' => $objects,
-			'total'   => (int) $total_items,
-			'pages'   => (int) ceil( $total_items / (int) $query_args['per_page'] ),
-		);
-	}
-
-	/**
 	 * Get enrollments query
 	 *
 	 * @since [version]
@@ -724,7 +781,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @param array $query_args Query args.
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
 	 */
-	protected function enrollments_query( $query_args ) {
+	protected function query_enrollments( $query_args ) {
+
 		global $wpdb;
 
 		// Maybe limit the query results depending on the page param.
@@ -776,7 +834,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					AND upm2.post_id = upm.post_id
 					AND upm2.user_id = upm.user_id
 				)
-				$limit
 			)",
 			array(
 				$query_args['id'],
@@ -795,16 +852,16 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$query = new stdClass();
 
+		$select_found_rows = empty( $query_args['no_found_rows'] ) ? esc_sql( 'SQL_CALC_FOUND_ROWS' ) : '';
+
 		// the query.
 		$query->items = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
+				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
 				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
-				JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
-				WHERE p.post_status = 'publish'
-				  AND upm.meta_key = '_start_date'
+				  WHERE upm.meta_key = '_start_date'
 				  AND upm.{$id_column} = %d
 				  {$filter}
 				{$order}
@@ -816,39 +873,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			)
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$query->found_items = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+
+		$query->found_items = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : count( $query->items );
 
 		return $query;
-	}
 
-	/**
-	 * Prepare a single item for the REST response
-	 *
-	 * @since [version]
-	 *
-	 * @param object          $object  Enrollment data object.
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
-	 */
-	public function prepare_item_for_response( $object, $request ) {
-
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-
-		$data = $this->prepare_object_for_response( $object, $request );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		// Filter data by context. E.g. in "view" mode the password property won't be allowed.
-		$data = $this->filter_response_by_context( $data, $context );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		$links = $this->prepare_links( $object );
-		$response->add_links( $links );
-
-		return $response;
 	}
 
 	/**
@@ -928,6 +957,67 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Handles the enrollment status update.
+	 *
+	 * @since [version]
+	 * @param LLMS_Student $student Student.
+	 * @param integer      $post_id The post id.
+	 * @param string       $status Status.
+	 * @return boolean
+	 */
+	protected function handle_status_update( $student, $post_id, $status ) {
+
+		// Status.
+		switch ( $status ) :
+			case 'enrolled':
+				$updated = $student->enroll( $post_id, 'admin_' . get_current_user_id() );
+				break;
+			default:
+				$updated = $student->unenroll( $post_id, $trigger = 'any', $status );
+		endswitch;
+
+		return $updated;
+
+	}
+
+
+	/**
+	 * Handles the enrollment creation date.
+	 *
+	 * @since [version]
+	 * @param integer $student_id Student id.
+	 * @param integer $post_id The post id.
+	 * @param string  $date Creation date.
+	 * @return boolean
+	 */
+	protected function handle_creation_date_update( $student_id, $post_id, $date ) {
+
+		$date_created = rest_parse_date( $date );
+		if ( ! $date_created ) {
+			return llms_bad_request_error();
+		}
+
+		$date_created = date_i18n( 'Y-m-d H:i:s', $date_created );
+
+		global $wpdb;
+
+		$inner_query = $wpdb->prepare(
+			"SELECT upm2.meta_id FROM ( SELECT * FROM {$wpdb->prefix}lifterlms_user_postmeta ) AS upm2 WHERE upm2.meta_key = '_start_date' AND upm2.user_id = %d AND upm2.post_id = %d ORDER BY upm2.updated_date DESC LIMIT 1",
+			$student_id,
+			$post_id
+		);
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = (${inner_query});",
+				$date_created
+			)
+		);
+
+		return $result;
+	}
+
+	/**
 	 * Checks if an enrollment can be edited.
 	 *
 	 * @since [version]
@@ -947,7 +1037,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	protected function check_update_permission() {
 		return current_user_can( 'enroll' ) && current_user_can( 'unenroll' );
-
 	}
 
 	/**
@@ -978,8 +1067,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return false;
 		}
 
-		// @TODO: who can read this enrollment?
-		return true;
+		return current_user_can( 'view_others_lifterlms_reports' );
+
 	}
 
 }
