@@ -255,11 +255,17 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'description' => __( 'Course ID of the prerequisite course.', 'lifterlms' ),
 				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' ),
+				'arg_options' => array(
+					'sanitize_callback' => 'absint',
+				),
 			),
 			'prerequisite_track'        => array(
 				'description' => __( 'Term ID of a prerequisite track.', 'lifterlms' ),
 				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' ),
+				'arg_options' => array(
+					'sanitize_callback' => 'absint',
+				),
 			),
 			'length'                    => array(
 				'description' => __( 'User defined course length.', 'lifterlms' ),

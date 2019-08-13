@@ -223,7 +223,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Course ID.', 'lifterlms' ) );
 			}
 
-			$prepared_item['parent_id'] = $request['parent_id'];
+			$prepared_item['parent_course'] = $request['parent_id'];
 		}
 
 		// LLMS Section order.
@@ -425,26 +425,37 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		$links            = parent::prepare_links( $section );
 		$parent_course_id = $section->get_parent_course();
-		$section_id       = $section->get( 'id' );
 
+		/**
+		 * If the section has no course parent return earlier
+		 */
+		if ( ! $parent_course_id ) {
+			return $links;
+
+		}
+
+		$parent_course = new LLMS_Course( $parent_course_id );
+		if ( ! is_a( $parent_course, 'LLMS_Course' ) ) {
+			return $links;
+		}
+
+		$section_id    = $section->get( 'id' );
 		$section_links = array();
 
 		// Parent (course).
-		if ( $parent_course_id ) {
-			$section_links['parent'] = array(
-				'type' => 'course',
-				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $parent_course_id ) ),
-			);
+		$section_links['parent'] = array(
+			'type' => 'course',
+			'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $parent_course_id ) ),
+		);
 
-			// Siblings.
-			$section_links['siblings'] = array(
-				'href' => add_query_arg(
-					'parent',
-					$parent_course_id,
-					$links['collection']['href']
-				),
-			);
-		}
+		// Siblings.
+		$section_links['siblings'] = array(
+			'href' => add_query_arg(
+				'parent',
+				$parent_course_id,
+				$links['collection']['href']
+			),
+		);
 
 		// Next.
 		$next_section = $section->get_next();
@@ -520,6 +531,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_content_items( $request ) {
 
+		$this->content_controller->set_parent_id( $request['id'] );
 		$result = $this->content_controller->get_items( $request );
 
 		// Specs require 404 when no section's lessons are found.

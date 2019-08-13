@@ -176,8 +176,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		);
 
 		// Add first page.
-		$first_link = add_query_arg( 'page', 1, $base );
-		$response->link_header( 'first', $first_link );
+		if ( 1 !== $page ) {
+			$first_link = add_query_arg( 'page', 1, $base );
+			$response->link_header( 'first', $first_link );
+		}
 
 		if ( $page > 1 ) {
 			$prev_page = $page - 1;
@@ -193,9 +195,12 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			$next_link = add_query_arg( 'page', $next_page, $base );
 			$response->link_header( 'next', $next_link );
 		}
+
 		// Add last page.
-		$last_link = add_query_arg( 'page', $max_pages, $base );
-		$response->link_header( 'last', $last_link );
+		if ( $max_pages !== $page ) {
+			$last_link = add_query_arg( 'page', $max_pages, $base );
+			$response->link_header( 'last', $last_link );
+		}
 
 		return $response;
 	}

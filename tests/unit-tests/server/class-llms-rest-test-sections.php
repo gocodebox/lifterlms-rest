@@ -10,7 +10,7 @@
  * @since [version]
  * @version [version]
  */
-class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 	/**
 	 * Route.
@@ -24,7 +24,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @var string
 	 */
-	private $post_type = 'section';
+	protected $post_type = 'section';
 
 	/**
 	 * Setup our test server, endpoints, and user info.
@@ -44,9 +44,8 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 			)
 		);
 
-
 		$this->sample_section_args = array(
-			'title'        => array(
+			'title' => array(
 				'rendered' => 'Introduction',
 				'raw'      => 'Introduction',
 			),
@@ -71,7 +70,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)', $routes );
 
 		// Child lessons.
-		// $this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)/content', $routes );
+		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)/content', $routes );
 	}
 
 	/**
@@ -83,8 +82,8 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create 2 courses.
-		$courses = $this->factory->course->create_many( 2, array( 'sections' => 5 ) );
+		// create 3 courses.
+		$courses = $this->factory->course->create_many( 3, array( 'sections' => 5, 'lessons' => 0 ) );
 
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
 
@@ -94,12 +93,61 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 		$this->assertEquals( 10, count( $res_data ) ); // default per_page is 10.
 
+		$headers = $response->get_headers();
+		$this->assertEquals( 15, $headers['X-WP-Total'] );
+		$this->assertEquals( 2, $headers['X-WP-TotalPages'] );
+
+		$i = 0;
 		// Check retrieved sections are the same as the generated ones.
-		/*
-		$course_id =
-		for ( $i = 0; $i < 10; $i++ ) {
-			assertEquals( $res_data[$i]['title']);
-		}*/
+		foreach ( $courses as $course ) {
+			$course_obj = new LLMS_Course( $course );
+			$sections   = $course_obj->get_sections();
+
+			// Easy sequential check as sections are by default oredered by id.
+			$j = 0;
+			foreach ( $sections as $section ) {
+				$res_section = $res_data[ $i + $j ];
+				$this->llms_posts_fields_match( $section, $res_section );
+				$j++;
+			}
+
+			$i++;
+		}
+
+	}
+
+
+	/**
+	 * Test create a single section.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_section() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+
+		// create a course.
+		$course_id = $this->factory->course->create( array( 'sections' => 0 ) );
+
+		$section_args = $this->sample_section_args;
+		$section_args['parent_id'] = $course_id;
+
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+
+		// Success.
+		$this->assertEquals( 201, $response->get_status() );
+
+		$course = new LLMS_Course( $course_id );
+		$sections = $course->get_sections(); // returns an array of one element.
+
+		$res_data = $response->get_data();
+
+		// Test the created section and the response are equal
+		$this->llms_posts_fields_match( $sections[0], $res_data );
+		$this->assertEquals( $section_args['title']['rendered'], $res_data['title']['rendered'] );
 
 	}
 
@@ -151,7 +199,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 		$this->sample_section_args['parent_id'] = $course;
 
 		// Creating a section passing an order equal to 0 produces a bad request.
-		$section_args = $this->sample_section_args;
+		$section_args          = $this->sample_section_args;
 		$section_args['order'] = 0;
 		$request->set_body_params( $section_args );
 		$response = $this->server->dispatch( $request );
@@ -216,6 +264,70 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Cannot find just deleted post.
 		$this->assertFalse( get_post_status( $section->get( 'id' ) ) );
+
+	}
+
+	/**
+	 * Test list sections content.
+	 *
+	 * @since [version]
+	 *
+	 * @todo test order and orderby
+	 */
+	public function test_get_sections_content() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 1 course with 1 section but no lessons.
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 0,
+			)
+		);
+
+		$section_id = $course->get_sections( 'ids' )[0];
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $section_id . '/content' ) );
+
+		// We have no lessons for this section so we expect a 404.
+		$this->assertEquals( 404, $response->get_status() );
+
+		// create 1 course with 5 sections and 3 lessons per section
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 5,
+				'lessons'  => 3,
+			)
+		);
+
+		$section_ids = $course->get_sections( 'ids' );
+
+		foreach ( $section_ids as $section_id ) {
+
+			$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $section_id . '/content' ) );
+
+			// Success.
+			$this->assertEquals( 200, $response->get_status() );
+
+			$res_data = $response->get_data();
+			$this->assertEquals( 3, count( $res_data ) );
+
+			for ( $i = 0; $i < 3; $i++ ) {
+				$this->assertEquals( $section_id, $res_data[ $i ]['parent_id'] );
+			}
+
+		}
+
+	}
+
+	protected function filter_expected_fields( $expected, $llms_post ) {
+
+		unset( $expected['content'] );
+		$expected[ 'order' ] = $llms_post->get('order');
+		$expected[ 'order' ] = $llms_post->get_parent_course();
+
+		return $expected;
 
 	}
 
