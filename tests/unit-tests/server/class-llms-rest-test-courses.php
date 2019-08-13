@@ -1022,6 +1022,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		$res_data = $response->get_data();
 
+		$this->assertEquals( $update_data['title'], $res_data['title']['raw'] );
 		$this->assertEquals( $update_data['title'], $res_data['title']['rendered'] );
 		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
@@ -1346,17 +1347,15 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 	 */
 	private function courses_fields_match( $course, $course_data, $context = 'view' ) {
 
-		$post = get_post( $course->get( 'post' ) );
-
 		$expected = array(
 			'id'               => $course->get( 'id' ),
 			'title'            => array(
-				'raw'      => $post->post_title,
+				'raw'      => $course->get( 'title', 'raw' ),
 				'rendered' => $course->get( 'title' ),
 			),
 			'status'           => $course->get( 'status' ),
 			'content'          => array(
-				'raw'      => $post->post_content,
+				'raw'      =>  $course->get( 'content', 'raw' ),
 				'rendered' => apply_filters( 'the_content', $course->get( 'content', 'raw' ) ),
 			),
 			'date_created'     => $course->get( 'date', 'Y-m-d H:i:s' ),

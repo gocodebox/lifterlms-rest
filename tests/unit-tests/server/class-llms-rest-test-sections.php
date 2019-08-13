@@ -44,6 +44,14 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 			)
 		);
 
+
+		$this->sample_section_args = array(
+			'title'        => array(
+				'rendered' => 'Introduction',
+				'raw'      => 'Introduction',
+			),
+		);
+
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
 
@@ -64,6 +72,103 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Child lessons.
 		// $this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)/content', $routes );
+	}
+
+	/**
+	 * Test list sections.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_sections() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create 2 courses.
+		$courses = $this->factory->course->create_many( 2, array( 'sections' => 5 ) );
+
+		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		$this->assertEquals( 10, count( $res_data ) ); // default per_page is 10.
+
+		// Check retrieved sections are the same as the generated ones.
+		/*
+		$course_id =
+		for ( $i = 0; $i < 10; $i++ ) {
+			assertEquals( $res_data[$i]['title']);
+		}*/
+
+	}
+
+	/**
+	 * Test producing bad request error when creating a single section.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_section_bad_request() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+		// create a course.
+		$course = $this->factory->course->create( array( 'sections' => 0 ) );
+		$post   = $this->factory->post->create();
+
+		// create a section without parent_id.
+		$section_args = $this->sample_section_args;
+
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
+		// Creating a section passing a parent_id which is not a course id produces a bad request.
+		$section_args = $this->sample_section_args;
+
+		// This post doesn't exist.
+		$section_args['parent_id'] = 1234;
+
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseMessageEquals( 'Invalid parent_id param. It must be a valid Course ID.', $response );
+
+		// This post exists but is not a course.
+		$section_args['parent_id'] = $post;
+
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseMessageEquals( 'Invalid parent_id param. It must be a valid Course ID.', $response );
+
+		$this->sample_section_args['parent_id'] = $course;
+
+		// Creating a section passing an order equal to 0 produces a bad request.
+		$section_args = $this->sample_section_args;
+		$section_args['order'] = 0;
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseMessageEquals( 'Invalid order param. It must be greater than 0.', $response );
+
+		// create a section without title.
+		$section_args = $this->sample_section_args;
+		unset( $section_args['title'] );
+
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+		// Bad request.
+		$this->assertEquals( 400, $response->get_status() );
+
 	}
 
 	/**

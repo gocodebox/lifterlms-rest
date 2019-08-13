@@ -40,6 +40,33 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	protected $parent_id;
 
 	/**
+	 * Schema properties available for ordering the collection.
+	 *
+	 * @var string[]
+	 */
+	protected $orderby_properties = array(
+		'id',
+		'title',
+		'date_created',
+		'date_updated',
+		'order',
+	);
+
+	/**
+	 * Lessons controller class
+	 *
+	 * @var strong
+	 */
+	protected $content_controller_class = 'LLMS_REST_Lessons_Controller';
+
+	/**
+	 * Lessons controller
+	 *
+	 * @var LLMS_REST_Lessons_Controller
+	 */
+	protected $content_controller;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since [version]
@@ -48,6 +75,45 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		$this->collection_params = $this->build_collection_params();
 
+		if ( isset( $this->content_controller_class ) && class_exists( $this->content_controller_class ) ) {
+			$this->content_controller = new $this->content_controller_class();
+			$this->content_controller->set_collection_params( $this->get_content_collection_params() );
+		}
+	}
+
+	/**
+	 * Register routes.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function register_routes() {
+
+		parent::register_routes();
+
+		if ( isset( $this->content_controller ) ) {
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base . '/(?P<id>[\d]+)/content',
+				array(
+					'args'   => array(
+						'id' => array(
+							// translators: %1$s the post type name.
+							'description' => sprintf( __( 'Unique %1$s Identifier. The WordPress Post ID', 'lifterlms' ), $this->post_type ),
+							'type'        => 'integer',
+						),
+					),
+					array(
+						'methods'             => WP_REST_Server::READABLE,
+						'callback'            => array( $this, 'get_content_items' ),
+						'permission_callback' => array( $this->content_controller, 'get_items_permissions_check' ),
+						'args'                => $this->content_controller->get_collection_params(),
+					),
+					'schema' => array( $this->content_controller, 'get_public_item_schema' ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -60,6 +126,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	public function get_delete_item_args() {
 		return array();
 	}
+
 	/**
 	 * Whether the delete should be forced.
 	 *
@@ -134,6 +201,47 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
+	 * Prepares a single post for create or update.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request  Request object.
+	 * @return array|WP_Error Array of llms post args or WP_Error.
+	 */
+	protected function prepare_item_for_database( $request ) {
+
+		$prepared_item = parent::prepare_item_for_database( $request );
+
+		$schema = $this->get_item_schema();
+
+		// LLMS Section parent id.
+		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
+
+			$parent_course = llms_get_post( $request['parent_id'] );
+
+			if ( ! $parent_course || ! is_a( $parent_course, 'LLMS_Course' ) ) {
+				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Course ID.', 'lifterlms' ) );
+			}
+
+			$prepared_item['parent_id'] = $request['parent_id'];
+		}
+
+		// LLMS Section order.
+		if ( ! empty( $schema['properties']['order'] ) && isset( $request['order'] ) ) {
+
+			// order must be > 0. It's sanitized as absint so it cannot come as negative value.
+			if ( 0 === $request['order'] ) {
+				return llms_rest_bad_request_error( __( 'Invalid order param. It must be greater than 0.', 'lifterlms' ) );
+			}
+
+			$prepared_item['order'] = $request['order'];
+		}
+
+		return $prepared_item;
+
+	}
+
+	/**
 	 * Get the Section's schema, conforming to JSON Schema.
 	 *
 	 * @since [version]
@@ -143,6 +251,9 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	public function get_item_schema() {
 
 		$schema = parent::get_item_schema();
+
+		// Section's title.
+		$schema['properties']['title']['description'] = __( 'Section Title', 'lifterlms' );
 
 		// Section's parent id.
 		$schema['properties']['parent_id'] = array(
@@ -155,10 +266,11 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			'required'    => true,
 		);
 
-		// Setion order.
+		// Section order.
 		$schema['properties']['order'] = array(
 			'description' => __( 'Order of the section within the course.', 'lifterlms' ),
 			'type'        => 'integer',
+			'default'     => 1,
 			'context'     => array( 'view', 'edit' ),
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
@@ -229,14 +341,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
-		$query_params['orderby']['enum'] = array(
-			'id',
-			'title',
-			'date_created',
-			'date_updated',
-			'order',
-		);
-
 		return $query_params;
 	}
 
@@ -254,7 +358,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$data = parent::prepare_object_for_response( $section, $request );
 
 		// Parent course.
-		$data['parent_id'] = $section->get( 'parent_course' );
+		$data['parent_id'] = $section->get_parent_course();
 
 		// Order.
 		$data['order'] = $section->get( 'order' );
@@ -286,7 +390,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			);
 		}
 
-		$parent_id = 0;
 		if ( isset( $this->parent_id ) ) {
 			$parent_id = $this->parent_id;
 		} elseif ( ! empty( $request['parent'] ) && $request['parent'] > 1 ) {
@@ -301,7 +404,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 					'meta_query' => array(
 						array(
 							'key'     => '_llms_parent_course',
-							'value'   => absint( $parent_id ),
+							'value'   => $parent_id,
 							'compare' => '=',
 						),
 					),
@@ -320,35 +423,28 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	protected function prepare_links( $section ) {
 
-		$links         = parent::prepare_links( $section );
-		$parent_course = $section->get_course();
-
-		/**
-		 * If the section has no course parent return earlier
-		 */
-		if ( ! is_a( $parent_course, 'LLMS_Course' ) ) {
-			return $links;
-		}
-
+		$links            = parent::prepare_links( $section );
+		$parent_course_id = $section->get_parent_course();
 		$section_id       = $section->get( 'id' );
-		$parent_course_id = $parent_course->get( 'id' );
 
 		$section_links = array();
 
-		// Parent.
-		$section_links['parent'] = array(
-			'type' => 'course',
-			'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $parent_course_id ) ),
-		);
+		// Parent (course).
+		if ( $parent_course_id ) {
+			$section_links['parent'] = array(
+				'type' => 'course',
+				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $parent_course_id ) ),
+			);
 
-		// Siblings.
-		$section_links['siblings'] = array(
-			'href' => add_query_arg(
-				'parent',
-				$parent_course_id,
-				$links['collection']['href']
-			),
-		);
+			// Siblings.
+			$section_links['siblings'] = array(
+				'href' => add_query_arg(
+					'parent',
+					$parent_course_id,
+					$links['collection']['href']
+				),
+			);
+		}
 
 		// Next.
 		$next_section = $section->get_next();
@@ -387,6 +483,51 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return parent::check_read_permission( $section );
+
+	}
+
+	/**
+	 * Retrieves the query params for the lessons objects collection.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_content_collection_params() {
+
+		$query_params = $this->content_controller->get_collection_params();
+
+		$query_params['orderby']['enum']    = array(
+			'order',
+			'id',
+			'title',
+		);
+		$query_params['orderby']['default'] = 'order';
+
+		unset( $query_params['parent'] );
+
+		return $query_params;
+
+	}
+
+	/**
+	 * Get a collection of content items (lessons).
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_content_items( $request ) {
+
+		$result = $this->content_controller->get_items( $request );
+
+		// Specs require 404 when no section's lessons are found.
+		if ( ! is_wp_error( $result ) && empty( $result->data ) ) {
+			return llms_rest_not_found_error();
+		}
+
+		return $result;
 
 	}
 

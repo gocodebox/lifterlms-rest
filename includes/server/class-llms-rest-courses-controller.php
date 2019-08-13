@@ -71,12 +71,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		parent::register_routes();
 
-		$get_item_args = array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
-
-		$get_enrollments_item_args = array_merge( $get_item_args, $this->enrollments_controller->get_collection_params() );
-
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)/enrollments',
@@ -91,13 +85,11 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this->enrollments_controller, 'get_items' ),
 					'permission_callback' => array( $this->enrollments_controller, 'get_items_permissions_check' ),
-					'args'                => $get_enrollments_item_args,
+					'args'                => $this->enrollments_controller->get_collection_params(),
 				),
 				'schema' => array( $this->enrollments_controller, 'get_public_item_schema' ),
 			)
 		);
-
-		$get_course_content_item_args = array_merge( $get_item_args, $this->sections_controller->get_collection_params() );
 
 		register_rest_route(
 			$this->namespace,
@@ -113,7 +105,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_course_content_items' ),
 					'permission_callback' => array( $this->sections_controller, 'get_items_permissions_check' ),
-					'args'                => $get_course_content_item_args,
+					'args'                => $this->sections_controller->get_collection_params(),
 				),
 				'schema' => array( $this->sections_controller, 'get_public_item_schema' ),
 			)
