@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-singleton.php';
+
 /**
  * LifterLMS_REST_API class.
  *
@@ -17,36 +19,14 @@ defined( 'ABSPATH' ) || exit;
  */
 final class LifterLMS_REST_API {
 
+	use LLMS_REST_Trait_Singleton;
+
 	/**
 	 * Current version of the plugin.
 	 *
 	 * @var string
 	 */
-	public $version = '0.0.3';
-
-	/**
-	 * Singleton instance of the class.
-	 *
-	 * @var obj
-	 */
-	private static $instance = null;
-
-	/**
-	 * Singleton Instance of the LifterLMS_REST_API class.
-	 *
-	 * @since [version]
-	 *
-	 * @return obj instance of the LifterLMS_REST_API class.
-	 */
-	public static function instance() {
-
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-
-	}
+	public $version = '0.0.4';
 
 	/**
 	 * Constructor.
@@ -78,26 +58,33 @@ final class LifterLMS_REST_API {
 	 */
 	public function includes() {
 
+		// Abstracts.
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/abstracts/class-llms-rest-database-resource.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/abstracts/class-llms-rest-webhook-data.php';
+
 		// Authentication needs to run early to handle basic auth.
-		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-authentication.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-authentication.php';
 
 		// Functions.
-		include_once dirname( __FILE__ ) . '/includes/server/llms-rest-server-functions.php';
-		include_once dirname( __FILE__ ) . '/includes/llms-rest-functions.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/server/llms-rest-server-functions.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/llms-rest-functions.php';
 
 		// Models.
-		include_once dirname( __FILE__ ) . '/includes/models/class-llms-rest-api-key.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/models/class-llms-rest-api-key.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/models/class-llms-rest-webhook.php';
 
 		// Classes.
-		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys.php';
-		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-api-keys-query.php';
-		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-install.php';
-		include_once dirname( __FILE__ ) . '/includes/class-llms-rest-capabilities.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-api-keys.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-api-keys-query.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-capabilities.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-install.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-webhooks.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-webhooks-query.php';
 
 		// Include admin classes.
 		if ( is_admin() ) {
-			include_once dirname( __FILE__ ) . '/includes/admin/class-llms-rest-admin-settings.php';
-			include_once dirname( __FILE__ ) . '/includes/admin/class-llms-rest-admin-form-controller.php';
+			include_once LLMS_REST_API_PLUGIN_DIR . 'includes/admin/class-llms-rest-admin-settings.php';
+			include_once LLMS_REST_API_PLUGIN_DIR . 'includes/admin/class-llms-rest-admin-form-controller.php';
 		}
 
 		add_action( 'rest_api_init', array( $this, 'rest_api_includes' ), 5 );
@@ -191,7 +178,8 @@ final class LifterLMS_REST_API {
 		if ( function_exists( 'LLMS' ) && version_compare( '3.32.0', LLMS()->version, '<=' ) ) {
 
 			// load includes.
-			add_action( 'plugins_loaded', array( $this, 'includes' ), 15 );
+			$this->includes();
+			$this->webhooks()->load();
 
 		}
 
@@ -220,6 +208,19 @@ final class LifterLMS_REST_API {
 		// load localization files.
 		load_plugin_textdomain( 'lifterlms', false, dirname( plugin_basename( __FILE__ ) ) . '//i18n' );
 
+	}
+
+	/**
+	 * Retrieve an instance of the webhooks management singleton.
+	 *
+	 * @example $webhooks = LLMS_REST_API()->webhooks();
+	 *
+	 * @since [version]
+	 *
+	 * @return LLMS_REST_API_Webhooks
+	 */
+	public function webhooks() {
+		return LLMS_REST_Webhooks::instance();
 	}
 
 }
