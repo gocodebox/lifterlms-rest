@@ -65,6 +65,30 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
 	}
 
+	public function create_many_webhooks( $count, $status = 'rand', $topic = 'rand' ) {
+
+		$statuses = array_keys( LLMS_REST_API()->webhooks()->get_statuses() );
+		$num_statuses = count( $statuses ) - 1;
+
+		$topics = array_keys( LLMS_REST_API()->webhooks()->get_topics() );
+		$num_topics = count( $topics ) - 2; // don't use the custom "action" topic.
+
+		$i = 1;
+		while ( $i <= $count ) {
+
+			$args = array(
+				'status' => 'rand' === $status ? $statuses[ rand( 0, $num_statuses ) ] : $status,
+				'topic' => 'rand' === $topic ? $topics[ rand( 0, $num_topics ) ] : $topic,
+				'delivery_url' => 'https://mock.tld',
+			);
+
+			LLMS_REST_API()->webhooks()->create( $args );
+			$i++;
+
+		}
+
+	}
+
 	/**
 	 * Mock authorization headers.
 	 *
