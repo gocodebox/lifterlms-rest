@@ -10,10 +10,10 @@
  * @since [version]
  * @version [version]
  *
- * @todo update tests to check headers, e.g. X-WP-Total X-WP-TotalPages.
+ * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
  */
-class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 	/**
 	 * Route.
@@ -27,7 +27,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @var string
 	 */
-	private $post_type = 'course';
+	protected $post_type = 'course';
 
 	/**
 	 * Setup our test server, endpoints, and user info.
@@ -109,8 +109,12 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		// Check retrieved courses are the same as the generated ones.
 		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
 		for ( $i = 0; $i < 10; $i++ ) {
-			$this->courses_fields_match( new LLMS_Course( $courses[ $i ] ), $res_data[ $i ] );
+			$this->llms_posts_fields_match( new LLMS_Course( $courses[ $i ] ), $res_data[ $i ] );
 		}
+
+		$headers = $response->get_headers();
+		$this->assertEquals( 12, $headers['X-WP-Total'] );
+		$this->assertEquals( 2, $headers['X-WP-TotalPages'] );
 
 	}
 
@@ -139,7 +143,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		// Check retrieved courses are the same as the generated ones with an offset of 10 (first page).
 		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
 		for ( $i = 0; $i < 5; $i++ ) {
-			$this->courses_fields_match( new LLMS_Course( $courses[ $i + 10 ] ), $res_data[ $i ] );
+			$this->llms_posts_fields_match( new LLMS_Course( $courses[ $i + 10 ] ), $res_data[ $i ] );
 		}
 
 	}
@@ -170,7 +174,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Check retrieved courses are the same as the second and third generated courses.
 		for ( $i = 0; $i < 2; $i++ ) {
-			$this->courses_fields_match( new LLMS_Course( $courses[ $i + 1 ] ), $res_data[ $i ] );
+			$this->llms_posts_fields_match( new LLMS_Course( $courses[ $i + 1 ] ), $res_data[ $i ] );
 		}
 
 	}
@@ -227,7 +231,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
 		$reversed_data = array_reverse( $res_data );
 		for ( $i = 0; $i < 5; $i++ ) {
-			$this->courses_fields_match( new LLMS_Course( $courses[ $i ] ), $reversed_data[ $i ] );
+			$this->llms_posts_fields_match( new LLMS_Course( $courses[ $i ] ), $reversed_data[ $i ] );
 		}
 
 	}
@@ -377,7 +381,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( 200, $response->get_status() );
 
 		// Check retrieved course matches the created ones.
-		$this->courses_fields_match( $course, $response->get_data() );
+		$this->llms_posts_fields_match( $course, $response->get_data() );
 
 	}
 
@@ -502,8 +506,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$request = new WP_REST_Request( 'POST', $this->route );
 
 		$course_args = array(
-			'title' => 'Title',
-			'content' => 'Content',
+			'title'                  => 'Title',
+			'content'                => 'Content',
 			'access_opens_date'      => '2019-05-22 17:20:05',
 			'access_closes_date'     => '2019-05-22 17:23:08',
 			'enrollment_opens_date'  => '2019-05-22 17:22:05',
@@ -740,12 +744,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$course = new LLMS_Course( $res_data['id'] );
 
 		// Check that the created course's has_prerequisite is set accordingly.
-		$this->assertEquals( 'no', $course->get('has_prerequisite') );
+		$this->assertEquals( 'no', $course->get( 'has_prerequisite' ) );
 
-
-		// Create a course and a track
-		$prereq_course = $this->factory->course->create( array('sections' => 0 ) );
-		$prereq_track = $this->factory()->term->create(
+		// Create a course and a track.
+		$prereq_course = $this->factory->course->create( array( 'sections' => 0 ) );
+		$prereq_track  = $this->factory()->term->create(
 			array(
 				'taxonomy' => 'course_track',
 			)
@@ -770,7 +773,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$course = new LLMS_Course( $res_data['id'] );
 
 		// Check that the created course's has_prerequisite is set accordingly.
-		$this->assertEquals( 'yes', $course->get('has_prerequisite') );
+		$this->assertEquals( 'yes', $course->get( 'has_prerequisite' ) );
 
 	}
 
@@ -789,7 +792,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 			$this->sample_course_args,
 			array(
 				'access_opens_date'      => '2019-05-22 17:20:05',
-				'enrollment_closes_date'  => '2019-05-22 17:22:05',
+				'enrollment_closes_date' => '2019-05-22 17:22:05',
 			)
 		);
 
@@ -808,8 +811,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$course_args = array_merge(
 			$this->sample_course_args,
 			array(
-				'access_closes_date'      => '2019-05-22 17:20:05',
-				'enrollment_opens_date'  => '2019-05-22 17:22:05',
+				'access_closes_date'    => '2019-05-22 17:20:05',
+				'enrollment_opens_date' => '2019-05-22 17:22:05',
 			)
 		);
 
@@ -850,27 +853,27 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		$request = new WP_REST_Request( 'POST', $this->route );
 
-		$course_raw_messages = 	array(
-			'length' => array(
-				'raw' => 'Length raw message'
+		$course_raw_messages = array(
+			'length'                    => array(
+				'raw' => 'Length raw message',
 			),
-			'restricted_message' => array(
-				'raw' => 'Restricted raw message'
+			'restricted_message'        => array(
+				'raw' => 'Restricted raw message',
 			),
-			'capacity_message'  => array(
-				'raw' => 'Capacity raw message'
+			'capacity_message'          => array(
+				'raw' => 'Capacity raw message',
 			),
-			'access_opens_message' => array(
-				'raw' => 'Access opens raw message'
+			'access_opens_message'      => array(
+				'raw' => 'Access opens raw message',
 			),
-			'access_closes_message' => array(
-				'raw' => 'Access closes raw message'
+			'access_closes_message'     => array(
+				'raw' => 'Access closes raw message',
 			),
-			'enrollment_opens_message' => array(
-				'raw' => 'Enrollment opens raw message'
+			'enrollment_opens_message'  => array(
+				'raw' => 'Enrollment opens raw message',
 			),
 			'enrollment_closes_message' => array(
-				'raw' => 'Enrollment closess raw message'
+				'raw' => 'Enrollment closess raw message',
 			),
 		);
 
@@ -885,7 +888,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 
 		foreach ( $course_raw_messages as $property => $content ) {
-			$this->assertEquals( $content['raw'], $res_data[$property]['raw'] );
+			$this->assertEquals( $content['raw'], $res_data[ $property ]['raw'] );
 		}
 
 	}
@@ -1022,6 +1025,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 
 		$res_data = $response->get_data();
 
+		$this->assertEquals( $update_data['title'], $res_data['title']['raw'] );
 		$this->assertEquals( $update_data['title'], $res_data['title']['rendered'] );
 		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
@@ -1150,7 +1154,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		// check the trashed post returned into the response has the correct status 'trash'.
 		$this->assertEquals( 'trash', $res_data['status'] );
 
-		// Trash again I expect the same as above
+		// Trash again I expect the same as above.
 		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
 		$request->set_param( 'force', false );
 		$response = $this->server->dispatch( $request );
@@ -1275,7 +1279,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		// We have no sections for this course so we expect a 404.
 		$this->assertEquals( 404, $response->get_status() );
 
-		// create 1 course with 20 sections.
+		// create 1 course with 5 sections.
 		$course = $this->factory->course->create(
 			array(
 				'sections' => 5,
@@ -1331,65 +1335,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 		$this->assertEquals( 1, count( $res_data ) );
 		$this->assertEquals( $student_ids[0], $res_data[0]['student_id'] );
-
-	}
-
-	/**
-	 * Utility to compare a Course with response course data.
-	 *
-	 * @since [version]
-	 *
-	 * @param LLMS_Course $course       A LLMS_Course.
-	 * @param array       $course_data  An array of course data.
-	 * @param string      $context      Optional. Default 'view'.
-	 * @return void
-	 */
-	private function courses_fields_match( $course, $course_data, $context = 'view' ) {
-
-		$post = get_post( $course->get( 'post' ) );
-
-		$expected = array(
-			'id'               => $course->get( 'id' ),
-			'title'            => array(
-				'raw'      => $post->post_title,
-				'rendered' => $course->get( 'title' ),
-			),
-			'status'           => $course->get( 'status' ),
-			'content'          => array(
-				'raw'      => $post->post_content,
-				'rendered' => apply_filters( 'the_content', $course->get( 'content', 'raw' ) ),
-			),
-			'date_created'     => $course->get( 'date', 'Y-m-d H:i:s' ),
-			'date_created_gmt' => $course->get( 'date_gmt', 'Y-m-d H:i:s' ),
-			'date_updated'     => $course->get( 'modified', 'Y-m-d H:i:s' ),
-			'date_updated_gmt' => $course->get( 'modified_gmt', 'Y-m-d H:i:s' ),
-		);
-
-		if ( 'edit' !== $context ) {
-			unset(
-				$expected['content']['raw'],
-				$expected['excerpt']['raw'],
-				$expected['title']['raw']
-			);
-		}
-
-		/**
-		 * The rtrim below is not ideal but at the moment we have templates printed after the course summary (e.g. prerequisites) that,
-		 * even when printing no data they still print "\n". Let's pretend we're not interested in testing the trailing "\n" presence.
-		 */
-		foreach ( $expected as $key => $value ) {
-			if ( is_array( $value ) ) {
-				foreach ( $value as $k => $v ) {
-					if ( 'content' === $key ) {
-						$this->assertEquals( rtrim( $v, "\n" ), rtrim( $course_data[ $key ][ $k ], "\n" ) );
-					}
-				}
-			} else {
-				if ( 'content' === $key ) {
-					$this->assertEquals( rtrim( $value, "\n" ), rtrim( $course_data[ $key ], "\n" ) );
-				}
-			}
-		}
 
 	}
 

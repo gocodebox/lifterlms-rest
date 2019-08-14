@@ -1259,7 +1259,17 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @return array Array of action/filters to be removed for response.
 	 */
 	protected function get_filters_to_be_removed_for_response( $object ) {
-		return array();
+
+		/**
+		 * Modify the array of filters to be removed before building the response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $filters Array of filters to be removed.
+		 * @param LLMS_Post_Model $object  LLMS_Post_Model object.
+		 */
+		return apply_filters( "llms_rest_{$this->post_type}_filters_removed_for_reponse", array(), $object );
+
 	}
 
 	/**
