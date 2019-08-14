@@ -82,7 +82,7 @@ allOf:
               properties:
                 type:
                   type: string
-                  example: course
+                  example: section
                 href:
                   type: string
                   example: /wp-json/llms/v1/sections/987
