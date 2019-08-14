@@ -24,6 +24,53 @@ function llms_rest_api_hash( $data ) {
 }
 
 /**
+ * Wrapper function to execute async delivery of webhooks.
+ *
+ * Hooked to `lifterlms_rest_deliver_webhook_async`.
+ *
+ * @since [version]
+ *
+ * @see LLMS_REST_Webhook::schedule()
+ *
+ * @param int   $webhook_id Webhook id.
+ * @param mixed $arg First argument from the hook.
+ * @return void
+ */
+function llms_rest_deliver_webhook_async( $webhook_id, $arg ) {
+
+	$webhook = LLMS_REST_API()->webhooks->get( $webhook_id );
+	if ( $webhook ) {
+		$webhook->deliver( $arg );
+	}
+
+}
+add_action( 'lifterlms_rest_deliver_webhook_async', 'llms_rest_deliver_webhook_async', 10, 2 );
+
+/**
+ * Get data from a WP Rest API endpoint.
+ *
+ * @since [version]
+ *
+ * @param string $endpoint API endpoint, eg "/llms/v1/courses".
+ * @param array  $params Query params to add to the request.
+ * @return array|WP_Error
+ */
+function llms_rest_get_api_endpoint_data( $endpoint, $params = array() ) {
+
+	$req = new WP_Rest_Request( 'GET', $endpoint );
+	if ( $params ) {
+		$req->set_query_params( $params );
+	}
+
+	$res    = rest_do_request( $req );
+	$server = rest_get_server();
+	$json   = wp_json_encode( $server->response_to_data( $res, false ) );
+
+	return json_decode( $json, true );
+
+}
+
+/**
  * Generate a random hash.
  *
  * @since [version]
@@ -36,3 +83,5 @@ function llms_rest_random_hash() {
 	}
 	return bin2hex( openssl_random_pseudo_bytes( 20 ) );
 }
+
+
