@@ -53,14 +53,14 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	);
 
 	/**
-	 * Lessons controller class
+	 * Lessons controller class.
 	 *
-	 * @var strong
+	 * @var string
 	 */
-	protected $content_controller_class = 'LLMS_REST_Lessons_Controller';
+	protected $content_controller_class;
 
 	/**
-	 * Lessons controller
+	 * Lessons controller.
 	 *
 	 * @var LLMS_REST_Lessons_Controller
 	 */
@@ -70,15 +70,19 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Constructor.
 	 *
 	 * @since [version]
+	 *
+	 * @param string $content_controller_class Optional. The class name of the content controller. Default 'LLMS_REST_Lessons_Controller'.
 	 */
-	public function __construct() {
+	public function __construct( $content_controller_class = 'LLMS_REST_Lessons_Controller' ) {
 
-		$this->collection_params = $this->build_collection_params();
+		$this->collection_params        = $this->build_collection_params();
+		$this->content_controller_class = $content_controller_class;
 
-		if ( isset( $this->content_controller_class ) && class_exists( $this->content_controller_class ) ) {
+		if ( $this->content_controller_class && class_exists( $this->content_controller_class ) ) {
 			$this->content_controller = new $this->content_controller_class();
 			$this->content_controller->set_collection_params( $this->get_content_collection_params() );
 		}
+
 	}
 
 	/**
@@ -495,6 +499,17 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		return parent::check_read_permission( $section );
 
+	}
+
+	/**
+	 * Retrieves the content controller.
+	 *
+	 * @since [version]
+	 *
+	 * @return  LLMS_REST_Lessons_Controller|null
+	 */
+	public function get_content_controller() {
+		return $this->content_controller;
 	}
 
 	/**

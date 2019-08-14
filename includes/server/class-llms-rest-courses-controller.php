@@ -55,7 +55,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
 
-		$this->sections_controller = new LLMS_REST_Sections_Controller();
+		$this->sections_controller = new LLMS_REST_Sections_Controller( '' );
 		$this->sections_controller->set_collection_params( $this->get_course_content_collection_params() );
 
 	}

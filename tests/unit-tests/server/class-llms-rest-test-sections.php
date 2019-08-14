@@ -321,6 +321,20 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
+	/**
+	 * Test sections content controller not initialized when not needed.
+	 *
+	 * @since [version]
+	 */
+	public function test_sections_content_not_init() {
+
+		$this->assertNotNull( $this->endpoint->get_content_controller() );
+
+		$new_sec_controller = new LLMS_REST_Sections_Controller( '' );
+		$this->assertNull( $new_sec_controller->get_content_controller() );
+
+	}
+
 	protected function filter_expected_fields( $expected, $llms_post ) {
 
 		unset( $expected['content'] );
