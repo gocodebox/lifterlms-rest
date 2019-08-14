@@ -1288,6 +1288,14 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
+        - name: parent
+          description: Filter lessons by the parent post (section) ID.
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            example: 987
       responses:
         '200':
           description: Successfully returned a list of lessons.
@@ -4042,7 +4050,7 @@ components:
                     properties:
                       type:
                         type: string
-                        example: course
+                        example: section
                       href:
                         type: string
                         example: /wp-json/llms/v1/sections/987

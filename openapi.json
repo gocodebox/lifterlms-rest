@@ -1673,6 +1673,17 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "parent",
+            "description": "Filter lessons by the parent post (section) ID.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 987
+            }
           }
         ],
         "responses": {
@@ -5902,7 +5913,7 @@
                       "properties": {
                         "type": {
                           "type": "string",
-                          "example": "course"
+                          "example": "section"
                         },
                         "href": {
                           "type": "string",
