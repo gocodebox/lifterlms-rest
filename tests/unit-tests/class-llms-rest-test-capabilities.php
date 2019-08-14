@@ -20,10 +20,14 @@ class LLMS_REST_Test_Capabilities extends LLMS_REST_Unit_Test_Case_Base {
 	 */
 	public function test_add() {
 
-		$this->assertEquals( array( 'manage_lifterlms_api_keys' => true ), LLMS_REST_Capabilities::add( array() ) );
+		$this->assertEquals( array(
+			'manage_lifterlms_api_keys' => true,
+			'manage_lifterlms_webhooks' => true,
+		), LLMS_REST_Capabilities::add( array() ) );
 		$this->assertEquals( array(
 			'some_other_cap' => true,
 			'manage_lifterlms_api_keys' => true,
+			'manage_lifterlms_webhooks' => true,
 		), LLMS_REST_Capabilities::add( array( 'some_other_cap' => true ) ) );
 
 	}
@@ -46,6 +50,11 @@ class LLMS_REST_Test_Capabilities extends LLMS_REST_Unit_Test_Case_Base {
 		$this->assertTrue( user_can( $manager, 'manage_lifterlms_api_keys' ) );
 		$this->assertFalse( user_can( $student, 'manage_lifterlms_api_keys' ) );
 		$this->assertFalse( user_can( $subscriber, 'manage_lifterlms_api_keys' ) );
+
+		$this->assertTrue( user_can( $admin, 'manage_lifterlms_webhooks' ) );
+		$this->assertTrue( user_can( $manager, 'manage_lifterlms_webhooks' ) );
+		$this->assertFalse( user_can( $student, 'manage_lifterlms_webhooks' ) );
+		$this->assertFalse( user_can( $subscriber, 'manage_lifterlms_webhooks' ) );
 
 	}
 
