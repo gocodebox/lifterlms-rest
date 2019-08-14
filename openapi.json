@@ -4162,22 +4162,6 @@
                 "disabled"
               ]
             }
-          },
-          {
-            "name": "resource",
-            "description": "Filter results to those for a specific resource.",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "event",
-            "description": "Filter results to those for a specific event.",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
