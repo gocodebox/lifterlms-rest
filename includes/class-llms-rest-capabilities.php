@@ -43,6 +43,7 @@ class LLMS_REST_Capabilities {
 	 */
 	public static function add( $caps ) {
 		$caps['manage_lifterlms_api_keys'] = true;
+		$caps['manage_lifterlms_webhooks'] = true;
 		return $caps;
 	}
 
