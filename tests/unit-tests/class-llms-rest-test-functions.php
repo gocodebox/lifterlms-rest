@@ -35,6 +35,20 @@ class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
+	 * Test the llms_rest_get_api_endpoint_data() method.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_get_api_endpoint_data() {
+
+		$res = llms_rest_get_api_endpoint_data( '/llms/v1' );
+		$this->assertEquals( 'llms/v1', $res['namespace'] );
+
+	}
+
+	/**
 	 * Test the llms_rest_random_hash() function
 	 *
 	 * @since [version]
