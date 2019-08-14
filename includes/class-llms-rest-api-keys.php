@@ -15,28 +15,59 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version]
  */
-class LLMS_REST_API_Keys {
+class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
+
+	use LLMS_REST_Trait_Singleton;
 
 	/**
-	 * Singleton instance
+	 * Resource Name/ID key.
 	 *
-	 * @var LLMS_REST_API_Keys
+	 * EG: key.
+	 *
+	 * @var string
 	 */
-	protected static $instance = null;
+	protected $id = 'key';
 
 	/**
-	 * Get Main Singleton Instance.
+	 * Resource Model classname.
 	 *
-	 * @since [version]
+	 * EG: LLMS_REST_API_Key.
 	 *
-	 * @return LLMS_REST
+	 * @var string
 	 */
-	public static function instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+	protected $model = 'LLMS_REST_API_Key';
+
+	/**
+	 * Default column values (for creating).
+	 *
+	 * @var array
+	 */
+	protected $default_column_values = array(
+		'permissions' => 'read',
+	);
+
+	/**
+	 * Array of read only column names.
+	 *
+	 * @var array
+	 */
+	protected $read_only_columns = array(
+		'id',
+		'consumer_key',
+		'consumer_secret',
+		'truncated_key',
+	);
+
+	/**
+	 * Array of required columns (for creating).
+	 *
+	 * @var array
+	 */
+	protected $required_columns = array(
+		'description',
+		'user_id',
+		'permissions',
+	);
 
 	/**
 	 * Create a new API Key
@@ -54,35 +85,9 @@ class LLMS_REST_API_Keys {
 	 */
 	public function create( $data ) {
 
-		if ( ! empty( $data['id'] ) ) {
-			return new WP_Error( 'llms_rest_key_exists', __( 'Cannot create a new API key with a pre-defined ID.', 'lifterlms' ) );
-		}
-
-		/**
-		 * Allow customization of default API Key properties.
-		 *
-		 * @since [version]
-		 *
-		 * @param array $properties An associative array of key properties.
-		 */
-		$defaults = apply_filters(
-			'llms_rest_api_key_default_properties',
-			array(
-				'permissions' => 'read',
-			)
-		);
-		$data     = wp_parse_args( $data, $defaults );
-
-		// Required Fields.
-		if ( empty( $data['description'] ) ) {
-			return new WP_Error( 'llms_rest_key_missing_description', __( 'An API Key description is required.', 'lifterlms' ) );
-		} elseif ( empty( $data['user_id'] ) ) {
-			return new WP_Error( 'llms_rest_key_missing_user', __( 'An API Key must be assigned to a user.', 'lifterlms' ) );
-		}
-
-		$err = $this->is_data_valid( $data );
-		if ( is_wp_error( $err ) ) {
-			return $err;
+		$data = $this->create_prepare( $data );
+		if ( is_wp_error( $data ) ) {
+			return $data;
 		}
 
 		$api_key = new LLMS_REST_API_Key();
@@ -105,39 +110,6 @@ class LLMS_REST_API_Keys {
 	}
 
 	/**
-	 * Delete an API key.
-	 *
-	 * @since [version]
-	 *
-	 * @param int $id API Key ID.
-	 * @return bool  `true` on success, `false` if the key couldn't be found or an error was encountered during deletion.
-	 */
-	public function delete( $id ) {
-		$key = $this->get( $id, false );
-		if ( $key ) {
-			return $key->delete();
-		}
-		return false;
-	}
-
-	/**
-	 * Retrieve an API Key object instance.
-	 *
-	 * @since [version]
-	 *
-	 * @param int  $id API Key ID.
-	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
-	 * @return LLMS_REST_API_Key|false
-	 */
-	public function get( $id, $hydrate = true ) {
-		$key = new LLMS_REST_API_Key( $id, $hydrate );
-		if ( $key && $key->exists() ) {
-			return $key;
-		}
-		return false;
-	}
-
-	/**
 	 * Retrieve the base admin url for managing API keys.
 	 *
 	 * @since [version]
@@ -153,6 +125,17 @@ class LLMS_REST_API_Keys {
 			),
 			admin_url( 'admin.php' )
 		);
+	}
+
+	/**
+	 * Retrieve the translated resource name.
+	 *
+	 * @since [version]
+	 *
+	 * @return string
+	 */
+	protected function get_i18n_name() {
+		return __( 'API Key', 'lifterlms' );
 	}
 
 	/**
@@ -190,7 +173,7 @@ class LLMS_REST_API_Keys {
 		// First conditions prevents '', '0', 0, etc... & second prevents invalid / non existant user ids.
 		if ( ( isset( $data['user_id'] ) && empty( $data['user_id'] ) ) || ( ! empty( $data['user_id'] ) && ! get_user_by( 'id', $data['user_id'] ) ) ) {
 			// Translators: %s = Invalid user id.
-			return new WP_Error( 'llms_rest_key_invalid_user', sprintf( __( '"%s" is not a valid user ID.', 'lifterlms' ), $data['user_id'] ) );
+			return new WP_Error( 'llms_rest_key_invalid_user_id', sprintf( __( '"%s" is not a valid user ID.', 'lifterlms' ), $data['user_id'] ) );
 		}
 
 		// Prevent blank/empty descriptions.
@@ -205,55 +188,6 @@ class LLMS_REST_API_Keys {
 		}
 
 		return true;
-
-	}
-
-	/**
-	 * Update an API Key
-	 *
-	 * @since [version]
-	 *
-	 * @param array $data {
-	 *     Associative array of data to set to a key's properties.
-	 *
-	 *     @type string $description A friendly name for the key.
-	 *     @type int $user_id WP_User ID of the key's owner.
-	 *     @type string $permissions Permission string for the key. Accepts `read`, `write`, or `read_write`.
-	 *     @type string $last_access MySQL Datetime string representing the last time the key was used to access the API.
-	 * }
-	 * @return LLMS_REST_API_Key|WP_Error
-	 */
-	public function update( $data ) {
-
-		if ( empty( $data['id'] ) ) {
-			return new WP_Error( 'llms_rest_key_missing_id', __( 'No API Key ID was supplied.', 'lifterlms' ) );
-		}
-
-		$api_key = $this->get( $data['id'] );
-		if ( ! $api_key || ! $api_key->exists() ) {
-			return new WP_Error( 'llms_rest_key_invalid_key', __( 'The requested API Key could not be located.', 'lifterlms' ) );
-		}
-
-		// Filter out write-protected keys.
-		$data = array_diff_key(
-			$data,
-			array(
-				'id'              => false,
-				'consumer_key'    => false,
-				'consumer_secret' => false,
-				'truncated_key'   => false,
-			)
-		);
-
-		$err = $this->is_data_valid( $data );
-		if ( is_wp_error( $err ) ) {
-			return $err;
-		}
-
-		// Set and save.
-		$api_key->setup( $data )->save();
-
-		return $api_key;
 
 	}
 
