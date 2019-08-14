@@ -43,6 +43,9 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 		// Adds filters so tables will be created during LLMS Core installs.
 		LLMS_REST_Install::init();
 		parent::install();
+
+		add_filter( 'llms_rest_webhook_pre_ping', '__return_true' );
+
 	}
 
 }
