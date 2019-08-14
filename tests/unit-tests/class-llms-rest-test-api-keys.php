@@ -48,14 +48,14 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 			$data['user_id'] = $uid;
 			$ret = $this->keys->create( $data );
 			$this->assertIsWPError( $ret );
-			$this->assertWPErrorCodeEquals( 'llms_rest_key_missing_user', $ret );
+			$this->assertWPErrorCodeEquals( 'llms_rest_key_missing_user_id', $ret );
 		}
 
 		// Invalid user_id.
 		$data['user_id'] = 92349234;
 		$ret = $this->keys->create( $data );
 		$this->assertIsWPError( $ret );
-		$this->assertWPErrorCodeEquals( 'llms_rest_key_invalid_user', $ret );
+		$this->assertWPErrorCodeEquals( 'llms_rest_key_invalid_user_id', $ret );
 
 		$data['user_id'] = $this->factory->user->create();
 
@@ -245,7 +245,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 			$data['user_id'] = $uid;
 			$ret = $this->keys->update( $data );
 			$this->assertIsWPError( $ret );
-			$this->assertWPErrorCodeEquals( 'llms_rest_key_invalid_user', $ret );
+			$this->assertWPErrorCodeEquals( 'llms_rest_key_invalid_user_id', $ret );
 		}
 
 		$data['user_id'] = $this->factory->user->create();
