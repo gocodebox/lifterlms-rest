@@ -22,6 +22,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// @todo handle this better.
+if ( version_compare( phpversion(), '7.1', '<' ) ) {
+	return;
+}
+
 // Define Constants.
 if ( ! defined( 'LLMS_REST_API_PLUGIN_FILE' ) ) {
 	define( 'LLMS_REST_API_PLUGIN_FILE', __FILE__ );
@@ -33,6 +38,10 @@ if ( ! defined( 'LLMS_REST_API_PLUGIN_DIR' ) ) {
 
 if ( ! defined( 'LLMS_REST_API_PLUGIN_URL' ) ) {
 	define( 'LLMS_REST_API_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+}
+
+if ( ! defined( 'LLMS_REST_WEBHOOK_DELIVERY_LOGGING' ) ) {
+	define( 'LLMS_REST_WEBHOOK_DELIVERY_LOGGING', true );
 }
 
 // Load Plugin.
