@@ -46,8 +46,8 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 		$html      = '<a href="' . $edit_link . '">' . $html . '</a>';
 		$html     .= '<div class="llms-rest-actions">';
 		$html     .= '<small class="llms-action-icon">ID: ' . $api_key->get( 'id' ) . '</small> | ';
-		$html     .= '<small><a class="llms-action-icon" href="' . $edit_link . '">View/Edit</a></small> | ';
-		$html     .= '<small><a class="llms-action-icon danger" href="' . esc_url( $api_key->get_delete_link() ) . '">Revoke</a></small>';
+		$html     .= '<small><a class="llms-action-icon" href="' . $edit_link . '">' . __( 'View/Edit', 'lifterlms' ) . '</a></small> | ';
+		$html     .= '<small><a class="llms-action-icon danger" href="' . esc_url( $api_key->get_delete_link() ) . '">' . __( 'Revoke', 'lifterlms' ) . '</a></small>';
 		$html     .= '</div>';
 
 		return $html;
