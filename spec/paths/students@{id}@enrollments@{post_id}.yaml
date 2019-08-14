@@ -90,7 +90,7 @@ delete:
     - Student Enrollments
   responses:
     204:
-      description: Successfully deleted the student.
+      description: Successfully deleted student's enrollment.
     400:
       $ref: '#/components/responses/Error400'
     401:
