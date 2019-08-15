@@ -133,6 +133,7 @@ final class LifterLMS_REST_API {
 			'server/class-llms-rest-enrollments-controller',
 			'server/class-llms-rest-instructors-controller',
 			'server/class-llms-rest-students-controller',
+			'server/class-llms-rest-students-progress-controller',
 
 		);
 
@@ -157,6 +158,7 @@ final class LifterLMS_REST_API {
 			'LLMS_REST_Lessons_Controller',
 			'LLMS_REST_Instructors_Controller',
 			'LLMS_REST_Students_Controller',
+			'LLMS_REST_Students_Progress_Controller',
 			'LLMS_REST_Enrollments_Controller',
 		);
 
