@@ -48,6 +48,23 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 
 	}
 
+	/**
+	 * Load the plugin
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function load() {
+
+		if ( $this->plugin_main ) {
+			require_once( $this->plugin_dir . '/' . $this->plugin_main );
+		}
+
+		parent::load();
+
+	}
+
 }
 
 return new LLMS_REST_Tests_Bootstrap();
