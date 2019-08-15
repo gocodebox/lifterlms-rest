@@ -1351,7 +1351,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 */
 	protected function handle_terms( $object_id, $request ) {
 
-		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'public' => true ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
 			$base = $this->get_taxonomy_rest_base( $taxonomy );
