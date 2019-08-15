@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.2
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Posts_Controller
  *
  * @since 1.0.0-beta.1
- * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
+ * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -1132,7 +1132,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
+	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.
@@ -1348,7 +1348,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
+	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 *
 	 * @param int             $object_id The post ID to update the terms form.
 	 * @param WP_REST_Request $request   The request object with post and terms data.

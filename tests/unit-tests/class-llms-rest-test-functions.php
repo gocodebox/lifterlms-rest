@@ -37,7 +37,7 @@ class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test the llms_rest_deliver_webhook_async() method
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.2
 	 *
 	 * @return void
 	 */

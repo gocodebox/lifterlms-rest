@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.2
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -28,7 +28,7 @@ function llms_rest_api_hash( $data ) {
  * Hooked to `lifterlms_rest_deliver_webhook_async`.
  *
  * @since 1.0.0-beta.1
- * @since [version] Fixed incorrect reference.
+ * @since 1.0.0-beta.2 Fixed incorrect reference.
  *
  * @see LLMS_REST_Webhook::schedule()
  *

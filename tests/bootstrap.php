@@ -51,7 +51,7 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 	/**
 	 * Load the plugin
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.2
 	 *
 	 * @return void
 	 */
