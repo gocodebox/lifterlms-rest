@@ -65,7 +65,6 @@ if ( ! class_exists( 'LifterLMS_REST_API' ) ) {
 	function LLMS_REST_API() {
 		return LifterLMS_REST_API::instance();
 	}
-
 }
 
 return LLMS_REST_API();
