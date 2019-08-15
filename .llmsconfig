@@ -10,9 +10,9 @@
 			"make": {
 				"tags": [ 48 ]
 			},
-			"slug": "lifterlms-rest"
+			"slug": "lifterlms-rest",
+			"pot": false
 		},
-		"pot": false,
 		"svn": false
 	},
 	"scaffold": {
