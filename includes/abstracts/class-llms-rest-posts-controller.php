@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Posts_Controller
  *
  * @since 1.0.0-beta.1
+ * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -1130,6 +1131,9 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
+	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.
 	 */
@@ -1170,7 +1174,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				$taxonomy_obj = get_taxonomy( $tax );
 
 				// Skip taxonomies that are not public.
-				if ( empty( $taxonomy_obj->show_in_rest ) ) {
+				if ( empty( $taxonomy_obj->public ) ) {
 					continue;
 				}
 
@@ -1344,6 +1348,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Filter taxonomies by `public` property instead of `show_in_rest`.
 	 *
 	 * @param int             $object_id The post ID to update the terms form.
 	 * @param WP_REST_Request $request   The request object with post and terms data.
@@ -1378,7 +1383,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @return bool Whether the current user can assign the provided terms.
 	 */
 	protected function check_assign_terms_permission( $request ) {
-		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_rest' => true ) );
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'public' => true ) );
 		foreach ( $taxonomies as $taxonomy ) {
 			$base = $this->get_taxonomy_rest_base( $taxonomy );
 
