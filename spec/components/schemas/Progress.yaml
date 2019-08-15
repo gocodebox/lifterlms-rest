@@ -15,13 +15,15 @@ properties:
     example: 456
     readOnly: true
   date_created:
-    description: 'The progress creation date. Format: `Y-m-d H:i:s`'
+    description: The progress creation date. Cannot be in the future.
     type: string
-    example: '2019-05-21 14:22:05'
+    format: date-time
+    example: '2019-05-21T14:22:05'
   date_updated:
-    description: 'The date of the last progress update. Format: `Y-m-d H:i:s`'
+    description: The date of the last progress update.
     type: string
-    example: '2019-05-21 19:22:05'
+    format: date-time
+    example: '2019-05-21T19:22:05'
     readOnly: true
   progress:
     description: Student's progress as a percentage.
@@ -53,15 +55,6 @@ properties:
             href:
               type: string
               example: /wp-json/llms/v1/students/123/progress/456
-      collection:
-        description: REST URI to the collection of student progress records.
-        type: array
-        items:
-          type: object
-          properties:
-            href:
-              type: string
-              example: /wp-json/llms/v1/students/123/progress
       post:
         description: Rest URI to the post resource.
         type: array
