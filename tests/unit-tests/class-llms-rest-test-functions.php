@@ -35,6 +35,29 @@ class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
+	 * test the llms_rest_deliver_webhook_async() method
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_deliver_webhook_async() {
+
+		$action_count = did_action( 'llms_rest_webhook_delivery' );
+
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://fake.tld',
+			'topic' => 'student.created',
+			'status' => 'active',
+		) );
+
+		llms_rest_deliver_webhook_async( $webhook->get( 'id' ), array( $this->factory->student->create() ) );
+
+		$this->assertEquals( ++$action_count, did_action( 'llms_rest_webhook_delivery' ) );
+
+	}
+
+	/**
 	 * Test the llms_rest_get_api_endpoint_data() method.
 	 *
 	 * @since 1.0.0-beta.1
