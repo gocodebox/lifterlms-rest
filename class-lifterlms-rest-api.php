@@ -183,7 +183,8 @@ final class LifterLMS_REST_API {
 
 			// load includes.
 			$this->includes();
-			$this->webhooks()->load();
+
+			add_action( 'init', array( $this->webhooks(), 'load' ) );
 
 		}
 
