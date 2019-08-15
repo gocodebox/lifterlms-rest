@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Functions
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Generate a keyed hash value using the HMAC method with the key `llms-rest-api`
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $data Message to be hashed.
  * @return string
@@ -28,7 +28,7 @@ function llms_rest_api_hash( $data ) {
  *
  * Hooked to `lifterlms_rest_deliver_webhook_async`.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @see LLMS_REST_Webhook::schedule()
  *
@@ -49,7 +49,7 @@ add_action( 'lifterlms_rest_deliver_webhook_async', 'llms_rest_deliver_webhook_a
 /**
  * Get data from a WP Rest API endpoint.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $endpoint API endpoint, eg "/llms/v1/courses".
  * @param array  $params Query params to add to the request.
@@ -73,7 +73,7 @@ function llms_rest_get_api_endpoint_data( $endpoint, $params = array() ) {
 /**
  * Generate a random hash.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @return string
  */

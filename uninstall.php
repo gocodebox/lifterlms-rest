@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Uninstall
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 // If uninstall not called from WordPress exit.

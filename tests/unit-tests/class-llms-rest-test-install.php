@@ -6,15 +6,15 @@
  *
  * @group install
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Test LLMS_REST_Install::check_version()
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -49,7 +49,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the LLMS_REST_Install::get_schema() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -82,7 +82,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the install method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -107,7 +107,7 @@ class LLMS_REST_Test_Install extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the update_version() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

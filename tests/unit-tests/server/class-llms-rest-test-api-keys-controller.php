@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_api_keys
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -22,7 +22,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Setup test
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -38,7 +38,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Teardown test
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -54,7 +54,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_register_routes() {
 
@@ -82,7 +82,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test error responses for creating a key
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -121,7 +121,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test creation of a new key success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -203,7 +203,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * test the delete_item() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -228,7 +228,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * test the get_item() for an invalid resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -248,7 +248,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * test the get_item() for an invalid resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -282,7 +282,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * test the get_items() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -353,7 +353,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * test the update_item() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -391,7 +391,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test the prepare collection query args method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return [type]
 	 */
@@ -461,7 +461,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test the validate_user_exists callback method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

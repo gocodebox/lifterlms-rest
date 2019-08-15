@@ -6,15 +6,15 @@
  *
  * @group caps
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Capabilities extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Test the add() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -35,7 +35,7 @@ class LLMS_REST_Test_Capabilities extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test various user types to ensure they have the proper capabilities.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Manage admin settings pages.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Admin_Settings {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -33,7 +33,7 @@ class LLMS_REST_Admin_Settings {
 	/**
 	 * Register the REST API settings page with the LifterLMS Core.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $pages Array of settings page classes.
 	 * @return array

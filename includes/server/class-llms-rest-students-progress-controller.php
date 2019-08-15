@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Student_Progress_Controller class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
@@ -38,7 +38,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Determine if the current user can view the requested item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return bool
@@ -62,7 +62,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Determine if current user has permission to delete a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -83,7 +83,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Note: we do not return 404s when the resource to delete cannot be found. We assume it's already been deleted and respond with 204.
 	 * Errors returned by this method should be any error other than a 404!
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj             $object Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
@@ -119,7 +119,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve a updated/created dates for a given post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Student                         $student Student Object.
 	 * @param LLMS_Course|LLMS_Section|LLMS_Lesson $post Course, Section, or Lesson post object.
@@ -165,7 +165,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get a single item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -182,7 +182,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -199,7 +199,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the API Key's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -260,7 +260,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int[] $ids {
 	 *     Numeric array of ids.
@@ -305,7 +305,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an ID from the object
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return int
@@ -320,7 +320,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare request arguments for a database insert/update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_Rest_Request $request Request object.
 	 * @return array
@@ -337,7 +337,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return array
@@ -378,7 +378,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare an object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.
@@ -393,7 +393,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -441,7 +441,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Determine if current user has permission to create/update an enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -459,7 +459,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Update the object in the database with prepared data.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
@@ -490,7 +490,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Validate the date_created
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string          $value Date string.
 	 * @param WP_REST_Request $request Request object.
@@ -512,7 +512,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Validate the path parameter "post_id".
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int             $value Post ID.
 	 * @param WP_REST_Request $request Request object.

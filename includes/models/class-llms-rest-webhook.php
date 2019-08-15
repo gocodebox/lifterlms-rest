@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Models
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Webhook class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 	/**
 	 * Delivers the webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return void
@@ -44,7 +44,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		/**
 		 * Modify HTTP args used to deliver the webhook.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $http_args HTTP request args suitable for `wp_remote_request()`.
 		 * @param LLMS_REST_Webhook $this Webhook object.
@@ -76,7 +76,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		/**
 		 * Fires after a webhook is delivered.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $http_args HTTP request args.
 		 * @param WP_Error|array $res Remote response.
@@ -93,7 +93,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 *
 	 * Logs data when loggind enabled and updates state data.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $delivery_id Webhook delivery id (for logging).
 	 * @param array  $req_args HTTP Request Arguments used to deliver the webhook.
@@ -164,7 +164,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Add actions for all the webhooks hooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -179,7 +179,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determine if the webhook is currently pending delivery.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool
 	 */
@@ -192,7 +192,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determine if the current action is valid for the webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -230,7 +230,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determine if the current post-related action is valid for the webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $post_id WP Post ID.
 	 * @return bool
@@ -256,7 +256,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determine if the the resource is valid for the webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -288,7 +288,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determine if the current user-related action is valid for the webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $user_id WP User ID.
 	 * @return bool
@@ -317,7 +317,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 *
 	 * Determines if the webhook should be delivered and whether or not it should be scheduled or delivered immediately.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param mixed ...$args Aguments from the hook.
 	 * @return int|false Timestamp of the scheduled event when the webhook is successfully scheduled.
@@ -350,7 +350,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Perform a test ping to the delivery url.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return true|WP_Error
 	 */
@@ -388,7 +388,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Determines if an originating action qualifies for webhook delivery.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -414,7 +414,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	/**
 	 * Schedule the webhook for async delivery.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -444,7 +444,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		 * second occurrence will not be scheduled. If it is triggerd again at 12:06pm this third occurrence will
 		 * again be scheduled.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param int $delay Time (in seconds).
 		 * @param array $args Numeric array of arguments from the originating hook.

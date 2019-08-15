@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Instructors_Controller class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 
@@ -34,7 +34,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if the current user can view the requested student.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $item_id WP_User id.
 	 * @return bool
@@ -52,7 +52,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to create a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -70,7 +70,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to delete a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -88,7 +88,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -119,7 +119,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to get a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -137,7 +137,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Get the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -154,7 +154,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to list users.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -172,7 +172,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Instructor|WP_Error
@@ -187,7 +187,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return array
@@ -207,7 +207,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Updates additional information not handled by WP Core insert/update user functions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int             $object_id WP User id.
 	 * @param array           $prepared Prepared item data.
@@ -235,7 +235,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to update a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_API_Keys class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 
@@ -72,7 +72,7 @@ class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 	/**
 	 * Create a new API Key
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data {
 	 *     Associative array of data to set to a key's properties.
@@ -112,7 +112,7 @@ class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve the base admin url for managing API keys.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -130,7 +130,7 @@ class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve the translated resource name.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -141,7 +141,7 @@ class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve an array of options for API Key Permissions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -156,7 +156,7 @@ class LLMS_REST_API_Keys extends LLMS_REST_Database_Resource {
 	/**
 	 * Validate data supplied for creating/updating a key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data {
 	 *     Associative array of data to set to a key's properties.

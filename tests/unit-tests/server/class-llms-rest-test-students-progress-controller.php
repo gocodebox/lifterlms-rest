@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_progress
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -48,7 +48,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_register_routes() {
 

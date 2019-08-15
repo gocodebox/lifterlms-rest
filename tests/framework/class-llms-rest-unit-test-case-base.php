@@ -3,8 +3,8 @@
  * LifterLMS REST API Unit Test Case Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
@@ -12,7 +12,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * Generate a mock api key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -41,7 +41,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * Create multiple API Keys
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $count Number of keys to create.
 	 * @param string $permissions Define permissions for the keys. If not specified assigns a random permission to each key.
@@ -92,7 +92,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * Mock authorization headers.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $key Consumer key.
 	 * @param string $secret Consumer secret.
@@ -107,7 +107,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * test teardown.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

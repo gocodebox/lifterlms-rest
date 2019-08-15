@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST_API/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
 /**
  * LifterLMS_REST_API class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 final class LifterLMS_REST_API {
 
@@ -31,7 +31,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -52,7 +52,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Include files and instantiate classes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @example $keys = LLMS_REST_API()->keys();
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return LLMS_REST_API_Keys
 	 */
@@ -108,7 +108,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Include REST api specific files.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -145,7 +145,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Instantiate REST api Controllers.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -172,7 +172,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * Include all required files and classes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -197,7 +197,7 @@ final class LifterLMS_REST_API {
 	 *      WP_LANG_DIR/lifterlms/lifterlms-LOCALE.mo
 	 *      WP_LANG_DIR/plugins/lifterlms-LOCALE.mo
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -219,7 +219,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @example $webhooks = LLMS_REST_API()->webhooks();
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return LLMS_REST_API_Webhooks
 	 */

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Capabilities class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Capabilities {
 
 	/**
 	 * Static Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -34,7 +34,7 @@ class LLMS_REST_Capabilities {
 	/**
 	 * Add REST-specific capabilities to LifterLMS core cap lists.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see LLMS_Roles::get_core_caps()
 	 *

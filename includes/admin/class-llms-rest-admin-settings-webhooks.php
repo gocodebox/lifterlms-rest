@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Settings Page: REST API: Webhooks
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_Rest_Admin_Settings_Webhooks {
 
@@ -21,7 +21,7 @@ class LLMS_Rest_Admin_Settings_Webhooks {
 	/**
 	 * Get settings fields for the Keys tab.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -175,7 +175,7 @@ class LLMS_Rest_Admin_Settings_Webhooks {
 	/**
 	 * Quick and dirty output of JS to power the UI.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

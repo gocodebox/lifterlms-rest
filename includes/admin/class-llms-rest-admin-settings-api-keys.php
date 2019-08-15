@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Settings Page: REST API
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_Rest_Admin_Settings_API_Keys {
 
@@ -29,7 +29,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	/**
 	 * Get settings fields for the Keys tab.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -187,7 +187,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	/**
 	 * Form handler to save Create / Update an API key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return null|LLMS_REST_API_Key|WP_Error
 	 */
@@ -217,7 +217,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	/**
 	 * Form handler to create a new API key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return LLMS_REST_API_Key|WP_Error
 	 */
@@ -242,7 +242,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	/**
 	 * Form handler to save an API key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $key_id API Key ID.
 	 * @return LLMS_REST_API_Key|WP_Error

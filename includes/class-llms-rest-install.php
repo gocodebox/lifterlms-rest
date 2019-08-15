@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin installation scripts.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Install {
 
 	/**
 	 * Initialize the install class.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return   void
 	 */
@@ -32,7 +32,7 @@ class LLMS_REST_Install {
 	/**
 	 * Checks the current LLMS version and runs installer if required
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return   void
 	 */
@@ -47,7 +47,7 @@ class LLMS_REST_Install {
 	/**
 	 * Adds REST API Keys table to the LifterLMS DB Table Schema
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see LLMS_Install::get_schema()
 	 *
@@ -98,7 +98,7 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_webhooks` (
 	/**
 	 * Core install function
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -122,7 +122,7 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_webhooks` (
 	/**
 	 * Update the LifterLMS rest version record to the latest version
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  string $version version number.
 	 * @return void

@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Abstracts
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Posts_Controller
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -47,7 +47,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves an array of arguments for the delete endpoint.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Delete endpoint arguments.
 	 */
@@ -66,7 +66,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for retrieving a single resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -89,7 +89,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read items.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -108,7 +108,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get a collection of LLMS posts.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -165,7 +165,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to create an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -198,7 +198,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields()
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -275,7 +275,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -313,7 +313,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -365,7 +365,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to update an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -397,7 +397,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -460,7 +460,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Updates a single llms post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object        LMMS_Post_Model instance.
 	 * @param array           $prepared_item Array.
@@ -475,7 +475,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to delete an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -503,7 +503,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Deletes a single llms post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -577,7 +577,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Whether the delete should be forced.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return bool True if the delete should be forced, false otherwise.
@@ -589,7 +589,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Whether the trash is supported.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool True if the trash is supported, false otherwise.
 	 */
@@ -600,7 +600,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $query_args Query args.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -657,7 +657,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object  object object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -707,7 +707,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare a single item for the REST response
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object  LLMS post object.
 	 * @param WP_REST_Request $request Request object.
@@ -763,7 +763,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Determines the allowed query_vars for a get_items() response and prepares
 	 * them for WP_Query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared_args Optional. Prepared WP_Query arguments. Default empty array.
 	 * @param WP_REST_Request $request       Optional. Full details about the request.
@@ -793,7 +793,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Map to proper WP_Query orderby param.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $query_args WP_Query arguments.
 	 * @param WP_REST_Request $request    Full details about the request.
@@ -822,7 +822,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepares a single post for create or update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -927,7 +927,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -1120,7 +1120,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Create an LLMS_Post_Model
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -1196,7 +1196,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Re-add filters previously removed
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object Object.
 	 * @return array Array of filters removed for response
@@ -1229,7 +1229,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Re-add filters previously removed
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $filters_removed Array of filters removed to be re-added.
 	 * @return void
@@ -1253,7 +1253,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object LLMS_Post_Model object.
 	 * @return array Array of action/filters to be removed for response.
@@ -1263,7 +1263,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		/**
 		 * Modify the array of filters to be removed before building the response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array           $filters Array of filters to be removed.
 		 * @param LLMS_Post_Model $object  LLMS_Post_Model object.
@@ -1276,7 +1276,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Determines validity and normalizes the given status parameter.
 	 * Heavily based on WP_REST_Posts_Controller::handle_status_param().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $status Status.
 	 * @return string|WP_Error Status or WP_Error if lacking the proper permission.
@@ -1317,7 +1317,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Determines the featured media based on a request param.
 	 * Heavily based on WP_REST_Posts_Controller::handle_featured_media().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $featured_media Featured Media ID.
 	 * @param int $object_id      LLMS object ID.
@@ -1343,7 +1343,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Updates the post's terms from a REST request.
 	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int             $object_id The post ID to update the terms form.
 	 * @param WP_REST_Request $request   The request object with post and terms data.
@@ -1372,7 +1372,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Checks whether current user can assign all terms sent with the current request.
 	 * Heavily based on WP_REST_Posts_Controller::check_assign_terms_permission().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request The request object with post and terms data.
 	 * @return bool Whether the current user can assign the provided terms.
@@ -1404,7 +1404,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Maps a taxonomy name to the relative rest base
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param object $taxonomy The taxonomy object.
 	 * @return string The taxonomy rest base.
@@ -1418,7 +1418,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if a post can be edited.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool Whether the post can be created
 	 */
@@ -1432,7 +1432,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an llms post can be edited.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object Optional. The LLMS_Post_model object. Default null.
 	 * @return bool Whether the post can be edited.
@@ -1447,7 +1447,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an llms post can be deleted.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object The LLMS_Post_model object.
 	 * @return bool Whether the post can be deleted.
@@ -1462,7 +1462,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an llms post can be read.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object The LLMS_Post_model object.
 	 * @return bool Whether the post can be read.
@@ -1508,7 +1508,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if the user can access password-protected content.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object  The LLMS_Post_model object.
 	 * @param WP_REST_Request $request Request data to check.

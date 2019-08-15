@@ -7,15 +7,15 @@
  * @group admin
  * @group admin_settings_page
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Setup the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -37,7 +37,7 @@ class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Tear down the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -48,7 +48,7 @@ class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test hooks are added from the constructor
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -70,7 +70,7 @@ class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test get_current_section() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test get_sections() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

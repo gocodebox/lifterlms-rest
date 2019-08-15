@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_enrollments
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -54,7 +54,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_register_routes() {
 
@@ -67,7 +67,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test list student enrollments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_enrollments() {
 
@@ -104,7 +104,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test list student enrollments filter by post_id.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
     public function test_get_enrollments_filter_post() {
 
@@ -148,7 +148,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting enrollments without permission.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_enrollments_without_permission() {
 
@@ -167,7 +167,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting enrollments: forbidden request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_enrollments_forbidden() {
 
@@ -186,7 +186,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test get single student enrollment
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
     public function test_get_enrollment() {
 
@@ -224,7 +224,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting enrollment without permission.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_enrollment_without_permission() {
 
@@ -251,7 +251,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting enrollment: forbidden request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_enrollment_forbidden() {
 
@@ -276,7 +276,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test create enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_enrollment() {
 
@@ -305,7 +305,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test producing bad request error when creating a single enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_enrollment_bad_request() {
 
@@ -325,7 +325,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test update enrollment status.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_enrollment_status() {
 
@@ -361,7 +361,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test update enrollment creation date.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_enrollment_creation_date() {
 
@@ -398,7 +398,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test producing 404 request errort.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_enrollment_not_found() {
 
@@ -441,7 +441,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test deleting a single enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_enrollment() {
 
@@ -469,7 +469,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test protected enrollment_exists method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_enrollment_exists() {
 		$error_code = 'llms_rest_not_found';

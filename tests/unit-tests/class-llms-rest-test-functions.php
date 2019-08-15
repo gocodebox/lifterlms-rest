@@ -6,15 +6,15 @@
  *
  * @group functions
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Test the llms_rest_api_hash() function
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -37,7 +37,7 @@ class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the llms_rest_get_api_endpoint_data() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -51,7 +51,7 @@ class LLMS_REST_Test_Functions extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the llms_rest_random_hash() function
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

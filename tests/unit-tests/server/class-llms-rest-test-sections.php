@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_sections
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -61,7 +61,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_register_routes() {
 
@@ -76,7 +76,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list sections.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_sections() {
 
@@ -120,7 +120,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test create a single section.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_section() {
 
@@ -154,7 +154,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test producing bad request error when creating a single section.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_section_bad_request() {
 
@@ -222,7 +222,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a single section.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_section() {
 
@@ -246,7 +246,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test trashing a single section.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_trash_section() {
 
@@ -270,7 +270,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list sections content.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @todo test order and orderby
 	 */
@@ -324,7 +324,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test sections content controller not initialized when not needed.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_sections_content_not_init() {
 

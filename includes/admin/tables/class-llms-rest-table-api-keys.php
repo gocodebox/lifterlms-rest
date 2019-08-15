@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Table_API_Keys class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 
@@ -34,7 +34,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	/**
 	 * Retrieve information for a the api key title/description <td>
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_REST_API_Key $api_key API Key object.
 	 * @return string
@@ -57,7 +57,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	/**
 	 * Retrieve data for the columns
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string            $key the column id / key.
 	 * @param LLMS_REST_API_Key $api_key API key object.
@@ -103,7 +103,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	/**
 	 * Execute a query to retrieve results from the table
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Array of query args.
 	 *
@@ -128,7 +128,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	/**
 	 * Define the structure of arguments used to pass to the get_results method
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -139,7 +139,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 	/**
 	 * Define the structure of the table
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return   array
 	 */

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Abstracts
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Controller class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -36,7 +36,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Create an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -74,7 +74,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Insert the prepared data into the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
@@ -95,7 +95,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Delete the item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error
@@ -124,7 +124,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -179,7 +179,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Get a single item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -284,7 +284,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Retrieves the query params for retrieving a single resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -303,7 +303,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Retrieve arguments for deleting a resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -317,7 +317,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Array keys are the request fields (as defined in the schema) and
 	 * array values are the database fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -332,7 +332,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prepare request arguments for a database insert/update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_Rest_Request $request Request object.
 	 * @return array
@@ -357,7 +357,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prepares a single object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj             $object Raw object from database.
 	 * @param WP_REST_Request $request Request object.
@@ -385,7 +385,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return array
@@ -410,7 +410,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -473,7 +473,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Update item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Students_Controller class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
@@ -42,7 +42,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if the current user can view the requested student.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $item_id WP_User id.
 	 * @return bool
@@ -60,7 +60,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to create a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -78,7 +78,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to delete a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -96,7 +96,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -129,7 +129,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Get the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -145,7 +145,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to get a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -163,7 +163,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to list users.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -185,7 +185,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Student|WP_Error
@@ -200,7 +200,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request Request object.
@@ -235,7 +235,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 *
 	 * Adds select fields and a having clause to check against `enrolled_in` and `enrolled_not_in` collection query args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/pre_user_query/
 	 *
@@ -267,7 +267,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Generates a subquery to check a user's enrollment status for a given course or membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $post_id Course or membership id.
 	 * @return string
@@ -291,7 +291,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return array
@@ -314,7 +314,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if current user has permission to update a user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Webhooks class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -62,7 +62,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Create a new API Key
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to a key's properties.
 	 * @return WP_Error|LLMS_REST_Webhook
@@ -84,7 +84,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve the base admin url for managing API keys.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -104,7 +104,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * Overrides parent to dynamically set the class variable since several defaults are generated through functions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -131,7 +131,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve the translated resource name.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -142,7 +142,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieves a list of webhook statuses.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -151,7 +151,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		/**
 		 * Filter the available webhook statuses.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $statuses Array of statuses.
 		 */
@@ -169,7 +169,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieves a list of webhook topics.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -178,7 +178,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		/**
 		 * Filter the available webhook topics.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $topics Array of topics.
 		 */
@@ -231,7 +231,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve a list of hooks for each topic.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -385,7 +385,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve an array of supported post types used as resources for webhooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string[]
 	 */
@@ -414,7 +414,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Validate data supplied for creating/updating a key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to a key's properties.
 	 * @return WP_Error|true When data is invalid will return a WP_Error with information about the invalid properties,
@@ -449,7 +449,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Determine if a given topic is valid.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $topic Topic.
 	 * @return bool
@@ -471,7 +471,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Load webhooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return int Number of hooks loaded.
 	 */
@@ -480,7 +480,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		/**
 		 * Limit the number of webhooks that are loaded. By default all webhooks are loaded.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param int $limit Number of webhooks to load. Default `null` loads all webhooks.
 		 */
@@ -508,7 +508,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * This method assumes the supplied data has already been validated and sanitized.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_REST_Webhook $obj Webhook object.
 	 * @param array             $data Associative array of data to persist.
@@ -532,7 +532,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	/**
 	 * Prepare data for an update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to a resources properties.
 	 * @return LLMS_REST_Webhook|WP_Error

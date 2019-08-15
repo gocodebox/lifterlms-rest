@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Abstracts
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Users_Controller class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -41,7 +41,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Determine if the current user has permissions to manage the role(s) present in a request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -97,7 +97,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Insert the prepared data into the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
@@ -122,7 +122,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Note: we do not return 404s when the resource to delete cannot be found. We assume it's already been deleted and respond with 204.
 	 * Errors returned by this method should be any error other than a 404!
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj             $object Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
@@ -155,7 +155,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -179,7 +179,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieve arguments for deleting a resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -197,7 +197,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieve an array of allowed user role values.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string[]
 	 */
@@ -211,7 +211,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Get the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -392,7 +392,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request Request object.
@@ -433,7 +433,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $query Objects query result.
 	 * @return WP_User[]
@@ -445,7 +445,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -474,7 +474,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Array keys are the request fields (as defined in the schema) and
 	 * array values are the database fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -499,7 +499,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Prepare request arguments for a database insert/update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_Rest_Request $request Request object.
 	 * @return array
@@ -530,7 +530,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Prepare an object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.
@@ -564,7 +564,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Validate a username is valid and allowed.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string          $value User-submitted username.
 	 * @param WP_REST_Request $request Request object.
@@ -588,7 +588,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Validate a username is valid and allowed.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string          $value User-submitted username.
 	 * @param WP_REST_Request $request Request object.
@@ -622,7 +622,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Updates additional information not handled by WP Core insert/update user functions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int             $object_id WP User id.
 	 * @param array           $prepared Prepared item data.
@@ -664,7 +664,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Update item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -695,7 +695,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Update the object in the database with prepared data.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.

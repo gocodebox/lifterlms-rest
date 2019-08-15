@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Models
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_API_Key class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 
@@ -64,7 +64,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	/**
 	 * Constructor
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, hydrates the object on instantiation if an ID is supplied.
@@ -81,7 +81,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve an admin nonce url for deleting an API key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -101,7 +101,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve the admin URL where the api key is managed.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -119,7 +119,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	 *
 	 * Uses WP Core date & time formatting settings.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -139,7 +139,7 @@ class LLMS_REST_API_Key extends LLMS_Abstract_Database_Store {
 	/**
 	 * Determine if the key has the permissions required by the HTTP Request Method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $method The HTTP request method.
 	 * @return bool

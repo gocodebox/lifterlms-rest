@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Lessons_Controller
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @todo Implement endpoints.
  */
@@ -57,7 +57,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function __construct() {
 
@@ -68,7 +68,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Set parent id.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $parent_id Course parent id.
 	 * @return void
@@ -80,7 +80,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get parent id.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return int|null Course parent id. Null if not set.
 	 */
@@ -91,7 +91,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Lesson|WP_Error
@@ -104,7 +104,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get an LLMS_Lesson
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $lesson_args Lesson args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -117,7 +117,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Lesson's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -197,7 +197,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array The Enrollments collection parameters.
 	 */
@@ -208,7 +208,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $collection_params The Enrollments collection parameters to be set.
 	 * @return void
@@ -220,7 +220,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -241,7 +241,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Lesson     $lesson Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -266,7 +266,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -316,7 +316,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Section $lesson Lesson object.
 	 * @return array Array of action/filters to be removed for response.
@@ -411,7 +411,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Checks if a Lesson can be read
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Lesson $lesson The Lesson oject.
 	 * @return bool Whether the post can be read.

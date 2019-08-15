@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Admin_Form_Controller class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Admin_Form_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -33,7 +33,7 @@ class LLMS_REST_Admin_Form_Controller {
 	/**
 	 * Handles submission of admin forms & nonce links.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return false|void
 	 */
@@ -62,7 +62,7 @@ class LLMS_REST_Admin_Form_Controller {
 	/**
 	 * Handle creating/updating a webhook via admin interfaces
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return true|void|WP_Error true on update success, void (redirect) on creation success, WP_Error on failure.
 	 */

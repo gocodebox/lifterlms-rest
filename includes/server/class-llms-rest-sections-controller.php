@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Sections_Controller
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
@@ -69,7 +69,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $content_controller_class Optional. The class name of the content controller. Default 'LLMS_REST_Lessons_Controller'.
 	 */
@@ -88,7 +88,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -123,7 +123,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves an array of arguments for the delete endpoint.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Delete endpoint arguments.
 	 */
@@ -134,7 +134,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Whether the delete should be forced.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return bool True if the delete should be forced, false otherwise.
@@ -146,7 +146,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Whether the trash is supported.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool True if the trash is supported, false otherwise.
 	 */
@@ -157,7 +157,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Set parent id.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $parent_id Course parent id.
 	 * @return void
@@ -169,7 +169,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get parent id.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return int|null Course parent id. Null if not set.
 	 */
@@ -181,7 +181,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Section|WP_Error
@@ -194,7 +194,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get an LLMS_Section
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $section_args Section args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -207,7 +207,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepares a single post for create or update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -248,7 +248,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Section's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -308,7 +308,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array The Enrollments collection parameters.
 	 */
@@ -319,7 +319,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $collection_params The Enrollments collection parameters to be set.
 	 * @return void
@@ -331,7 +331,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -351,7 +351,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Section    $section Section object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -374,7 +374,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -483,7 +483,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Checks if a Section can be read
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Section $section The Section oject.
 	 * @return bool Whether the post can be read.
@@ -504,7 +504,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the content controller.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return  LLMS_REST_Lessons_Controller|null
 	 */
@@ -515,7 +515,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the lessons objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -539,7 +539,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get a collection of content items (lessons).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response

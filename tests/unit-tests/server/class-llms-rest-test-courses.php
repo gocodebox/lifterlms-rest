@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_courses
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
@@ -71,7 +71,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_register_routes() {
 
@@ -89,7 +89,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses() {
 
@@ -121,7 +121,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses pagination success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_with_pagination() {
 
@@ -151,7 +151,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses include arg
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_include() {
 
@@ -182,7 +182,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses exclude arg
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_exclude() {
 
@@ -209,7 +209,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses ordered by id desc.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_ordered_by_id_desc() {
 
@@ -239,7 +239,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses ordered by title.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_ordered_by_title() {
 
@@ -271,7 +271,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses ordered by title
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_ordered_by_title_desc() {
 
@@ -303,7 +303,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting courses without permission.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *//*
 	public function test_get_courses_without_permission() {
 
@@ -323,7 +323,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting courses: forbidden request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *//*
 	public function test_get_courses_forbidden() {
 
@@ -342,7 +342,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting courses: bad request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_courses_bad_request() {
 
@@ -367,7 +367,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting a single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_course() {
 
@@ -389,7 +389,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting single course without permission.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	/*
 	public function test_get_course_without_permission() {
@@ -409,7 +409,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting forbidden single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	/*
 	public function test_get_course_forbidden() {
@@ -429,7 +429,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting single course that doesn't exist.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_get_nonexistent_course() {
 
@@ -447,7 +447,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course() {
 
@@ -498,7 +498,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course defaults are correctly set.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_check_defaults() {
 		wp_set_current_user( $this->user_allowed );
@@ -576,7 +576,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course special props.
 	 * These props, when set, alter the rendered content so we test them separetaly.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_special() {
 
@@ -623,7 +623,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course with taxonomies
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_with_taxonomies() {
 
@@ -717,7 +717,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course with taxonomies
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_with_prerequisites() {
 		wp_set_current_user( $this->user_allowed );
@@ -780,7 +780,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test course "periods".
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_and_periods() {
 
@@ -846,7 +846,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test create course with raw properties.
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_and_raws() {
 		wp_set_current_user( $this->user_allowed );
@@ -896,7 +896,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test producing bad request error when creating a single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_bad_request() {
 
@@ -960,7 +960,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating single course without permissions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_without_permissions() {
 
@@ -979,7 +979,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test forbidden single course creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_create_course_forbidden() {
 
@@ -999,7 +999,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_course() {
 
@@ -1036,7 +1036,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a nonexistent course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_nonexistent_course() {
 
@@ -1058,7 +1058,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test forbidden single course update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_forbidden_course() {
 
@@ -1080,7 +1080,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single course update without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_update_course_without_authorization() {
 
@@ -1102,7 +1102,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_course() {
 
@@ -1128,7 +1128,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test trashing a single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_trash_course() {
 
@@ -1177,7 +1177,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a nonexistent single course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_nonexistent_course() {
 
@@ -1195,7 +1195,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting bad request response when deleting a course.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_bad_request_course() {
 
@@ -1216,7 +1216,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single course update without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_forbidden_course() {
 
@@ -1237,7 +1237,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single course deletion without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function test_delete_course_without_authorization() {
 
@@ -1259,7 +1259,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list course content.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @todo test order and orderby
 	 */
@@ -1299,7 +1299,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list course content.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @todo test order and orderby
 	 */

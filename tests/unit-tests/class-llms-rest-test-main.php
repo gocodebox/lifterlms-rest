@@ -6,15 +6,15 @@
  *
  * @group main
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Setup the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -28,7 +28,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test keys() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -42,7 +42,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test webhooks() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Abstracts
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Webhook class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
@@ -56,7 +56,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Constructor
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, hydrates the object on instantiation if an ID is supplied.
@@ -77,7 +77,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve an admin nonce url for deleting an API key.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -97,7 +97,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Generate a delivery signature from a delivery payload.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $payload JSON-encoded payload.
 	 * @return string
@@ -107,7 +107,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		/**
 		 * Allow overriding of signature generation.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param string $signature Custom signature. Return a string to replace the default signature.
 		 * @param string $payload JSON-encoded body to be delivered.
@@ -121,7 +121,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		/**
 		 * Customize the hash algorithm used to generate the webhook delivery signature.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param string $algo Hash algorithm. Defaults to 'sha256'. List of supported algorithms available at https://www.php.net/manual/en/function.hash-hmac-algos.php.
 		 * @param string $payload JSON-encoded body to be delivered.
@@ -139,7 +139,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve the admin URL where the api key is managed.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -156,7 +156,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve the topic event
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -170,7 +170,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve an array of hooks for the webhook topic.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string[]
 	 */
@@ -191,7 +191,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve a payload for webhook delivery.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return array
@@ -221,7 +221,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		/**
 		 * Filter the webhook payload prior to delivery
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $payload Webhook payload.
 		 * @param string $resource Webhook resource.
@@ -236,7 +236,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve the topic resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -250,7 +250,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Retrieve a user agent string to use for delivering webhooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -262,7 +262,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	/**
 	 * Increment delivery failures and after max allowed failures are reached, set status to disabled.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return LLMS_REST_Webhook
 	 */
@@ -275,7 +275,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		/**
 		 * Filter the number of times a webhook is allowed to fail before it is automatically disabled.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param int $num Number of allowed failures. Default: 5.
 		 */
@@ -288,7 +288,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 			/**
 			 * Fires immediately after a webhook has been disabled due to exceeding its maximum allowed failures.
 			 *
-			 * @since [version]
+			 * @since 1.0.0-beta.1
 			 *
 			 * @param int $webhook_id ID of the webhook.
 			 */

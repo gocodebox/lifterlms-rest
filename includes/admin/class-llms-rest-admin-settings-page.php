@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Admin/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Settings Page: REST API
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 	/**
 	 * Constructor
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function __construct() {
 
@@ -51,7 +51,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 *
 	 * Overrides parent function to set "keys" as the default section instead of the nonexistant "main".
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -69,7 +69,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	/**
 	 * Get the page sections
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -88,7 +88,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		/**
 		 * Modify the available tabs on the REST API settings screen.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $sections Array of settings page tabs.
 		 */
@@ -99,7 +99,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	/**
 	 * Get settings array
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -121,7 +121,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	/**
 	 * Add CSS classes to the API Keys Table.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string[] $classes Array of css class names.
 	 * @param string   $id Table ID.
@@ -139,7 +139,7 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	/**
 	 * Outputs a custom "title" field with HTML content as the settings section title.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $field Settings field arguments.
 	 * @return void

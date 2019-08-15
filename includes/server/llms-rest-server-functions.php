@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Functions
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Return a WP_Error with proper code, message and status for unauthorized requests.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -37,7 +37,7 @@ function llms_rest_authorization_required_error( $message = '' ) {
 /**
  * Return a WP_Error with proper code, message and status for invalid or malformed request syntax.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -51,7 +51,7 @@ function llms_rest_bad_request_error( $message = '' ) {
 /**
  * Return a WP_Error with proper code, message and status for not found resources.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -65,7 +65,7 @@ function llms_rest_not_found_error( $message = '' ) {
 /**
  * Return a WP_Error for a 500 Internal Server Error.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  *
  * @param string $message Optional. Custom error message. When none provided a predefined message is used.
  * @return WP_Error

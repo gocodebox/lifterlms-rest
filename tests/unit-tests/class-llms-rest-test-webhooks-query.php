@@ -7,15 +7,15 @@
  * @group webhooks
  * @group webhooks_query
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Setup test.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -29,7 +29,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_webhooks() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -56,7 +56,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the include and exclude arguments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -85,7 +85,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test pagination of query results.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -112,7 +112,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the status filter arguments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test setting up default query args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -164,7 +164,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Tests setting up all possible arguments with custom arguments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -192,7 +192,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Merge default with custom arguments on setup.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

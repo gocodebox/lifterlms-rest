@@ -7,15 +7,15 @@
  * @group admin
  * @group admin_form_contoller
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Set up the tests.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -35,7 +35,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Clean up admin notices between tests
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -54,7 +54,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test no events are run on regular admin screens.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -70,7 +70,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Ensure required field errors are returned when creating a webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return [type]
 	 */
@@ -121,7 +121,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Ensure all submittable fields are added to the hook on creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return [type]
 	 */
@@ -161,7 +161,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test creating a webhook with a custom action.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -204,7 +204,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test upserting a webhook with weird or invalid ids.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -292,7 +292,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test updating a webhook with a custom action.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -329,7 +329,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test the "Revoke" nonce URL for deleting api keys.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -397,7 +397,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test the delete nonce URL for deleting webhooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

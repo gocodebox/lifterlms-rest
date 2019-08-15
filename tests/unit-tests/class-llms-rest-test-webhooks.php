@@ -6,15 +6,15 @@
  *
  * @group webhooks
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Setup the tests.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return  void
 	 */
@@ -28,7 +28,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't create a webhook with an ID.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -43,7 +43,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't create a webhook with a bad url.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -66,7 +66,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Creation attempts missing required columns should fail.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -92,7 +92,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Fill required data with default data during creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -122,7 +122,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Create with entirely custom values.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -147,7 +147,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Ensure created/updated dates are automatically added during creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -171,7 +171,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test deleting a webhook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -199,7 +199,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test hook getter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -222,7 +222,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't create with invalid status
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -248,7 +248,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't create with invalid topic
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -275,7 +275,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't create/update with an empty description.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -302,7 +302,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Validate delivery url (can't be empty)
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -328,7 +328,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test default column values getter
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -346,7 +346,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the is_topic_valid() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -371,7 +371,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't update without supplying an ID
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -391,7 +391,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't update something that doesn't exist
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -411,7 +411,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Can't supply an empty url during an update
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -435,7 +435,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test updating
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -469,7 +469,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test updating delivery_url to a bad url.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -499,7 +499,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test that the updated date is automatically updated during an update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

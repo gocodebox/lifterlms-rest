@@ -7,15 +7,15 @@
  * @group rest_users_abstract
  * @group rest_users
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Setup the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -38,7 +38,7 @@ class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_
 	/**
 	 * Filter for testing banned usernames added via the `illegal_user_logins` filter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string[] $illegal List of illegal usernames.
 	 * @return string[]
@@ -52,7 +52,7 @@ class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_
 	/**
 	 * Test the sanitize_password method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -72,7 +72,7 @@ class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_
 	/**
 	 * Test the sanitize_username method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

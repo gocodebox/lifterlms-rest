@@ -6,8 +6,8 @@
  *
  * @group auth
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -22,7 +22,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the authenticate method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -77,7 +77,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test key lookup.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return [type]
 	 */
@@ -111,7 +111,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_credentials() method using headers.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -145,7 +145,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_credentials() method using basic auth.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -179,7 +179,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the is_rest_request() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

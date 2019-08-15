@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST_API/Tests
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -22,7 +22,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Utility to compare an LLMS_Post with an array of data, tipically coming from a rest response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $llms_post       An LLMS_Post_Model.
 	 * @param array           $llms_post_data  An array of llms post data.

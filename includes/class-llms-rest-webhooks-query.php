@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Webhooks_Query class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 
@@ -27,7 +27,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	/**
 	 * Retrieve default arguments for a query
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -53,7 +53,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	/**
 	 * Retrieve an array of LLMS_REST_Webhook objects for the given result set returned by the query
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -80,7 +80,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	/**
 	 * Parses argument data
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -102,7 +102,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	/**
 	 * Prepare the SQL for the query
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -121,7 +121,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	/**
 	 * SQL "where" clause for the query
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */

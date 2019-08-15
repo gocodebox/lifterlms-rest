@@ -6,8 +6,8 @@
  *
  * @package  LifterLMS_REST/Abstracts
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Controller_Stubs class.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
@@ -31,7 +31,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return object|WP_Error
@@ -41,7 +41,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Determine if the current user can view the requested item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $item_id WP_User id.
 	 * @return bool
@@ -56,7 +56,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Insert the prepared data into the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
@@ -77,7 +77,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Retrieve an ID from the object
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $object Item object.
 	 * @return int
@@ -106,7 +106,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request Request object.
@@ -127,7 +127,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj $query Objects query result.
 	 * @return obj[]
@@ -147,7 +147,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -179,7 +179,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Prepare an object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.
@@ -207,7 +207,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Update the object in the database with prepared data.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.

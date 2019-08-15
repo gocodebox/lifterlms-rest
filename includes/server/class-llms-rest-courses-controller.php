@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Courses_Controller
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -48,7 +48,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function __construct() {
 
@@ -63,7 +63,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -115,7 +115,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Course|WP_Error
@@ -128,7 +128,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get an LLMS_Course
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -141,7 +141,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Course's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -499,7 +499,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -624,7 +624,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepares a single post for create or update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -747,7 +747,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Updates a single llms post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -883,7 +883,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Maps a taxonomy name to the relative rest base
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param object $taxonomy The taxonomy object.
 	 * @return string The taxonomy rest base.
@@ -906,7 +906,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Course $course Course object.
 	 * @return array Array of action/filters to be removed for response.
@@ -1041,7 +1041,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the enrollments objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -1062,7 +1062,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the sections objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -1086,7 +1086,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get a collection of content items (sections).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response

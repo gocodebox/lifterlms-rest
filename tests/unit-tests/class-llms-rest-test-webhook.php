@@ -8,15 +8,15 @@
  * @group webhooks
  * @group webhook_model
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Mock `wp_remote_request` via the `pre_http_request`
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @see {Reference}
 	 * @link https://developer.wordpress.org/reference/hooks/pre_http_request/
@@ -55,7 +55,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Setup the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -66,7 +66,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Tear down the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -131,7 +131,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test enqueue for an action with a single hook.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -151,7 +151,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test enqueue for an action with a multiple hooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -173,7 +173,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test enqueue for a custom action
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -193,7 +193,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_edit_link() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -214,7 +214,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_delete_link() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -236,7 +236,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test signature generation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -278,7 +278,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test event getter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -310,7 +310,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test hook getter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -339,7 +339,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test resource getter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -370,7 +370,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test is pending checker method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -391,7 +391,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test validity of post actions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -559,7 +559,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test ping() on unresolveable urls.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -582,7 +582,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test ping() on non 200 responses.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -605,7 +605,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test ping() success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -626,7 +626,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the delivery failure setter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -654,7 +654,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the status condition of the should_deliver() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -677,7 +677,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the status condition of the should_deliver() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

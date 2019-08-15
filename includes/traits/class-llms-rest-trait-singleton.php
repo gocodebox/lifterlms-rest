@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Trait_Singleton class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 trait LLMS_REST_Trait_Singleton {
 
@@ -27,7 +27,7 @@ trait LLMS_REST_Trait_Singleton {
 	/**
 	 * Private Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -36,7 +36,7 @@ trait LLMS_REST_Trait_Singleton {
 	/**
 	 * Singleton Instance of the LifterLMS_REST_API class.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return obj instance of the LifterLMS_REST_API class.
 	 */

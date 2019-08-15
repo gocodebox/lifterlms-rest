@@ -6,8 +6,8 @@
  *
  * @group api_keys
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -21,7 +21,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test all potential errors encountered during API Key creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -70,7 +70,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the success of the create() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -124,7 +124,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the delete() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -155,7 +155,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -182,7 +182,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the `get_admin_url()` method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -195,7 +195,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the get_permissions() method.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -210,7 +210,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test update() error conditions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -269,7 +269,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test update() method success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

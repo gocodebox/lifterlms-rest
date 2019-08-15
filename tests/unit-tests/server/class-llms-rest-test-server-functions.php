@@ -7,15 +7,15 @@
  * @group rest_server
  * @group rest_functions
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Test the llms_rest_authorization_required_error() function when logged out.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -40,7 +40,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test the llms_rest_authorization_required_error() function when logged in.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -67,7 +67,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test the llms_rest_bad_request_error() function.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -92,7 +92,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test the llms_rest_not_found_error() function.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -117,7 +117,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test the llms_rest_server_error() function.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */

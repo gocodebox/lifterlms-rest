@@ -4,8 +4,8 @@
  *
  * @package LLMS_REST
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Enrollments_Controller
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -44,7 +44,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function __construct() {
 		$this->collection_params = $this->build_collection_params();
@@ -53,7 +53,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read items.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -134,7 +134,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get a collection of enrollments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -208,7 +208,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -235,7 +235,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get a single item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -256,7 +256,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to create an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -280,7 +280,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Creates a single enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -334,7 +334,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to update an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -357,7 +357,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Update item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -418,7 +418,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to delete an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -446,7 +446,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Deletes a single llms post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -479,7 +479,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check enrollment existence.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int     $student_id Student ID.
 	 * @param int     $post_id The course/membership ID.
@@ -507,7 +507,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -532,7 +532,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -555,7 +555,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array The Enrollments collection parameters.
 	 */
@@ -566,7 +566,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $collection_params The Enrollments collection parameters to be set.
 	 * @return void
@@ -578,7 +578,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Build the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -609,7 +609,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Enrollments's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -658,7 +658,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get enrollments objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $query_args Query args.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -702,7 +702,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -736,7 +736,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Determines the allowed query_vars for a get_items() response and prepares
 	 * them for WP_Query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared_args Optional. Prepared WP_Query arguments. Default empty array.
 	 * @param WP_REST_Request $request       Optional. Full details about the request.
@@ -781,7 +781,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get enrollments query
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $query_args Query args.
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
@@ -888,7 +888,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param stdClass        $enrollment Enrollment object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -913,7 +913,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments links for the request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param object $enrollment Enrollment object data.
 	 * @return array Links for the given object.
@@ -964,7 +964,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Handles the enrollment status update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.
 	 * @param string       $status Status.
@@ -989,7 +989,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Handles the enrollment creation date.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 * @param integer $student_id Student id.
 	 * @param integer $post_id The post id.
 	 * @param string  $date Creation date.
@@ -1025,7 +1025,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an enrollment can be edited.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool Whether the enrollment can be created
 	 */
@@ -1036,7 +1036,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an enrollment can be updated
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool Whether the enrollment can be edited.
 	 */
@@ -1047,7 +1047,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an enrollment can be deleted
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool Whether the enrollment can be deleted.
 	 */
@@ -1058,7 +1058,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Checks if an llms post can be read.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param mixed $enrollment The enrollment object.
 	 * @return bool Whether the enrollment can be read.

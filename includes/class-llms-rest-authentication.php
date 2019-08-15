@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST API Authentication.
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 class LLMS_REST_Authentication {
 
@@ -34,7 +34,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Constructor
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 */
 	public function __construct() {
 
@@ -58,7 +58,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Authenticate an API Request
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/determine_current_user/
 	 *
@@ -101,7 +101,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Check for authentication error.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/rest_authentication_errors/
 	 *
@@ -147,7 +147,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Find a key via unhashed consumer key
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $consumer_key An unhashed consumer key.
 	 * @return LLMS_REST_API_Key|false
@@ -171,7 +171,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Locate credentials in the $_SERVER superglobal.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $key_var Variable name for the consumer key.
 	 * @param string $secret_var Variable name for the consumer secret.
@@ -194,7 +194,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Retrieve the auth error object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return WP_Error|null
 	 */
@@ -205,7 +205,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Determine if the request is a request to a LifterLMS REST API endpoint.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return bool
 	 */
@@ -231,7 +231,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Get api credentials from headers and then basic auth.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array|false
 	 */
@@ -275,7 +275,7 @@ class LLMS_REST_Authentication {
 	/**
 	 * Set authentication error object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param WP_Error|null $err Error object or null to clear an error.
 	 * @return void

@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Database_Resource class..
  *
- * @since [version]
+ * @since 1.0.0-beta.1
  */
 abstract class LLMS_REST_Database_Resource {
 
@@ -59,7 +59,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Validate data supplied for creating/updating a resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to a key's properties.
 	 * @return WP_Error|true When data is invalid will return a WP_Error with information about the invalid properties,
@@ -74,7 +74,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Create a new Resource
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to the resource's properties.
 	 * @return WP_Error|obj
@@ -93,7 +93,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Prepare data for creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Array of data.
 	 * @return array
@@ -132,7 +132,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Delete a the resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int $id Resource ID.
 	 * @return bool  `true` on success, `false` if the resource couldn't be found or an error was encountered during deletion.
@@ -148,7 +148,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve an API Key object instance.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param int  $id API Key ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
@@ -165,7 +165,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Get default column values.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return array
 	 */
@@ -174,7 +174,7 @@ abstract class LLMS_REST_Database_Resource {
 		/**
 		 * Allow customization of default Resource values.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.1
 		 *
 		 * @param array $values An associative array of default values.
 		 */
@@ -185,7 +185,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Retrieve the translated resource name.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @return string
 	 */
@@ -196,7 +196,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Update a resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data {
 	 *     Array of data to update.
@@ -230,7 +230,7 @@ abstract class LLMS_REST_Database_Resource {
 	/**
 	 * Prepare data for an update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param array $data Associative array of data to set to a resources properties.
 	 * @return object|WP_Error
@@ -257,7 +257,7 @@ abstract class LLMS_REST_Database_Resource {
 	 *
 	 * This method assumes the supplied data has already been validated and sanitized.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.1
 	 *
 	 * @param obj   $obj Instantiated object.
 	 * @param array $data Associative array of data to persist.
