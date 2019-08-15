@@ -51,19 +51,21 @@ if ( ! defined( 'LLMS_REST_WEBHOOK_DELIVERY_LOGGING' ) ) {
 
 // Load Plugin.
 if ( ! class_exists( 'LifterLMS_REST_API' ) ) {
-	require_once LLMS_REST_API_PLUGIN_DIR . 'class-lifterlms-rest-api.php';
-}
 
-// phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
-/**
- * Main Plugin Instance
- *
- * @since 1.0.0-beta.1
- *
- * @return LLMS_REST_API
- */
-function LLMS_REST_API() {
-	return LifterLMS_REST_API::instance();
+	require_once LLMS_REST_API_PLUGIN_DIR . 'class-lifterlms-rest-api.php';
+
+	// phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+	/**
+	 * Main Plugin Instance
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return LLMS_REST_API
+	 */
+	function LLMS_REST_API() {
+		return LifterLMS_REST_API::instance();
+	}
+
 }
 
 return LLMS_REST_API();
