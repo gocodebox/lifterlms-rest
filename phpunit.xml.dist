@@ -16,6 +16,8 @@
 	<testsuites>
 		<testsuite name="LifterLMS REST API Test Suite">
 			<directory suffix=".php">tests/unit-tests</directory>
+			<!-- @todo: rework these tests to post to a mocked url -->
+			<exclude>./tests/unit-tests/class-llms-rest-test-webhook-delivery.php</exclude>
 		</testsuite>
 	</testsuites>
 
