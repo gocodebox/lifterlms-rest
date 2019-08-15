@@ -407,7 +407,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 	}
 
-
 	/**
 	 * Register routes.
 	 *

@@ -177,6 +177,34 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	}
 
 	/**
+	 * Prepare an object for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Abstract_User_Data $object User object.
+	 * @param WP_REST_Request         $request Request object.
+	 * @return array
+	 */
+	protected function prepare_object_for_response( $object, $request ) {
+
+		// Todo: update version number.
+
+		// Translators: %s = method name.
+		_doing_it_wrong( 'LLMS_REST_Controller::prepare_object_for_response', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+
+		$prepared = array();
+		$map      = array_flip( $this->map_schema_to_database() );
+		$fields   = $this->get_fields_for_response( $request );
+
+		foreach ( $map as $db_key => $schema_key ) {
+			$prepared[ $schema_key ] = $object->get( $db_key );
+		}
+
+		return $prepared;
+
+	}
+
+	/**
 	 * Update the object in the database with prepared data.
 	 *
 	 * @since [version]
