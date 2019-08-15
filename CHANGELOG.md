@@ -1,7 +1,7 @@
 LifterLMS REST API Changelog
 ============================
 
-v1.0.0 - 2019-05-20
--------------------
+v1.0.0-beta.1 - 2019-08-15
+--------------------------
 
-+ Initial Public Release
++ Initial public beta release.
