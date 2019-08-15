@@ -5,11 +5,10 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
-
 
 /**
  * Generate a keyed hash value using the HMAC method with the key `llms-rest-api`
@@ -29,18 +28,19 @@ function llms_rest_api_hash( $data ) {
  * Hooked to `lifterlms_rest_deliver_webhook_async`.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Fixed incorrect reference.
  *
  * @see LLMS_REST_Webhook::schedule()
  *
  * @param int   $webhook_id Webhook id.
- * @param mixed $arg First argument from the hook.
+ * @param array $args Numeric array of arguments from the originating hook.
  * @return void
  */
-function llms_rest_deliver_webhook_async( $webhook_id, $arg ) {
+function llms_rest_deliver_webhook_async( $webhook_id, $args ) {
 
-	$webhook = LLMS_REST_API()->webhooks->get( $webhook_id );
+	$webhook = LLMS_REST_API()->webhooks()->get( $webhook_id );
 	if ( $webhook ) {
-		$webhook->deliver( $arg );
+		$webhook->deliver( $args );
 	}
 
 }
