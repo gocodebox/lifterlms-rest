@@ -225,20 +225,6 @@ tags:
         + `membership.updated`
         + `membership.deleted`
         + `membership.restored`
-      + Access Plans
-        + `access_plan.created`
-        + `access_plan.updated`
-        + `access_plan.deleted`
-        + `access_plan.restored`
-      + Orders
-        + `order.created`
-        + `order.updated`
-        + `order.deleted`
-        + `order.restored`
-      + Transaction
-        + `transaction.created`
-        + `transaction.updated`
-        + `transaction.deleted`
       + Students
         + `student.created`
         + `student.updated`
@@ -329,9 +315,10 @@ x-tagGroups:
       - Sections
       - Lessons
 
-  - name: E-Commerce
-    tags:
-      - Access Plans
+  # @todo: Implement
+  # - name: E-Commerce
+  #   tags:
+  #     - Access Plans
 
   - name: Instructors
     tags:
@@ -341,11 +328,12 @@ x-tagGroups:
     tags:
       - Memberships
 
-  - name: Quizzes
-    tags:
-      - Quizzes
-      - Quiz Questions
-      - Quiz Attempts
+  # @todo: Implment.
+  # - name: Quizzes
+  #   tags:
+  #     - Quizzes
+  #     - Quiz Questions
+  #     - Quiz Attempts
 
   - name: Students
     tags:
