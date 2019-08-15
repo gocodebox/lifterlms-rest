@@ -4,13 +4,13 @@
  *
  * @package  LifterLMS_REST_API/Main
  *
- * @since 1.0.0
- * @version 1.0.0
+ * @since 1.0.0-beta.1
+ * @version 1.0.0-beta.1
  *
  * Plugin Name: LifterLMS REST API
  * Plugin URI: https://lifterlms.com/
  * Description: REST API feature plugin for the LifterLMS Core.
- * Version: 1.0.0-beta.1
+ * Version: 1.0.0-beta.1-beta.1
  * Author: LifterLMS
  * Author URI: https://lifterlms.com/
  * Text Domain: lifterlms
@@ -21,6 +21,11 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// Don't load the REST API.
+if ( defined( 'LLMS_REST_DISABLE' ) && LLMS_REST_DISABLE ) {
+	return;
+}
 
 // @todo handle this better.
 if ( version_compare( phpversion(), '7.1', '<' ) ) {
@@ -53,7 +58,7 @@ if ( ! class_exists( 'LifterLMS_REST_API' ) ) {
 /**
  * Main Plugin Instance
  *
- * @since 1.0.0
+ * @since 1.0.0-beta.1
  *
  * @return LLMS_REST_API
  */
