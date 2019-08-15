@@ -1,32 +1,46 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0-alpha.1
+  version: 1.0.0-beta.1
   title: LifterLMS REST API
   description: >-
     # Introduction
 
     LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.
 
-    ## We're Under Construction
+    ## Public Beta
 
-    This is a working specification for the LifterLMS Rest API scheduled to be released as part of the free LifterLMS core plugin in August 2019.
+    As of LifterLMS version 3.34.0, the LifterLMS REST API is included in the LifterLMS core plugin for public evaluation and testing.
 
-    We are currently accepting feedback from any interested party. Please review this specification and provide your feedback via [this form](https://docs.google.com/forms/d/e/1FAIpQLSeQTBN-TOG9kPyccWJ_agZWmxuUwdaz7PGforoXRwW3IYscbA/viewform).
+    The specification may change slightly over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!
 
-    If you're interested in contributing, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack) to find out how you can contribute.
+    If you're interested in contributing or discussing the REST API, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack).
 
     ## Requirements
 
     To use the latest version of the REST API you must be using the following:
 
-      + LifterLMS Version ??+.
+      + LifterLMS Version 3.34.0+.
       + WordPress 5.2+.
       + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**
       + An SSL certificate.
 
-    ## Errors
+    ## Libraries and Tools
 
-    asrtasrtarst
+    ### Official Libraries
+
+    LifterLMS develops and maintains official libraries for different programming languages so you can easily build around the REST API.
+
+      + [Node/Javascript](https://github.com/gocodebox/llms-api-node)
+      + PHP (coming soon)
+
+    ### Tools
+
+    Some useful tools to help develop and access the REST API:
+
+      + [Postman](https://www.getpostman.com/) - A multi platform REST API GUI client.
+      + [RESTCLient](https://addons.mozilla.org/en-US/firefox/addon/restclient/) - A free Firefox add-on.
+      + [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) - A free Google Chrome extension.
+      + [RequestBin](https://requestbin.com/) - A free service allowing you to quickly test webhooks.
 
     # Authentication
 
