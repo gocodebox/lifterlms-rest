@@ -191,20 +191,6 @@ tags:
         + `membership.updated`
         + `membership.deleted`
         + `membership.restored`
-      + Access Plans
-        + `access_plan.created`
-        + `access_plan.updated`
-        + `access_plan.deleted`
-        + `access_plan.restored`
-      + Orders
-        + `order.created`
-        + `order.updated`
-        + `order.deleted`
-        + `order.restored`
-      + Transaction
-        + `transaction.created`
-        + `transaction.updated`
-        + `transaction.deleted`
       + Students
         + `student.created`
         + `student.updated`
@@ -291,20 +277,12 @@ x-tagGroups:
       - Courses
       - Sections
       - Lessons
-  - name: E-Commerce
-    tags:
-      - Access Plans
   - name: Instructors
     tags:
       - Instructors
   - name: Memberships
     tags:
       - Memberships
-  - name: Quizzes
-    tags:
-      - Quizzes
-      - Quiz Questions
-      - Quiz Attempts
   - name: Students
     tags:
       - Students
@@ -2649,71 +2627,7 @@ paths:
         - Student Enrollments
       responses:
         '204':
-          description: Successfully deleted the student.
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-  '/students/{id}/progress':
-    parameters:
-      - name: id
-        description: Unique student Identifer. The WordPress User `ID`.
-        example: 123
-        in: path
-        required: true
-        schema:
-          $ref: '#/components/schemas/ResourceId'
-    get:
-      summary: List student progress
-      description: Retrieves a list of a student's progress records.
-      tags:
-        - Student Progress
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/Order'
-        - name: orderby
-          description: Specify the sort field for a collection of results.
-          in: query
-          schema:
-            type: string
-            enum:
-              - date_updated
-              - date_created
-              - progress
-            default: date_updated
-        - name: status
-          description: Filter results to records matching the specified status.
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - incomplete
-              - complete
-      responses:
-        '200':
-          description: Successfully returned a list of a student's progress records.
-          headers:
-            Link:
-              description: Pagination links for the collection.
-              schema:
-                type: string
-                example: '</wp-json/llms/v1/students/123/progress?page=1>; rel="first", </wp-json/llms/v1/students/123/progress?page=2>; rel="prev", </wp-json/llms/v1/students/123/progress?page=4>; rel="next", </wp-json/llms/v1/students/123/progress?page=5>; rel="last"'
-            X-WP-Total:
-              $ref: '#/components/headers/PaginationTotalResults'
-            X-WP-TotalPages:
-              $ref: '#/components/headers/PaginationTotalPages'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Progress'
+          description: Successfully deleted student's enrollment.
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -2798,8 +2712,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   /webhooks:
     get:
       summary: List webhooks
@@ -4435,13 +4347,15 @@ components:
           example: 456
           readOnly: true
         date_created:
-          description: 'The progress creation date. Format: `Y-m-d H:i:s`'
+          description: The progress creation date. Cannot be in the future.
           type: string
-          example: '2019-05-21 14:22:05'
+          format: date-time
+          example: '2019-05-21T14:22:05'
         date_updated:
-          description: 'The date of the last progress update. Format: `Y-m-d H:i:s`'
+          description: The date of the last progress update.
           type: string
-          example: '2019-05-21 19:22:05'
+          format: date-time
+          example: '2019-05-21T19:22:05'
           readOnly: true
         progress:
           description: Student's progress as a percentage.
@@ -4473,15 +4387,6 @@ components:
                   href:
                     type: string
                     example: /wp-json/llms/v1/students/123/progress/456
-            collection:
-              description: REST URI to the collection of student progress records.
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                    example: /wp-json/llms/v1/students/123/progress
             post:
               description: Rest URI to the post resource.
               type: array

@@ -67,7 +67,7 @@
     },
     {
       "name": "Webhooks",
-      "description": "Webhooks can be created to notify you about LMS-related events that happen on your site.\n\nThe Webhooks API allows you to create, view, update, and delete webhooks.\n\nWebhooks may additionally be managed on the LifterLMS Webhooks screen on your site's WordPress admin panel.\n\n## Topics\n\nThe `topic` is a combination of the resource (e.g. student) and event (e.g. created). Each `topic` maps to one or more hook names (e.g. `llms_user_registered`). The proper hooks are automatically added based on the `topic`.\n\nThe following topics are available:\n\n+ Courses\n  + `course.created`\n  + `course.updated`\n  + `course.deleted`\n  + `course.restored`\n+ Sections\n  + `section.created`\n  + `section.updated`\n  + `section.deleted`\n  + `section.restored`\n+ Lessons\n  + `lesson.created`\n  + `lesson.updated`\n  + `lesson.deleted`\n  + `lesson.restored`\n+ Memberships\n  + `membership.created`\n  + `membership.updated`\n  + `membership.deleted`\n  + `membership.restored`\n+ Access Plans\n  + `access_plan.created`\n  + `access_plan.updated`\n  + `access_plan.deleted`\n  + `access_plan.restored`\n+ Orders\n  + `order.created`\n  + `order.updated`\n  + `order.deleted`\n  + `order.restored`\n+ Transaction\n  + `transaction.created`\n  + `transaction.updated`\n  + `transaction.deleted`\n+ Students\n  + `student.created`\n  + `student.updated`\n  + `student.deleted`\n+ Student Enrollment\n  + `enrollment.created`\n  + `enrollment.updated`\n  + `enrollment.deleted`\n+ Student Progress\n  + `progress.updated`\n  + `progress.deleted`\n+ Instructors\n  + `instructor.created`\n  + `instructor.updated`\n  + `instructor.deleted`\n\nCustom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.\n\n## Delivery\n\nWebhook payloads are delivered in the background using wp-cron and `wp_remote_post()` (HTTP POST).\n\nCustom headers are supplied to assist with the receipt of the webhook:\n\n| Header                   | Description                                        | Example             |\n| ------------------------ | -------------------------------------------------- | ------------------- |\n| X-LLMS-Webhook-Source    | The URL of the LifterLMS website.                  | https://example.tld |\n| X-LLMS-Webhook-Topic     | The webhook `topic` property.                      | student.created     |\n| X-LLMS-Webhook-Resource  | The webhook `resource` property.                   | student             |\n| X-LLMS-Webhook-Event     | The webhook `event` property.                      | created             |\n| X-LLMS-Webhook-Signature | A base64 encoded HMAC-SHA256 hash of the payload.  |                     |\n| X-LLMS-Webhook-ID        | The unique webhook identifier (WordPress post ID). | 654                 |\n| X-LLMS-Delivery-ID       | A unique ID for the webhook delivery.              | 765                 |\n\nThe payload is a JSON-encoded object of the API resource as if retrieved by a `GET` request.\n\nThe payload for a custom hook will be a JSON-encoded version of the first parameter supplied by the hook.\n\n## Signature Verification\n\nWebhooks are signed by LifterLMS and the event's unique signature is included in the `X-LLMS-Webhook-Signature` header. The signature allows you to verify that the webhook was sent by LifterLMS and not by a third party. We recommend verifying all webhooks and discarding any payloads which cannot be verified.\n\nThe `X-LLMS-Webhook-Signature` contains a timestamp and one or more signatures. The timestamp is prefixed by `t=` and the signatures are prefixed by `v` and an integer. Currently the only valid signature scheme is `v1`.\n\n```\nX-LLMS-Webhook-Signature: t=1562715579,v1=0d579d62ef442b6e2d1d522924aafed480fdaaacbe498486a94445de8b995819\n```\n\nThe signature is generated using a hash-based message authentication code ([HMAC](https://en.wikipedia.org/wiki/HMAC)) with [SHA-256](https://en.wikipedia.org/wiki/SHA-2).\n\nTo verify a webhook signature you must construct an _expected_ webhook signature which you can then compare against the webhook signature supplied with delivery.\n\n#### Step 1: Extract the timestamps and signatures from the header\n\nSplit the header, using the `,` character as the separator, to get a list of elements. Then split each element, using the `=` character as the separator, to get a prefix and value pair.\n\nThe value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature. You can discard all other elements.\n\n#### Step 2: Prepare the payload string for signing\n\nYou achieve this by concatenating:\n\n+ The timestamp (as a string)\n+ The character `.`\n+ The actual JSON payload (i.e. the request's body)\n\n#### Step 3: Generate the expected signature string\n\nCompute an HMAC with the SHA256 hash function. Use the endpoints signing secret as the key, and use the string from Step 2 as the message.\n\n#### Step 4: Compare the signatures\n\nCompare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.\n\n## Webook Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Webhook\" showReadOnly={true} showWriteOnly={true} />\n"
+      "description": "Webhooks can be created to notify you about LMS-related events that happen on your site.\n\nThe Webhooks API allows you to create, view, update, and delete webhooks.\n\nWebhooks may additionally be managed on the LifterLMS Webhooks screen on your site's WordPress admin panel.\n\n## Topics\n\nThe `topic` is a combination of the resource (e.g. student) and event (e.g. created). Each `topic` maps to one or more hook names (e.g. `llms_user_registered`). The proper hooks are automatically added based on the `topic`.\n\nThe following topics are available:\n\n+ Courses\n  + `course.created`\n  + `course.updated`\n  + `course.deleted`\n  + `course.restored`\n+ Sections\n  + `section.created`\n  + `section.updated`\n  + `section.deleted`\n  + `section.restored`\n+ Lessons\n  + `lesson.created`\n  + `lesson.updated`\n  + `lesson.deleted`\n  + `lesson.restored`\n+ Memberships\n  + `membership.created`\n  + `membership.updated`\n  + `membership.deleted`\n  + `membership.restored`\n+ Students\n  + `student.created`\n  + `student.updated`\n  + `student.deleted`\n+ Student Enrollment\n  + `enrollment.created`\n  + `enrollment.updated`\n  + `enrollment.deleted`\n+ Student Progress\n  + `progress.updated`\n  + `progress.deleted`\n+ Instructors\n  + `instructor.created`\n  + `instructor.updated`\n  + `instructor.deleted`\n\nCustom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.\n\n## Delivery\n\nWebhook payloads are delivered in the background using wp-cron and `wp_remote_post()` (HTTP POST).\n\nCustom headers are supplied to assist with the receipt of the webhook:\n\n| Header                   | Description                                        | Example             |\n| ------------------------ | -------------------------------------------------- | ------------------- |\n| X-LLMS-Webhook-Source    | The URL of the LifterLMS website.                  | https://example.tld |\n| X-LLMS-Webhook-Topic     | The webhook `topic` property.                      | student.created     |\n| X-LLMS-Webhook-Resource  | The webhook `resource` property.                   | student             |\n| X-LLMS-Webhook-Event     | The webhook `event` property.                      | created             |\n| X-LLMS-Webhook-Signature | A base64 encoded HMAC-SHA256 hash of the payload.  |                     |\n| X-LLMS-Webhook-ID        | The unique webhook identifier (WordPress post ID). | 654                 |\n| X-LLMS-Delivery-ID       | A unique ID for the webhook delivery.              | 765                 |\n\nThe payload is a JSON-encoded object of the API resource as if retrieved by a `GET` request.\n\nThe payload for a custom hook will be a JSON-encoded version of the first parameter supplied by the hook.\n\n## Signature Verification\n\nWebhooks are signed by LifterLMS and the event's unique signature is included in the `X-LLMS-Webhook-Signature` header. The signature allows you to verify that the webhook was sent by LifterLMS and not by a third party. We recommend verifying all webhooks and discarding any payloads which cannot be verified.\n\nThe `X-LLMS-Webhook-Signature` contains a timestamp and one or more signatures. The timestamp is prefixed by `t=` and the signatures are prefixed by `v` and an integer. Currently the only valid signature scheme is `v1`.\n\n```\nX-LLMS-Webhook-Signature: t=1562715579,v1=0d579d62ef442b6e2d1d522924aafed480fdaaacbe498486a94445de8b995819\n```\n\nThe signature is generated using a hash-based message authentication code ([HMAC](https://en.wikipedia.org/wiki/HMAC)) with [SHA-256](https://en.wikipedia.org/wiki/SHA-2).\n\nTo verify a webhook signature you must construct an _expected_ webhook signature which you can then compare against the webhook signature supplied with delivery.\n\n#### Step 1: Extract the timestamps and signatures from the header\n\nSplit the header, using the `,` character as the separator, to get a list of elements. Then split each element, using the `=` character as the separator, to get a prefix and value pair.\n\nThe value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature. You can discard all other elements.\n\n#### Step 2: Prepare the payload string for signing\n\nYou achieve this by concatenating:\n\n+ The timestamp (as a string)\n+ The character `.`\n+ The actual JSON payload (i.e. the request's body)\n\n#### Step 3: Generate the expected signature string\n\nCompute an HMAC with the SHA256 hash function. Use the endpoints signing secret as the key, and use the string from Step 2 as the message.\n\n#### Step 4: Compare the signatures\n\nCompare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.\n\n## Webook Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Webhook\" showReadOnly={true} showWriteOnly={true} />\n"
     }
   ],
   "x-tagGroups": [
@@ -86,12 +86,6 @@
       ]
     },
     {
-      "name": "E-Commerce",
-      "tags": [
-        "Access Plans"
-      ]
-    },
-    {
       "name": "Instructors",
       "tags": [
         "Instructors"
@@ -101,14 +95,6 @@
       "name": "Memberships",
       "tags": [
         "Memberships"
-      ]
-    },
-    {
-      "name": "Quizzes",
-      "tags": [
-        "Quizzes",
-        "Quiz Questions",
-        "Quiz Attempts"
       ]
     },
     {
@@ -3885,108 +3871,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted the student."
-          },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Error401"
-          },
-          "403": {
-            "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
-          }
-        }
-      }
-    },
-    "/students/{id}/progress": {
-      "parameters": [
-        {
-          "name": "id",
-          "description": "Unique student Identifer. The WordPress User `ID`.",
-          "example": 123,
-          "in": "path",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/ResourceId"
-          }
-        }
-      ],
-      "get": {
-        "summary": "List student progress",
-        "description": "Retrieves a list of a student's progress records.",
-        "tags": [
-          "Student Progress"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/Page"
-          },
-          {
-            "$ref": "#/components/parameters/PerPage"
-          },
-          {
-            "$ref": "#/components/parameters/Order"
-          },
-          {
-            "name": "orderby",
-            "description": "Specify the sort field for a collection of results.",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "date_updated",
-                "date_created",
-                "progress"
-              ],
-              "default": "date_updated"
-            }
-          },
-          {
-            "name": "status",
-            "description": "Filter results to records matching the specified status.",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "incomplete",
-                "complete"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully returned a list of a student's progress records.",
-            "headers": {
-              "Link": {
-                "description": "Pagination links for the collection.",
-                "schema": {
-                  "type": "string",
-                  "example": "</wp-json/llms/v1/students/123/progress?page=1>; rel=\"first\", </wp-json/llms/v1/students/123/progress?page=2>; rel=\"prev\", </wp-json/llms/v1/students/123/progress?page=4>; rel=\"next\", </wp-json/llms/v1/students/123/progress?page=5>; rel=\"last\""
-                }
-              },
-              "X-WP-Total": {
-                "$ref": "#/components/headers/PaginationTotalResults"
-              },
-              "X-WP-TotalPages": {
-                "$ref": "#/components/headers/PaginationTotalPages"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Progress"
-                  }
-                }
-              }
-            }
+            "description": "Successfully deleted student's enrollment."
           },
           "400": {
             "$ref": "#/components/responses/Error400"
@@ -4116,9 +4001,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
@@ -6478,14 +6360,16 @@
             "readOnly": true
           },
           "date_created": {
-            "description": "The progress creation date. Format: `Y-m-d H:i:s`",
+            "description": "The progress creation date. Cannot be in the future.",
             "type": "string",
-            "example": "2019-05-21 14:22:05"
+            "format": "date-time",
+            "example": "2019-05-21T14:22:05"
           },
           "date_updated": {
-            "description": "The date of the last progress update. Format: `Y-m-d H:i:s`",
+            "description": "The date of the last progress update.",
             "type": "string",
-            "example": "2019-05-21 19:22:05",
+            "format": "date-time",
+            "example": "2019-05-21T19:22:05",
             "readOnly": true
           },
           "progress": {
@@ -6521,19 +6405,6 @@
                     "href": {
                       "type": "string",
                       "example": "/wp-json/llms/v1/students/123/progress/456"
-                    }
-                  }
-                }
-              },
-              "collection": {
-                "description": "REST URI to the collection of student progress records.",
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "href": {
-                      "type": "string",
-                      "example": "/wp-json/llms/v1/students/123/progress"
                     }
                   }
                 }
