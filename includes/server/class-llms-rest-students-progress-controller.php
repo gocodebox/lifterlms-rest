@@ -97,10 +97,14 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
 		if ( $ids ) {
 			foreach ( $ids as $id ) {
-				llms_bulk_delete_user_postmeta( $request['id'], $id, array(
-					'_status' => null,
-					'_completion_trigger' => null,
-				) );
+				llms_bulk_delete_user_postmeta(
+					$request['id'],
+					$id,
+					array(
+						'_status'             => null,
+						'_completion_trigger' => null,
+					)
+				);
 			}
 		}
 
@@ -117,9 +121,9 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param LLMS_Student $student Student Object.
+	 * @param LLMS_Student                         $student Student Object.
 	 * @param LLMS_Course|LLMS_Section|LLMS_Lesson $post Course, Section, or Lesson post object.
-	 * @param string $order Sort order, ASC or DESC.
+	 * @param string                               $order Sort order, ASC or DESC.
 	 * @return string|null
 	 */
 	protected function get_date( $student, $post, $order ) {
@@ -131,7 +135,11 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 			$lessons = implode( ', ', $lessons );
 
 			global $wpdb;
-			$date = $wpdb->get_var( $wpdb->prepare( "
+			// @todo: rewrite query so we don't have to ignore CS rules.
+			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$date = $wpdb->get_var(
+				$wpdb->prepare(
+					"
 				SELECT updated_date
 				  FROM {$wpdb->prefix}lifterlms_user_postmeta
 				 WHERE user_id = %d
@@ -139,13 +147,15 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				   AND meta_key = '_is_complete'
 		         ORDER BY updated_date {$order}
 				 LIMIT 1;
-				", $student->get( 'id' )
-			) );
+				",
+					$student->get( 'id' )
+				)
+			);
+			//phpcs:enable
 
 			if ( $date ) {
 				return mysql_to_rfc3339( $date );
 			}
-
 		}
 
 		return null;
@@ -162,7 +172,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$object = $this->get_object( array( $request['id'], $request['post_id'] ) );
+		$object   = $this->get_object( array( $request['id'], $request['post_id'] ) );
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return rest_ensure_response( $response );
@@ -235,7 +245,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 					'type'        => 'string',
 					'required'    => true,
 				),
-				'progress'        => array(
+				'progress'     => array(
 					'description' => __( 'Student\'s progress as a percentage.', 'lifterlms' ),
 					'enum'        => array( 'complete', 'incomplete' ),
 					'context'     => array( 'view', 'edit' ),
@@ -252,7 +262,12 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id Object ID.
+	 * @param int[] $ids {
+	 *     Numeric array of ids.
+	 *
+	 *     @type int $ids[0] Student id.
+	 *     @type int $ids[1] Post id.
+	 * }
 	 * @return object|WP_Error
 	 */
 	protected function get_object( $ids ) {
@@ -263,7 +278,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		$student_id = $ids[0];
-		$post_id = $ids[1];
+		$post_id    = $ids[1];
 
 		$post = llms_get_post( $post_id );
 
@@ -312,7 +327,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 */
 	protected function prepare_item_for_database( $request ) {
 
-		$prepared = parent::prepare_item_for_database( $request );
+		$prepared       = parent::prepare_item_for_database( $request );
 		$prepared['id'] = $request['id'];
 
 		return $prepared;
@@ -344,14 +359,14 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		$post_type = get_post_type( $object->post_id );
 
 		$links = array(
-			'self'       => array(
+			'self'    => array(
 				'href' => $base,
 			),
-			'post'       => array(
+			'post'    => array(
 				'type' => $post_type,
 				'href' => rest_url( sprintf( '/%1$s/%2$ss/%3$d', $this->namespace, $post_type, $object->post_id ) ),
 			),
-			'student'    => array(
+			'student' => array(
 				'href' => rest_url( sprintf( '/%1$s/students/%2$d', $this->namespace, $object->student_id ) ),
 			),
 		);
@@ -389,7 +404,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 			'/' . $this->rest_base,
 			array(
 				'args'   => array(
-					'id' => array(
+					'id'      => array(
 						'description' => __( 'Unique identifier for the student. The WP User ID.', 'lifterlms' ),
 						'type'        => 'integer',
 					),
@@ -466,7 +481,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 			} elseif ( 'incomplete' === $prepared['status'] ) {
 				llms_mark_incomplete( $prepared['id'], $lesson_id, 'lesson', 'api_' . get_current_user_id() );
 			}
-
 		}
 
 		return $this->get_object( array( $prepared['id'], $prepared['post_id'] ) );
@@ -478,9 +492,9 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param string $value Date string.
+	 * @param string          $value Date string.
 	 * @param WP_REST_Request $request Request object.
-	 * @param string $param Parameter name ("post_id").
+	 * @param string          $param Parameter name ("post_id").
 	 * @return bool
 	 */
 	public function validate_date_created( $value, $request, $param ) {
@@ -500,9 +514,9 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $value Post ID.
+	 * @param int             $value Post ID.
 	 * @param WP_REST_Request $request Request object.
-	 * @param string $param Parameter name ("post_id").
+	 * @param string          $param Parameter name ("post_id").
 	 * @return bool
 	 */
 	public function validate_post_id( $value, $request, $param ) {
