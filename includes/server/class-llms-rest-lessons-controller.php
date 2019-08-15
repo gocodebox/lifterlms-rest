@@ -428,7 +428,10 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			return false;
 		}
 
-		return parent::check_read_permission( $lesson );
+		/**
+		 * At the moment we grant lessons read permission only to who can edit lessons.
+		 */
+		return parent::check_update_permission( $lesson );
 
 	}
 
