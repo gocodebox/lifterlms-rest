@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Controller class..
  *
  * @since 1.0.0-beta.1
+ * @since [version] Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -68,27 +69,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $this->get_object_id( $object ) ) ) );
 
 		return $response;
-
-	}
-
-	/**
-	 * Insert the prepared data into the database.
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
-	 * @return obj Object Instance of object from $this->get_object().
-	 */
-	protected function create_object( $prepared, $request ) {
-
-		// @todo: add version to message.
-
-		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::create_object', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
-
-		// For example.
-		return $this->get_object( $this->get_object_id( $prepared ) );
 
 	}
 
@@ -200,7 +180,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Retrieves all users.
 	 *
-	 * @since 4.7.0
+	 * @since 1.0.0-beta.1
+	 * @since [version] Fix an issue displaying a last page for lists with 0 possible results.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -273,7 +254,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		// Last page link.
-		if ( $pagination['total_pages'] !== $pagination['current_page'] ) {
+		if ( $pagination['total_pages'] && $pagination['total_pages'] !== $pagination['current_page'] ) {
 			$last_link = add_query_arg( 'page', $pagination['total_pages'], $base );
 			$response->link_header( 'last', $last_link );
 		}
@@ -344,7 +325,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$schema   = $this->get_item_schema();
 
 		foreach ( $map as $req_key => $db_key ) {
-
 			if ( ! empty( $request[ $req_key ] ) ) {
 				$prepared[ $db_key ] = $request[ $req_key ];
 			}
@@ -358,12 +338,17 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Prepares a single object for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Return early with a WP_Error if `$object` is a WP_Error
 	 *
 	 * @param obj             $object Raw object from database.
 	 * @param WP_REST_Request $request Request object.
-	 * @return WP_REST_Response
+	 * @return WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $object, $request ) {
+
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
 
 		$data = $this->prepare_object_for_response( $object, $request );
 
