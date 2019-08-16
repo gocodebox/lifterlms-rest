@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Webhooks class.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Fix formatting error on the default webhook name string.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -105,6 +106,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Overrides parent to dynamically set the class variable since several defaults are generated through functions.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fix formatting error.
 	 *
 	 * @return array
 	 */
@@ -120,7 +122,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				// Translators: %s = created date.
 				__( 'Webhook created on %s', 'lifterlms' ),
 				// Translators: Date format.
-				strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'Webhook created on date parsed by strftime', 'lifterlms' ) )
+				strftime( _x( '%b %d, %Y @ %I:%M %p', 'Webhook created on date parsed by strftime', 'lifterlms' ) ) // phpcs:disable WordPress.WP.I18n.UnorderedPlaceholdersText
 			),
 		);
 
@@ -454,7 +456,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * @param string $topic Topic.
 	 * @return bool
 	 */
-	protected function is_topic_valid( $topic ) {
+	public function is_topic_valid( $topic ) {
 
 		$split = explode( '.', $topic );
 
