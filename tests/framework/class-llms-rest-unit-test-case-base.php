@@ -3,10 +3,10 @@
  * LifterLMS REST API Unit Test Case Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
+ *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Add hook-related mock functions.
  */
-
 class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
 	/**
@@ -65,6 +65,16 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
 	}
 
+	/**
+	 * Create many webhooks.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @param int $count Number to create.
+	 * @param string $status Status or rand to use a random status.
+	 * @param string $topic Topic or rand to use a random topic.
+	 * @return void
+	 */
 	public function create_many_webhooks( $count, $status = 'rand', $topic = 'rand' ) {
 
 		$statuses = array_keys( LLMS_REST_API()->webhooks()->get_statuses() );
@@ -86,6 +96,38 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 			$i++;
 
 		}
+
+	}
+
+	/**
+	 * Create a hook
+	 *
+	 * @since [version]
+	 *
+	 * @param array $args Webhook creation args.
+	 * @return LLMS_REST_Webhook
+	 */
+	protected function get_hook( $args = array() ) {
+
+		return LLMS_REST_API()->webhooks()->create( $this->get_hook_args( $args ) );
+
+	}
+
+	/**
+	 * Retrieve default args for creating a hook
+	 *
+	 * @since [version]
+	 *
+	 * @param array $args Webhook creation args.
+	 * @return array
+	 */
+	protected function get_hook_args( $args = array() ) {
+
+		return wp_parse_args( $args, array(
+			'delivery_url' => 'https://mock.tld/200',
+			'status' => 'active',
+			'topic' => 'action.mock',
+		) );
 
 	}
 
