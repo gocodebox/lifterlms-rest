@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Admin Settings Page: REST API
  *
  * @since 1.0.0-beta.1
+ * @since [version] Denote "Description" as a required field.
  */
 class LLMS_Rest_Admin_Settings_API_Keys {
 
@@ -30,6 +31,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Get settings fields for the Keys tab.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Add "required" to the description field.
 	 *
 	 * @return array
 	 */
@@ -71,6 +73,9 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 					'id'    => 'llms_rest_key_description',
 					'type'  => 'text',
 					'value' => $key ? $key->get( 'description' ) : '',
+					'custom_attributes' => array(
+						'required' => 'required',
+					),
 				);
 
 				$settings[] = array(
