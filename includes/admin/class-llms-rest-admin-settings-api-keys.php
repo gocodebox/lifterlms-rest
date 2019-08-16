@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Admin Settings Page: REST API
  *
  * @since 1.0.0-beta.1
- * @since [version] Denote "Description" as a required field.
+ * @since [version] Improve UX of key generation and updates.
  */
 class LLMS_Rest_Admin_Settings_API_Keys {
 
@@ -31,7 +31,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Get settings fields for the Keys tab.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Add "required" to the description field.
+	 * @since [version] Add "required" to the description field, add helper text, & add credential download option after generation.
 	 *
 	 * @return array
 	 */
@@ -81,6 +81,11 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 				$settings[] = array(
 					'title'             => __( 'User', 'lifterlms' ),
 					'class'             => 'llms-select2-student',
+					'desc'              => sprintf(
+						// Translators: %1$s = opening anchor tag to capabilities doc; %2$s closing anchor tag.
+						__( 'The owner is used to determine what user %1$scapabilities%2$s are available to the API key.', 'lifterlms' ),
+						'<a href="https://lifterlms.com/docs/roles-and-capabilities/" target="_blank">', '</a>'
+					),
 					'custom_attributes' => array(
 						'data-placeholder' => __( 'Select a user', 'lifterlms' ),
 					),
@@ -91,6 +96,11 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 
 				$settings[] = array(
 					'title'   => __( 'Permissions', 'lifterlms' ),
+					'desc'    => '<br>' . sprintf(
+						// Translators: %1$s = opening anchor tag to doc; %2$s closing anchor tag.
+						__( 'Determines what kind of requests can be made with the API key. %1$sRead more%2$s.', 'lifterlms' ),
+						'<a href="https://lifterlms.com/docs/getting-started-with-the-lifterlms-rest-api/#api-keys" target="_blank">', '</a>'
+					),
 					'id'      => 'llms_rest_key_permissions',
 					'type'    => 'select',
 					'options' => LLMS_REST_API()->keys()->get_permissions(),
@@ -123,6 +133,12 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 				} elseif ( self::$generated_key ) {
 
 					$settings[] = array(
+						'type'  => 'custom-html',
+						'id'    => 'llms_rest_key_onetime_notice',
+						'value' => '<p style="padding: 10px;border-left:4px solid #ff922b;background:rgba(255, 146, 43, 0.3);">' . __( 'Make sure to copy or download the consumer key and consumer secret. After leaving this page they will not be displayed again.', 'lifterlms' ) . '</p>',
+					);
+
+					$settings[] = array(
 						'title'             => __( 'Consumer key', 'lifterlms' ),
 						'custom_attributes' => array(
 							'readonly' => 'readonly',
@@ -148,7 +164,16 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 
 				}
 
-				$buttons = self::$generated_key ? '' : '<br><br><button class="llms-button-primary" type="submit" value="llms-rest-save-key">' . __( 'Save', 'lifterlms' ) . '</button>';
+				$buttons  = '<br><br>';
+				if ( self::$generated_key ) {
+					$download_url = wp_nonce_url( admin_url( add_query_arg( array(
+						'id' => $key->get( 'id' ),
+						'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) )
+					), 'admin.php' ) ), 'dl-key', 'dl-key-nonce' );
+					$buttons .= '<a class="llms-button-primary" href="' . $download_url . '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> ' . __( 'Download Keys', 'lifterlms' ) . '</a>';
+				} else {
+					$buttons .= '<button class="llms-button-primary" type="submit" value="llms-rest-save-key">' . __( 'Save', 'lifterlms' ) . '</button>';
+				}
 				if ( $key ) {
 					$buttons .= $buttons ? '&nbsp;&nbsp;&nbsp;' : '<br><br>';
 					$buttons .= '<a class="llms-button-danger" href="' . esc_url( $key->get_delete_link() ) . '">' . __( 'Revoke', 'lifterlms' ) . '</a>';
@@ -193,6 +218,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to save Create / Update an API key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Remove key copy message in favor of message directly above the key fields.
 	 *
 	 * @return null|LLMS_REST_API_Key|WP_Error
 	 */
@@ -205,9 +231,6 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 			$ret = self::save_update( $key_id );
 		} elseif ( llms_filter_input( INPUT_GET, 'add-key', FILTER_SANITIZE_NUMBER_INT ) ) {
 			$ret = self::save_create();
-			if ( ! is_wp_error( $ret ) ) {
-				LLMS_Admin_Settings::set_message( __( 'API Key generated. Make sure to copy the consumer key and consumer secret. After leaving this page they will not be displayed again.', 'lifterlms' ) );
-			}
 		}
 
 		if ( is_wp_error( $ret ) ) {
