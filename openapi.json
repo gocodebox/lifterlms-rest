@@ -4031,8 +4031,8 @@
               "enum": [
                 "id",
                 "name",
-                "date_created",
-                "date_updated"
+                "created",
+                "updated"
               ],
               "default": "id"
             }
@@ -4115,7 +4115,7 @@
                   {
                     "required": [
                       "topic",
-                      "url"
+                      "delivery_url"
                     ]
                   }
                 ]
@@ -7774,14 +7774,14 @@
               "paused",
               "disabled"
             ],
-            "default": "active"
+            "default": "disabled"
           },
           "topic": {
             "description": "The Webhook topic.",
             "type": "string",
             "example": "student.created"
           },
-          "url": {
+          "delivery_url": {
             "description": "The webhook payload delivery URL.",
             "type": "string",
             "example": "https://example.tld/webhook-receipt/endpoint"
@@ -7812,28 +7812,18 @@
             },
             "readOnly": true
           },
-          "date_created": {
-            "description": "Creation date. Format: `Y-m-d H:i:s`.",
+          "created": {
+            "description": "Creation date.",
             "type": "string",
-            "example": "2019-05-20 17:22:05",
+            "format": "date-time",
+            "example": "2019-03-20T17:22:05",
             "readOnly": true
           },
-          "date_created_gmt": {
-            "description": "Creation date (in GMT). Format: `Y-m-d H:i:s`.",
+          "updated": {
+            "description": "Date last modified.",
             "type": "string",
-            "example": "2019-05-20 13:22:05",
-            "readOnly": true
-          },
-          "date_updated": {
-            "description": "Date last modified. Format: `Y-m-d H:i:s`.",
-            "type": "string",
-            "example": "2019-05-20 17:25:05",
-            "readOnly": true
-          },
-          "date_updated_gmt": {
-            "description": "Date last modified (in GMT). Format: `Y-m-d H:i:s`.",
-            "type": "string",
-            "example": "2019-05-20 13:25:05",
+            "format": "date-time",
+            "example": "2019-05-20T17:25:05",
             "readOnly": true
           },
           "_links": {
