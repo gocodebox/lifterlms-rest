@@ -22,9 +22,17 @@
 	},
 	"zip": {
 		"src": {
-			"custom": [
+			"default": [
+				"./**/*.*",
+				"!./src/**",
+				"!./deploy/**", "!./dist/**", "!./tmp/**", "!./gulpfile.js/**", "!./gulpfile.js/**/*.*", "!./node_modules/**", "!./tests/**",
 				"!./spec/**",
-				"!./web/**"
+				"!./web/**",
+				"!./**/*.yml",
+				"!./**/composer.lock",
+				"!./**/package.json", "!./**/package-lock.json",
+				"!./*.xml", "!./*.xml.dist",
+				"!./README.md"
 			]
 		}
 	}
