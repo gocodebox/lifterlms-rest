@@ -85,6 +85,24 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Delete the object.
+	 *
+	 * Note: we do not return 404s when the resource to delete cannot be found. We assume it's already been deleted and respond with 204.
+	 * Errors returned by this method should be any error other than a 404!
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $object Instance of the object from $this->get_object().
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error true when the object is removed, WP_Error on failure.
+	 */
+	protected function delete_object( $object, $request ) {
+
+		return $object->delete();
+
+	}
+
+	/**
 	 * Retrieves the query params for the objects collection.
 	 *
 	 * @since [version]
