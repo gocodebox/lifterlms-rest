@@ -119,13 +119,13 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 			'title'      => 'api_key',
 			'type'       => 'object',
 			'properties' => array(
-				'id'   => array(
+				'id'           => array(
 					'description' => __( 'Webhook ID.', 'lifterlms' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'name'   => array(
+				'name'         => array(
 					'description' => __( 'Friendly, human-readable name or description.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
@@ -133,14 +133,14 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'status'   => array(
+				'status'       => array(
 					'description' => __( 'The status of the webhook.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'enum'        => array_keys( LLMS_REST_API()->webhooks()->get_statuses() ),
 					'default'     => 'disabled',
 				),
-				'topic'       => array(
+				'topic'        => array(
 					'description' => __( 'The webhook topic', 'lifterlms' ),
 					'type'        => 'string',
 					'required'    => true,
@@ -155,38 +155,38 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'secret'   => array(
+				'secret'       => array(
 					'description' => __( 'An optional secret key used to generate the delivery signature.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'created' => array(
+				'created'      => array(
 					'description' => __( 'Creation date. Format: Y-m-d H:i:s', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'updated' => array(
+				'updated'      => array(
 					'description' => __( 'Date last modified. Format: Y-m-d H:i:s', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'resource' => array(
+				'resource'     => array(
 					'description' => __( 'The parsed resource from the `topic`.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'event' => array(
+				'event'        => array(
 					'description' => __( 'The parsed event from the `topic`.', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'hooks' => array(
+				'hooks'        => array(
 					'description' => __( 'List of WordPress action hook associated with the webhook.', 'lifterlms' ),
 					'type'        => 'array',
 					'items'       => array(
@@ -254,7 +254,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $id Webhook ID.
+	 * @param int  $id Webhook ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return WP_Error|LLMS_REST_API_Key
 	 */
@@ -338,7 +338,6 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 		$prepared['hooks']    = $object->get_hooks();
 		$prepared['created']  = mysql_to_rfc3339( $prepared['created'] );
 		$prepared['updated']  = mysql_to_rfc3339( $prepared['updated'] );
-
 
 		return $prepared;
 

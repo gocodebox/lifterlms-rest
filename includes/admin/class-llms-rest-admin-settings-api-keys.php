@@ -68,11 +68,11 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 				$user_id = $key ? $key->get( 'user_id' ) : get_current_user_id();
 
 				$settings[] = array(
-					'title' => __( 'Description', 'lifterlms' ),
-					'desc'  => '<br>' . __( 'A friendly, human-readable, name used to identify the key.', 'lifterlms' ),
-					'id'    => 'llms_rest_key_description',
-					'type'  => 'text',
-					'value' => $key ? $key->get( 'description' ) : '',
+					'title'             => __( 'Description', 'lifterlms' ),
+					'desc'              => '<br>' . __( 'A friendly, human-readable, name used to identify the key.', 'lifterlms' ),
+					'id'                => 'llms_rest_key_description',
+					'type'              => 'text',
+					'value'             => $key ? $key->get( 'description' ) : '',
 					'custom_attributes' => array(
 						'required' => 'required',
 					),
@@ -84,7 +84,8 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 					'desc'              => sprintf(
 						// Translators: %1$s = opening anchor tag to capabilities doc; %2$s closing anchor tag.
 						__( 'The owner is used to determine what user %1$scapabilities%2$s are available to the API key.', 'lifterlms' ),
-						'<a href="https://lifterlms.com/docs/roles-and-capabilities/" target="_blank">', '</a>'
+						'<a href="https://lifterlms.com/docs/roles-and-capabilities/" target="_blank">',
+						'</a>'
 					),
 					'custom_attributes' => array(
 						'data-placeholder' => __( 'Select a user', 'lifterlms' ),
@@ -99,7 +100,8 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 					'desc'    => '<br>' . sprintf(
 						// Translators: %1$s = opening anchor tag to doc; %2$s closing anchor tag.
 						__( 'Determines what kind of requests can be made with the API key. %1$sRead more%2$s.', 'lifterlms' ),
-						'<a href="https://lifterlms.com/docs/getting-started-with-the-lifterlms-rest-api/#api-keys" target="_blank">', '</a>'
+						'<a href="https://lifterlms.com/docs/getting-started-with-the-lifterlms-rest-api/#api-keys" target="_blank">',
+						'</a>'
 					),
 					'id'      => 'llms_rest_key_permissions',
 					'type'    => 'select',
@@ -164,13 +166,22 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 
 				}
 
-				$buttons  = '<br><br>';
+				$buttons = '<br><br>';
 				if ( self::$generated_key ) {
-					$download_url = wp_nonce_url( admin_url( add_query_arg( array(
-						'id' => $key->get( 'id' ),
-						'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) )
-					), 'admin.php' ) ), 'dl-key', 'dl-key-nonce' );
-					$buttons .= '<a class="llms-button-primary" href="' . $download_url . '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> ' . __( 'Download Keys', 'lifterlms' ) . '</a>';
+					$download_url = wp_nonce_url(
+						admin_url(
+							add_query_arg(
+								array(
+									'id' => $key->get( 'id' ),
+									'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) ),
+								),
+								'admin.php'
+							)
+						),
+						'dl-key',
+						'dl-key-nonce'
+					);
+					$buttons     .= '<a class="llms-button-primary" href="' . $download_url . '" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> ' . __( 'Download Keys', 'lifterlms' ) . '</a>';
 				} else {
 					$buttons .= '<button class="llms-button-primary" type="submit" value="llms-rest-save-key">' . __( 'Save', 'lifterlms' ) . '</button>';
 				}

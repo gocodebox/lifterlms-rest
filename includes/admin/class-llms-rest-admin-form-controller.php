@@ -68,7 +68,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @return false|void
 	 */
 	protected function handle_key_download() {
 
@@ -82,8 +82,10 @@ class LLMS_REST_Admin_Form_Controller {
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
 
+		// Translators: %s = Consumer Key.
 		printf( __( 'Consumer Key: %s', 'lifterlms' ), $info['ck'] );
 		echo "\r\n";
+		// Translators: %s = Consumer Secret.
 		printf( __( 'Consumer Secret: %s', 'lifterlms' ), $info['cs'] );
 		die();
 
