@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Table_Webhooks class..
  *
  * @since 1.0.0-beta.1
+ * @since [version] Output translated status instead of the database value; trim the delivery URL to 40 characters.
  */
 class LLMS_REST_Table_Webhooks extends LLMS_Admin_Table {
 
@@ -58,6 +59,7 @@ class LLMS_REST_Table_Webhooks extends LLMS_Admin_Table {
 	 * Retrieve data for the columns
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Output translated status instead of the database value; trim the delivery URL to 40 characters.
 	 *
 	 * @param string            $key the column id / key.
 	 * @param LLMS_REST_API_Key $webhook API key object.
@@ -69,6 +71,16 @@ class LLMS_REST_Table_Webhooks extends LLMS_Admin_Table {
 
 			case 'name':
 				$value = $this->get_name_cell( $webhook );
+				break;
+
+			case 'status':
+				$statuses = LLMS_REST_API()->webhooks()->get_statuses();
+				$value = $webhook->get( $key );
+				$value = isset( $statuses[ $value ] ) ? $statuses[ $value ] : $value;
+				break;
+
+			case 'delivery_url':
+				$value = llms_trim_string( $webhook->get( $key ), 40 );
 				break;
 
 			default:
