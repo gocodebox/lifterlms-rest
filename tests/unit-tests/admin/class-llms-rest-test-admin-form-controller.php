@@ -5,10 +5,10 @@
  * @package  LifterLMS_REST/Tests
  *
  * @group admin
- * @group admin_form_contoller
+ * @group admin_forms
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -56,10 +56,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @see {Reference}
-	 * @link {URL}
-	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_handle_events_no_submit() {
 
@@ -72,7 +69,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_create_webhook_required_fields() {
 
@@ -123,7 +120,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_create_webhook_all_fields() {
 
@@ -206,10 +203,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @see {Reference}
-	 * @link {URL}
-	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_upsert_webhook_weird_ids() {
 
@@ -238,6 +232,13 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 
 	}
 
+	/**
+	 * Test required fields for upserting a webhook.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_webhook_required_fields() {
 
 		$hook = LLMS_REST_API()->webhooks()->create( array(
@@ -257,6 +258,14 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 
 	}
 
+
+	/**
+	 * Test updating an existing webhook.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_webhook() {
 
 		$hook = LLMS_REST_API()->webhooks()->create( array(
@@ -459,6 +468,58 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 
 			throw $exception;
 		}
+
+	}
+
+	/**
+	 * Test prepare_key_download() method
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_prepare_key_download() {
+
+		// Missing key & id.
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
+
+		// Missing CK.
+		$this->mockGetRequest( array(
+			'id' => 1,
+		) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
+
+		// Missing ID.
+		$this->mockGetRequest( array(
+			'ck' => 'arst',
+		) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
+
+		$key = $this->get_mock_api_key();
+
+		// Fake ID.
+		$this->mockGetRequest( array(
+			'id' => $key->get( 'id' ) + 1,
+			'ck' => 'arst',
+		) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
+
+		// Fake CK.
+		$this->mockGetRequest( array(
+			'id' => $key->get( 'id' ),
+			'ck' => 'arst',
+		) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
+
+		$this->mockGetRequest( array(
+			'id' => $key->get( 'id' ),
+			'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) ),
+		) );
+		$this->assertEquals( array(
+			'fn' => 'Test-Key.txt',
+			'ck' => $key->get( 'consumer_key_one_time' ),
+			'cs' => $key->get( 'consumer_secret' ),
+		), LLMS_Unit_Test_Util::call_method( $this->obj, 'prepare_key_download' ) );
 
 	}
 

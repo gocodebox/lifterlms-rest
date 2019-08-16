@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Admin_Form_Controller class..
  *
  * @since 1.0.0-beta.1
+ * @since [version] Added API credential download methods.
  */
 class LLMS_REST_Admin_Form_Controller {
 
@@ -34,6 +35,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 * Handles submission of admin forms & nonce links.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added logic for handling api key txt download via nonce link.
 	 *
 	 * @return false|void
 	 */
@@ -53,9 +55,37 @@ class LLMS_REST_Admin_Form_Controller {
 				LLMS_Admin_Notices::flash_notice( esc_html__( 'The webhook has been successfully deleted.', 'lifterlms' ), 'success' );
 				return llms_redirect_and_exit( admin_url( 'admin.php?page=llms-settings&tab=rest-api&section=webhooks' ) );
 			}
+		} elseif ( llms_verify_nonce( 'dl-key-nonce', 'dl-key', 'GET' ) ) {
+			return $this->handle_key_download();
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Generate and download a api key credentials file.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function download_key_file() {
+
+		$info = $this->prepare_key_download();
+		if ( ! $info ) {
+			return false;
+		}
+
+		header( 'Content-type: text/plain' );
+		header( 'Content-Disposition: attachment; filename="' . $info['fn'] );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+
+		printf( __( 'Consumer Key: %s', 'lifterlms' ), $info['ck'] );
+		echo "\r\n";
+		printf( __( 'Consumer Secret: %s', 'lifterlms' ), $info['cs'] );
+		die();
 
 	}
 
@@ -111,6 +141,43 @@ class LLMS_REST_Admin_Form_Controller {
 		}
 
 		return true;
+
+	}
+
+	/**
+	 * Validates `GET` information from the credential download URL and prepares information for generating the file.
+	 *
+	 * @since [version]
+	 *
+	 * @return false|array
+	 */
+	protected function prepare_key_download() {
+
+		$key_id       = llms_filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$consumer_key = llms_filter_input( INPUT_GET, 'ck', FILTER_SANITIZE_STRING );
+
+		// return if missing required fields.
+		if ( ! $key_id || ! $consumer_key ) {
+			return false;
+		}
+
+		// return if key doesn't exist.
+		$key = LLMS_REST_API()->keys()->get( $key_id );
+		if ( ! $key ) {
+			return false;
+		}
+
+		// validate the decoded consumer key looks like the stored truncated key.
+		$consumer_key = base64_decode( $consumer_key );
+		if ( substr( $consumer_key, -7 ) !== $key->get( 'truncated_key' ) ) {
+			return false;
+		}
+
+		return array(
+			'fn' => sanitize_file_name( $key->get( 'description' ) ) . '.txt',
+			'ck' => $consumer_key,
+			'cs' => $key->get( 'consumer_secret' ),
+		);
 
 	}
 
