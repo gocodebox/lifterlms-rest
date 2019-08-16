@@ -7,7 +7,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Controller_Stubs class.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Conditionally throw `_doing_it_wrong()` on stub method.
  */
 abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
@@ -67,7 +68,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 		// @todo: add version to message.
 
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::create_object', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::create_object', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return $this->get_object( $this->get_object_id( $prepared ) );
@@ -96,7 +97,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 		// @todo: add version to message.
 
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::get_object_id', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::get_object_id', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return 0;
@@ -114,10 +115,8 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 */
 	protected function get_objects_query( $prepared, $request ) {
 
-		// Todo: update version number.
-
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return new WP_Query( $prepared );
@@ -134,10 +133,8 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 */
 	protected function get_objects_from_query( $query ) {
 
-		// Todo: update version number.
-
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::get_objects_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return array();
@@ -162,10 +159,8 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 */
 	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
-		// Todo: update version number.
-
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::get_pagination_data_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::get_pagination_data_from_query', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return array(
@@ -180,6 +175,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * Prepare an object for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Conditionally throw `_doing_it_wrong()`.
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.
@@ -187,17 +183,19 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
 
-		// Todo: update version number.
-
-		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::prepare_object_for_response', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		if ( ! method_exists( $object, 'get' ) ) {
+			// Translators: %s = method name.
+			_doing_it_wrong( 'LLMS_REST_Controller::prepare_object_for_response', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
+		}
 
 		$prepared = array();
 		$map      = array_flip( $this->map_schema_to_database() );
 		$fields   = $this->get_fields_for_response( $request );
 
 		foreach ( $map as $db_key => $schema_key ) {
-			$prepared[ $schema_key ] = $object->get( $db_key );
+			if ( in_array( $schema_key, $fields, true ) ) {
+				$prepared[ $schema_key ] = $object->get( $db_key );
+			}
 		}
 
 		return $prepared;
@@ -218,7 +216,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 		// @todo: add version to message.
 
 		// Translators: %s = method name.
-		_doing_it_wrong( 'LLMS_REST_Controller::update_object', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '[version]' );
+		_doing_it_wrong( 'LLMS_REST_Controller::update_object', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 
 		// For example.
 		return $this->get_object( $prepared['id'] );
