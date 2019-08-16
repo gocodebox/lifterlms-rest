@@ -70,7 +70,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 *
 	 * @return void
 	 */
-	protected function download_key_file() {
+	protected function handle_key_download() {
 
 		$info = $this->prepare_key_download();
 		if ( ! $info ) {
