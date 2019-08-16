@@ -15,8 +15,8 @@ get:
         enum:
           - id
           - name
-          - date_created
-          - date_updated
+          - created
+          - updated
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
@@ -73,7 +73,7 @@ post:
             - $ref: '#/components/schemas/Webhook'
             - required:
               - topic
-              - url
+              - delivery_url
   responses:
     201:
       description: Successfully created the webhook.

@@ -22,12 +22,12 @@ properties:
       - active
       - paused
       - disabled
-    default: active
+    default: disabled
   topic:
     description: The Webhook topic.
     type: string
     example: student.created
-  url:
+  delivery_url:
     description: The webhook payload delivery URL.
     type: string
     example: https://example.tld/webhook-receipt/endpoint
@@ -55,25 +55,17 @@ properties:
       type: string
       example: 'llms_user_registered'
     readOnly: true
-  date_created:
-    description: 'Creation date. Format: `Y-m-d H:i:s`.'
+  created:
+    description: Creation date.
     type: string
-    example: '2019-05-20 17:22:05'
+    format: date-time
+    example: '2019-03-20T17:22:05'
     readOnly: true
-  date_created_gmt:
-    description: 'Creation date (in GMT). Format: `Y-m-d H:i:s`.'
+  updated:
+    description: Date last modified.
     type: string
-    example: '2019-05-20 13:22:05'
-    readOnly: true
-  date_updated:
-    description: 'Date last modified. Format: `Y-m-d H:i:s`.'
-    type: string
-    example: '2019-05-20 17:25:05'
-    readOnly: true
-  date_updated_gmt:
-    description: 'Date last modified (in GMT). Format: `Y-m-d H:i:s`.'
-    type: string
-    example: '2019-05-20 13:25:05'
+    format: date-time
+    example: '2019-05-20T17:25:05'
     readOnly: true
   _links:
     description: A map of links to other related API resources.
