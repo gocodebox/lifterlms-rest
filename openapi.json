@@ -4248,9 +4248,6 @@
           },
           "403": {
             "$ref": "#/components/responses/Error403"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error404"
           }
         }
       }
