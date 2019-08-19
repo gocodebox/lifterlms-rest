@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
+ * @since [version] Filter taxonomies by `show_in_llms_rest` property instead of `public`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -1133,6 +1134,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
+	 * @since [version] Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.
@@ -1173,8 +1175,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			foreach ( $taxonomies as $tax ) {
 				$taxonomy_obj = get_taxonomy( $tax );
 
-				// Skip taxonomies that are not public.
-				if ( empty( $taxonomy_obj->public ) ) {
+				// Skip taxonomies that are not set to be shown in LLMS REST.
+				if ( empty( $taxonomy_obj->show_in_llms_rest ) ) {
 					continue;
 				}
 
@@ -1349,6 +1351,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
+	 * @since [version] Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 *
 	 * @param int             $object_id The post ID to update the terms form.
 	 * @param WP_REST_Request $request   The request object with post and terms data.
@@ -1356,7 +1359,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 */
 	protected function handle_terms( $object_id, $request ) {
 
-		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'public' => true ) );
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_llms_rest' => true ) );
 
 		foreach ( $taxonomies as $taxonomy ) {
 			$base = $this->get_taxonomy_rest_base( $taxonomy );
@@ -1378,12 +1381,13 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::check_assign_terms_permission().
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 *
 	 * @param WP_REST_Request $request The request object with post and terms data.
 	 * @return bool Whether the current user can assign the provided terms.
 	 */
 	protected function check_assign_terms_permission( $request ) {
-		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'public' => true ) );
+		$taxonomies = wp_list_filter( get_object_taxonomies( $this->post_type, 'objects' ), array( 'show_in_llms_rest' => true ) );
 		foreach ( $taxonomies as $taxonomy ) {
 			$base = $this->get_taxonomy_rest_base( $taxonomy );
 
