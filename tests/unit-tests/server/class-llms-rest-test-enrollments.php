@@ -8,7 +8,7 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -73,7 +73,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create enrollments.
+		// create user.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		// Create new courses.
@@ -84,11 +84,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 			llms_enroll_student( $user_id, $course_id, 'test_get_enrollments' );
 		}
 
-		$request = new WP_REST_Request( 'GET', $this->parse_route($user_id) );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( $user_id ) );
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
 
 		// Expect 5 enrollments.
@@ -99,6 +98,88 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		foreach ( $res_data as $enrollment ) {
 			$this->assertEquals( $course_ids[$i], $res_data[$i++]['post_id'] );
 		}
+
+	}
+
+	/**
+	 * Test list student enrollments.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_enrollments_pagination() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create enrollments.
+		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+
+		// Create new courses.
+		$course_ids      = $this->factory->post->create_many( 25, array( 'post_type' => 'course' ) );
+		$start_course_id = $course_ids[0];
+
+		foreach ( $course_ids as $course_id ) {
+			// Enroll Student in newly created course.
+			llms_enroll_student( $user_id, $course_id, 'test_get_enrollments_pagination' );
+		}
+
+		$route = $this->parse_route( $user_id );
+
+		// Page 1.
+		$response = $this->perform_mock_request( 'GET', $route );
+
+		$body = $response->get_data();
+		$headers = $response->get_headers();
+
+		$links = $this->parse_link_headers( $response );
+
+		$this->assertResponseStatusEquals( 200, $response );
+		$this->assertEquals( 25, $headers['X-WP-Total'] );
+		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
+		$this->assertEquals( array( 'next', 'last' ), array_keys( $links ) );
+
+		$this->assertEquals( range( $start_course_id, $start_course_id + 9 ), wp_list_pluck( $body, 'post_id' ) );
+
+		$start_course_id += 10;
+
+		// Page 2.
+		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 2 ) );
+
+		$body = $response->get_data();
+		$headers = $response->get_headers();
+
+		$links = $this->parse_link_headers( $response );
+
+		$this->assertResponseStatusEquals( 200, $response );
+
+		$this->assertEquals( 25, $headers['X-WP-Total'] );
+		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
+		$this->assertEquals( array( 'first', 'prev', 'next', 'last' ), array_keys( $links ) );
+
+		$this->assertEquals( range( $start_course_id, $start_course_id + 9 ), wp_list_pluck( $body, 'post_id' ) );
+
+		$start_course_id += 10;
+
+		// Page 3.
+		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 3 ) );
+
+		$body = $response->get_data();
+		$headers = $response->get_headers();
+
+		$links = $this->parse_link_headers( $response );
+
+		$this->assertResponseStatusEquals( 200, $response );
+		$this->assertEquals( 25, $headers['X-WP-Total'] );
+		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
+		$this->assertEquals( array( 'first', 'prev' ), array_keys( $links ) );
+
+		$this->assertEquals( range( $start_course_id, $start_course_id + 4 ), wp_list_pluck( $body, 'post_id' ) );
+
+		// Out of bounds.
+		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 4 ) );
+
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_bad_request', $response );
+
 	}
 
 	/**
@@ -126,12 +207,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 			}
 		}
 
-		$request = new WP_REST_Request( 'GET', $this->parse_route($user_id) );
-		$request->set_param( 'post', "$courses[1],$courses[2]" );
-	    $response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ), array(), array( 'post' =>  "$courses[1],$courses[2]" ) );
 
 	    // Success.
-	    $this->assertEquals( 200, $response->get_status() );
+	    $this->assertResponseStatusEquals( 200, $response );
 	    $res_data = $response->get_data();
 
 	    // Expect 2 enrollments.
@@ -157,10 +236,9 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Setup course.
 		$this->factory->course->create();
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->parse_route( 1 ) ) );
-
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( 1 ) );
 		// Check we don't have permissions to make this request.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
 
 	}
 
@@ -176,10 +254,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Setup course.
 		$this->factory->course->create();
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->parse_route( 1 ) ) );
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( 1 ) );
 
 		// Check we're not allowed to get results.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
 	}
 
@@ -200,11 +278,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$date_now  = date( 'Y-m-d H:i:s' );
 		llms_enroll_student( $user_id, $course_id[0], 'test_get_enrollment' );
 
-		$request = new WP_REST_Request( 'GET', $this->parse_route($user_id)  . '/' . $course_id[0] );
-	    $response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( $user_id )  . '/' . $course_id[0] );
 
 	    // Success.
-	    $this->assertEquals( 200, $response->get_status() );
+	    $this->assertResponseStatusEquals( 200, $response );
 	    $res_data = $response->get_data();
 
 		// Check:
@@ -241,10 +318,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Setup course.
 		$this->factory->course->create();
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id ) );
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( $user_id )  . '/' . $course_id );
 
 		// Check we don't have permissions to make this request.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
 
 	}
 
@@ -266,10 +343,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Setup course.
 		$this->factory->course->create();
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id ) );
+		$response = $this->perform_mock_request( 'GET',  $this->parse_route( $user_id )  . '/' . $course_id );
 
 		// Check we're not allowed to get results.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
 	}
 
@@ -285,12 +362,11 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
-		$request  = new WP_REST_Request( 'POST', $this->parse_route( $user_id ) . '/' . $course_id );
+		$response = $this->perform_mock_request( 'POST',  $this->parse_route( $user_id )  . '/' . $course_id );
 		$date_now  = date( 'Y-m-d H:i:s' );
-		$response = $this->server->dispatch( $request );
 
 		// Success.
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertResponseStatusEquals( 201, $response );
 		$res_data = $response->get_data();
 
 		// Check:
@@ -316,9 +392,9 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Bad request: post is not a enrollable.
 		$lesson_id = $this->factory->post->create( array( 'post_type' => 'lesson' ) );
-		$request  = new WP_REST_Request( 'POST', $this->parse_route( $user_id ) . '/' . $lesson_id );
-		$response = $this->server->dispatch( $request );
-		$this->assertEquals( 400, $response->get_status() );
+		$response = $this->perform_mock_request( 'POST',  $this->parse_route( $user_id )  . '/' . $lesson_id );
+
+		$this->assertResponseStatusEquals( 400, $response );
 
 	}
 
@@ -338,15 +414,11 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		llms_enroll_student( $user_id, $course_id, 'test_update_status' );
 
 		sleep(1); //<- to be sure the new status is subsequent the one set on creation.
-		$request  = new WP_REST_Request( 'PATCH', $this->parse_route( $user_id ) . '/' . $course_id );
-		$request->set_body_params( array(
-			'status' => 'expired'
-		) );
 
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'status' => 'expired' ) );
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
 
 		// Check:
@@ -372,17 +444,11 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Enroll Student in newly created course/membership
 		llms_enroll_student( $user_id, $course_id, 'test_update_creation' );
 
-		$request  = new WP_REST_Request( 'PATCH', $this->parse_route( $user_id ) . '/' . $course_id );
-
 		$new_date = date( 'Y-m-d H:i:s', strtotime('+1 year') );
-
-		$request->set_body_params( array(
-			'date_created' => $new_date
-		) );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'date_created' => $new_date ) );
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
 
 		// Check:
@@ -400,7 +466,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.1
 	 */
-	public function test_enrollment_not_found() {
+	public function test_enrollments_not_found() {
 
 		wp_set_current_user( $this->user_allowed );
 
@@ -408,32 +474,31 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		/* create */
+		// user not enrolled
+		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) );
+		$this->assertResponseStatusEquals( 404, $response );
+
 		// User id doesn't exist.
-		$request  = new WP_REST_Request( 'POST', $this->parse_route( $user_id . '1234' ) . '/' . $course_id );
-		$response = $this->server->dispatch( $request );
-		$this->assertEquals( 404, $response->get_status() );
+		$response = $this->perform_mock_request( 'POST', $this->parse_route( $user_id . '1234' ) . '/' . $course_id );
+		$this->assertResponseStatusEquals( 404, $response );
 
 		// Course id doesn't exist.
-		$request  = new WP_REST_Request( 'POST', $this->parse_route( $user_id ) . '/' . $course_id . '1245' );
-		$response = $this->server->dispatch( $request );
-		$this->assertEquals( 404, $response->get_status() );
+		$response = $this->perform_mock_request( 'POST', $this->parse_route( $user_id ) . '/' . $course_id . '1245' );
+		$this->assertResponseStatusEquals( 404, $response );
 
 		/* Update and Retrieve single */
 		foreach ( array( 'PATCH', 'GET' ) as $method ) {
 			// User id doesn't exist.
-			$request  = new WP_REST_Request( $method, $this->parse_route( $user_id . '1234' ) . '/' . $course_id );
-			$response = $this->server->dispatch( $request );
-			$this->assertEquals( 404, $response->get_status() );
+			$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id . '1234' ) . '/' . $course_id );
+			$this->assertResponseStatusEquals( 404, $response );
 
 			// Course id doesn't exist.
-			$request  = new WP_REST_Request( $method, $this->parse_route( $user_id ) . '/' . $course_id . '1245' );
-			$response = $this->server->dispatch( $request );
-			$this->assertEquals( 404, $response->get_status() );
+			$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id . '1245' );
+			$this->assertResponseStatusEquals( 404, $response );
 
 			// User id and course id exist but the enrollment is not found
-			$request  = new WP_REST_Request( $method, $this->parse_route( $user_id ) . '/' . $course_id );
-			$response = $this->server->dispatch( $request );
-			$this->assertEquals( 404, $response->get_status() );
+			$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id  );
+			$this->assertResponseStatusEquals( 404, $response );
 		}
 
 	}
@@ -456,11 +521,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		llms_enroll_student( $user_id, $course_id, 'test_delete' );
 
 		// Delete user's enrollment
-		$request = new WP_REST_Request( 'DELETE', $this->parse_route($user_id) . '/' . $course_id );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'DELETE',  $this->parse_route( $user_id ) . '/' . $course_id );
 
 		// Success.
-		$this->assertEquals( 204, $response->get_status() );
+		$this->assertResponseStatusEquals( 204, $response );
 		// Student should not be enrolled in course
 		$this->assertFalse( llms_is_user_enrolled( $user_id, $course_id ) );
 

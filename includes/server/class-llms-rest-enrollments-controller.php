@@ -149,7 +149,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		$page        = (int) $query_args['page'];
-		$page        = $page ? $page : 1;
 		$max_pages   = $query_results['pages'];
 		$total_posts = $query_results['total'];
 		$objects     = $query_results['objects'];
@@ -197,7 +196,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		// Add last page.
-		if ( $max_pages !== $page ) {
+		if ( $max_pages && $max_pages !== $page ) {
 			$last_link = add_query_arg( 'page', $max_pages, $base );
 			$response->link_header( 'last', $last_link );
 		}
@@ -724,7 +723,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		$args['id']   = $request['id'];
-		$args['page'] = ! isset( $args['page'] ) ? 1 : 0;
+		$args['page'] = ! isset( $args['page'] ) ? 1 : $args['page'];
 
 		$args = $this->prepare_items_query( $args, $request );
 
