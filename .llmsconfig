@@ -20,6 +20,9 @@
 		"package_main": "LifterLMS_REST",
 		"testcase_class_name": "LLMS_REST_Unit_Test_Case_Base"
 	},
+	"versioner": {
+		"custom": [ "versioner-spec" ]
+	},
 	"zip": {
 		"src": {
 			"default": [
