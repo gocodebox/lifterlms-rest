@@ -8,7 +8,7 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -104,7 +104,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test list student enrollments.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 */
 	public function test_get_enrollments_pagination() {
 

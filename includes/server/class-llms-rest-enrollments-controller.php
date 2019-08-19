@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Enrollments_Controller
  *
  * @since 1.0.0-beta.1
- * @since [version] Don't output "Last" page link header on the last page.
+ * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -136,7 +136,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get a collection of enrollments.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Don't output "Last" page link header on the last page.
+	 * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response

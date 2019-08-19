@@ -7,7 +7,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Controller_Stubs class.
  *
  * @since 1.0.0-beta.1
- * @since [version] Conditionally throw `_doing_it_wrong()` on stub method.
+ * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()` on stub method.
  */
 abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
@@ -175,7 +175,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * Prepare an object for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Conditionally throw `_doing_it_wrong()`.
+	 * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()`.
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since [version] Add hook-related mock functions.
+ * @since 1.0.0-beta.3 Add hook-related mock functions.
  */
 class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 
@@ -102,7 +102,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * Create a hook
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param array $args Webhook creation args.
 	 * @return LLMS_REST_Webhook
@@ -116,7 +116,7 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	/**
 	 * Retrieve default args for creating a hook
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param array $args Webhook creation args.
 	 * @return array

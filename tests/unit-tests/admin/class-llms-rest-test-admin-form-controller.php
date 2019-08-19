@@ -8,7 +8,7 @@
  * @group admin_forms
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -474,7 +474,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	/**
 	 * Test prepare_key_download() method
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */

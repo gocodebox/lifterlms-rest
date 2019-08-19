@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Admin_Form_Controller class..
  *
  * @since 1.0.0-beta.1
- * @since [version] Added API credential download methods.
+ * @since 1.0.0-beta.3 Added API credential download methods.
  */
 class LLMS_REST_Admin_Form_Controller {
 
@@ -35,7 +35,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 * Handles submission of admin forms & nonce links.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added logic for handling api key txt download via nonce link.
+	 * @since 1.0.0-beta.3 Added logic for handling api key txt download via nonce link.
 	 *
 	 * @return false|void
 	 */
@@ -66,7 +66,7 @@ class LLMS_REST_Admin_Form_Controller {
 	/**
 	 * Generate and download a api key credentials file.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return false|void
 	 */
@@ -149,7 +149,7 @@ class LLMS_REST_Admin_Form_Controller {
 	/**
 	 * Validates `GET` information from the credential download URL and prepares information for generating the file.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return false|array
 	 */

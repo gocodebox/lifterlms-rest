@@ -4,8 +4,8 @@
  *
  * @package  LifterLMS_REST/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.3
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Webhooks_Controller class.
  *
- * @since [version]
+ * @since 1.0.0-beta.3
  */
 class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 
@@ -39,7 +39,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if the authenticated user can perform the request action.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return boolean
 	 */
@@ -60,7 +60,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Insert the prepared data into the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request Request object.
@@ -75,7 +75,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to delete an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -90,7 +90,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Note: we do not return 404s when the resource to delete cannot be found. We assume it's already been deleted and respond with 204.
 	 * Errors returned by this method should be any error other than a 404!
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param obj             $object Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
@@ -105,7 +105,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -126,7 +126,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Webhook's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return array
 	 */
@@ -220,7 +220,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -232,7 +232,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read items.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -244,7 +244,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -270,7 +270,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve An Webhook object by ID.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param int  $id Webhook ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
@@ -290,7 +290,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request Request object.
@@ -305,7 +305,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param obj $query Objects query result.
 	 * @return obj[]
@@ -322,7 +322,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Array keys are the request fields (as defined in the schema) and
 	 * array values are the database fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return array
 	 */
@@ -340,7 +340,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare an object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param LLMS_Abstract_User_Data $object User object.
 	 * @param WP_REST_Request         $request Request object.
@@ -364,7 +364,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Update an Webhook
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -387,7 +387,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to update an item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean

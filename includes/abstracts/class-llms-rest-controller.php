@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Controller class..
  *
  * @since 1.0.0-beta.1
- * @since [version] Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
+ * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -181,7 +181,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Retrieves all users.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix an issue displaying a last page for lists with 0 possible results.
+	 * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -338,7 +338,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Prepares a single object for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Return early with a WP_Error if `$object` is a WP_Error
+	 * @since 1.0.0-beta.3 Return early with a WP_Error if `$object` is a WP_Error
 	 *
 	 * @param obj             $object Raw object from database.
 	 * @param WP_REST_Request $request Request object.

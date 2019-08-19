@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Webhooks class.
  *
  * @since 1.0.0-beta.1
- * @since [version] Fix formatting error on the default webhook name string.
+ * @since 1.0.0-beta.3 Fix formatting error on the default webhook name string.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -106,7 +106,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Overrides parent to dynamically set the class variable since several defaults are generated through functions.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix formatting error.
+	 * @since 1.0.0-beta.3 Fix formatting error.
 	 *
 	 * @return array
 	 */

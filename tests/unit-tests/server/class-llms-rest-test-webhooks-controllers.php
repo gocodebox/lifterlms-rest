@@ -8,8 +8,8 @@
  * @group webhooks
  * @group rest_webhooks
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.3
+ * @version 1.0.0-beta.3
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -46,7 +46,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Setup our test server, endpoints, and user info.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -67,7 +67,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -82,7 +82,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error if webhook creation missing required parameters.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -98,7 +98,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error creating webhook with invalid topic
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error creating webhook with invalid status
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -134,7 +134,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error for invalid status
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -154,7 +154,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error creating webhook with an id
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -173,7 +173,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Works.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -196,7 +196,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Public function test delete item.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -221,7 +221,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Can't get if unauthorized
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -237,7 +237,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Authorized but missing capabilities
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -254,7 +254,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * 404
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -271,7 +271,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Retrieve success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -290,7 +290,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Cant list unuathorized.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -308,7 +308,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Cant list without permissions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -327,7 +327,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * None found.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -350,7 +350,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test pagination.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @see {Reference}
 	 * @link {URL}
@@ -403,7 +403,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error for invalid status
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -424,7 +424,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error for invalid status
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -449,7 +449,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Error for invalid topic
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */
@@ -470,7 +470,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.3
 	 *
 	 * @return void
 	 */

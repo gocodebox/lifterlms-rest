@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Admin Settings Page: REST API
  *
  * @since 1.0.0-beta.1
- * @since [version] Improve UX of key generation and updates.
+ * @since 1.0.0-beta.3 Improve UX of key generation and updates.
  */
 class LLMS_Rest_Admin_Settings_API_Keys {
 
@@ -31,7 +31,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Get settings fields for the Keys tab.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Add "required" to the description field, add helper text, & add credential download option after generation.
+	 * @since 1.0.0-beta.3 Add "required" to the description field, add helper text, & add credential download option after generation.
 	 *
 	 * @return array
 	 */
@@ -229,7 +229,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to save Create / Update an API key.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Remove key copy message in favor of message directly above the key fields.
+	 * @since 1.0.0-beta.3 Remove key copy message in favor of message directly above the key fields.
 	 *
 	 * @return null|LLMS_REST_API_Key|WP_Error
 	 */
