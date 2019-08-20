@@ -1,7 +1,7 @@
 # https://github.com/Rebilly/ReDoc/blob/master/src/theme.ts
 theme:
   logo:
-    gutter: 20px
+    gutter: 20px 80px 10px 20px
   colors:
     primary:
       main: '#466dd8'
