@@ -11,21 +11,57 @@
     So override default browser styles
     -->
     <style>
-      @import url(//fonts.googleapis.com/css?family=Montserrat:300,600);
-      body {
-        margin: 0;
-        padding: 0;
-      }
+		@import url(//fonts.googleapis.com/css?family=Montserrat:300,600);
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		.network-menu {
+			font-family: Montserrat, Helvetica, Arial;
+			font-weight: 300;
+			background: #466dd8;
+		}
+		.network-menu .menu {
+			padding: 0;
+			margin: 0 auto;
+			list-style-type: none;
+		}
+		.network-menu .menu li {
+			display: inline-block;
+		}
+		.network-menu .menu a {
+			color: #fff;
+			font-weight: 300;
+			display: block;
+			padding: 1em;
+			font-size: 14px;
+			text-decoration: none;
+			transition: all .2s linear;
+		}
+		.network-menu .menu li:hover a {
+			background: rgba(0, 0, 0, 0.23);
+		}
     </style>
     
   </head>
   <body>
+	<nav class="network-menu" id="network-menu">
+		<ul class="menu">
+			<li class="menu-item"><a href="https://lifterlms.com">LifterLMS</a></li>
+			<li class="menu-item"><a href="https://lifterlms.com/docs/">Knowledge Base</a></li>
+			<li class="menu-item"><a href="https://academy.lifterlms.com/">Academy</a></li>
+			<li class="menu-item"><a href="https://blog.lifterlms.com/">Blog</a></li>
+			<li class="menu-item"><a href="https://podcast.lifterlms.com/">Podcast</a></li>
+			<li class="menu-item"><a href="https://make.lifterlms.com/">Contributors</a></li>
+			<li class="menu-item"><a href="https://developer.lifterlms.com/">Developers</a></li>
+		</ul>
+	</nav>
     <div id="redoc_container"></div>
     <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
     <script>
       Redoc.init(
         './openapi.json',
-        {"theme":{"logo":{"gutter":"20px"},"colors":{"primary":{"main":"#466dd8"}},"typography":{"headings":{"fontFamily":"Montserrat","fontWeight":600},"fontFamily":"Montserrat","fontWeight":300,"fontSize":"16px"},"rightPanel":{"backgroundColor":"#222"}},"noAutoAuth":true,"requiredPropsFirst":true,"sortPropsAlphabetically":true},
+        {"theme":{"logo":{"gutter":"20px 80px 10px 20px"},"colors":{"primary":{"main":"#466dd8"}},"typography":{"headings":{"fontFamily":"Montserrat","fontWeight":600},"fontFamily":"Montserrat","fontWeight":300,"fontSize":"16px"},"rightPanel":{"backgroundColor":"#222"}},"noAutoAuth":true,"requiredPropsFirst":true,"sortPropsAlphabetically":true},
         document.getElementById("redoc_container")
       );
     </script>
