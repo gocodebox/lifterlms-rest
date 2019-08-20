@@ -2,14 +2,12 @@
 <html>
   <head>
     <title>LifterLMS REST API Reference</title>
-    <!-- needed for adaptive design -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="favicon.png">
 
-    <!--
-    ReDoc uses font options from the parent element
-    So override default browser styles
-    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="canonical" href="https://developer.lifterlms.com/rest-api" />
+
     <style>
 		@import url(//fonts.googleapis.com/css?family=Montserrat:300,600);
 		body {
@@ -57,5 +55,10 @@
 		</ul>
 	</nav>
     {{redocBody}}
+    <script>
+    	if ( -1 !== window.location.href.indexOf( '//gocodebox.github.io' ) ) {
+    		window.location.replace( 'https://developer.lifterlms.com/rest-api/' + window.location.hash );
+    	}
+    </script>
   </body>
 </html>
