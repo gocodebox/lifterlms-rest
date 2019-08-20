@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
+ * @since [version] Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
+ *                  The single enrollment can be read only by who can view the enrollment's student.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -118,14 +120,19 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to read items.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
 
-		if ( ! current_user_can( 'view_others_lifterlms_reports' ) ) {
-			return llms_rest_authorization_required_error();
+		if ( stristr( $request->get_route(), '/students/' ) && isset( $request['id'] ) ) {
+			$enrollment             = new stdClass();
+			$enrollment->student_id = (int) $request['id'];
+			if ( ! $this->check_read_permission( $enrollment ) ) {
+				return llms_rest_authorization_required_error();
+			}
 		}
 
 		return true;
@@ -223,8 +230,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$object = new stdClass();
 
-		$object->id      = (int) $request['id'];
-		$object->post_id = (int) $request['post_id'];
+		$object->student_id = (int) $request['id'];
+		$object->post_id    = (int) $request['post_id'];
 
 		if ( ! $this->check_read_permission( $object ) ) {
 			return llms_rest_authorization_required_error();
@@ -1057,9 +1064,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Checks if an llms post can be read.
+	 * Checks if an enrollment can be read.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] The single enrollment can be read only by who can view the enrollment's student.
 	 *
 	 * @param mixed $enrollment The enrollment object.
 	 * @return bool Whether the enrollment can be read.
@@ -1069,11 +1077,15 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		/**
 		 * As of now, enrollments of password protected courses cannot be read
 		 */
-		if ( post_password_required( $enrollment->post_id ) ) {
+		if ( isset( $enrollment->post_id ) && post_password_required( $enrollment->post_id ) ) {
 			return false;
 		}
 
-		return current_user_can( 'view_others_lifterlms_reports' );
+		if ( get_current_user_id() === (int) $enrollment->student_id ) {
+			return true;
+		}
+
+		return current_user_can( 'view_students', $enrollment->student_id );
 
 	}
 

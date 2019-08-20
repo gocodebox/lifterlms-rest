@@ -225,6 +225,42 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test getting current user enrollments permissions.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_current_user_enrollments_permissions() {
+
+		// create an user.
+		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		// Setup course.
+		$course_id = $this->factory->course->create();
+		wp_set_current_user( $this->user_allowed );
+		llms_enroll_student( $user_id, $course_id, 'test_get_current_user_enrollments' );
+
+		wp_set_current_user( $user_id );
+
+		// check we can list our own enrollments
+		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) );
+
+		// Check we have permissions to make this request.
+		$this->assertNotEquals( 403, $response->get_status() );
+		// And that the list of enrollments contains the enrolled course.
+		$enrollments = $response->get_data();
+		$this->assertEquals( $course_id, $enrollments[0]['post_id'] );
+
+		// Check we can get our own single enrollment.
+		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id );
+
+		// Check we have permissions to make this request.
+		$this->assertNotEquals( 403, $response->get_status() );
+		// And that the list of enrollments contains the enrolled course.
+		$enrollment = $response->get_data();
+		$this->assertEquals( $course_id, $enrollment['post_id'] );
+
+	}
+
+	/**
 	 * Test getting enrollments without permission.
 	 *
 	 * @since 1.0.0-beta.1
