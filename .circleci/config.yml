@@ -108,7 +108,8 @@ jobs:
           at: ~/repo
       - run:
           name: Setup known_hosts
-          command: ssh-keyscan github.com >> ~/.ssh/known_hosts
+          command: |
+            ssh-keyscan github.com $DEPLOY_HOST >> ~/.ssh/known_hosts
       - run:
           name: Build Docs
           command: npm run build
