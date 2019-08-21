@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.4
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
- * @since [version] Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
+ * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
  *                  The single enrollment can be read only by who can view the enrollment's student.
  *                  Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
  */
@@ -121,7 +121,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to read items.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
+	 * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -367,7 +367,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Update item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Return a bad request error when supplying an invalid date_created param.
+	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -522,7 +522,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix call to undefined function llms_rest_bad_request(), must be llms_rest_bad_request_error().
+	 * @since 1.0.0-beta.4 Fix call to undefined function llms_rest_bad_request(), must be llms_rest_bad_request_error().
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -797,7 +797,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get enrollments query
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Enrollment's post_id and student_id casted to integer.
+	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 *
 	 * @param array $query_args Query args.
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
@@ -1015,7 +1015,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Handles the enrollment creation date.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix call to undefined function llms_bad_request_error(), must be llms_rest_bad_request_error().
+	 * @since 1.0.0-beta.4 Fix call to undefined function llms_bad_request_error(), must be llms_rest_bad_request_error().
 	 *
 	 * @param integer $student_id Student id.
 	 * @param integer $post_id The post id.
@@ -1087,7 +1087,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Checks if an enrollment can be read.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] The single enrollment can be read only by who can view the enrollment's student.
+	 * @since 1.0.0-beta.4 The single enrollment can be read only by who can view the enrollment's student.
 	 *
 	 * @param mixed $enrollment The enrollment object.
 	 * @return bool Whether the enrollment can be read.

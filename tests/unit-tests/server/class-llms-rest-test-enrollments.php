@@ -231,7 +231,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting current user enrollments permissions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.4
 	 */
 	public function test_get_current_user_enrollments_permissions() {
 
