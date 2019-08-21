@@ -96,7 +96,11 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Check enrollments post_id.
 		$i = 0;
 		foreach ( $res_data as $enrollment ) {
-			$this->assertEquals( $course_ids[$i], $res_data[$i++]['post_id'] );
+			$this->assertEquals( $course_ids[$i], $res_data[$i]['post_id'] );
+			// make sure post_id and student_id are inegers.
+			$this->assertInternalType( "int", $res_data[$i]['post_id'] );
+			$this->assertInternalType( "int", $res_data[$i]['student_id'] );
+			$i++;
 		}
 
 	}
@@ -426,10 +430,15 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
-		// Bad request: post is not a enrollable.
+		// Bad request: post is not enrollable.
 		$lesson_id = $this->factory->post->create( array( 'post_type' => 'lesson' ) );
 		$response = $this->perform_mock_request( 'POST',  $this->parse_route( $user_id )  . '/' . $lesson_id );
 
+		$this->assertResponseStatusEquals( 400, $response );
+
+		// invalid date.
+		llms_enroll_student( $user_id, $course_id );
+		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'date_created' => 'some_invalid_date' ) );
 		$this->assertResponseStatusEquals( 400, $response );
 
 	}
@@ -463,6 +472,27 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( 'expired', $res_data['status'] );
 		$student = new LLMS_Student( $user_id );
 		$this->assertEquals( $res_data['status'], $student->get_enrollment_status( $course_id, false ) );
+
+		// enroll and check the trigger is admin_{$this->user_allowed}.
+		// clean:
+		$student->delete_enrollment( $course_id );
+		// insert an enrollment with a "different" trigger.
+		$student->enroll( $course_id, 'whatever_trigger' );
+		// unenroll.
+		$student->unenroll( $course_id );
+		$this->assertEquals( 'expired', $student->get_enrollment_status( $course_id ) );
+		$this->assertEquals( 'whatever_trigger', $student->get_enrollment_trigger( $course_id, false ) );
+
+		// enroll via api.
+		sleep(1); //<- to be sure the new status is subsequent the one previously set.
+		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'status' => 'enrolled' ) );
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+		$res_data = $response->get_data();
+		$this->assertEquals( 'enrolled', $res_data['status'] );
+		$this->assertEquals( 'enrolled', $student->get_enrollment_status( $course_id, true ) );
+		$this->assertEquals( "admin_{$this->user_allowed}", $student->get_enrollment_trigger( $course_id ) );
 
 	}
 
