@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
+ * @since [version] Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -359,6 +360,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Update item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Return a bad request error when supplying an invalid date_created param.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -399,6 +401,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		if ( ! empty( $schema['properties']['date_created'] ) && isset( $request['date_created'] ) ) {
 
 			$updated_date_created = $this->handle_creation_date_update( $student_id, $post_id, $request['date_created'] );
+
+			if ( is_wp_error( $updated_date_created ) ) {
+				return $updated_date_created;
+			}
 
 			// Something went wrong internally.
 			if ( ! $updated_date_created ) {
@@ -509,6 +515,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fix call to undefined function llms_rest_bad_request(), must be llms_rest_bad_request_error().
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -517,7 +524,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	protected function get_object( $student_id, $post_id = null ) {
 
 		if ( empty( $post_id ) ) {
-			return llms_rest_bad_request();
+			return llms_rest_bad_request_error();
 		}
 
 		$query_args = $this->prepare_object_query( $student_id, $post_id );
@@ -783,6 +790,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get enrollments query
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Enrollment's post_id and student_id casted to integer.
 	 *
 	 * @param array $query_args Query args.
 	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
@@ -880,7 +888,16 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		$query->found_items = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : count( $query->items );
+		$count = count( $query->items );
+
+		if ( $count ) {
+			foreach ( $query->items as $key => $item ) {
+				$query->items[ $key ]->post_id    = (int) $item->post_id;
+				$query->items[ $key ]->student_id = (int) $item->student_id;
+			}
+		}
+
+		$query->found_items = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count;
 
 		return $query;
 
@@ -991,6 +1008,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Handles the enrollment creation date.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fix call to undefined function llms_bad_request_error(), must be llms_rest_bad_request_error().
+	 *
 	 * @param integer $student_id Student id.
 	 * @param integer $post_id The post id.
 	 * @param string  $date Creation date.
@@ -999,8 +1018,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	protected function handle_creation_date_update( $student_id, $post_id, $date ) {
 
 		$date_created = rest_parse_date( $date );
+
 		if ( ! $date_created ) {
-			return llms_bad_request_error();
+			return llms_rest_bad_request_error();
 		}
 
 		$date_created = date_i18n( 'Y-m-d H:i:s', $date_created );
