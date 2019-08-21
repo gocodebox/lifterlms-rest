@@ -75,8 +75,8 @@ class LLMS_REST_Table_Webhooks extends LLMS_Admin_Table {
 
 			case 'status':
 				$statuses = LLMS_REST_API()->webhooks()->get_statuses();
-				$value = $webhook->get( $key );
-				$value = isset( $statuses[ $value ] ) ? $statuses[ $value ] : $value;
+				$value    = $webhook->get( $key );
+				$value    = isset( $statuses[ $value ] ) ? $statuses[ $value ] : $value;
 				break;
 
 			case 'delivery_url':
