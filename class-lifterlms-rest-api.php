@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  * LifterLMS_REST_API class.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Load authentication early.
  */
 final class LifterLMS_REST_API {
 
@@ -32,6 +33,7 @@ final class LifterLMS_REST_API {
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Load authentication early.
 	 *
 	 * @return void
 	 */
@@ -44,6 +46,9 @@ final class LifterLMS_REST_API {
 		// i18n.
 		add_action( 'init', array( $this, 'load_textdomain' ), 0 );
 
+		// Authentication needs to run early to handle basic auth.
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-authentication.php';
+
 		// Load everything else.
 		add_action( 'plugins_loaded', array( $this, 'init' ), 10 );
 
@@ -53,6 +58,7 @@ final class LifterLMS_REST_API {
 	 * Include files and instantiate classes.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Load authentication early.
 	 *
 	 * @return void
 	 */
@@ -61,9 +67,6 @@ final class LifterLMS_REST_API {
 		// Abstracts.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/abstracts/class-llms-rest-database-resource.php';
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/abstracts/class-llms-rest-webhook-data.php';
-
-		// Authentication needs to run early to handle basic auth.
-		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-authentication.php';
 
 		// Functions.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/server/llms-rest-server-functions.php';
