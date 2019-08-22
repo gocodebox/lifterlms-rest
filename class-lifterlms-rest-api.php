@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.4
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.4 Load authentication early.
+ * @since [version] Include functions when loading authentication early.
  */
 final class LifterLMS_REST_API {
 
@@ -34,6 +35,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
+	 * @since [version] Include functions when loading authentication early.
 	 *
 	 * @return void
 	 */
@@ -48,6 +50,7 @@ final class LifterLMS_REST_API {
 
 		// Authentication needs to run early to handle basic auth.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-authentication.php';
+		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/llms-rest-functions.php';
 
 		// Load everything else.
 		add_action( 'plugins_loaded', array( $this, 'init' ), 10 );
@@ -59,6 +62,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
+	 * @since [version] Include functions when loading authentication early.
 	 *
 	 * @return void
 	 */
@@ -70,7 +74,6 @@ final class LifterLMS_REST_API {
 
 		// Functions.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/server/llms-rest-server-functions.php';
-		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/llms-rest-functions.php';
 
 		// Models.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/models/class-llms-rest-api-key.php';
