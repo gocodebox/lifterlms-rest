@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.5 is_rest_request() accesses uses `filter_var` instead of `llms_filter_input()`.
+ *                     Load all includes to accommodate plugins and themes that call `determine_current_user` early.
  */
 class LLMS_REST_Authentication {
 
@@ -60,6 +61,7 @@ class LLMS_REST_Authentication {
 	 * Authenticate an API Request
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.5 Load all includes to accommodate plugins and themes that call `determine_current_user` early.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/determine_current_user/
 	 *
@@ -67,6 +69,9 @@ class LLMS_REST_Authentication {
 	 * @return int|false
 	 */
 	public function authenticate( $user_id ) {
+
+		// Load includes in case a plugin has triggered authentication early.
+		LLMS_REST_API()->includes();
 
 		// 1. If we already have a user, use that user.
 		// 2. Only authenticate via ssl.
