@@ -207,7 +207,7 @@ class LLMS_REST_Authentication {
 	 * Determine if the request is a request to a LifterLMS REST API endpoint.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Access `$_SERVER['REQUEST_URI']` via `filter_var` instead of `llms_filter_input()`, see https://bugs.php.net/bug.php?id=49184.
+	 * @since 1.0.0-beta.5 Access `$_SERVER['REQUEST_URI']` via `filter_var` instead of `llms_filter_input()`, see https://bugs.php.net/bug.php?id=49184.
 	 *
 	 * @return bool
 	 */
