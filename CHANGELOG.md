@@ -1,10 +1,11 @@
 LifterLMS REST API Changelog
 ============================
 
-v1.0.0-beta.5 - 2019-08-21
+v1.0.0-beta.5 - 2019-08-22
 --------------------------
 
 + Load core functions during early authentication loading.
++ Access `$_SERVER` variables via `filter_var` instead of `llms_filter_input` to work around PHP bug https://bugs.php.net/bug.php?id=49184.
 
 
 v1.0.0-beta.4 - 2019-08-21

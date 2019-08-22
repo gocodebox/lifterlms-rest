@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version 1.0.0-beta.5
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * REST API Authentication.
  *
  * @since 1.0.0-beta.1
+ * @since 1.0.0-beta.5 is_rest_request() accesses uses `filter_var` instead of `llms_filter_input()`.
  */
 class LLMS_REST_Authentication {
 
@@ -179,7 +180,7 @@ class LLMS_REST_Authentication {
 	 */
 	private function get_credentials( $key_var, $secret_var ) {
 
-		// Use `filter_var()` instead of `llms_filter_input()` due to PHP bug with `filter_input()`: https://bugs.php.net/bug.php?id=44779.
+		// Use `filter_var()` instead of `llms_filter_input()` due to PHP bug with `filter_input()`: https://bugs.php.net/bug.php?id=49184.
 		$key    = isset( $_SERVER[ $key_var ] ) ? filter_var( wp_unslash( $_SERVER[ $key_var ] ), FILTER_SANITIZE_STRING ) : null;
 		$secret = isset( $_SERVER[ $secret_var ] ) ? filter_var( wp_unslash( $_SERVER[ $secret_var ] ), FILTER_SANITIZE_STRING ) : null;
 
@@ -206,12 +207,16 @@ class LLMS_REST_Authentication {
 	 * Determine if the request is a request to a LifterLMS REST API endpoint.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Access `$_SERVER['REQUEST_URI']` via `filter_var` instead of `llms_filter_input()`, see https://bugs.php.net/bug.php?id=49184.
 	 *
 	 * @return bool
 	 */
 	protected function is_rest_request() {
 
-		$request = llms_filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+		$request = isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : null;
+		if ( empty( $request ) ) {
+			return false;
+		}
 		if ( empty( $request ) ) {
 			return false;
 		}
