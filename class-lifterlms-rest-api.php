@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.5
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.4 Load authentication early.
- * @since [version] Include functions when loading authentication early.
+ * @since 1.0.0-beta.5 Include functions when loading authentication early.
  */
 final class LifterLMS_REST_API {
 
@@ -28,14 +28,14 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.4';
+	public $version = '1.0.0-beta.5';
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
-	 * @since [version] Include functions when loading authentication early.
+	 * @since 1.0.0-beta.5 Include functions when loading authentication early.
 	 *
 	 * @return void
 	 */
@@ -62,7 +62,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
-	 * @since [version] Include functions when loading authentication early.
+	 * @since 1.0.0-beta.5 Include functions when loading authentication early.
 	 *
 	 * @return void
 	 */

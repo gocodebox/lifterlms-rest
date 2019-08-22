@@ -1,6 +1,12 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.5 - 2019-08-21
+--------------------------
+
++ Load core functions during early authentication loading.
+
+
 v1.0.0-beta.4 - 2019-08-21
 --------------------------
 
