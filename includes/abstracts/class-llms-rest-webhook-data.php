@@ -212,11 +212,10 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
 			if ( in_array( $this->get_resource(), array( 'enrollment', 'progress' ), true ) ) {
 				$payload['student_id'] = $args[0];
-				$payload['post_id'] = $args[1];
+				$payload['post_id']    = $args[1];
 			} else {
 				$payload['id'] = $args[0];
 			}
-
 		} elseif ( 'action' === $resource ) {
 
 			$payload['action'] = current( $this->get_hooks() );
