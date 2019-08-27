@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Webhook class.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Retrieve proper payload for enrollment and progress resources.
  */
 abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
@@ -192,6 +193,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	 * Retrieve a payload for webhook delivery.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Retrieve proper payload for enrollment and progress resources.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return array
@@ -207,12 +209,31 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
 		$payload = array();
 		if ( 'deleted' === $event ) {
-			$payload['id'] = $args[0];
+
+			if ( in_array( $this->get_resource(), array( 'enrollment', 'progress' ), true ) ) {
+				$payload['student_id'] = $args[0];
+				$payload['post_id'] = $args[1];
+			} else {
+				$payload['id'] = $args[0];
+			}
+
 		} elseif ( 'action' === $resource ) {
+
 			$payload['action'] = current( $this->get_hooks() );
 			$payload['args']   = $args;
+
 		} else {
-			$payload = llms_rest_get_api_endpoint_data( sprintf( '/llms/v1/%1$ss/%2$d', $resource, $args[0] ) );
+
+			if ( 'enrollment' === $resource ) {
+				$endpoint = sprintf( '/llms/v1/students/%1$d/enrollments/%2$d', $args[0], $args[1] );
+			} elseif ( 'progress' === $resource ) {
+				$endpoint = sprintf( '/llms/v1/students/%1$d/progress/%2$d', $args[0], $args[1] );
+			} else {
+				$endpoint = sprintf( '/llms/v1/%1$ss/%2$d', $resource, $args[0] );
+			}
+
+			$payload = llms_rest_get_api_endpoint_data( $endpoint );
+
 		}
 
 		// Restore the current user.
