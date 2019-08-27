@@ -9,7 +9,7 @@
  * @group webhook_model
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -125,6 +125,195 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 		$this->assertEquals( 0, $webhook->get( 'pending_delivery' ) );
 		$this->assertEquals( 0, $webhook->get( 'failure_count' ) );
+
+	}
+
+	/**
+	 * Test the webhook payload getter for post resources.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_payload_for_posts() {
+
+		$posts = array(
+			'course' => 'course',
+			'section' => 'section',
+			'lesson' => 'lesson',
+			// 'membership' => 'llms_membership',
+			// 'order' => 'llms_order',
+			// 'access_plan' => 'llms_access_plan',
+			// 'transaction' => 'llms_transaction',
+		);
+		foreach ( $posts as $post => $post_type ) {
+
+			$post_id = $this->factory->post->create( array( 'post_type' => $post_type ) );
+
+			// Created.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $post . '.created',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $post_id, null, false ) ) );
+			$this->assertEquals( $post_id, $payload['id'] );
+			$this->assertArrayHasKey( 'title', $payload );
+
+			// Updated.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $post . '.updated',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $post_id, null ) ) );
+			$this->assertEquals( $post_id, $payload['id'] );
+			$this->assertArrayHasKey( 'title', $payload );
+
+			// Deleted.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $post . '.deleted',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $post_id ) ) );
+			$this->assertEquals( array( 'id' => $post_id ), $payload );
+
+		}
+
+	}
+
+	/**
+	 * Test get_payload() method for user webhooks.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_payload_for_users() {
+
+		$roles = array( 'student', 'instructor' );
+
+		foreach ( $roles as $role ) {
+
+			$user_id = $this->factory->user->create( array( 'role' => $role ) );
+
+			// Created.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $role . '.created',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user_id ) ) );
+			$this->assertEquals( $user_id, $payload['id'] );
+			$this->assertArrayHasKey( 'name', $payload );
+
+			// Updated.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $role . '.updated',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user_id ) ) );
+			$this->assertEquals( $user_id, $payload['id'] );
+			$this->assertArrayHasKey( 'name', $payload );
+
+			// Deleted.
+			$webhook = LLMS_REST_API()->webhooks()->create( array(
+				'delivery_url' => 'https://mock.tld/200',
+				'topic' => $role . '.deleted',
+				'status' => 'active',
+				'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+			) );
+			$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user_id ) ) );
+			$this->assertEquals( array( 'id' => $user_id ), $payload );
+
+		}
+
+	}
+
+	/**
+	 * test get_payload() for enrollment resources.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_payload_for_enrollments() {
+
+		$user = $this->factory->student->create();
+		$course = $this->factory->course->create();
+
+		llms_enroll_student( $user, $course );
+
+		// Created.
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld/200',
+			'topic' => 'enrollment.created',
+			'status' => 'active',
+			'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+		) );
+
+		$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user, $course ) ) );
+		$this->assertEquals( $user, $payload['student_id'] );
+		$this->assertEquals( $course, $payload['post_id'] );
+
+		// Updated.
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld/200',
+			'topic' => 'enrollment.updated',
+			'status' => 'active',
+			'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+		) );
+
+		$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user, $course ) ) );
+		$this->assertEquals( $user, $payload['student_id'] );
+		$this->assertEquals( $course, $payload['post_id'] );
+
+		// Deleted.
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld/200',
+			'topic' => 'enrollment.deleted',
+			'status' => 'active',
+			'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+		) );
+
+		$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user, $course ) ) );
+		$this->assertEquals( $user, $payload['student_id'] );
+		$this->assertEquals( $course, $payload['post_id'] );
+
+	}
+
+	/**
+	 * test get_payload() for enrollment resources.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_payload_for_progress() {
+
+		$user = $this->factory->student->create();
+		$course = $this->factory->course->create();
+
+		llms_enroll_student( $user, $course );
+
+		// Updated.
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld/200',
+			'topic' => 'progress.updated',
+			'status' => 'active',
+			'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
+		) );
+
+		$payload = LLMS_Unit_Test_Util::call_method( $webhook, 'get_payload', array( array( $user, $course ) ) );
+		$this->assertEquals( $user, $payload['student_id'] );
+		$this->assertEquals( $course, $payload['post_id'] );
 
 	}
 
