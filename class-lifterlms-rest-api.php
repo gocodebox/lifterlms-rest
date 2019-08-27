@@ -174,7 +174,7 @@ final class LifterLMS_REST_API {
 		}
 
 	}
-fw
+
 	/**
 	 * Include all required files and classes.
 	 *
