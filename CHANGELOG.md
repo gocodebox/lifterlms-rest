@@ -1,6 +1,13 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.6 - 2019-08-22
+--------------------------
+
++ Fix issue causing certain webhooks to not trigger as a result of action load order.
++
+
+
 v1.0.0-beta.5 - 2019-08-22
 --------------------------
 

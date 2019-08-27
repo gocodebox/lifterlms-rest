@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.4
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.4 Load authentication early.
+ * @since [version] Load webhook actions early.
  */
 final class LifterLMS_REST_API {
 
@@ -173,11 +174,12 @@ final class LifterLMS_REST_API {
 		}
 
 	}
-
+fw
 	/**
 	 * Include all required files and classes.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Load webhooks actions at init 1 instead of init 10.
 	 *
 	 * @return void
 	 */
@@ -189,7 +191,7 @@ final class LifterLMS_REST_API {
 			// load includes.
 			$this->includes();
 
-			add_action( 'init', array( $this->webhooks(), 'load' ) );
+			add_action( 'init', array( $this->webhooks(), 'load' ), 1 );
 
 		}
 
