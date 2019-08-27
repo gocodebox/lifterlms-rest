@@ -38,7 +38,7 @@
     "tests-install": [
       "vendor/bin/llms-tests teardown llms_rest_tests root password 127.0.0.1",
       "vendor/bin/llms-tests install llms_rest_tests root password 127.0.0.1",
-      "vendor/bin/llms-tests plugin https://github.com/gocodebox/lifterlms.git"
+      "vendor/bin/llms-tests plugin lifterlms"
     ],
     "tests-run": [
       "vendor/bin/phpunit"
