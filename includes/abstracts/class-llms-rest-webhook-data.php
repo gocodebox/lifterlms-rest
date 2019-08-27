@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Webhook class.
  *
  * @since 1.0.0-beta.1
- * @since [version] Retrieve proper payload for enrollment and progress resources.
+ * @since 1.0.0-beta.6 Retrieve proper payload for enrollment and progress resources.
  */
 abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
@@ -193,7 +193,7 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	 * Retrieve a payload for webhook delivery.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Retrieve proper payload for enrollment and progress resources.
+	 * @since 1.0.0-beta.6 Retrieve proper payload for enrollment and progress resources.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return array

@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.6
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix formatting error on the default webhook name string.
- * @since [version] "access plan" not "access_plan" for human reading.
+ * @since 1.0.0-beta.6 "access plan" not "access_plan" for human reading.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -182,7 +182,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		 * Filter the available webhook topics.
 		 *
 		 * @since 1.0.0-beta.1
-		 * @since [version] Fix translated access plans typo.
+		 * @since 1.0.0-beta.6 Fix translated access plans typo.
 		 *
 		 * @param array $topics Array of topics.
 		 */

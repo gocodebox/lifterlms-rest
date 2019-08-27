@@ -9,7 +9,7 @@
  * @group webhook_model
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.6
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -131,7 +131,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test the webhook payload getter for post resources.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.6
 	 *
 	 * @return void
 	 */
@@ -189,7 +189,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test get_payload() method for user webhooks.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.6
 	 *
 	 * @return void
 	 */
@@ -240,7 +240,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test get_payload() for enrollment resources.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.6
 	 *
 	 * @return void
 	 */
@@ -292,7 +292,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * test get_payload() for enrollment resources.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.6
 	 *
 	 * @return void
 	 */
