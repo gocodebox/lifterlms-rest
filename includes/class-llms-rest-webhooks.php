@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix formatting error on the default webhook name string.
+ * @since [version] "access plan" not "access_plan" for human reading.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -181,6 +182,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		 * Filter the available webhook topics.
 		 *
 		 * @since 1.0.0-beta.1
+		 * @since [version] Fix translated access plans typo.
 		 *
 		 * @param array $topics Array of topics.
 		 */
@@ -202,10 +204,10 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'membership.updated'   => __( 'Membership updated', 'lifterlms' ),
 				'membership.deleted'   => __( 'Membership deleted', 'lifterlms' ),
 				'membership.restored'  => __( 'Membership restored', 'lifterlms' ),
-				'access_plan.created'  => __( 'Access_plan created', 'lifterlms' ),
-				'access_plan.updated'  => __( 'Access_plan updated', 'lifterlms' ),
-				'access_plan.deleted'  => __( 'Access_plan deleted', 'lifterlms' ),
-				'access_plan.restored' => __( 'Access_plan restored', 'lifterlms' ),
+				'access_plan.created'  => __( 'Access Plan created', 'lifterlms' ),
+				'access_plan.updated'  => __( 'Access Plan updated', 'lifterlms' ),
+				'access_plan.deleted'  => __( 'Access Plan deleted', 'lifterlms' ),
+				'access_plan.restored' => __( 'Access Plan restored', 'lifterlms' ),
 				'order.created'        => __( 'Order created', 'lifterlms' ),
 				'order.updated'        => __( 'Order updated', 'lifterlms' ),
 				'order.deleted'        => __( 'Order deleted', 'lifterlms' ),
