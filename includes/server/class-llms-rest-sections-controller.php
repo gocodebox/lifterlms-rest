@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Sections_Controller
  *
  * @since 1.0.0-beta.1
+ * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
@@ -372,16 +373,16 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Prepare objects query.
+	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
-	protected function prepare_objects_query( $request ) {
+	protected function prepare_collection_query_args( $request ) {
 
-		$query_args = parent::prepare_objects_query( $request );
+		$query_args = parent::prepare_collection_query_args( $request );
 
 		// Orderby 'order' requires a meta query.
 		if ( isset( $query_args['orderby'] ) && 'order' === $query_args['orderby'] ) {

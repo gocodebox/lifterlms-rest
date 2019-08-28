@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_API_Keys_Controller class.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Added: `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ *                  `get_items()` method abstracted and moved in LLMS_REST_Controller.
  */
 class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 
@@ -244,78 +246,81 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get API Key List
+	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|WP_REST_Response
+	 * @param  array           $prepared Array of collection arguments.
+	 * @param  WP_REST_Request $request  Full details about the request.
+	 * @return LLMS_REST_API_Keys_Query
 	 */
-	public function get_items( $request ) {
+	protected function get_objects_query( $prepared, $request ) {
 
-		$args  = $this->prepare_collection_query_args( $request );
-		$query = new LLMS_REST_API_Keys_Query( $args );
+		return new LLMS_REST_API_Keys_Query( $prepared );
 
-		$page      = (int) $args['page'];
-		$max_pages = (int) $query->max_pages;
-		$total     = (int) $query->found_results;
+	}
 
-		if ( $total < 1 ) {
+	/**
+	 * Retrieve an array of objects from the result of $this->get_objects_query().
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_Query $query Query result.
+	 * @return obj[]
+	 */
+	protected function get_objects_from_query( $query ) {
 
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $args['page'] );
-			$count_query = new LLMS_REST_API_Keys_Query( $args );
-			$total       = (int) $count_query->found_results;
-			$max_pages   = (int) $query->max_pages;
+		return $query->get_keys();
 
-		}
+	}
 
-		if ( $page > $max_pages && $total > 0 ) {
-			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
-		}
+	/**
+	 * Retrieve pagination information from an objects query.
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $query Objects query result.
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array {
+	 *     Array of pagination information.
+	 *
+	 *     @type int $current_page Current page number.
+	 *     @type int $total_results Total number of results.
+	 *     @type int $total_pages Total number of results pages.
+	 * }
+	 */
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
-		$results = array();
-		foreach ( $query->get_keys() as $key ) {
-			$response_object = $this->prepare_item_for_response( $key, $request );
-			if ( ! is_wp_error( $response_object ) ) {
-				$results[] = $this->prepare_response_for_collection( $response_object );
+		$total_results = (int) $query->found_results;
+		$current_page  = isset( $prepared['page'] ) ? (int) $prepared['page'] : 1;
+		$total_pages   = (int) $query->max_pages;
+
+		return compact( 'current_page', 'total_results', 'total_pages' );
+
+	}
+
+	/**
+	 * Prepare collection items for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $objects Array of objects to be prepared for response.
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array
+	 */
+	protected function prepare_collection_items_for_response( $objects, $request ) {
+
+		$items = array();
+
+		foreach ( $objects as $object ) {
+			$item = $this->prepare_item_for_response( $object, $request );
+			if ( ! is_wp_error( $item ) ) {
+				$items[] = $this->prepare_response_for_collection( $item );
 			}
 		}
 
-		$response = rest_ensure_response( $results );
-
-		$response->header( 'X-WP-Total', $total );
-		$response->header( 'X-WP-TotalPages', $max_pages );
-
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg(
-			urlencode_deep( $request_params ),
-			rest_url( $request->get_route() )
-		);
-
-		// Add first page.
-		$first_link = add_query_arg( 'page', 1, $base );
-		$response->link_header( 'first', $first_link );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-			$response->link_header( 'next', $next_link );
-		}
-		// Add last page.
-		$last_link = add_query_arg( 'page', $max_pages, $base );
-		$response->link_header( 'last', $last_link );
-
-		return $response;
-
+		return $items;
 	}
 
 	/**
