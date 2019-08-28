@@ -1253,7 +1253,7 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-  /lesson:
+  /lessons:
     get:
       summary: List lessons
       description: Retrieve a list of lessons.
@@ -1340,7 +1340,7 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-  '/lesson/{id}':
+  '/lessons/{id}':
     parameters:
       - name: id
         in: path

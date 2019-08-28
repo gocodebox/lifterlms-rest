@@ -1617,7 +1617,7 @@
         }
       }
     },
-    "/lesson": {
+    "/lessons": {
       "get": {
         "summary": "List lessons",
         "description": "Retrieve a list of lessons.",
@@ -1761,7 +1761,7 @@
         }
       }
     },
-    "/lesson/{id}": {
+    "/lessons/{id}": {
       "parameters": [
         {
           "name": "id",
