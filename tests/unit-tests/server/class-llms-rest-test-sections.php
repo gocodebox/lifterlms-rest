@@ -17,7 +17,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/sections';
+	protected $route = '/llms/v1/sections';
 
 	/**
 	 * Post type.
@@ -113,6 +113,23 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 			$i++;
 		}
+
+	}
+
+	/**
+	 * Test list sections pagination.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_sections_pagination() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create sections
+		$course = $this->factory->course->create_and_get( array( 'sections' => 25, 'lessons' => 0 ) );
+		$start_section_id = $course->get_sections( 'ids' )[0];
+
+		$this->pagination_test( $this->route, $start_section_id );
 
 	}
 
