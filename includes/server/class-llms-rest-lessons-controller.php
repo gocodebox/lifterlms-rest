@@ -119,6 +119,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Lesson's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added the following properties: assignment, drip_date, drip_days, drip_method, public, quiz.
 	 *
 	 * @return array
 	 */
@@ -164,6 +165,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			'points'       => array(
 				'description' => __( 'Determines the weight of the lesson when grading the course.', 'literlms' ),
 				'type'        => 'integer',
+				'default'     => 1,
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
@@ -185,6 +187,126 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				'format'      => 'uri',
 				'arg_options' => array(
 					'sanitize_callback' => 'esc_url_raw',
+				),
+			),
+			'assignment'   => array(
+				'description' => __( 'Associate an assignment with this lesson. While assignment functionality is included with the LifterLMS Core REST API, the assignments themselves are implemented by the LifterLMS Assignments add-on.', 'lifterlms' ),
+				'type'        => 'object',
+				'context'     => array( 'view', 'edit' ),
+				'arg_options' => array(
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
+				),
+				'properties'  => array(
+					'enabled'     => array(
+						'description' => __( 'Determines if an assignment is enabled for the lesson.', 'lifterlms' ),
+						'type'        => 'boolean',
+						'default'     => false,
+						'context'     => array( 'view', 'edit' ),
+					),
+					'id'          => array(
+						'description' => __( 'The post ID of the associated assingment.', 'lifterlms' ),
+						'type'        => 'integer',
+						'default'     => 0,
+						'context'     => array( 'view', 'edit' ),
+						'arg_options' => array(
+							'sanitize_callback' => 'absint',
+						),
+					),
+					'progression' => array(
+						'description' => __(
+							'Determines lesson progression requirements related to the assignment.
+							<ul>
+								<li>complete: The assignment must be completed (with any grade) to progress the lesson.</li>
+								<li>pass: A passing grade must be earned to progress the lesson.</li>
+							</ul>',
+							'lifterlms'
+						),
+						'type'        => 'string',
+						'default'     => 'complete',
+						'enum'        => array( 'complete', 'pass' ),
+						'context'     => array( 'view', 'edit' ),
+					),
+				),
+			),
+			'drip_date'    => array(
+				'description' => __(
+					'The date and time when the lesson becomes available. Applicable only when drip_method is date. Format: Y-m-d H:i:s.',
+					'lifterlms'
+				),
+				'type'        => 'string',
+				'context'     => array( 'view', 'edit' ),
+			),
+			'drip_days'    => array(
+				'description' => __( 'Number of days to wait before allowing access to the lesson. Applicable only when drip_method is enrollment, start, or prerequisite.', 'lifterlms' ),
+				'type'        => 'integer',
+				'default'     => 1,
+				'context'     => array( 'view', 'edit' ),
+				'arg_options' => array(
+					'sanitize_callback' => 'absint',
+				),
+			),
+			'drip_method'  => array(
+				'description' => __(
+					'Determine the method with which to make the lesson content available.
+					<ul>
+						<li>none: Drip is disabled; the lesson is immediately available.</li>
+						<li>date: Lesson is made available at a specific date and time.</li>
+						<li>enrollment: Lesson is made available a specific number of days after enrollment into the course.</li>
+						<li>start: Lesson is made available a specific number of days after the course\'s start date. Only available on courses with a access_opens_date.</li>
+						<li>prerequisite: Lesson is made available a specific number of days after the prerequisite lesson is completed.</li>
+					</ul>',
+					'lifterlms'
+				),
+				'type'        => 'string',
+				'default'     => 'none',
+				'enum'        => array( 'none', 'date', 'enrollment', 'start', 'prerequisite' ),
+				'context'     => array( 'view', 'edit' ),
+			),
+			'public'       => array(
+				'description' => __( 'Denotes a lesson that\'s publicly accessible regardless of course enrollment.', 'lifterlms' ),
+				'type'        => 'boolean',
+				'default'     => false,
+				'context'     => array( 'view', 'edit' ),
+			),
+			'quiz'         => array(
+				'description' => __( 'Associate an assignment with this lesson. While assignment functionality is included with the LifterLMS Core REST API, the assignments themselves are implemented by the LifterLMS Assignments add-on.', 'lifterlms' ),
+				'type'        => 'object',
+				'context'     => array( 'view', 'edit' ),
+				'arg_options' => array(
+					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
+					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
+				),
+				'properties'  => array(
+					'enabled'     => array(
+						'description' => __( 'Determines if a quiz is enabled for the lesson.', 'lifterlms' ),
+						'type'        => 'boolean',
+						'default'     => false,
+						'context'     => array( 'view', 'edit' ),
+					),
+					'id'          => array(
+						'description' => __( 'The post ID of the associated quiz.', 'lifterlms' ),
+						'type'        => 'integer',
+						'default'     => 0,
+						'context'     => array( 'view', 'edit' ),
+						'arg_options' => array(
+							'sanitize_callback' => 'absint',
+						),
+					),
+					'progression' => array(
+						'description' => __(
+							'Determines lesson progression requirements related to the quiz.
+							<ul>
+								<li>complete: The quiz must be completed (with any grade) to progress the lesson.</li>
+								<li>pass: A passing grade must be earned to progress the lesson.</li>
+							</ul>',
+							'lifterlms'
+						),
+						'type'        => 'string',
+						'default'     => 'complete',
+						'enum'        => array( 'complete', 'pass' ),
+						'context'     => array( 'view', 'edit' ),
+					),
 				),
 			),
 		);
@@ -347,10 +469,11 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param LLMS_Lesson $lesson  LLMS Section.
-	 * @return array Links for the given object.
+	 * @since 1.0.0-beta.1
+	 * @since [version] Fix `siblings` link that was using the parent course's id instead of the parent section's id.
 	 *
-	 * @todo Implement all other links.
+	 * @param LLMS_Lesson $lesson LLMS Section.
+	 * @return array Links for the given object..
 	 */
 	protected function prepare_links( $lesson ) {
 
@@ -371,7 +494,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			);
 		}
 
-		// Parent (section).
+		// Parent section.
 		if ( $parent_section_id ) {
 			$lesson_links['parent'] = array(
 				'type' => 'section',
@@ -383,7 +506,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		$lesson_links['siblings'] = array(
 			'href' => add_query_arg(
 				'parent',
-				$parent_course_id,
+				$parent_section_id,
 				$links['collection']['href']
 			),
 		);
