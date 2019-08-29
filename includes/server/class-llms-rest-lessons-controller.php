@@ -16,8 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- *
- * @todo Implement endpoints.
+ *                  Added the following properties: assignment, drip_date, drip_days, drip_method, public, quiz.
+ *                  Added the following links: prerequisite, quiz, assignment.
+ *                  Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
+ *                  Fixed `parent` link href, replacing 'section' with 'sections'.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -470,7 +472,9 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix `siblings` link that was using the parent course's id instead of the parent section's id.
+	 * @since [version] Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
+	 *                  Fixed `parent` link href, replacing 'section' with 'sections'.
+	 *                  Following links added: prerequisite, quiz, assignment.
 	 *
 	 * @param LLMS_Lesson $lesson LLMS Section.
 	 * @return array Links for the given object..
@@ -498,7 +502,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		if ( $parent_section_id ) {
 			$lesson_links['parent'] = array(
 				'type' => 'section',
-				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'section', $parent_section_id ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'sections', $parent_section_id ) ),
 			);
 		}
 
@@ -525,6 +529,35 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			$lesson_links['previous'] = array(
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $previous_lesson ) ),
 			);
+		}
+
+		// Prerequisite.
+		$prerequisite = $lesson->get_prerequisite();
+
+		if ( ! empty( $prerequisite ) ) {
+			$lesson_links['prerequisite'] = array(
+				'type' => $this->post_type,
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $prerequisite ) ),
+			);
+		}
+
+		// Quiz.
+		$quiz = $lesson->get_quiz();
+		if ( ! empty( $quiz ) ) {
+			$lesson_links['quiz'] = array(
+				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'quizzes', $quiz->get( 'id' ) ) ),
+			);
+		}
+
+		// Assignment.
+		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
+
+			$assignment = llms_lesson_get_assignment( $lesson );
+			if ( $assignment ) {
+				$lesson_links['assignment'] = array(
+					'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'assignments', $assignment->get( 'id' ) ) ),
+				);
+			}
 		}
 
 		return array_merge( $links, $lesson_links );
