@@ -17,8 +17,9 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
  * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
  * @since [version] Added: `check_read_object_permissions()`, `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
- *                  `get_items()` method removed, now abstracted in LLMS_REST_Controller.
- *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
+ *                     `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ *                     Fix wp:featured_media link, we don't expose any embeddable field.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -1109,6 +1110,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Create an LLMS_Post_Model
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fix wp:featured_media link, we don't expose any embeddable field.
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -1148,8 +1150,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			$image_url = rest_url( 'wp/v2/media/' . $featured_media );
 
 			$links['https://api.w.org/featuredmedia'] = array(
-				'href'       => $image_url,
-				'embeddable' => true,
+				'href' => $image_url,
 			);
 		}
 
