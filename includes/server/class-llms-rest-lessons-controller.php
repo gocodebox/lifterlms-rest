@@ -16,10 +16,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- *                  Added the following properties: assignment, drip_date, drip_days, drip_method, public, quiz.
- *                  Added the following links: prerequisite, quiz, assignment.
+ *                  Added the following properties to the item schema: `assignment`, `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
+ *                  Added the following links: `prerequisite`, `quiz`, `assignment`.
  *                  Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
  *                  Fixed `parent` link href, replacing 'section' with 'sections'.
+ *                  Added following properties to the response object: `public`, `points`, `quiz`, `assignment`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -367,10 +368,14 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added following properties to the response object:
+	 *                  public, points, quiz, assignment, drip_method, drip_days, drip_date, prerequisite.
 	 *
 	 * @param LLMS_Lesson     $lesson Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
+	 *
+	 * @todo Verify the required condition we need to meet to expose assignment properties.
 	 */
 	protected function prepare_object_for_response( $lesson, $request ) {
 
@@ -378,11 +383,52 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Parent section.
 		$data['parent_id'] = $lesson->get_parent_section();
+
 		// Parent course.
 		$data['course_id'] = $lesson->get_parent_course();
 
 		// Order.
 		$data['order'] = $lesson->get( 'order' );
+
+		// Public.
+		$data['public'] = $lesson->is_free();
+
+		// Points.
+		$data['points'] = $lesson->get( 'points' );
+
+		// Quiz.
+		$data['quiz']['enabled']     = llms_parse_bool( $lesson->get( 'quiz_enabled' ) );
+		$data['quiz']['id']          = absint( $lesson->get( 'quiz' ) );
+		$data['quiz']['progression'] = llms_parse_bool( $lesson->get( 'require_passing_grade' ) ) ? 'pass' : 'completed';
+
+		// Assignment.
+		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
+			$data['assignment']['enabled']     = llms_parse_bool( $lesson->get( 'assignment_enabled' ) );
+			$data['assignment']['id']          = absint( $lesson->get( 'assignment' ) );
+			$data['assignment']['progression'] = llms_parse_bool( $lesson->get( 'require_assignment_passing_grade' ) ) ? 'pass' : 'completed';
+		}
+
+		// Drip method.
+		$data['drip_method'] = $lesson->get( 'drip_method' );
+		$data['drip_method'] = $data['drip_method'] ? $data['drip_method'] : 'none';
+
+		// Drip days.
+		$data['drip_days'] = absint( $lesson->get( 'days_before_available' ) );
+
+		// Drip date.
+		$date = $lesson->get( 'date_available' );
+		$time = $lesson->get( 'time_available' );
+
+		if ( ! $time ) {
+			$time = '12:00 AM';
+		}
+
+		$drip_date = strtotime( $date . ' ' . $time );
+
+		$data['drip_date'] = date_i18n( 'Y-m-d H:i:s', $drip_date );
+
+		// Prerequisite.
+		$data['prerequisite'] = absint( $lesson->get_prerequisite() );
 
 		return $data;
 
@@ -542,8 +588,8 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Quiz.
-		$quiz = $lesson->get_quiz();
-		if ( ! empty( $quiz ) ) {
+		if ( $lesson->is_quiz_enabled() ) {
+			$quiz                 = $lesson->get_quiz();
 			$lesson_links['quiz'] = array(
 				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'quizzes', $quiz->get( 'id' ) ) ),
 			);
