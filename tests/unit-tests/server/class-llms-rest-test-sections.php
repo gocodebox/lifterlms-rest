@@ -8,7 +8,8 @@
  * @group rest_sections
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Add links test.
+ * @version [version]
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -25,6 +26,14 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @var string
 	 */
 	protected $post_type = 'section';
+
+
+	/**
+	 * Array of link $rels expected for each item.
+	 *
+	 * @var array
+	 */
+	private $expected_link_rels = array( 'self', 'collection', 'content', 'parent', 'siblings', 'next', 'previous' );
 
 	/**
 	 * Setup our test server, endpoints, and user info.
@@ -113,6 +122,41 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 			$i++;
 		}
+	}
+
+	/**
+	 * Test links.
+	 *
+	 * @since [version]
+	 */
+	public function test_links() {
+
+		// create course with 3 sections and 1 lesson per section.
+		$course = $this->factory->course->create_and_get( array( 'sections' => 3, 'lessons' => 1 ) );
+
+		$course_obj = new LLMS_Course( $course );
+		$sections   = $course_obj->get_sections();
+
+
+		$i = 0;
+		foreach ( $sections as $section ) {
+
+			$response = $this->perform_mock_request( 'GET',  $this->route . '/' . $section->get('id')  );
+
+			switch ( $i++ ):
+				case 0:
+					$expected_link_rels = array_values( array_diff( $this->expected_link_rels, array( 'previous' ) ) );
+					break;
+				case 2:
+					$expected_link_rels = array_values( array_diff( $this->expected_link_rels, array( 'next' ) ) );
+					break;
+				default:
+					$expected_link_rels = $this->expected_link_rels;
+			endswitch;
+
+			$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
+
+		}
 
 	}
 
@@ -165,7 +209,6 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 		// Test the created section and the response are equal
 		$this->llms_posts_fields_match( $sections[0], $res_data );
 		$this->assertEquals( $section_args['title']['rendered'], $res_data['title']['rendered'] );
-
 	}
 
 	/**
