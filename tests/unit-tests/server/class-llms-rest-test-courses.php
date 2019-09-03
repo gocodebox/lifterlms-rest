@@ -8,6 +8,7 @@
  * @group rest_courses
  *
  * @since 1.0.0-beta.1
+ * @since [version] Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
  * @version [version]
  *
  * @todo update tests to check links.
@@ -30,7 +31,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $post_type = 'course';
 
 	/**
+	 *
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
 	 */
 	public function setUp() {
 
@@ -61,11 +66,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'status'       => 'publish',
 		);
 
-		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
-
-		// assume all courses have been migrated to the block editor to avoid adding parts to the content.
-		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );
 	}
 
 	/**

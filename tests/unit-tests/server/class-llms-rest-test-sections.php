@@ -8,7 +8,8 @@
  * @group rest_sections
  *
  * @since 1.0.0-beta.1
- * @since [version] Add links test.
+ * @since [version] Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp(),
+ *                  fixed sections fields checks when retrieving the collection.
  * @version [version]
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
@@ -37,6 +38,9 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
 	 */
 	public function setUp() {
 
@@ -60,10 +64,8 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 			),
 		);
 
-		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
-
 		$this->endpoint = new LLMS_REST_Sections_Controller();
+
 	}
 
 
@@ -86,6 +88,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list sections.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed sections fields check.
 	 */
 	public function test_get_sections() {
 
@@ -106,16 +109,18 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 15, $headers['X-WP-Total'] );
 		$this->assertEquals( 2, $headers['X-WP-TotalPages'] );
 
+		array_pop($courses);
 		$i = 0;
 		// Check retrieved sections are the same as the generated ones.
 		foreach ( $courses as $course ) {
+
 			$course_obj = new LLMS_Course( $course );
 			$sections   = $course_obj->get_sections();
 
-			// Easy sequential check as sections are by default oredered by id.
+			// Easy sequential check as sections are by default ordered by id.
 			$j = 0;
 			foreach ( $sections as $section ) {
-				$res_section = $res_data[ $i + $j ];
+				$res_section = $res_data[ ( $i * count( $sections ) ) + $j ];
 				$this->llms_posts_fields_match( $section, $res_section );
 				$j++;
 			}
@@ -395,11 +400,17 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
+	/**
+	 * Override.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed expected 'order' field, added expected 'parent_id'.
+	 */
 	protected function filter_expected_fields( $expected, $llms_post ) {
 
 		unset( $expected['content'] );
 		$expected[ 'order' ] = $llms_post->get('order');
-		$expected[ 'order' ] = $llms_post->get_parent_course();
+		$expected[ 'parent_id' ] = $llms_post->get_parent_course();
 
 		return $expected;
 
