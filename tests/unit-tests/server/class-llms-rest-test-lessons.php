@@ -52,10 +52,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
-
 		$this->endpoint = new LLMS_REST_Lessons_Controller();
+
 	}
 
 
@@ -79,7 +77,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	public function test_get_item_schema() {
 
 		$schema = $this->endpoint->get_item_schema();
-
 
 		$this->assertEquals( 'lesson', $schema['title'] );
 
@@ -133,7 +130,46 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
-	// public function test_get_items_success() {}
+	/**
+	 * Test getting items.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_items_success() {
+		wp_set_current_user( $this->user_allowed );
+
+		// create 3 courses with 3 lessons per course.
+		$courses = $this->factory->course->create_many( 3, array( 'sections' => 1 , 'lessons' => 3 ) );
+
+		$response = $this->perform_mock_request( 'GET', $this->route );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+		$this->assertEquals( 9, count( $res_data ) );
+
+		// Check parent course and parent section match.
+		$i = 0;
+
+		// Check retrieved sections are the same as the generated ones.
+		foreach ( $courses as $course ) {
+			$course_obj = new LLMS_Course( $course );
+			$lessons    = $course_obj->get_lessons();
+
+			// Easy sequential check as sections are by default ordered by id.
+			$j = 0;
+			foreach ( $lessons as $lesson ) {
+				$res_lesson = $res_data[ ( $i * count( $lessons ) ) + $j ];
+				$this->llms_posts_fields_match( $lesson, $res_lesson );
+				$j++;
+			}
+
+			$i++;
+		}
+
+	}
+
 	// public function test_get_items_exclude() {}
 	// public function test_get_items_include() {}
 	// public function test_get_items_orderby_id() {}
@@ -208,6 +244,30 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		}
 
+	}
+
+	/**
+	 * Override.
+	 *
+	 * @since [version]
+	 */
+	protected function filter_expected_fields( $expected, $llms_post ) {
+		// Parent section.
+		$expected['parent_id'] = $llms_post->get_parent_section();
+
+		// Parent course.
+		$expected['course_id'] = $llms_post->get_parent_course();
+
+		// Order.
+		$expected['order'] = $llms_post->get( 'order' );
+
+		// Public.
+		$expected['public'] = $llms_post->is_free();
+
+		// Points.
+		$expected['points'] = $llms_post->get( 'points' );
+
+		return $expected;
 	}
 
 }
