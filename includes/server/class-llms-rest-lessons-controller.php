@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *                  Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
  *                  Fixed `parent` link href, replacing 'section' with 'sections'.
  *                  Added following properties to the response object: `public`, `points`, `quiz`, `assignment`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
+ *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -486,6 +487,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed lesson progression callback name.
 	 *
 	 * @param LLMS_Section $lesson Lesson object.
 	 * @return array Array of action/filters to be removed for response.
@@ -506,7 +508,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				),
 				// Lesson Progression.
 				array(
-					'callback' => 'lifterlms_single_lesson_after_summary',
+					'callback' => 'lifterlms_template_complete_lesson_link',
 					'priority' => 10,
 				),
 			),
