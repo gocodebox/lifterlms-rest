@@ -144,7 +144,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$response = $this->perform_mock_request( 'GET', $this->route );
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		$this->assertEquals( 9, count( $res_data ) );
@@ -152,12 +152,12 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		// Check parent course and parent section match.
 		$i = 0;
 
-		// Check retrieved sections are the same as the generated ones.
+		// Check retrieved lessons are the same as the generated ones.
 		foreach ( $courses as $course ) {
 			$course_obj = new LLMS_Course( $course );
 			$lessons    = $course_obj->get_lessons();
 
-			// Easy sequential check as sections are by default ordered by id.
+			// Easy sequential check as lessons are by default ordered by id.
 			$j = 0;
 			foreach ( $lessons as $lesson ) {
 				$res_lesson = $res_data[ ( $i * count( $lessons ) ) + $j ];
@@ -170,12 +170,68 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
+	/**
+	 * Test getting lessons filtered by section's parent.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_items_by_parent() {
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course with 3 sections and two lessons per section.
+		$course = $this->factory->course->create( array( 'sections' => 3 , 'lessons' => 2 ) );
+
+		$course_obj = new LLMS_Course( $course );
+		$sections   = $course_obj->get_sections();
+
+		$i = 0;
+
+		foreach ( $sections as $section ) {
+			if ( 2 === $i++ ) {
+				continue;
+			}
+
+			// filter by parent section.
+			$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'parent' => $section->get( 'id' ) ) );
+
+			// Success.
+			$this->assertResponseStatusEquals( 200, $response );
+			$res_data = $response->get_data();
+			$this->assertEquals( 2, count( $res_data ) );
+
+			$lessons = $section->get_lessons();
+
+			// Easy sequential check as lesson are by default ordered by id.
+			$j = 0;
+			foreach ( $lessons as $lesson ) {
+
+				$res_lesson = $res_data[ $j ];
+				$this->llms_posts_fields_match( $lesson, $res_lesson );
+				$j++;
+
+			}
+
+		}
+
+		// Check filtering by a section id which doesn't exist.
+		$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'parent' => $section->get( 'id' ) + 999 ) );
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+
+		// Expect an empty collection.
+		$res_data = $response->get_data();
+		$this->assertEquals( 0, count( $res_data ) );
+
+	}
+
 	// public function test_get_items_exclude() {}
 	// public function test_get_items_include() {}
 	// public function test_get_items_orderby_id() {}
-	// public function test_get_items_orderby_email() {}
-	// public function test_get_items_orderby_name() {}
-	// public function test_get_items_orderby_registered_date() {}
+	// public function test_get_items_orderby_title() {}
+	// public function test_get_items_orderby_order() {}
+	// public function test_get_items_orderby_date_created() {}
+	// public function test_get_items_orderby_date_updated() {}
 	// public function test_get_items_pagination() {}
 	// public function test_get_items_filter_by_posts() {}
 	// public function test_get_items_filter_by_roles() {}
