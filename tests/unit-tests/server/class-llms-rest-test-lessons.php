@@ -35,7 +35,48 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	private $expected_link_rels = array( 'self', 'collection', 'course', 'parent', 'siblings', 'next', 'previous' );
 
 	/**
+	 * Array of schema properties.
+	 *
+	 * @var array
+	 */
+	private $schema_props = array(
+		'id',
+		'audio_embed',
+		'comment_status',
+		'content',
+		'course_id',
+		'date_created',
+		'date_created_gmt',
+		'date_updated',
+		'date_updated_gmt',
+		'drip_date',
+		'drip_days',
+		'drip_method',
+		'excerpt',
+		'featured_media',
+		'menu_order',
+		'order',
+		'parent_id',
+		'password',
+		'permalink',
+		'ping_status',
+		'points',
+		'post_type',
+		'prerequisite',
+		'public',
+		'quiz',
+		'slug',
+		'status',
+		'title',
+		'video_embed',
+	);
+
+	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function setUp() {
 
@@ -54,6 +95,11 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$this->endpoint = new LLMS_REST_Lessons_Controller();
 
+		// Assignment.
+		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
+			$this->schema_props[] = 'assignment';
+		}
+
 	}
 
 
@@ -61,6 +107,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test route registration.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_register_routes() {
 
@@ -73,6 +121,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test the item schema.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_item_schema() {
 
@@ -80,38 +130,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$this->assertEquals( 'lesson', $schema['title'] );
 
-		$props = array(
-			'id',
-			'audio_embed',
-			'assignment',
-			'comment_status',
-			'content',
-			'course_id',
-			'date_created',
-			'date_created_gmt',
-			'date_updated',
-			'date_updated_gmt',
-			'drip_date',
-			'drip_days',
-			'drip_method',
-			'excerpt',
-			'featured_media',
-			'menu_order',
-			'order',
-			'parent_id',
-			'password',
-			'permalink',
-			'ping_status',
-			'points',
-			'post_type',
-			'prerequisite',
-			'public',
-			'quiz',
-			'slug',
-			'status',
-			'title',
-			'video_embed',
-		);
+		$props = $this->schema_props;
 
 		$schema_keys = array_keys( $schema['properties'] );
 		sort( $schema_keys );
@@ -125,7 +144,10 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 			'id',
 			'progression'
 		);
-		$this->assertEquals( $assignment_quiz_nested, array_keys( $schema['properties']['assignment']['properties'] ) );
+
+		if ( in_array( 'assignment', $props ) ) {
+			$this->assertEquals( $assignment_quiz_nested, array_keys( $schema['properties']['assignment']['properties'] ) );
+		}
 		$this->assertEquals( $assignment_quiz_nested, array_keys( $schema['properties']['quiz']['properties'] ) );
 
 	}
@@ -134,6 +156,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting items.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_items_success() {
 		wp_set_current_user( $this->user_allowed );
@@ -174,6 +198,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting lessons filtered by section's parent.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_items_filter_by_parent() {
 		wp_set_current_user( $this->user_allowed );
@@ -234,6 +260,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting lessons filtered by section's parent.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_items_orderby_order() {
 
@@ -271,6 +299,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
 		$this->assertEquals( array( $lessons[1], $lessons[0], $lessons[2] ), wp_list_pluck( $res_data, 'id' ) );
+
 	}
 
 	// public function test_get_items_orderby_date_created() {}
@@ -281,12 +310,62 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	// public function test_create_item_missing_required() {}
 	// public function test_create_item_auth_errors() {}
 
-	// public function test_get_item_success() {}
+
+	/**
+	 * Retrieve success.
+	 *
+	 * @since [version]
+	 * @group aja
+	 * @return void
+	 */
+	public function test_get_item_success() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a course with 1 section and 1 lesson with no quizzes
+		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1, 'quiz' => 0 ) );
+		$lesson = $course->get_lessons()[0];
+		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $lesson->get( 'id' ) ) );
+
+		$this->assertResponseStatusEquals( 200, $res );
+		$res_data = $res->get_data();
+
+		// check that created and the retrieved lessons match.
+		$this->llms_posts_fields_match( $lesson, $res_data );
+
+		// check that the retrieved lesson has exactly the fields we expect.
+		$props = $this->schema_props;
+
+		// we're not in edit context so 'password' property won't be returned
+		$props = array_diff( $props, array( 'password' ) );
+
+		$res_data_keys = array_keys( $res_data );
+		sort( $res_data_keys );
+		sort( $props );
+
+		$this->assertEquals( $props, $res_data_keys );
+
+		// check nested items.
+		$assignment_quiz_nested = array(
+			'enabled',
+			'id',
+			'progression'
+		);
+
+		if ( in_array( 'assignment', $props ) ) {
+			$this->assertEquals( $assignment_quiz_nested, array_keys( $res_data['assignment'] ) );
+		}
+
+		$this->assertEquals( $assignment_quiz_nested, array_keys(  $res_data['quiz'] ) );
+
+	}
 
 	/**
 	 * Test getting an item with no auth.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_item_auth_errors() {
 
@@ -308,6 +387,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test not found lesson.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_item_not_found() {
 
@@ -332,6 +413,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test links.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
     public function test_links() {
 
@@ -381,22 +464,67 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Override.
 	 *
 	 * @since [version]
+	 *
+	 * @param $expected array Array of expected properties.
+	 * @param $lesson LLMS_Post Instance of LLMS_Post.
+	 * @return array
 	 */
-	protected function filter_expected_fields( $expected, $llms_post ) {
+	protected function filter_expected_fields( $expected, $lesson ) {
+
+		// Audio Embed.
+		$expected['audio_embed'] = $lesson->get( 'audio_embed' );
+
+		// Video Embed.
+		$expected['video_embed'] = $lesson->get( 'video_embed' );
+
 		// Parent section.
-		$expected['parent_id'] = $llms_post->get_parent_section();
+		$expected['parent_id'] = $lesson->get_parent_section();
 
 		// Parent course.
-		$expected['course_id'] = $llms_post->get_parent_course();
+		$expected['course_id'] = $lesson->get_parent_course();
 
 		// Order.
-		$expected['order'] = $llms_post->get( 'order' );
+		$expected['order'] = $lesson->get( 'order' );
 
 		// Public.
-		$expected['public'] = $llms_post->is_free();
+		$expected['public'] = $lesson->is_free();
 
 		// Points.
-		$expected['points'] = $llms_post->get( 'points' );
+		$expected['points'] = $lesson->get( 'points' );
+
+		// Quiz.
+		$expected['quiz']['enabled']     = llms_parse_bool( $lesson->get( 'quiz_enabled' ) );
+		$expected['quiz']['id']          = absint( $lesson->get( 'quiz' ) );
+		$expected['quiz']['progression'] = llms_parse_bool( $lesson->get( 'require_passing_grade' ) ) ? 'pass' : 'completed';
+
+		// Assignment.
+		if ( in_array( 'assignment', $this->schema_props ) ) {
+			$expected['assignment']['enabled']     = llms_parse_bool( $lesson->get( 'assignment_enabled' ) );
+			$expected['assignment']['id']          = absint( $lesson->get( 'assignment' ) );
+			$expected['assignment']['progression'] = llms_parse_bool( $lesson->get( 'require_assignment_passing_grade' ) ) ? 'pass' : 'completed';
+		}
+
+		// Drip method.
+		$expected['drip_method'] = $lesson->get( 'drip_method' );
+		$expected['drip_method'] = $expected['drip_method'] ? $expected['drip_method'] : 'none';
+
+		// Drip days.
+		$expected['drip_days'] = absint( $lesson->get( 'days_before_available' ) );
+
+		// Drip date.
+		$date = $lesson->get( 'date_available' );
+		$time = $lesson->get( 'time_available' );
+
+		if ( ! $time ) {
+			$time = '12:00 AM';
+		}
+
+		$drip_date = strtotime( $date . ' ' . $time );
+
+		$expected['drip_date'] = date_i18n( 'Y-m-d H:i:s', $drip_date );
+
+		// Prerequisite.
+		$expected['prerequisite'] = absint( $lesson->get_prerequisite() );
 
 		return $expected;
 	}
