@@ -282,8 +282,42 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	// public function test_create_item_auth_errors() {}
 
 	// public function test_get_item_success() {}
-	// public function test_get_item_auth_errors() {}
-	// public function test_get_item_not_found() {}
+
+	/**
+	 * Test getting an item with no auth.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_item_auth_errors() {
+
+		// create a course with 1 section and 1 lesson with no quizzes
+		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1, 'quiz' => 0 ) );
+		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $course->get_lessons( 'ids' )[0] ) );
+		$this->assertResponseStatusEquals( 401, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
+
+		wp_set_current_user( $this->user_forbidden );
+
+		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $course->get_lessons( 'ids' )[0] ) );
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+	}
+
+	/**
+	 * Test not found lesson.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_item_not_found() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, 1234 ) );
+		$this->assertResponseStatusEquals( 404, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_not_found', $res );
+
+	}
 
 	// public function test_update_item_success() {}
 	// public function test_update_item_auth_errors() {}
