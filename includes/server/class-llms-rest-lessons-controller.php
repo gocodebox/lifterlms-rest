@@ -22,6 +22,10 @@ defined( 'ABSPATH' ) || exit;
  *                  Fixed `parent` link href, replacing 'section' with 'sections'.
  *                  Added following properties to the response object: `public`, `points`, `quiz`, `assignment`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
  *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
+ * @todo Implement endpoints.
+ * @todo Assignment related code will be part of the addon, hence it must be removed here.
+ *       Also several filters/actions hooks must be added to allow the addon alter the schema, add the link to the assignment resource, etc
+ *       see https://github.com/gocodebox/lifterlms-rest/issues/85#issuecomment-528481364
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
