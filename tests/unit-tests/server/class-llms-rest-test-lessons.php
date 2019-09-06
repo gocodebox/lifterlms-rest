@@ -95,11 +95,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$this->endpoint = new LLMS_REST_Lessons_Controller();
 
-		// Assignment.
-		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
-			$this->schema_props[] = 'assignment';
-		}
-
 	}
 
 
@@ -139,16 +134,13 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $props, $schema_keys );
 
 		// check nested items.
-		$assignment_quiz_nested = array(
+		$quiz_nested = array(
 			'enabled',
 			'id',
 			'progression'
 		);
 
-		if ( in_array( 'assignment', $props ) ) {
-			$this->assertEquals( $assignment_quiz_nested, array_keys( $schema['properties']['assignment']['properties'] ) );
-		}
-		$this->assertEquals( $assignment_quiz_nested, array_keys( $schema['properties']['quiz']['properties'] ) );
+		$this->assertEquals( $quiz_nested, array_keys( $schema['properties']['quiz']['properties'] ) );
 
 	}
 
@@ -346,17 +338,13 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $props, $res_data_keys );
 
 		// check nested items.
-		$assignment_quiz_nested = array(
+		$quiz_nested = array(
 			'enabled',
 			'id',
 			'progression'
 		);
 
-		if ( in_array( 'assignment', $props ) ) {
-			$this->assertEquals( $assignment_quiz_nested, array_keys( $res_data['assignment'] ) );
-		}
-
-		$this->assertEquals( $assignment_quiz_nested, array_keys(  $res_data['quiz'] ) );
+		$this->assertEquals( $quiz_nested, array_keys(  $res_data['quiz'] ) );
 
 	}
 
@@ -496,13 +484,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$expected['quiz']['enabled']     = llms_parse_bool( $lesson->get( 'quiz_enabled' ) );
 		$expected['quiz']['id']          = absint( $lesson->get( 'quiz' ) );
 		$expected['quiz']['progression'] = llms_parse_bool( $lesson->get( 'require_passing_grade' ) ) ? 'pass' : 'completed';
-
-		// Assignment.
-		if ( in_array( 'assignment', $this->schema_props ) ) {
-			$expected['assignment']['enabled']     = llms_parse_bool( $lesson->get( 'assignment_enabled' ) );
-			$expected['assignment']['id']          = absint( $lesson->get( 'assignment' ) );
-			$expected['assignment']['progression'] = llms_parse_bool( $lesson->get( 'require_assignment_passing_grade' ) ) ? 'pass' : 'completed';
-		}
 
 		// Drip method.
 		$expected['drip_method'] = $lesson->get( 'drip_method' );

@@ -21,6 +21,8 @@ defined( 'ABSPATH' ) || exit;
  *                     `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Fix wp:featured_media link, we don't expose any embeddable field.
  *                     Also `self` and `collection` links prepared in the parent class.
+ *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
+ *                     fired after inserting/uodateing an llms post into the database.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -187,6 +189,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields()
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
+	 *                  fired after inserting/uodateing an llms post into the database.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -210,6 +214,22 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $object;
 		}
 
+		$schema = $this->get_item_schema();
+
+		/**
+		 * Fires after a single llms post is created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
+		 *
+		 * @since [version]
+		 *
+		 * @param LLMS_Post       $object   Inserted or updated llms object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_insert_{$this->post_type}", $object, $request, $schema, true );
+
 		// Set all the other properties.
 		// TODO: maybe we want to filter the post properties that have already been inserted before.
 		$set_bulk_result = $object->set_bulk( $prepared_item, true );
@@ -225,8 +245,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		$object_id = $object->get( 'id' );
-
-		$schema = $this->get_item_schema();
 
 		$additional_fields = $this->update_additional_object_fields( $object, $request, $schema, $prepared_item );
 		if ( is_wp_error( $additional_fields ) ) {
@@ -250,6 +268,20 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		// return $fields_update;
 		// }
 		$request->set_param( 'context', 'edit' );
+
+		/**
+		 * Fires after a single llms post is completely created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
+		 *
+		 * @since [version]
+		 *
+		 * @param LLMS_Post       $object   Inserted or updated llms object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_after_insert_{$this->post_type}", $object, $request, $schema, true );
 
 		$response = $this->prepare_item_for_response( $object, $request );
 
@@ -386,6 +418,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Extending classes can add additional object fields by overriding the method update_additional_object_fields().
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
+	 *                  fired after inserting/uodateing an llms post into the database.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -414,9 +448,23 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $update_result;
 		}
 
-		$object_id = $object->get( 'id' );
-
 		$schema = $this->get_item_schema();
+
+		/**
+		 * Fires after a single llms post is created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
+		 *
+		 * @since [version]
+		 *
+		 * @param LLMS_Post       $object   Inserted or updated llms object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_insert_{$this->post_type}", $object, $request, $schema, true );
+
+		$object_id = $object->get( 'id' );
 
 		$additional_fields = $this->update_additional_object_fields( $object, $request, $schema, $prepared_item, false );
 		if ( is_wp_error( $additional_fields ) ) {
@@ -440,6 +488,20 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		// return $fields_update;
 		// }
 		$request->set_param( 'context', 'edit' );
+
+		/**
+		 * Fires after a single llms post is completely created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
+		 *
+		 * @since [version]
+		 *
+		 * @param LLMS_Post       $object   Inserted or updated llms object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_after_insert_{$this->post_type}", $object, $request, $schema, true );
 
 		return $this->prepare_item_for_response( $object, $request );
 

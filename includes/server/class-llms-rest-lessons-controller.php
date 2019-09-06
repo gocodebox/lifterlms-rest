@@ -16,12 +16,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- *                  Added the following properties to the item schema: `assignment`, `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
- *                  Added the following links: `prerequisite`, `quiz`, `assignment`.
+ *                  Added the following properties to the item schema: `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
+ *                  Added the following links: `prerequisite`, `quiz`.
  *                  Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
  *                  Fixed `parent` link href, replacing 'section' with 'sections'.
- *                  Added following properties to the response object: `public`, `points`, `quiz`, `assignment`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
+ *                  Added following properties to the response object: `public`, `points`, `quiz`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
  *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
+ *                  Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
  * @todo Implement endpoints.
  * @todo Assignment related code will be part of the addon, hence it must be removed here.
  *       Also several filters/actions hooks must be added to allow the addon alter the schema, add the link to the assignment resource, etc
@@ -124,12 +125,40 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
+	 * Prepares a single lesson for create or update.
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request  Request object.
+	 * @return array|WP_Error Array of lesson args or WP_Error.
+	 */
+	protected function prepare_item_for_database( $request ) {
+
+		$prepared_item = parent::prepare_item_for_database( $request );
+		$schema        = $this->get_item_schema();
+
+		/**
+		 * Filters the lesson data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $prepared_item Array of lesson item properties prepared for database.
+		 * @param WP_REST_Request $request       Full details about the request.
+		 * @param array           $schema        The item schema.
+		 */
+		return apply_filters( 'llms_rest_pre_insert_lesson', $prepared_item, $request, $schema );
+
+	}
+
+
+	/**
 	 * Get the Lesson's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the following properties: assignment, drip_date, drip_days, drip_method, public, quiz.
+	 * @since [version] Added the following properties: drip_date, drip_days, drip_method, public, quiz.
+	 *                  Added `llms_rest_lesson_item_schema` filter hook.
 	 *
-	 * @return array
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 
@@ -279,53 +308,16 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			),
 		);
 
-		// Assignment.
-		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
-			$lesson_properties['assignment'] = array(
-				'description' => __( 'Associate an assignment with this lesson. While assignment functionality is included with the LifterLMS Core REST API, the assignments themselves are implemented by the LifterLMS Assignments add-on.', 'lifterlms' ),
-				'type'        => 'object',
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
-					'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
-				),
-				'properties'  => array(
-					'enabled'     => array(
-						'description' => __( 'Determines if an assignment is enabled for the lesson.', 'lifterlms' ),
-						'type'        => 'boolean',
-						'default'     => false,
-						'context'     => array( 'view', 'edit' ),
-					),
-					'id'          => array(
-						'description' => __( 'The post ID of the associated assingment.', 'lifterlms' ),
-						'type'        => 'integer',
-						'default'     => 0,
-						'context'     => array( 'view', 'edit' ),
-						'arg_options' => array(
-							'sanitize_callback' => 'absint',
-						),
-					),
-					'progression' => array(
-						'description' => __(
-							'Determines lesson progression requirements related to the assignment.
-							<ul>
-								<li>complete: The assignment must be completed (with any grade) to progress the lesson.</li>
-								<li>pass: A passing grade must be earned to progress the lesson.</li>
-							</ul>',
-							'lifterlms'
-						),
-						'type'        => 'string',
-						'default'     => 'complete',
-						'enum'        => array( 'complete', 'pass' ),
-						'context'     => array( 'view', 'edit' ),
-					),
-				),
-			);
-		}
-
 		$schema['properties'] = array_merge( (array) $schema['properties'], $lesson_properties );
 
-		return $schema;
+		/**
+		 * Filter item schema for the lessons controller.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $schema Item schema data.
+		 */
+		return apply_filters( 'llms_rest_lesson_item_schema', $schema );
 
 	}
 
@@ -378,13 +370,12 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since [version] Added following properties to the response object:
-	 *                  public, points, quiz, assignment, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
+	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
+	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
 	 *
 	 * @param LLMS_Lesson     $lesson Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
-	 *
-	 * @todo Verify the required condition we need to meet to expose assignment properties.
 	 */
 	protected function prepare_object_for_response( $lesson, $request ) {
 
@@ -416,13 +407,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		$data['quiz']['id']          = absint( $lesson->get( 'quiz' ) );
 		$data['quiz']['progression'] = llms_parse_bool( $lesson->get( 'require_passing_grade' ) ) ? 'pass' : 'completed';
 
-		// Assignment.
-		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
-			$data['assignment']['enabled']     = llms_parse_bool( $lesson->get( 'assignment_enabled' ) );
-			$data['assignment']['id']          = absint( $lesson->get( 'assignment' ) );
-			$data['assignment']['progression'] = llms_parse_bool( $lesson->get( 'require_assignment_passing_grade' ) ) ? 'pass' : 'completed';
-		}
-
 		// Drip method.
 		$data['drip_method'] = $lesson->get( 'drip_method' );
 		$data['drip_method'] = $data['drip_method'] ? $data['drip_method'] : 'none';
@@ -445,7 +429,16 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		// Prerequisite.
 		$data['prerequisite'] = absint( $lesson->get_prerequisite() );
 
-		return $data;
+		/**
+		 * Filters the lesson data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $data    Array of lesson properties prepared for response.
+		 * @param LLMS_Lesson     $lesson  Lesson object.
+		 * @param WP_REST_Request $request Full details about the request.
+		 */
+		return apply_filters( 'llms_rest_prepare_lesson_object_response', $data, $lesson, $request );
 
 	}
 
@@ -536,7 +529,8 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
 	 *                  Fixed `parent` link href, replacing 'section' with 'sections'.
-	 *                  Following links added: prerequisite, quiz, assignment.
+	 *                  Following links added: prerequisite, quiz.
+	 *                  Added `llms_rest_lesson_links` filter hook.
 	 *
 	 * @param LLMS_Lesson $lesson LLMS Section.
 	 * @return array Links for the given object..
@@ -611,18 +605,18 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			);
 		}
 
-		// Assignment.
-		if ( function_exists( 'llms_lesson_get_assignment' ) ) {
+		$links = array_merge( $links, $lesson_links );
 
-			$assignment = llms_lesson_get_assignment( $lesson );
-			if ( $assignment ) {
-				$lesson_links['assignment'] = array(
-					'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'assignments', $assignment->get( 'id' ) ) ),
-				);
-			}
-		}
+		/**
+		 * Filters the lesson's links.
+		 *
+		 * @since [version]
+		 *
+		 * @param array       links   Links for the given lesson.
+		 * @param LLMS_Lesson $lesson Lesson object.
+		 */
+		return apply_filters( 'llms_rest_lesson_links', $links, $lesson );
 
-		return array_merge( $links, $lesson_links );
 	}
 
 	/**
