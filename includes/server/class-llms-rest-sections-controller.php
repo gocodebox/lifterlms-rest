@@ -211,7 +211,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param WP_REST_Request $request  Request object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {

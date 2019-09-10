@@ -23,10 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *                  Added following properties to the response object: `public`, `points`, `quiz`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
  *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
  *                  Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
+ *                  Added `prepare_item_for_database` method.
+ *
  * @todo Implement endpoints.
- * @todo Assignment related code will be part of the addon, hence it must be removed here.
- *       Also several filters/actions hooks must be added to allow the addon alter the schema, add the link to the assignment resource, etc
- *       see https://github.com/gocodebox/lifterlms-rest/issues/85#issuecomment-528481364
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -129,13 +128,58 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param WP_REST_Request $request  Request object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 
 		$prepared_item = parent::prepare_item_for_database( $request );
 		$schema        = $this->get_item_schema();
+
+		// Course Audio embed URL.
+		if ( ! empty( $schema['properties']['audio_embed'] ) && isset( $request['audio_embed'] ) ) {
+			$prepared_item['audio_embed'] = $request['audio_embed'];
+		}
+
+		// Course Video embed URL.
+		if ( ! empty( $schema['properties']['video_embed'] ) && isset( $request['video_embed'] ) ) {
+			$prepared_item['video_embed'] = $request['video_embed'];
+		}
+
+		// LLMS Lesson parent id.
+		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
+
+			$parent_section = llms_get_post( $request['parent_id'] );
+
+			if ( ! $parent_section || ! is_a( $parent_section, 'LLMS_Section' ) ) {
+				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Section ID.', 'lifterlms' ) );
+			}
+
+			$prepared_item['parent_section'] = $request['parent_id'];
+		}
+
+		// LLMS Lesson course id.
+		if ( ! empty( $schema['properties']['course_id'] ) && isset( $request['course_id'] ) ) {
+
+			$parent_course = llms_get_post( $request['course_id'] );
+
+			if ( ! $parent_course || ! is_a( $parent_course, 'LLMS_Course' ) ) {
+				return llms_rest_bad_request_error( __( 'Invalid course_id param. It must be a valid Course ID.', 'lifterlms' ) );
+			}
+
+			$prepared_item['parent_course'] = $request['course_id'];
+		}
+
+		// LLMS Lesson order.
+		if ( ! empty( $schema['properties']['order'] ) && isset( $request['order'] ) ) {
+
+			// order must be > 0. It's sanitized as absint so it cannot come as negative value.
+			if ( 0 === $request['order'] ) {
+				return llms_rest_bad_request_error( __( 'Invalid order param. It must be greater than 0.', 'lifterlms' ) );
+			}
+
+			$prepared_item['order'] = $request['order'];
+		}
 
 		/**
 		 * Filters the lesson data for a response.
