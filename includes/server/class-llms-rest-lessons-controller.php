@@ -136,17 +136,17 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		$prepared_item = parent::prepare_item_for_database( $request );
 		$schema        = $this->get_item_schema();
 
-		// Course Audio embed URL.
+		// Lesson's audio embed URL.
 		if ( ! empty( $schema['properties']['audio_embed'] ) && isset( $request['audio_embed'] ) ) {
 			$prepared_item['audio_embed'] = $request['audio_embed'];
 		}
 
-		// Course Video embed URL.
+		// Lesson's video embed URL.
 		if ( ! empty( $schema['properties']['video_embed'] ) && isset( $request['video_embed'] ) ) {
 			$prepared_item['video_embed'] = $request['video_embed'];
 		}
 
-		// LLMS Lesson parent id.
+		// Parent (section) id.
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
 
 			$parent_section = llms_get_post( $request['parent_id'] );
@@ -158,7 +158,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['parent_section'] = $request['parent_id'];
 		}
 
-		// LLMS Lesson course id.
+		// Course id.
 		if ( ! empty( $schema['properties']['course_id'] ) && isset( $request['course_id'] ) ) {
 
 			$parent_course = llms_get_post( $request['course_id'] );
@@ -170,7 +170,18 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['parent_course'] = $request['course_id'];
 		}
 
-		// LLMS Lesson order.
+		// Prerequisite.
+		if ( ! empty( $schema['properties']['prerequisite'] ) && isset( $request['prerequisite'] ) ) {
+
+			// check if lesson exists.
+			$prerequisite = llms_get_post( $request['prerequisite'] );
+
+			if ( is_a( $prerequisite, 'LLMS_Lesson' ) ) {
+				$prepared_item['prerequisite'] = $request['prerequisite'];
+			}
+		}
+
+		// Order.
 		if ( ! empty( $schema['properties']['order'] ) && isset( $request['order'] ) ) {
 
 			// order must be > 0. It's sanitized as absint so it cannot come as negative value.
@@ -179,6 +190,67 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			}
 
 			$prepared_item['order'] = $request['order'];
+		}
+
+		// Public (free lesson).
+		if ( ! empty( $schema['properties']['public'] ) && isset( $request['public'] ) ) {
+			$prepared_item['free'] = empty( $request['public'] ) ? 'no' : 'yes';
+		}
+
+		// Points.
+		if ( ! empty( $schema['properties']['points'] ) && isset( $request['points'] ) ) {
+			$prepared_item['points'] = $request['points'];
+		}
+
+		// Drip days.
+		if ( ! empty( $schema['properties']['drip_days'] ) && isset( $request['drip_days'] ) ) {
+
+			// drip_days must be > 0. It's sanitized as absint so it cannot come as negative value.
+			if ( 0 === $request['drip_days'] ) {
+				return llms_rest_bad_request_error( __( 'Invalid drip_days param. It must be greater than 0.', 'lifterlms' ) );
+			}
+
+			$prepared_item['days_before_available'] = $request['drip_days'];
+		}
+
+		// Drip date.
+		if ( ! empty( $schema['properties']['drip_date'] ) && isset( $request['drip_date'] ) ) {
+			$drip_date = rest_parse_date( $request['drip_date'] );
+
+			// Drip date is nullable.
+			if ( empty( $drip_date ) ) {
+				$prepared_item['date_available'] = '';
+				$prepared_item['time_available'] = '';
+			} else {
+				$prepared_item['date_available'] = date_i18n( 'Y-m-d', $drip_date );
+				$prepared_item['time_available'] = date_i18n( 'H:i:s', $drip_date );
+			}
+		}
+
+		// Drip method.
+		if ( ! empty( $schema['properties']['drip_method'] ) && isset( $request['drip_method'] ) ) {
+			$prepared_item['drip_method'] = 'none' === $request['drip_method'] ? '' : $request['drip_method'];
+		}
+
+		// Quiz enabled.
+		if ( ! empty( $schema['properties']['quiz']['enabled'] ) && isset( $request['quiz']['enabled'] ) ) {
+			$prepared_item['quiz_enabled'] = empty( $request['quiz']['enabled'] ) ? 'no' : 'yes';
+		}
+
+		// Quiz id.
+		if ( ! empty( $schema['properties']['quiz']['id'] ) && isset( $request['quiz']['id'] ) ) {
+
+			// check if quiz exists.
+			$quiz = llms_get_post( $request['quiz']['id'] );
+
+			if ( is_a( $quiz, 'LLMS_Quiz' ) ) {
+				$prepared_item['quiz'] = $request['quiz']['id'];
+			}
+		}
+
+		// Quiz progression.
+		if ( ! empty( $schema['properties']['quiz']['progression'] ) && isset( $request['quiz']['progression'] ) ) {
+			$prepared_item['require_passing_grade'] = 'complete' === $request['quiz']['progression'] ? 'no' : 'yes';
 		}
 
 		/**
