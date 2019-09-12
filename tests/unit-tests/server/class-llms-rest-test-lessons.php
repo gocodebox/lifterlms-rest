@@ -298,8 +298,24 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	// public function test_get_items_orderby_date_updated() {}
 	// public function test_get_items_pagination() {}
 
-	// public function test_create_item_success() {}
-	// public function test_create_item_missing_required() {}
+	// public function test_create_item_success() {
+
+	/**
+	 * Test creating lesson missing required parameters
+	 *
+	 * @since [version]
+	 * @todo abstract and move in posts case.
+	 * @return void
+	 */
+	public function test_create_item_missing_required() {
+
+		$res = $this->perform_mock_request( 'POST', $this->route );
+		$this->assertResponseStatusEquals( 400, $res );
+		$this->assertResponseCodeEquals( 'rest_missing_callback_param', $res );
+		$this->assertResponseMessageEquals( 'Missing parameter(s): title, content', $res );
+
+	}
+
 	// public function test_create_item_auth_errors() {}
 
 
@@ -307,7 +323,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Retrieve success.
 	 *
 	 * @since [version]
-	 * @group aja
+	 *
 	 * @return void
 	 */
 	public function test_get_item_success() {
