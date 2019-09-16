@@ -148,13 +148,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Parent (section) id.
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
-
-			$parent_section = llms_get_post( $request['parent_id'] );
-
-			if ( ! $parent_section || ! is_a( $parent_section, 'LLMS_Section' ) ) {
-				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Section ID.', 'lifterlms' ) );
-			}
-
 			$prepared_item['parent_section'] = $request['parent_id'];
 		}
 
