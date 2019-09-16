@@ -93,6 +93,24 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
+		$this->sample_lesson = array(
+			'title'        => array(
+				'rendered' => 'Getting Started with LifterLMS',
+				'raw'      => 'Getting Started with LifterLMS',
+			),
+			'content'      => array(
+				'rendered' => "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
+				'raw'      => "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
+			),
+			'excerpt'      => array(
+				'rendered' => '<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>',
+				'raw'      => 'Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.',
+			),
+			'date_created' => '2019-05-20 17:22:05',
+			'status'       => 'publish',
+
+		);
+
 		$this->endpoint = new LLMS_REST_Lessons_Controller();
 
 	}
@@ -137,7 +155,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$quiz_nested = array(
 			'enabled',
 			'id',
-			'progression'
+			'progression',
 		);
 
 		$this->assertEquals( $quiz_nested, array_keys( $schema['properties']['quiz']['properties'] ) );
@@ -152,10 +170,17 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @return void
 	 */
 	public function test_get_items_success() {
+
 		wp_set_current_user( $this->user_allowed );
 
 		// create 3 courses with 3 lessons per course.
-		$courses = $this->factory->course->create_many( 3, array( 'sections' => 1 , 'lessons' => 3 ) );
+		$courses = $this->factory->course->create_many(
+			3,
+			array(
+				'sections' => 1,
+				'lessons'  => 3,
+			)
+		);
 
 		$response = $this->perform_mock_request( 'GET', $this->route );
 
@@ -197,7 +222,12 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		wp_set_current_user( $this->user_allowed );
 
 		// create a course with 3 sections and two lessons per section.
-		$course = $this->factory->course->create( array( 'sections' => 3, 'lessons' => 2 ) );
+		$course = $this->factory->course->create(
+			array(
+				'sections' => 3,
+				'lessons'  => 2,
+			)
+		);
 
 		$course_obj = new LLMS_Course( $course );
 		$sections   = $course_obj->get_sections();
@@ -228,7 +258,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 				$j++;
 
 			}
-
 		}
 
 		// Check filtering by a section id which doesn't exist.
@@ -260,12 +289,17 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		wp_set_current_user( $this->user_allowed );
 
 		// create a course with 1 section and three lessons per section.
-		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 3 ) );
+		$course = $this->factory->course->create(
+			array(
+				'sections' => 1,
+				'lessons'  => 3,
+			)
+		);
 
 		$course_obj = new LLMS_Course( $course );
-		$lessons    = $course_obj->get_lessons('ids');
+		$lessons    = $course_obj->get_lessons( 'ids' );
 
-		// By default lessons are ordered by id
+		// By default lessons are ordered by id.
 		$response = $this->perform_mock_request( 'GET', $this->route );
 		// Success.
 		$this->assertResponseStatusEquals( 200, $response );
@@ -273,9 +307,9 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $lessons, wp_list_pluck( $res_data, 'id' ) );
 
 		// Set first lesson order to 8 and second to 10 so that, when ordered by 'order' ASC the collection will be [last, first, second]
-		$first_lesson  = llms_get_post($lessons[0]);
-		$second_lesson = llms_get_post($lessons[1]);
-		$last_lesson   = llms_get_post($lessons[2]);
+		$first_lesson  = llms_get_post( $lessons[0] );
+		$second_lesson = llms_get_post( $lessons[1] );
+		$last_lesson   = llms_get_post( $lessons[2] );
 		$first_lesson->set( 'order', 8 );
 		$second_lesson->set( 'order', 10 );
 
@@ -285,8 +319,16 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$res_data = $response->get_data();
 		$this->assertEquals( array( $lessons[2], $lessons[0], $lessons[1] ), wp_list_pluck( $res_data, 'id' ) );
 
-		// Check DESC order works as well, we expect [second, first, last]
-		$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'orderby' => 'order', 'order' => 'desc' ) );
+		// Check DESC order works as well, we expect [second, first, last].
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'orderby' => 'order',
+				'order'   => 'desc',
+			)
+		);
 		// Success.
 		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
@@ -298,10 +340,95 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	// public function test_get_items_orderby_date_updated() {}
 	// public function test_get_items_pagination() {}
 
-	// public function test_create_item_success() {
+	/**
+	 * Test creating lesson.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_item_success() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create a parent course, a prerequisite and a quiz.
+		$course_id           = $this->factory->course->create(
+			array(
+				'sections' => 1,
+				'lessons'  => 1,
+				'quiz'     => 1,
+			)
+		);
+		$course              = llms_get_post( $course_id );
+		$prerequisite_lesson = $course->get_lessons()[0];
+		$prerequisite        = $prerequisite_lesson->get( 'id' );
+		$quiz                = $prerequisite_lesson->get( 'quiz' );
+
+		$sample_lesson_additional = array(
+			'parent_id'    => 0, // checks also orphaned lessons are available.
+			'course_id'    => $course_id,
+			'drip_date'    => '', // checks also drip date can be null.
+			'order'        => 2,
+			'public'       => true,
+			'points'       => 3,
+			'drip_days'    => 20,
+			'drip_method'  => 'enrollment',
+			'prerequisite' => $prerequisite,
+			'quiz'         => array(
+				'enabled'     => true,
+				'id'          => $quiz,
+				'progression' => 'pass',
+			),
+		);
+
+		$sample_lesson = array_merge(
+			$this->sample_lesson,
+			$sample_lesson_additional
+		);
+
+		$res = $this->perform_mock_request( 'POST', $this->route, $sample_lesson );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $res );
+		$res_data = $res->get_data();
+		$lesson   = new LLMS_Lesson( $res_data['id'] );
+
+		// Check fields.
+		$this->llms_posts_fields_match( $lesson, $res_data );
+
+		foreach ( $sample_lesson_additional as $key => $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $k => $v ) {
+					$this->assertEquals( $v, $res_data[ $key ][ $k ] );
+				}
+			} else {
+				$this->assertEquals( $value, $res_data[ $key ] );
+			}
+		}
+
+		// Check that if we create a course with no prerequisite the $lessons->has_prerequisite() returns false
+		unset( $sample_lesson['prerequisite'] );
+		$res = $this->perform_mock_request( 'POST', $this->route, $sample_lesson );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $res );
+		$res_data = $res->get_data();
+		$lesson   = new LLMS_Lesson( $res_data['id'] );
+
+		$this->assertFalse( $lesson->has_prerequisite() );
+	}
 
 	/**
-	 * Test creating lesson missing required parameters
+	 * Test creating lesson with wrong params.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	//public function test_create_item_wrong_params() {
+
+	/**
+	 * Test creating lesson missing required parameters.
 	 *
 	 * @since [version]
 	 * @todo abstract and move in posts case.
@@ -316,7 +443,25 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
-	// public function test_create_item_auth_errors() {}
+	/**
+	 * Test creating lesson auth errors.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_item_auth_errors() {
+
+		$res = $this->perform_mock_request( 'POST', $this->route, $this->sample_lesson );
+		$this->assertResponseStatusEquals( 401, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
+
+		wp_set_current_user( $this->user_forbidden );
+		$res = $this->perform_mock_request( 'POST', $this->route, $this->sample_lesson );
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+	}
 
 
 	/**
@@ -331,9 +476,15 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		wp_set_current_user( $this->user_allowed );
 
 		// create a course with 1 section and 1 lesson with no quizzes
-		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1, 'quiz' => 0 ) );
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 1,
+				'quiz'     => 0,
+			)
+		);
 		$lesson = $course->get_lessons()[0];
-		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $lesson->get( 'id' ) ) );
+		$res    = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $lesson->get( 'id' ) ) );
 
 		$this->assertResponseStatusEquals( 200, $res );
 		$res_data = $res->get_data();
@@ -357,10 +508,10 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$quiz_nested = array(
 			'enabled',
 			'id',
-			'progression'
+			'progression',
 		);
 
-		$this->assertEquals( $quiz_nested, array_keys(  $res_data['quiz'] ) );
+		$this->assertEquals( $quiz_nested, array_keys( $res_data['quiz'] ) );
 
 	}
 
@@ -374,8 +525,14 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	public function test_get_item_auth_errors() {
 
 		// create a course with 1 section and 1 lesson with no quizzes
-		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1, 'quiz' => 0 ) );
-		$res = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $course->get_lessons( 'ids' )[0] ) );
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 1,
+				'quiz'     => 0,
+			)
+		);
+		$res    = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $course->get_lessons( 'ids' )[0] ) );
 		$this->assertResponseStatusEquals( 401, $res );
 		$this->assertResponseCodeEquals( 'llms_rest_unauthorized_request', $res );
 
@@ -420,13 +577,18 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @return void
 	 */
-    public function test_links() {
+	public function test_links() {
 
 		// create course with 1 section and 3 lessons per section.
-		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 3 ) );
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 3,
+			)
+		);
 
-		$course_obj  = new LLMS_Course( $course );
-		$lessons     = $course_obj->get_lessons();
+		$course_obj = new LLMS_Course( $course );
+		$lessons    = $course_obj->get_lessons();
 
 		wp_set_current_user( $this->user_allowed );
 
@@ -434,15 +596,15 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		foreach ( $lessons as $lesson ) {
 
 			/**
-			 * Latest leson: remove the quiz.
+			 * Latest lesson: remove the quiz.
 			 */
 			if ( 3 === $i ) {
 				$lesson->set( 'quiz_enabled', 'no' );
 			}
 
-			$response = $this->perform_mock_request( 'GET',  $this->route . '/' . $lesson->get( 'id' )  );
+			$response = $this->perform_mock_request( 'GET', $this->route . '/' . $lesson->get( 'id' ) );
 
-			switch ( $i++ ):
+			switch ( $i++ ) :
 				case 0:
 					$expected_link_rels = array_values( array_diff( $this->expected_link_rels, array( 'previous' ) ) );
 					break;
@@ -452,7 +614,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 				default:
 					$expected_link_rels = $this->expected_link_rels;
 			endswitch;
-
 
 			if ( $lesson->is_quiz_enabled() ) {
 				$expected_link_rels[] = 'quiz';
@@ -510,15 +671,19 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Drip date.
 		$date = $lesson->get( 'date_available' );
-		$time = $lesson->get( 'time_available' );
+		if ( $date ) {
+			$time = $lesson->get( 'time_available' );
 
-		if ( ! $time ) {
-			$time = '12:00 AM';
+			if ( ! $time ) {
+				$time = '12:00 AM';
+			}
+
+			$drip_date = date_i18n( 'Y-m-d H:i:s', strtotime( $date . ' ' . $time ) );
+		} else {
+			$drip_date = '';
 		}
 
-		$drip_date = strtotime( $date . ' ' . $time );
-
-		$expected['drip_date'] = date_i18n( 'Y-m-d H:i:s', $drip_date );
+		$expected['drip_date'] = $drip_date;
 
 		// Prerequisite.
 		$expected['prerequisite'] = absint( $lesson->get_prerequisite() );
