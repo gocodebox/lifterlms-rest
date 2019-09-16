@@ -171,8 +171,13 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 			if ( is_a( $prerequisite, 'LLMS_Lesson' ) ) {
 				$prepared_item['prerequisite'] = $request['prerequisite'];
+			} else {
+				$prepared_item['prerequisite'] = 0;
 			}
 		}
+
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		$prepared_item['has_prerequisite'] = empty( $prepared_item['prerequisite'] ) ? 'no' : 'yes';
 
 		// Order.
 		if ( ! empty( $schema['properties']['order'] ) && isset( $request['order'] ) ) {
@@ -187,7 +192,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Public (free lesson).
 		if ( ! empty( $schema['properties']['public'] ) && isset( $request['public'] ) ) {
-			$prepared_item['free'] = empty( $request['public'] ) ? 'no' : 'yes';
+			$prepared_item['free_lesson'] = empty( $request['public'] ) ? 'no' : 'yes';
 		}
 
 		// Points.
@@ -226,12 +231,12 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Quiz enabled.
-		if ( ! empty( $schema['properties']['quiz']['enabled'] ) && isset( $request['quiz']['enabled'] ) ) {
+		if ( ! empty( $schema['properties']['quiz']['properties']['enabled'] ) && isset( $request['quiz']['enabled'] ) ) {
 			$prepared_item['quiz_enabled'] = empty( $request['quiz']['enabled'] ) ? 'no' : 'yes';
 		}
 
 		// Quiz id.
-		if ( ! empty( $schema['properties']['quiz']['id'] ) && isset( $request['quiz']['id'] ) ) {
+		if ( ! empty( $schema['properties']['quiz']['properties']['id'] ) && isset( $request['quiz']['id'] ) ) {
 
 			// check if quiz exists.
 			$quiz = llms_get_post( $request['quiz']['id'] );
@@ -242,7 +247,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Quiz progression.
-		if ( ! empty( $schema['properties']['quiz']['progression'] ) && isset( $request['quiz']['progression'] ) ) {
+		if ( ! empty( $schema['properties']['quiz']['properties']['progression'] ) && isset( $request['quiz']['progression'] ) ) {
 			$prepared_item['require_passing_grade'] = 'complete' === $request['quiz']['progression'] ? 'no' : 'yes';
 		}
 
@@ -525,15 +530,19 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Drip date.
 		$date = $lesson->get( 'date_available' );
-		$time = $lesson->get( 'time_available' );
+		if ( $date ) {
+			$time = $lesson->get( 'time_available' );
 
-		if ( ! $time ) {
-			$time = '12:00 AM';
+			if ( ! $time ) {
+				$time = '12:00 AM';
+			}
+
+			$drip_date = date_i18n( 'Y-m-d H:i:s', strtotime( $date . ' ' . $time ) );
+		} else {
+			$drip_date = '';
 		}
 
-		$drip_date = strtotime( $date . ' ' . $time );
-
-		$data['drip_date'] = date_i18n( 'Y-m-d H:i:s', $drip_date );
+		$data['drip_date'] = $drip_date;
 
 		// Prerequisite.
 		$data['prerequisite'] = absint( $lesson->get_prerequisite() );
@@ -638,7 +647,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
 	 *                  Fixed `parent` link href, replacing 'section' with 'sections'.
-	 *                  Following links added: prerequisite, quiz.
+	 *                  Following links added: `prerequisite`, `quiz`.
 	 *                  Added `llms_rest_lesson_links` filter hook.
 	 *
 	 * @param LLMS_Lesson $lesson LLMS Section.
