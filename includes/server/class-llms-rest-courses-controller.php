@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Courses_Controller
  *
  * @since 1.0.0-beta.1
+ * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -625,6 +626,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepares a single post for create or update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -689,12 +691,12 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Access dates.
 		if ( ! empty( $schema['properties']['access_opens_date'] ) && isset( $request['access_opens_date'] ) ) {
 			$access_opens_date           = rest_parse_date( $request['access_opens_date'] );
-			$prepared_item['start_date'] = date_i18n( 'Y-m-d H:i:s', $access_opens_date );
+			$prepared_item['start_date'] = empty( $access_opens_date ) ? '' : date_i18n( 'Y-m-d H:i:s', $access_opens_date );
 		}
 
 		if ( ! empty( $schema['properties']['access_closes_date'] ) && isset( $request['access_closes_date'] ) ) {
 			$access_closes_date        = rest_parse_date( $request['access_closes_date'] );
-			$prepared_item['end_date'] = date_i18n( 'Y-m-d H:i:s', $access_closes_date );
+			$prepared_item['end_date'] = empty( $access_closes_date ) ? '' : date_i18n( 'Y-m-d H:i:s', $access_closes_date );
 		}
 
 		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
@@ -707,12 +709,12 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Enrollment dates.
 		if ( ! empty( $schema['properties']['enrollment_opens_date'] ) && isset( $request['enrollment_opens_date'] ) ) {
 			$enrollment_opens_date                  = rest_parse_date( $request['enrollment_opens_date'] );
-			$prepared_item['enrollment_start_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
+			$prepared_item['enrollment_start_date'] = empty( $enrollment_opens_date ) ? '' : date_i18n( 'Y-m-d H:i:s', $enrollment_opens_date );
 		}
 
 		if ( ! empty( $schema['properties']['enrollment_closes_date'] ) && isset( $request['enrollment_closes_date'] ) ) {
 			$enrollment_closes_date               = rest_parse_date( $request['enrollment_closes_date'] );
-			$prepared_item['enrollment_end_date'] = date_i18n( 'Y-m-d H:i:s', $enrollment_closes_date );
+			$prepared_item['enrollment_end_date'] = empty( $enrollment_closes_date ) ? '' : date_i18n( 'Y-m-d H:i:s', $enrollment_closes_date );
 		}
 
 		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
