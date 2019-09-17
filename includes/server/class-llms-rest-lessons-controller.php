@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *                  Added following properties to the response object: `public`, `points`, `quiz`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
  *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
  *                  Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
- *                  Added `prepare_item_for_database` method.
+ *                  Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
  *
  * @todo Implement endpoints.
  */
@@ -163,22 +163,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['parent_course'] = $request['course_id'];
 		}
 
-		// Prerequisite.
-		if ( ! empty( $schema['properties']['prerequisite'] ) && isset( $request['prerequisite'] ) ) {
-
-			// check if lesson exists.
-			$prerequisite = llms_get_post( $request['prerequisite'] );
-
-			if ( is_a( $prerequisite, 'LLMS_Lesson' ) ) {
-				$prepared_item['prerequisite'] = $request['prerequisite'];
-			} else {
-				$prepared_item['prerequisite'] = 0;
-			}
-		}
-
-		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-		$prepared_item['has_prerequisite'] = empty( $prepared_item['prerequisite'] ) ? 'no' : 'yes';
-
 		// Order.
 		if ( ! empty( $schema['properties']['order'] ) && isset( $request['order'] ) ) {
 
@@ -264,6 +248,60 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 	}
 
+	/**
+	 * Updates a single llms lesson.
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
+	 * @param WP_REST_Request $request       Full details about the request.
+	 * @param array           $schema        The item schema.
+	 * @param array           $prepared_item Array.
+	 * @param bool            $creating      Optional. Whether we're in creation or update phase. Default true (create).
+	 * @return bool|WP_Error True on success or false if nothing to update, WP_Error object if something went wrong during the update.
+	 */
+	protected function update_additional_object_fields( $lesson, $request, $schema, $prepared_item, $creating = true ) {
+
+		$error = new WP_Error();
+
+		$to_set = array();
+
+		// Prerequisite.
+		if ( ! empty( $schema['properties']['prerequisite'] ) && isset( $request['prerequisite'] ) ) {
+
+			// check if lesson exists.
+			$prerequisite = llms_get_post( $request['prerequisite'] );
+
+			if ( is_a( $prerequisite, 'LLMS_Lesson' ) ) {
+				$to_set['prerequisite'] = $request['prerequisite'];
+			} else {
+				$to_set['prerequisite'] = 0;
+			}
+		}
+
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		$to_set['has_prerequisite'] = empty( $to_set['prerequisite'] ) ? 'no' : 'yes';
+
+		if ( ! $creating ) {
+			if ( $to_set['has_prerequisite'] === $lesson->get( 'has_prerequisite' ) ) {
+				unset( $to_set['has_prerequisite'] );
+			}
+		}
+
+		// Set bulk.
+		if ( ! empty( $to_set ) ) {
+			$update = $lesson->set_bulk( $to_set );
+			if ( is_wp_error( $update ) ) {
+				$error = $update;
+			}
+		}
+		if ( $error->has_errors() ) {
+			return $error;
+		}
+
+		return ! empty( $to_set );
+
+	}
 
 	/**
 	 * Get the Lesson's schema, conforming to JSON Schema.
