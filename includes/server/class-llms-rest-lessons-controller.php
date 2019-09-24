@@ -295,7 +295,8 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				$error = $update;
 			}
 		}
-		if ( $error->has_errors() ) {
+
+		if ( ! empty( $error->errors ) ) {
 			return $error;
 		}
 
