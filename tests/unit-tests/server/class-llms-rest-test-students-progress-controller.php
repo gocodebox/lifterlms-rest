@@ -17,7 +17,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/students/(?P<id>[\d]+)/progress';
+	protected $route = '/llms/v1/students/(?P<id>[\d]+)/progress';
 
 	/**
 	 * Setup our test server, endpoints, and user info.

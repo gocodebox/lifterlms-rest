@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Students_Controller class..
  *
  * @since 1.0.0-beta.1
+ * @since [version] Added `prepare_args_for_total_count_query()` method override.
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
@@ -286,6 +287,21 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 			LIMIT 1
 		) AS p_{$post_id}_stat";
 
+	}
+
+	/**
+	 * Prepare query args for total count query.
+	 *
+	 * @since [version]
+	 *
+	 * @param  array           $args Array of query args.
+	 * @param  WP_REST_Request $request  Full details about the request.
+	 * @return array
+	 */
+	protected function prepare_args_for_total_count_query( $args, $request ) {
+		// run the query again on page one to get a proper total count.
+		$args['page'] = 1;
+		return $args;
 	}
 
 	/**

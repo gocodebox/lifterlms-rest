@@ -18,7 +18,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/webhooks';
+	protected $route = '/llms/v1/webhooks';
 
 	private function assertIsAWebhook( $data ) {
 
@@ -359,10 +359,12 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 */
 	public function test_get_items_okay_pagination() {
 
-		$this->create_many_webhooks( 6 );
+		$total    = 6;
+		$per_page = 2;
+		$this->create_many_webhooks( $total );
 
 		wp_set_current_user( $this->user_allowed );
-		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'per_page' => 2 ) );
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'per_page' => $per_page ) );
 		$this->assertResponseStatusEquals( 200, $res );
 
 		$data = $res->get_data();
@@ -370,33 +372,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 			$this->assertIsAWebhook( $item );
 		}
 
-		$this->assertEquals( 2, count( $data ) );
-
-		$headers = $res->get_headers();
-		$this->assertEquals( 6, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-
-		$links = $this->parse_link_headers( $res );
-		$this->assertEquals( array( 'next', 'last' ), array_keys( $links ) );
-
-
-		// Page 2
-		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'per_page' => 2, 'page' => 2 ) );
-		$this->assertResponseStatusEquals( 200, $res );
-		$data = $res->get_data();
-		$this->assertEquals( 2, count( $data ) );
-
-		$links = $this->parse_link_headers( $res );
-		$this->assertEquals( array( 'first', 'prev', 'next', 'last' ), array_keys( $links ) );
-
-		// Page 3
-		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'per_page' => 2, 'page' => 3 ) );
-		$this->assertResponseStatusEquals( 200, $res );
-		$data = $res->get_data();
-		$this->assertEquals( 2, count( $data ) );
-
-		$links = $this->parse_link_headers( $res );
-		$this->assertEquals( array( 'first', 'prev' ), array_keys( $links ) );
+		$this->pagination_test( $this->route, $start = 1, $per_page, $id_field = '', $total );
 
 	}
 

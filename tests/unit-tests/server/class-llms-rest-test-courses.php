@@ -20,7 +20,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/courses';
+	protected $route = '/llms/v1/courses';
 
 	/**
 	 * Post type.
@@ -121,30 +121,15 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses pagination success.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 */
 	public function test_get_courses_with_pagination() {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create 15 courses.
-		$courses = $this->factory->course->create_many( 15, array( 'sections' => 0 ) );
-		$request = new WP_REST_Request( 'GET', $this->route );
-		$request->set_param( 'page', 2 );
-
-		$response = $this->server->dispatch( $request );
-
-		$res_data = $response->get_data();
-
-		// Success.
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEquals( 5, count( $res_data ) );
-
-		// Check retrieved courses are the same as the generated ones with an offset of 10 (first page).
-		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
-		for ( $i = 0; $i < 5; $i++ ) {
-			$this->llms_posts_fields_match( new LLMS_Course( $courses[ $i + 10 ] ), $res_data[ $i ] );
-		}
+		$course_ids      = $this->factory->course->create_many( 25, array( 'sections' => 0 ) );
+		$start_course_id = $course_ids[0];
+		$this->pagination_test( $this->route, $start_course_id );
 
 	}
 

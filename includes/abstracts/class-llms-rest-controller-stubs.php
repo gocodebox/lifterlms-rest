@@ -7,7 +7,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()` on stub method.
+ * @since [version] Added `check_read_object_permissions()` stub.
  */
 abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
@@ -48,6 +49,21 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @return bool
 	 */
 	protected function check_read_item_permissions( $item_id ) {
+
+		// Translators: %s = method name.
+		return llms_rest_server_error( sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ) );
+
+	}
+
+	/**
+	 * Determine if the current user can view the object.
+	 *
+	 * @since [version]
+	 *
+	 * @param object $object Object.
+	 * @return bool
+	 */
+	protected function check_read_object_permissions( $object ) {
 
 		// Translators: %s = method name.
 		return llms_rest_server_error( sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ) );
