@@ -433,6 +433,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since Add checks on nullable dates.
 	 */
 	public function test_create_course() {
 
@@ -454,6 +455,10 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 					),
 				),
 				'video_tile'         => true,
+				'access_opens_date'      => '',
+				'access_closes_date'     => '',
+				'enrollment_opens_date'  => '',
+				'enrollment_closes_date' => '',
 			)
 		);
 
@@ -478,6 +483,15 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $sample_course_args['instructors'], $res_data['instructors'] );
 		$this->assertEquals( $sample_course_args['video_tile'], $res_data['video_tile'] );
 
+		$date_props = array(
+			'access_opens_date',
+			'access_closes_date',
+			'enrollment_opens_date',
+			'enrollment_closes_date',
+		);
+		foreach ( $date_props as $empty_prop ) {
+			$this->assertEquals( '', $res_data[$empty_prop] );
+		}
 	}
 
 	/**
