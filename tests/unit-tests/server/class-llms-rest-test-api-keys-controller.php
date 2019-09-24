@@ -8,7 +8,7 @@
  * @group rest_api_keys
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -17,7 +17,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/api-keys';
+	protected $route = '/llms/v1/api-keys';
 
 	/**
 	 * Setup test
@@ -297,56 +297,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 		// Make keys for remaining tests.
 		$keys = $this->create_many_api_keys( 25 );
 
-		// Page 1.
-		$response = $this->perform_mock_request( 'GET', $this->route );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'first', 'next', 'last' ), array_keys( $links ) );
-
-		$this->assertEquals( range( 1, 10 ), wp_list_pluck( $body, 'id' ) );
-
-		// Page 2.
-		$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 2 ) );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'first', 'prev', 'next', 'last' ), array_keys( $links ) );
-
-		$this->assertEquals( range( 11, 20 ), wp_list_pluck( $body, 'id' ) );
-
-		// Page 3.
-		$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 3 ) );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'first', 'prev', 'last' ), array_keys( $links ) );
-
-		$this->assertEquals( range( 21, 25 ), wp_list_pluck( $body, 'id' ) );
-
-		// Out of bounds.
-		$response = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 4 ) );
-
-		$this->assertResponseStatusEquals( 400, $response );
-		$this->assertResponseCodeEquals( 'llms_rest_bad_request', $response );
+		$this->pagination_test();
 
 	}
 

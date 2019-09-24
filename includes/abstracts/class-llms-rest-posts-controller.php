@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.2
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,9 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
  * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
+ * @since [version] Added: `check_read_object_permissions()`, `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ *                  `get_items()` method removed, now abstracted in LLMS_REST_Controller.
+ *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -89,6 +92,18 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Determine if the current user can view the object.
+	 *
+	 * @since [version]
+	 *
+	 * @param object $object Object.
+	 * @return bool
+	 */
+	protected function check_read_object_permissions( $object ) {
+		return $this->check_read_permission( $object );
+	}
+
+	/**
 	 * Check if a given request has access to read items.
 	 *
 	 * @since 1.0.0-beta.1
@@ -108,60 +123,29 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get a collection of LLMS posts.
+	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
+	 * @param obj             $query Objects query result.
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array {
+	 *     Array of pagination information.
+	 *
+	 *     @type int $current_page Current page number.
+	 *     @type int $total_results Total number of results.
+	 *     @type int $total_pages Total number of results pages.
+	 * }
 	 */
-	public function get_items( $request ) {
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
-		$query_args    = $this->prepare_objects_query( $request );
-		$query_results = $this->get_objects( $query_args, $request );
+		$total_results = (int) $query->found_posts;
+		$current_page  = isset( $prepared['paged'] ) ? (int) $prepared['paged'] : 1;
+		$total_pages   = (int) ceil( $total_results / (int) $query->get( 'posts_per_page' ) );
 
-		$page        = (int) $query_args['paged'];
-		$max_pages   = $query_results['pages'];
-		$total_posts = $query_results['total'];
-		$objects     = $query_results['objects'];
+		return compact( 'current_page', 'total_results', 'total_pages' );
 
-		if ( $page > $max_pages && $total_posts > 0 ) {
-			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
-		}
-
-		$response = rest_ensure_response( $objects );
-
-		$response->header( 'X-WP-Total', $total_posts );
-		$response->header( 'X-WP-TotalPages', (int) $max_pages );
-
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg(
-			urlencode_deep( $request_params ),
-			rest_url( $request->get_route() )
-		);
-
-		// Add first page.
-		$first_link = add_query_arg( 'page', 1, $base );
-		$response->link_header( 'first', $first_link );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-			$response->link_header( 'next', $next_link );
-		}
-		// Add last page.
-		$last_link = add_query_arg( 'page', $max_pages, $base );
-		$response->link_header( 'last', $last_link );
-
-		return $response;
 	}
 
 	/**
@@ -313,14 +297,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare objects query.
+	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
-	protected function prepare_objects_query( $request ) {
+	protected function prepare_collection_query_args( $request ) {
 
 		// Retrieve the list of registered collection query parameters.
 		$registered = $this->get_collection_params();
@@ -599,60 +583,62 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		return ( EMPTY_TRASH_DAYS > 0 );
 	}
 
+
 	/**
-	 * Get objects.
+	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
-	 * @param array           $query_args Query args.
+	 * @param  array           $prepared Array of collection arguments.
+	 * @param  WP_REST_Request $request  Full details about the request.
+	 * @return WP_Query
+	 */
+	protected function get_objects_query( $prepared, $request ) {
+
+		return new WP_Query( $prepared );
+
+	}
+
+	/**
+	 * Retrieve an array of objects from the result of $this->get_objects_query().
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_Query $query WP_Query query result.
+	 * @return WP_Post[]
+	 */
+	protected function get_objects_from_query( $query ) {
+
+		return $query->get_posts();
+
+	}
+
+	/**
+	 * Prepare collection items for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
-	protected function get_objects( $query_args, $request ) {
+	protected function prepare_collection_items_for_response( $objects, $request ) {
 
-		$query  = new WP_Query();
-		$result = $query->query( $query_args );
-
-		$objects = array();
+		$items = array();
 
 		// Allow access to all password protected posts if the context is edit.
 		if ( 'edit' === $request['context'] ) {
 			add_filter( 'post_password_required', '__return_false' );
 		}
 
-		foreach ( $result as $post ) {
-			$object = $this->get_object( $post );
-			if ( ! $this->check_read_permission( $object ) ) {
-				continue;
-			}
-
-			$response_object = $this->prepare_item_for_response( $object, $request );
-			if ( ! is_wp_error( $response_object ) ) {
-				$objects[] = $this->prepare_response_for_collection( $response_object );
-			}
-		}
+		$items = parent::prepare_collection_items_for_response( $objects, $request );
 
 		// Reset filter.
 		if ( 'edit' === $request['context'] ) {
 			remove_filter( 'post_password_required', '__return_false' );
 		}
 
-		$total_posts = $query->found_posts;
-
-		if ( $total_posts < 1 ) {
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args['paged'] );
-
-			$count_query = new WP_Query();
-			$count_query->query( $query_args );
-			$total_posts = $count_query->found_posts;
-		}
-
-		return array(
-			'objects' => $objects,
-			'total'   => (int) $total_posts,
-			'pages'   => (int) ceil( $total_posts / (int) $query->query_vars['posts_per_page'] ),
-		);
+		return $items;
 
 	}
 

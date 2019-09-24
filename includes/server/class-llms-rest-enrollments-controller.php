@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.4
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,8 +16,12 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
  * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
- *                  The single enrollment can be read only by who can view the enrollment's student.
- *                  Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
+ *                     The single enrollment can be read only by who can view the enrollment's student.
+ *                     Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
+ * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ *                  `prepare_object_query()` renamed to `prepare_object_query_args()`.
+ *                  Added: `get_objects_from_query()`, `prepare_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ *                  `get_items()` method removed, now abstracted in LLMS_REST_Controller.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -145,73 +149,21 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
+	 * @since [version] Overrides the parent `get_items()` for the only purpose of returning a 404 if no enrollments are found.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
 
-		$query_args    = $this->prepare_objects_query( $request );
-		$query_results = $this->get_objects( $query_args, $request );
-
-		if ( is_wp_error( $query_results ) ) {
-			return $query_results;
-		}
-
-		$page        = (int) $query_args['page'];
-		$max_pages   = $query_results['pages'];
-		$total_posts = $query_results['total'];
-		$objects     = $query_results['objects'];
-
-		if ( $page > $max_pages && $total_posts > 0 ) {
-			return llms_rest_bad_request_error( __( 'The page number requested is larger than the number of pages available.', 'lifterlms' ) );
-		}
-
+		$response = parent::get_items( $request );
 		// Specs require 404 when no course enrollments are found.
-		if ( empty( $query_results['objects'] ) ) {
+		if ( ! is_wp_error( $response ) && empty( $response->data ) ) {
 			return llms_rest_not_found_error();
 		}
 
-		$response = rest_ensure_response( $objects );
-
-		$response->header( 'X-WP-Total', $total_posts );
-		$response->header( 'X-WP-TotalPages', (int) $max_pages );
-
-		$request_params = $request->get_query_params();
-
-		$base = add_query_arg(
-			urlencode_deep( $request_params ),
-			rest_url( $request->get_route() )
-		);
-
-		// Add first page.
-		if ( 1 !== $page ) {
-			$first_link = add_query_arg( 'page', 1, $base );
-			$response->link_header( 'first', $first_link );
-		}
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-			$response->link_header( 'next', $next_link );
-		}
-
-		// Add last page.
-		if ( $max_pages && $max_pages !== $page ) {
-			$last_link = add_query_arg( 'page', $max_pages, $base );
-			$response->link_header( 'last', $last_link );
-		}
-
 		return $response;
+
 	}
 
 	/**
@@ -534,11 +486,12 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return llms_rest_bad_request_error();
 		}
 
-		$query_args = $this->prepare_object_query( $student_id, $post_id );
-		$result     = $this->query_enrollments( $query_args );
+		$query_args = $this->prepare_object_query_args( $student_id, $post_id );
+		$query      = $this->get_objects_query( $query_args );
+		$items      = $this->get_objects_from_query( $query );
 
-		if ( $result->items ) {
-			return $result->items[0];
+		if ( $items ) {
+			return $items[0];
 		}
 
 		return llms_rest_not_found_error();
@@ -547,13 +500,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
 	 * @return array
 	 */
-	protected function prepare_object_query( $student_id, $post_id ) {
+	protected function prepare_object_query_args( $student_id, $post_id ) {
 
 		$args = array();
 
@@ -671,58 +624,82 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get enrollments objects.
+	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
-	 * @param array           $query_args Query args.
+	 * @param WP_Query $query Query result.
+	 * @return obj[]
+	 */
+	protected function get_objects_from_query( $query ) {
+
+		return $query->items;
+
+	}
+
+	/**
+	 * Prepare collection items for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
-	public function get_objects( $query_args, $request ) {
+	protected function prepare_collection_items_for_response( $objects, $request ) {
 
-		$objects = array();
-		$result  = $this->query_enrollments( $query_args );
+		$items = array();
 
-		foreach ( $result->items as $enrollment ) {
+		foreach ( $objects as $object ) {
 
-			if ( ! $this->check_read_permission( $enrollment ) ) {
+			if ( ! $this->check_read_permission( $object ) ) {
 				continue;
 			}
 
-			$response_object = $this->prepare_item_for_response( $enrollment, $request );
-
-			if ( ! is_wp_error( $response_object ) ) {
-				$objects[] = $this->prepare_response_for_collection( $response_object );
+			$item = $this->prepare_item_for_response( $object, $request );
+			if ( ! is_wp_error( $item ) ) {
+				$items[] = $this->prepare_response_for_collection( $item );
 			}
 		}
 
-		$total_items = $result->found_items;
+		return $items;
+	}
 
-		if ( $total_items < 1 ) {
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args['page'] );
+	/**
+	 * Retrieve pagination information from an objects query.
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $query Objects query result.
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array {
+	 *     Array of pagination information.
+	 *
+	 *     @type int $current_page Current page number.
+	 *     @type int $total_results Total number of results.
+	 *     @type int $total_pages Total number of results pages.
+	 * }
+	 */
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
-			$count_query = $this->query_enrollments( $query_args );
-			$total_posts = $count_query->found_items;
-		}
+		$total_results = (int) $query->found_results;
+		$current_page  = isset( $prepared['page'] ) ? (int) $prepared['page'] : 1;
+		$total_pages   = (int) ceil( $total_results / (int) $prepared['per_page'] );
 
-		return array(
-			'objects' => $objects,
-			'total'   => (int) $total_items,
-			'pages'   => (int) ceil( $total_items / (int) $query_args['per_page'] ),
-		);
+		return compact( 'current_page', 'total_results', 'total_pages' );
+
 	}
 
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */
-	protected function prepare_objects_query( $request ) {
+	protected function prepare_collection_query_args( $request ) {
 
 		// Retrieve the list of registered collection query parameters.
 		$registered_params = $this->get_collection_params();
@@ -799,10 +776,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 *
-	 * @param array $query_args Query args.
-	 * @return object An object with two fields: items an array of OBJECT result of the query; found_items the total found items
+	 * @param  array           $query_args Array of collection arguments.
+	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.
+	 * @return object An object with two fields: items an array of OBJECT result of the query; found_reults the total found items
 	 */
-	protected function query_enrollments( $query_args ) {
+	protected function get_objects_query( $query_args, $request = null ) {
 
 		global $wpdb;
 
@@ -904,7 +882,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			}
 		}
 
-		$query->found_items = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count;
+		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count;
 
 		return $query;
 
