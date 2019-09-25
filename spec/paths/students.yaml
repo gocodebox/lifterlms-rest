@@ -4,6 +4,7 @@ get:
   tags:
     - Students
   parameters:
+    - $ref: '#/components/parameters/Context'
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
     - $ref: '#/components/parameters/Order'
