@@ -16,6 +16,10 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
  *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+ *                     Allow `prerequisite` and `prerequisite_track` to be cleared (set to 0).
+ *                     Also:
+ *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;
+ *                     - if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to 0.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -752,7 +756,11 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since [version] Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
-
+	 *                     Allow `prerequisite` and `prerequisite_track` to be ted.
+	 *                     Also:
+	 *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;
+	 *                     - if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to 0.
+	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
 	 * @param array           $schema        The item schema.
@@ -795,6 +803,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			$prerequisite = llms_get_post( $request['prerequisite'] );
 			if ( is_a( $prerequisite, 'LLMS_Course' ) ) {
 				$to_set['prerequisite'] = $request['prerequisite'];
+			} else {
+				$to_set['prerequisite'] = 0;
 			}
 		}
 
@@ -804,6 +814,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			$track = new LLMS_Track( $request['prerequisite_track'] );
 			if ( $track->term ) {
 				$to_set['prerequisite_track'] = $request['prerequisite_track'];
+			} else {
+				$to_set['prerequisite_track'] = 0;
 			}
 		}
 
