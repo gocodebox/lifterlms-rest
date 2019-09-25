@@ -16,16 +16,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- *                  Added the following properties to the item schema: `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
- *                  Added the following links: `prerequisite`, `quiz`.
- *                  Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
- *                  Fixed `parent` link href, replacing 'section' with 'sections'.
- *                  Added following properties to the response object: `public`, `points`, `quiz`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
- *                  Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
- *                  Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
- *                  Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
- *
- * @todo Implement endpoints.
+ *                     Added the following properties to the item schema: `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
+ *                     Added the following links: `prerequisite`, `quiz`.
+ *                     Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
+ *                     Fixed `parent` link href, replacing 'section' with 'sections'.
+ *                     Added following properties to the response object: `public`, `points`, `quiz`, `drip_method`, `drip_days`, `drip_date`, `prerequisite`.
+ *                     Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
+ *                     Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
+ *                     Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
