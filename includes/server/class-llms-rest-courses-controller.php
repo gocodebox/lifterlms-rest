@@ -23,12 +23,15 @@ defined( 'ABSPATH' ) || exit;
  *                     - if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to 0.
  *
  *                     `update_additional_object_fields()` returns false if nothing to update.
- *
  *                     Properties `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` handling
  *                     moved here from `prepare_item_for_database()` method to `update_additional_object_fields()` method so to better handle the update of the
  *                     course's properties `time_period` and `enrollment_period`.
  *                     Added logic to prevent trying to update "derived only" courses's properties (`time_period`, `enrollment_period`, `has_prerequisite`)
  *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
+ *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()`
+ *                     to support WordPress version prior to 5.1.
+ *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
+ *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -138,6 +141,21 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected function get_object( $id ) {
 		$course = llms_get_post( $id );
 		return $course && is_a( $course, 'LLMS_Course' ) ? $course : llms_rest_not_found_error();
+	}
+
+	/**
+	 * Retrieve an ID from the object
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Course $object LLMS_Course object.
+	 * @return int
+	 */
+	protected function get_object_id( $object ) {
+
+		// For example.
+		return $object->get( 'id' );
+
 	}
 
 	/**
