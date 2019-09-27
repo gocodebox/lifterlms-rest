@@ -87,7 +87,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			array(
 				'args'   => array(
 					'post_id' => array(
-						'description' => __( 'Unique course, lesson, or section Identifer. The WordPress Post ID.', 'lifterlms' ),
+						'description' => __( 'Unique course or membership Identifier. The WordPress Post ID.', 'lifterlms' ),
 						'type'        => 'integer',
 					),
 				),
