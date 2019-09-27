@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
- * @since [version] Break `get_items()` method into `prepare_collection_query_args()`, `prepare_args_for_total_count_query()`,
+ * @since 1.0.0-beta.7 Break `get_items()` method into `prepare_collection_query_args()`, `prepare_args_for_total_count_query()`,
  *                  `prepare_collection_items_for_response()` and `add_header_pagination()` methods so to improve abstraction.
  *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  */
@@ -185,7 +185,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results.
-	 * @since [version] Broken into several methods so to improve abstraction.
+	 * @since 1.0.0-beta.7 Broken into several methods so to improve abstraction.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -223,7 +223,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -247,7 +247,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prepare query args for total count query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  array           $args Array of query args.
 	 * @param  WP_REST_Request $request  Full details about the request.
@@ -262,7 +262,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prepare collection items for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -291,7 +291,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Add pagination info and links to the response header.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param WP_REST_Response $response   Current response being served.
 	 * @param array            $pagination Pagination array.

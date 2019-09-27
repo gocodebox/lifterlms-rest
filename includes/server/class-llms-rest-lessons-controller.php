@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Lessons_Controller
  *
  * @since 1.0.0-beta.1
- * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Added the following properties to the item schema: `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
  *                     Added the following links: `prerequisite`, `quiz`.
  *                     Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
@@ -124,7 +124,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepares a single lesson for create or update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -236,7 +236,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the lesson data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param array           $prepared_item Array of lesson item properties prepared for database.
 		 * @param WP_REST_Request $request       Full details about the request.
@@ -249,7 +249,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Updates a single llms lesson.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -306,7 +306,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Lesson's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the following properties: drip_date, drip_days, drip_method, public, quiz.
+	 * @since 1.0.0-beta.7 Added the following properties: drip_date, drip_days, drip_method, public, quiz.
 	 *                  Added `llms_rest_lesson_item_schema` filter hook.
 	 *
 	 * @return array Item schema data.
@@ -351,7 +351,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				),
 			),
 			'points'       => array(
-				'description' => __( 'Determines the weight of the lesson when grading the course.', 'literlms' ),
+				'description' => __( 'Determines the weight of the lesson when grading the course.', 'lifterlms' ),
 				'type'        => 'integer',
 				'default'     => 1,
 				'context'     => array( 'view', 'edit' ),
@@ -464,7 +464,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filter item schema for the lessons controller.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -520,7 +520,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added following properties to the response object:
+	 * @since 1.0.0-beta.7 Added following properties to the response object:
 	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
 	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
 	 *
@@ -587,7 +587,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the lesson data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param array           $data    Array of lesson properties prepared for response.
 		 * @param LLMS_Lesson     $lesson  Lesson object.
@@ -600,7 +600,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -649,7 +649,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed lesson progression callback name.
+	 * @since 1.0.0-beta.7 Fixed lesson progression callback name.
 	 *
 	 * @param LLMS_Section $lesson Lesson object.
 	 * @return array Array of action/filters to be removed for response.
@@ -682,7 +682,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
+	 * @since 1.0.0-beta.7 Fixed `siblings` link that was using the parent course's id instead of the parent section's id.
 	 *                  Fixed `parent` link href, replacing 'section' with 'sections'.
 	 *                  Following links added: `prerequisite`, `quiz`.
 	 *                  Added `llms_rest_lesson_links` filter hook.
@@ -765,7 +765,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the lesson's links.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param array       links   Links for the given lesson.
 		 * @param LLMS_Lesson $lesson Lesson object.

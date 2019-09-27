@@ -8,8 +8,8 @@
  * @group rest_courses
  *
  * @since 1.0.0-beta.1
- * @since [version] Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @version [version]
+ * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
+ * @version 1.0.0-beta.7
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
@@ -35,7 +35,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
+	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
 	 */
 	public function setUp() {
 
@@ -121,7 +121,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list courses pagination success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 */
 	public function test_get_courses_with_pagination() {
 
@@ -999,7 +999,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Add tests on prerequisites.
+	 * @since 1.0.0-beta.7 Add tests on prerequisites.
 	 */
 	public function test_update_course() {
 

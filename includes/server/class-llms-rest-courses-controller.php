@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Courses_Controller
  *
  * @since 1.0.0-beta.1
- * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
+ * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
  *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
  *
  *                     Allow `prerequisite` and `prerequisite_track` to be cleared (set to 0).
@@ -146,7 +146,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieve an ID from the object
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param LLMS_Course $object LLMS_Course object.
 	 * @return int
@@ -658,7 +658,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepares a single post for create or update.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date`
+	 * @since 1.0.0-beta.7 `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date`
 	 *                     treated in @see `update_additional_object_fields()` method so to better handle the update of the
 	 *                     course's properties `time_period` and `enrollment_period` whose values are derived from them and need to be
 	 *                     passed to `$course->set_bulk()` only if they differ from their current values, otherwise we'd get a WP_Error
@@ -752,7 +752,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Updates a single llms course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+	 * @since 1.0.0-beta.7 Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
 	 *                     Allow `prerequisite` and `prerequisite_track` to be ted.
 	 *                     Also:
 	 *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;

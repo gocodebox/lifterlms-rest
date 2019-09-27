@@ -8,8 +8,8 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @since [version] Add links test.
- * @version [version]
+ * @since 1.0.0-beta.7 Add links test.
+ * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 

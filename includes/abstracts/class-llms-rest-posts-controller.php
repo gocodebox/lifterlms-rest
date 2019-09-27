@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
  * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
- * @since [version] Added: `check_read_object_permissions()`, `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ * @since 1.0.0-beta.7 Added: `check_read_object_permissions()`, `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
  *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
  *                     `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     On `update_item`, don't execute `$object->set_bulk()` when there's no data to update.
@@ -99,7 +99,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Determine if the current user can view the object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param object $object Object.
 	 * @return bool
@@ -130,7 +130,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -190,7 +190,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Extending classes can add additional object fields by overriding the method `update_additional_object_fields()`.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
+	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                  fired after inserting/uodateing an llms post into the database.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -222,7 +222,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 *
 		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param LLMS_Post       $object   Inserted or updated llms object.
 		 * @param WP_REST_Request $request  Request object.
@@ -275,7 +275,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 *
 		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param LLMS_Post       $object   Inserted or updated llms object.
 		 * @param WP_REST_Request $request  Request object.
@@ -334,7 +334,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -419,7 +419,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Extending classes can add additional object fields by overriding the method `update_additional_object_fields()`.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Don't execute `$object->set_bulk()` when there's no data to update:
+	 * @since 1.0.0-beta.7 Don't execute `$object->set_bulk()` when there's no data to update:
 	 *                    this fixes an issue when updating only properties which are not handled in `prepare_item_for_database()`.
 	 *                  Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                    fired after inserting/uodateing an llms post into the database.
@@ -458,7 +458,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 *
 		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param LLMS_Post       $object   Inserted or updated llms object.
 		 * @param WP_REST_Request $request  Request object.
@@ -497,7 +497,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 *
 		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.7
 		 *
 		 * @param LLMS_Post       $object   Inserted or updated llms object.
 		 * @param WP_REST_Request $request  Request object.
@@ -514,7 +514,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Updates a single llms post.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] return description updated.
+	 * @since 1.0.0-beta.7 return description updated.
 	 *
 	 * @param LLMS_Post_Model $object        LMMS_Post_Model instance.
 	 * @param array           $prepared_item Array.
@@ -655,7 +655,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  array           $prepared Array of collection arguments.
 	 * @param  WP_REST_Request $request  Full details about the request.
@@ -670,7 +670,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param WP_Query $query WP_Query query result.
 	 * @return WP_Post[]
@@ -684,7 +684,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare collection items for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -1177,7 +1177,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Create an LLMS_Post_Model
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix wp:featured_media link, we don't expose any embeddable field.
+	 * @since 1.0.0-beta.7 Fix wp:featured_media link, we don't expose any embeddable field.
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -1190,7 +1190,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
-	 * @since [version] `self` and `collection` links prepared in the parent class.
+	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.

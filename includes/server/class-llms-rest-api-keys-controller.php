@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_API_Keys_Controller class.
  *
  * @since 1.0.0-beta.1
- * @since [version] Added: `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ * @since 1.0.0-beta.7 Added: `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
  *                  `get_items()` method abstracted and moved in LLMS_REST_Controller.
  */
 class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
@@ -248,7 +248,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  array           $prepared Array of collection arguments.
 	 * @param  WP_REST_Request $request  Full details about the request.
@@ -263,7 +263,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param WP_Query $query Query result.
 	 * @return obj[]
@@ -277,7 +277,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -303,7 +303,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare collection items for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.

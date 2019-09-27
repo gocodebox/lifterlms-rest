@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Sections_Controller
  *
  * @since 1.0.0-beta.1
- * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Fix the way we get the section's parent course object when building the resource links.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
@@ -376,7 +376,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Format query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array
@@ -425,7 +425,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix the way we get the section's parent course object.
+	 * @since 1.0.0-beta.7 Fix the way we get the section's parent course object.
 	 *
 	 * @param LLMS_Section $section  LLMS Section.
 	 * @return array Links for the given object.

@@ -9,7 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -157,7 +157,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	/**
 	 * Test list instructors pagination.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 */
 	public function test_get_items_pagination() {
 		global $wpdb;
@@ -270,7 +270,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	/**
 	 * Teardown test
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */

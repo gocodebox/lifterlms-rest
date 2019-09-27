@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Students_Controller class..
  *
  * @since 1.0.0-beta.1
- * @since [version] Added `prepare_args_for_total_count_query()` method override.
+ * @since 1.0.0-beta.7 Added `prepare_args_for_total_count_query()` method override.
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
@@ -292,7 +292,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Prepare query args for total count query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  array           $args Array of query args.
 	 * @param  WP_REST_Request $request  Full details about the request.

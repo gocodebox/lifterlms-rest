@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
  *                     The single enrollment can be read only by who can view the enrollment's student.
  *                     Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
- * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     `prepare_object_query()` renamed to `prepare_object_query_args()`.
  *                     Added: `get_objects_from_query()`, `prepare_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
  *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
@@ -63,7 +63,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Register routes.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed description of the `post_id` path parameter.
+	 * @since 1.0.0-beta.7 Fixed description of the `post_id` path parameter.
 	 *
 	 * @return void
 	 */
@@ -151,7 +151,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
-	 * @since [version] Overrides the parent `get_items()` for the only purpose of returning a 404 if no enrollments are found.
+	 * @since 1.0.0-beta.7 Overrides the parent `get_items()` for the only purpose of returning a 404 if no enrollments are found.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -502,7 +502,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -628,7 +628,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param WP_Query $query Query result.
 	 * @return obj[]
@@ -642,7 +642,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare collection items for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -670,7 +670,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -696,7 +696,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array

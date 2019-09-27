@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Users_Controller class..
  *
  * @since 1.0.0-beta.1
- * @since [version] Added `check_read_object_permissions()` method override.
+ * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -156,7 +156,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Determine if the current user can view the object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param object $object Object.
 	 * @return bool

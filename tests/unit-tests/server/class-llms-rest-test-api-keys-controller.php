@@ -8,7 +8,7 @@
  * @group rest_api_keys
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 

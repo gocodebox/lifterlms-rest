@@ -8,9 +8,9 @@
  * @group rest_sections
  *
  * @since 1.0.0-beta.1
- * @since [version] Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp(),
+ * @since 1.0.0-beta.7 Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp(),
  *                  fixed sections fields checks when retrieving the collection.
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -40,7 +40,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
+	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
 	 */
 	public function setUp() {
 
@@ -88,7 +88,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list sections.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed sections fields check.
+	 * @since 1.0.0-beta.7 Fixed sections fields check.
 	 */
 	public function test_get_sections() {
 
@@ -132,7 +132,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test links.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 */
 	public function test_links() {
 
@@ -168,7 +168,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list sections pagination.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 */
 	public function test_get_sections_pagination() {
 
@@ -404,7 +404,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Override.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed expected 'order' field, added expected 'parent_id'.
+	 * @since 1.0.0-beta.7 Fixed expected 'order' field, added expected 'parent_id'.
 	 */
 	protected function filter_expected_fields( $expected, $llms_post ) {
 

@@ -28,7 +28,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.6';
+	public $version = '1.0.0-beta.7';
 
 	/**
 	 * Constructor.

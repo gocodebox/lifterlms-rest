@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.7
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -115,7 +115,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Utility to perform pagination test.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param string $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
 	 * @param int    $start_id Optional. The id of the first item. Default 1.

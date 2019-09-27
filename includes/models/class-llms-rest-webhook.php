@@ -120,7 +120,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 			$message = array(
 				'Delivery ID' => $delivery_id,
-				'Date'        => date_i18n( __( 'M j, Y @ H:i', 'woocommerce' ), strtotime( 'now' ), true ),
+				'Date'        => date_i18n( __( 'M j, Y @ H:i', 'lifterlms' ), strtotime( 'now' ), true ),
 				'URL'         => $this->get( 'delivery_url' ),
 				'Duration'    => $duration,
 				'Request'     => array(

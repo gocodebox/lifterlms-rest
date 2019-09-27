@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_lessons
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.7
+ * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -74,7 +74,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Setup our test server, endpoints, and user info.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -119,7 +119,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -133,7 +133,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -165,7 +165,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting items.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -214,7 +214,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting lessons filtered by section's parent.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -280,7 +280,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting lessons filtered by section's parent.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -342,7 +342,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list lessons pagination.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 */
 	public function test_get_items_pagination() {
 
@@ -359,7 +359,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating lesson.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -437,7 +437,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating lesson with wrong params.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -446,7 +446,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating lesson missing required parameters.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 * @todo abstract and move in posts case.
 	 * @return void
 	 */
@@ -462,7 +462,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating lesson auth errors.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -483,7 +483,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Retrieve success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -534,7 +534,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting an item with no auth.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -563,7 +563,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test not found lesson.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -589,7 +589,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test links.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @return void
 	 */
@@ -644,7 +644,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Override.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.7
 	 *
 	 * @param $expected array Array of expected properties.
 	 * @param $lesson LLMS_Post Instance of LLMS_Post.

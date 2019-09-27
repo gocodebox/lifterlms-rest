@@ -1,6 +1,28 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.7 - 2019-09-27
+--------------------------
+
+##### Updates
+
++ Added the following properties to the lesson schema and response object: `drip_date`, `drip_days`, `drip_method`, `public`, `quiz`.
++ Added the following links to lesson objects: `prerequisite` and `quiz`.
++ Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
++ Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
++ Course properties `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` are now nullable.
++ Course properties `prerequisite` and `prerequisite_track` can be be cleared (set to `0` to signify no prerequisite exists).
++ Added prerequisite validation for courses, if `prerequisite` is not a valid course the course `prerequisite` will be set to `0` and if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to `0`.
+
+##### Bug Fixes
+
++ Fixed lesson `siblings` link that was using the parent course's id instead of the parent section's id.
++ Fixed lesson `parent` link href, replacing 'section' with 'sections'.
++ Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
++ Fixed description of the `post_id` path parameter for student enrollments resources. Thanks [@pondermatic](https://github.com/pondermatic).
++ Fixed section parent course object retrieval method when building the resource links.
+
+
 v1.0.0-beta.6 - 2019-08-27
 --------------------------
 
