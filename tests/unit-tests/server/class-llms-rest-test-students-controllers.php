@@ -9,7 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -18,7 +18,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/students';
+	protected $route = '/llms/v1/students';
 
 	/**
 	 * Array of link $rels expected for each item.
@@ -525,6 +525,9 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$db_pages = ceil( $db_total / 10 );
 
 		wp_set_current_user( $this->user_admin );
+
+//		$this->pagination_test( $this->route, $start_id = 1, $per_page = 10, $id_field = null, $total = $db_total );
+
 		$res = $this->perform_mock_request( 'GET', $this->route );
 
 		// Correct # of results to default 10 / page
@@ -570,7 +573,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 		// Out of bounds.
 		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'page' => 25, 'per_page' => 100 ) );
-		$this->assertEquals( array(), $res->get_data() );
+		$this->assertResponseStatusEquals( 400, $res );
 
 	}
 

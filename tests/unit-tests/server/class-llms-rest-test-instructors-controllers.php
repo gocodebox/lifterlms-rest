@@ -9,7 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -18,7 +18,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/instructors';
+	protected $route = '/llms/v1/instructors';
 
 	/**
 	 * Setup the test case.
@@ -153,6 +153,25 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	// public function test_get_items_orderby_name() {}
 	// public function test_get_items_orderby_registered_date() {}
 	// public function test_get_items_pagination() {}
+
+	/**
+	 * Test list instructors pagination.
+	 *
+	 * @since [version]
+	 */
+	public function test_get_items_pagination() {
+		global $wpdb;
+		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
+
+		$admin_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+
+		wp_set_current_user( $admin_id );
+		// other 24 users except the admin who's an instructor too.
+		$ids = $this->factory->user->create_many( 24, array( 'role' => 'instructor' ) );
+		$this->pagination_test( $this->route, $admin_id );
+
+	}
+
 	// public function test_get_items_filter_by_posts() {}
 	// public function test_get_items_filter_by_roles() {}
 
@@ -247,5 +266,21 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 
 	// public function test_delete_item_auth() {}
 	// public function test_delete_item_success() {}
+
+	/**
+	 * Teardown test
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function tearDown() {
+
+		parent::tearDown();
+
+		global $wpdb;
+		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
+
+	}
 
 }

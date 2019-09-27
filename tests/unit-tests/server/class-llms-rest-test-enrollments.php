@@ -8,7 +8,7 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -17,7 +17,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @var string
 	 */
-	private $route = '/llms/v1/students/(?P<id>[\d]+)/enrollments';
+	protected $route = '/llms/v1/students/(?P<id>[\d]+)/enrollments';
 
 	/**
 	 * Consider dates equal for +/- 2 mins
@@ -106,7 +106,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
-	 * Test list student enrollments.
+	 * Test list student enrollments pagination.
 	 *
 	 * @since 1.0.0-beta.3
 	 */
@@ -128,61 +128,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		$route = $this->parse_route( $user_id );
 
-		// Page 1.
-		$response = $this->perform_mock_request( 'GET', $route );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'next', 'last' ), array_keys( $links ) );
-
-		$this->assertEquals( range( $start_course_id, $start_course_id + 9 ), wp_list_pluck( $body, 'post_id' ) );
-
-		$start_course_id += 10;
-
-		// Page 2.
-		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 2 ) );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'first', 'prev', 'next', 'last' ), array_keys( $links ) );
-
-		$this->assertEquals( range( $start_course_id, $start_course_id + 9 ), wp_list_pluck( $body, 'post_id' ) );
-
-		$start_course_id += 10;
-
-		// Page 3.
-		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 3 ) );
-
-		$body = $response->get_data();
-		$headers = $response->get_headers();
-
-		$links = $this->parse_link_headers( $response );
-
-		$this->assertResponseStatusEquals( 200, $response );
-		$this->assertEquals( 25, $headers['X-WP-Total'] );
-		$this->assertEquals( 3, $headers['X-WP-TotalPages'] );
-		$this->assertEquals( array( 'first', 'prev' ), array_keys( $links ) );
-
-		$this->assertEquals( range( $start_course_id, $start_course_id + 4 ), wp_list_pluck( $body, 'post_id' ) );
-
-		// Out of bounds.
-		$response = $this->perform_mock_request( 'GET', $route, array(), array( 'page' => 4 ) );
-
-		$this->assertResponseStatusEquals( 400, $response );
-		$this->assertResponseCodeEquals( 'llms_rest_bad_request', $response );
+		$this->pagination_test( $route, $start_course_id, 10, 'post_id' );
 
 	}
 
