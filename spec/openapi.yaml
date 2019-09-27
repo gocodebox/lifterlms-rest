@@ -62,7 +62,7 @@ info:
 
     ## Header Authentication
 
-    Alternatively, requests may be authenticated by providing the Consumer Key and Consumer secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.
+    Alternatively, requests may be authenticated by providing the Consumer Key and Consumer Secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.
 
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
