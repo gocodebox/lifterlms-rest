@@ -19,9 +19,10 @@ defined( 'ABSPATH' ) || exit;
  *                     The single enrollment can be read only by who can view the enrollment's student.
  *                     Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- *                  `prepare_object_query()` renamed to `prepare_object_query_args()`.
- *                  Added: `get_objects_from_query()`, `prepare_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
- *                  `get_items()` method removed, now abstracted in LLMS_REST_Controller.
+ *                     `prepare_object_query()` renamed to `prepare_object_query_args()`.
+ *                     Added: `get_objects_from_query()`, `prepare_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
+ *                     Fixed description of the `post_id` path parameter.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -62,6 +63,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Register routes.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed description of the `post_id` path parameter.
 	 *
 	 * @return void
 	 */
