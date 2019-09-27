@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ *                     Fix the way we get the section's parent course object when building the resource links.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
@@ -210,7 +211,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param WP_REST_Request $request  Request object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -423,6 +424,9 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Fix the way we get the section's parent course object.
+	 *
 	 * @param LLMS_Section $section  LLMS Section.
 	 * @return array Links for the given object.
 	 */
@@ -436,10 +440,9 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		 */
 		if ( ! $parent_course_id ) {
 			return $links;
-
 		}
 
-		$parent_course = new LLMS_Course( $parent_course_id );
+		$parent_course = llms_get_post( $parent_course_id );
 		if ( ! is_a( $parent_course, 'LLMS_Course' ) ) {
 			return $links;
 		}

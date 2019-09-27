@@ -15,7 +15,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
- *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+ *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()`
+ *                     to support WordPress version prior to 5.1.
+ *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
+ *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -125,6 +128,21 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected function get_object( $id ) {
 		$course = llms_get_post( $id );
 		return $course && is_a( $course, 'LLMS_Course' ) ? $course : llms_rest_not_found_error();
+	}
+
+	/**
+	 * Retrieve an ID from the object
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Course $object LLMS_Course object.
+	 * @return int
+	 */
+	protected function get_object_id( $object ) {
+
+		// For example.
+		return $object->get( 'id' );
+
 	}
 
 	/**
@@ -629,7 +647,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
-	 * @param WP_REST_Request $request  Request object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
