@@ -999,6 +999,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Add tests on prerequisites.
 	 */
 	public function test_update_course() {
 
@@ -1015,9 +1016,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'status'       => 'draft',
 		);
 
-		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
-		$request->set_body_params( $update_data );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $course->get( 'id' ), $update_data );
 
 		// Success.
 		$this->assertEquals( 200, $response->get_status() );
@@ -1029,6 +1028,38 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( rtrim( apply_filters( 'the_content', $update_data['content'] ), "\n" ), rtrim( $res_data['content']['rendered'], "\n" ) );
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
 		$this->assertEquals( $update_data['status'], $res_data['status'] );
+
+		// check the course has no prerequisites.
+		$course = new LLMS_Course( $res_data['id'] );
+		$this->assertFalse( $course->has_prerequisite() );
+
+		// create a course prerequisite.
+		$prerequisite_id       = $this->factory->course->create();
+		$track                 = wp_insert_term( 'mock track', 'course_track' );
+		$prerequisite_track_id = $track['term_id'];
+
+		// Update prerequisites.
+		$update_data = array(
+			'prerequisite'       => (int) $prerequisite_id,
+			'prerequisite_track' => $prerequisite_track_id,
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $course->get( 'id' ), $update_data );
+
+		// Success.
+		$this->assertEquals( 200, $response->get_status() );
+
+		$res_data = $response->get_data();
+
+		// check the course has prerequisites.
+		$course = new LLMS_Course( $res_data['id'] );
+		$this->assertTrue( $course->has_prerequisite() );
+		$this->assertTrue( $course->has_prerequisite( 'course' ) );
+		$this->assertTrue( $course->has_prerequisite( 'course_track' ) );
+		$this->assertEquals( $course->get( 'prerequisite' ), $res_data['prerequisite'] );
+		$this->assertEquals( $update_data['prerequisite'], $res_data['prerequisite'] );
+		$this->assertEquals( $course->get( 'prerequisite_track' ), $res_data['prerequisite_track'] );
+		$this->assertEquals( $update_data['prerequisite_track'], $res_data['prerequisite_track'] );
 
 	}
 
