@@ -2562,7 +2562,7 @@ paths:
         schema:
           $ref: '#/components/schemas/ResourceId'
       - name: post_id
-        description: 'Unique course, lesson, or section Identifer. The WordPress Post `ID`.'
+        description: Unique course or membership Identifier. The WordPress Post `ID`.
         example: 456
         in: path
         required: true
