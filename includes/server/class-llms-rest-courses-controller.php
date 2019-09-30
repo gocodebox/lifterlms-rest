@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
- *                     In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
- *
  *                     Allow `prerequisite` and `prerequisite_track` to be cleared (set to 0).
  *                     Also:
  *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;
@@ -38,6 +36,9 @@ defined( 'ABSPATH' ) || exit;
  *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
+ * @since [version] In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+ *                     Also made sure course's `instructor` is at least set as the post author.
+ *                     Defined `instructors` validate callback so to make sure instructors list is either not empty and composed by real user ids.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -183,6 +184,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Add missing quotes in enrollment/access default messages shortcodes.
+	 *                     Make sure instructors list is either not empty and composed by real user ids.
 	 *
 	 * @return array
 	 */
@@ -232,10 +234,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'instructors'               => array(
-				'description' => __( 'List of course instructors.', 'lifterlms' ),
+				'description' => __( 'List of course instructors. Defaults to current user when creating a new post.', 'lifterlms' ),
 				'type'        => 'array',
 				'items'       => array(
 					'type' => 'integer',
+				),
+				'arg_options' => array(
+					'validate_callback' => 'llms_validate_instructors',
 				),
 				'context'     => array( 'view', 'edit' ),
 			),
@@ -677,7 +682,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     which the consumer cannot avoid having no direct control on those properties.
 	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 *                     Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -765,8 +769,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Updates a single llms course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
-	 *                     Allow `prerequisite` and `prerequisite_track` to be ted.
+	 * @since 1.0.0-beta.7 Allow `prerequisite` and `prerequisite_track` to be ted.
 	 *                     Also:
 	 *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;
 	 *                     - if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to 0.
@@ -783,6 +786,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
+	 *                     Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+	 *                     Also made sure course's `instructor` is at least set as the post author.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -801,21 +806,31 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Instructors.
-		if ( ! empty( $schema['properties']['instructors'] ) && isset( $request['instructors'] ) ) {
+		if ( ! empty( $schema['properties']['instructors'] ) ) {
 
-			$instructors = array();
+			$instructors = $request['instructors'];
 
-			foreach ( $request['instructors'] as $instructor_id ) {
-				$user_data = get_userdata( $instructor_id );
-				if ( ! empty( $user_data ) ) {
-					$instructors[] = array(
-						'id'   => $instructor_id,
-						'name' => $user_data->display_name,
-					);
+			// When creating, if the instructor is not set, set it with the post author id.
+			if ( $creating && ! isset( $instructors ) ) {
+				$instructors = array_filter( array( $course->get( 'author' ) ) );
+			}
+
+			if ( ! empty( $instructors ) ) {
+
+				foreach ( $instructors as $instructor_id ) {
+					$user_data = get_userdata( $instructor_id );
+					if ( ! empty( $user_data ) ) {
+						$instructors[] = array(
+							'id'   => $instructor_id,
+							'name' => $user_data->display_name,
+						);
+					}
 				}
 			}
 
-			$course->set_instructors( $instructors );
+			if ( ! empty( $instructors ) ) {
+				$course->set_instructors( $instructors );
+			}
 		}
 
 		$to_set = array();
@@ -962,7 +977,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
-		if ( $error->has_errors() ) {
+		if ( $error->errors ) {
 			return $error;
 		}
 

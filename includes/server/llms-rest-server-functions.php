@@ -1,14 +1,23 @@
 <?php
 /**
- * REST Server functions
+ * REST Server functions.
  *
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * REST Server functions.
+ *
+ * @package LifterLMS_REST/Functions
+ *
+ * @since 1.0.0-beta.1
+ * @since [version] Added an util to validate a list of instructors.
+ */
 
 /**
  * Return a WP_Error with proper code, message and status for unauthorized requests.
@@ -75,4 +84,15 @@ function llms_rest_server_error( $message = '' ) {
 	return new WP_Error( 'llms_rest_server_error', $message, array( 'status' => 500 ) );
 }
 
-
+/**
+ * Validate submitted array of integers is an array of real real user ids.
+ *
+ * @since [version]
+ *
+ * @param array $instructors Array of instructors id.
+ *
+ * @return boolean
+ */
+function llms_validate_instructors( $instructors ) {
+	return ! empty( $instructors ) ? count( array_filter( array_map( 'get_userdata', $instructors ) ) ) === count( $instructors ) : false;
+}

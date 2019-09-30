@@ -520,6 +520,66 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test creating a single course without a list of instructors.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_create_with_empty_instructors() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $this->sample_course_args );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
+		$res_data = $response->get_data();
+
+		// check the instructors post meta has been set as expected.
+		$this->assertEquals( array( $this->user_allowed ), wp_list_pluck( get_post_meta( $res_data['id'], '_llms_instructors', true ), 'id' ) );
+
+	}
+
+
+	/**
+	 * Test creating a single course with incorrect list of instructors.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_course_create_with_bad_instructors_list() {
+		wp_set_current_user( $this->user_allowed );
+
+		// The list cannot contain not existent ids.
+		$sample_course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'instructors' => array(
+					get_current_user_id(),
+					7383931
+				),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $sample_course_args );
+
+		// 400 error.
+		$this->assertResponseStatusEquals( 400, $response );
+
+		// The list cannot be empty.
+		$sample_course_args = array_merge(
+			$this->sample_course_args,
+			array(
+				'instructors' => array(),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $sample_course_args );
+
+		// 400 error.
+		$this->assertResponseStatusEquals( 400, $response );
+
+	}
+
+	/**
 	 * Test creating a single course defaults are correctly set.
 	 *
 	 * @since 1.0.0-beta.1
