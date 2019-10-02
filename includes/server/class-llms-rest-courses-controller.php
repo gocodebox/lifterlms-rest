@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                     to support WordPress version prior to 5.1.
  *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
  *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
+ * @since [version] Fixed `sales_page_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -533,6 +534,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed `sales_page_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -642,6 +644,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Sales page page type.
 		$data['sales_page_page_type'] = $course->get( 'sales_page_content_type' );
+		$data['sales_page_page_type'] = $data['sales_page_page_type'] ? $data['sales_page_page_type'] : 'none';
 
 		// Sales page id/url.
 		if ( 'page' === $data['sales_page_page_type'] ) {
