@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.6
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +18,7 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.4 Load authentication early.
  * @since 1.0.0-beta.6 Load webhook actions early.
+ * @since [version] Added memberships controller..
  */
 final class LifterLMS_REST_API {
 
@@ -113,6 +114,7 @@ final class LifterLMS_REST_API {
 	 * Include REST api specific files.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Include memberships controller class file.
 	 *
 	 * @return void
 	 */
@@ -131,6 +133,7 @@ final class LifterLMS_REST_API {
 
 			// Controllers.
 			'server/class-llms-rest-api-keys-controller',
+			'server/class-llms-rest-memberships-controller',
 			'server/class-llms-rest-courses-controller',
 			'server/class-llms-rest-sections-controller',
 			'server/class-llms-rest-lessons-controller',
@@ -151,6 +154,7 @@ final class LifterLMS_REST_API {
 	 * Instantiate REST api Controllers.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Init memberships controller.
 	 *
 	 * @return void
 	 */
@@ -158,6 +162,7 @@ final class LifterLMS_REST_API {
 
 		$controllers = array(
 			'LLMS_REST_API_Keys_Controller',
+			'LLMS_REST_Memberships_Controller',
 			'LLMS_REST_Courses_Controller',
 			'LLMS_REST_Sections_Controller',
 			'LLMS_REST_Lessons_Controller',

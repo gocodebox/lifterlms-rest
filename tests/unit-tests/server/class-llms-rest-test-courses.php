@@ -1327,7 +1327,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test list course content.
+	 * Test list course's enrollments.
 	 *
 	 * @since 1.0.0-beta.1
 	 *
