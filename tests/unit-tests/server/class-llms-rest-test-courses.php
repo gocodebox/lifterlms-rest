@@ -9,7 +9,9 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @since [version]  When retrieving a course, added check on `sales_page_page_*` defaults.
+ * @since [version]  When retrieving a course, added check on `sales_page_*` defaults.
+ *                     Also renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+ *
  * @version 1.0.0-beta.7
  *
  * @todo update tests to check links.
@@ -354,7 +356,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added check on `sales_page_page_*` defaults.
+	 * @since [version] Added check on `sales_page_*` defaults. Also renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+
 	 */
 	public function test_get_course() {
 
@@ -373,9 +376,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->llms_posts_fields_match( $course, $res_data );
 
 		// Sales page type.
-		$this->assertEquals( 'none', $res_data['sales_page_page_type'] );
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
 		$this->assertFalse( array_key_exists( 'sales_page_page_id', $res_data ) );
-		$this->assertFalse( array_key_exists( 'sales_page_page_url', $res_data ) );
+		$this->assertFalse( array_key_exists( 'sales_page_url', $res_data ) );
 	}
 
 
@@ -506,6 +509,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course defaults are correctly set.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Renamed `sales_page_page_type` to `sales_page_type` according to the specs.
 	 */
 	public function test_create_course_check_defaults() {
 		wp_set_current_user( $this->user_allowed );
@@ -564,7 +568,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'open', $res_data['ping_status'] );
 
 		// Sales page type.
-		$this->assertEquals( 'none', $res_data['sales_page_page_type'] );
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
 
 		// Status.
 		$this->assertEquals( 'publish', $res_data['status'] );
