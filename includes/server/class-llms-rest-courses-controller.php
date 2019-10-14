@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                     to support WordPress version prior to 5.1.
  *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
  *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
+ * @since [version] Add missing quotes in enrollment/access default messages shortcodes.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -175,6 +176,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Course's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Add missing quotes in enrollment/access default messages shortcodes.
 	 *
 	 * @return array
 	 */
@@ -378,7 +380,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'This course closed on [lifterlms_course_info id={{course_id}} key="end_date"].', 'lifterlms' ),
+				'default'     => __( 'This course closed on [lifterlms_course_info id="{{course_id}}" key="end_date"].', 'lifterlms' ),
 			),
 			'access_opens_date'         => array(
 				'description' => __(
@@ -412,7 +414,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'This course opens on [lifterlms_course_info id={{course_id}} key="start_date"].', 'lifterlms' ),
+				'default'     => __( 'This course opens on [lifterlms_course_info id="{{course_id}}" key="start_date"].', 'lifterlms' ),
 			),
 			'enrollment_closes_date'    => array(
 				'description' => __(
@@ -446,7 +448,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info id={{course_id}} key="enrollment_end_date"].', 'lifterlms' ),
+				'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info id="{{course_id}}" key="enrollment_end_date"].', 'lifterlms' ),
 			),
 			'enrollment_opens_date'     => array(
 				'description' => __(
@@ -480,7 +482,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info id={{course_id}} key="enrollment_start_date"].', 'lifterlms' ),
+				'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info id="{{course_id}}" key="enrollment_start_date"].', 'lifterlms' ),
 			),
 			'sales_page_page_id'        => array(
 				'description' => __(
