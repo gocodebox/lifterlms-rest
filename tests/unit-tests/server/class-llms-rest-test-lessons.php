@@ -278,7 +278,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	// public function test_get_items_orderby_title() {}
 
 	/**
-	 * Test getting lessons filtered by section's parent.
+	 * Test getting lessons ordered by `order`.
 	 *
 	 * @since 1.0.0-beta.7
 	 *

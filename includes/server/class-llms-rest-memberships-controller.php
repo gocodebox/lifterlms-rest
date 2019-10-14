@@ -166,7 +166,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			),
 			'restriction_action'  => array(
 				'description' => __(
-					'Determines the action to take when content restricted by the membership is accessed by a non-member.<br> - <code>none</code> Remain on page and display the message <code>restriction_message</code>.<br> - <code>membership</code> Redirect to the membership\'s permalink.<br> - <code>page</code> Redirect to the permalink of the page identified by <code>restriction_page_id</code>.<br> - <code>custom</code> Redirct to the URL identified by <code>restriction_url</code>',
+					'Determines the action to take when content restricted by the membership is accessed by a non-member.<br> - <code>none</code> Remain on page and display the message <code>restriction_message</code>.<br> - <code>membership</code> Redirect to the membership\'s permalink.<br> - <code>page</code> Redirect to the permalink of the page identified by <code>restriction_page_id</code>.<br> - <code>custom</code> Redirect to the URL identified by <code>restriction_url</code>',
 					'lifterlms'
 				),
 				'type'        => 'string',
@@ -180,7 +180,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 			),
 			'restriction_message' => array(
-				'description' => __( 'Message to display to non-members after a restriction_action redirct. When restriction_action is none replaces the page content with this message.', 'lifterlms' ),
+				'description' => __( 'Message to display to non-members after a restriction_action redirect. When restriction_action is none replaces the page content with this message.', 'lifterlms' ),
 				'type'        => 'object',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
@@ -370,7 +370,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 
 		// Restrictions.
 		if ( ! empty( $schema['properties']['restriction_action'] ) && isset( $request['restriction_action'] ) ) {
-			$prepared_item['redirect_page_type'] = $request['restriction_action'];
+			$prepared_item['restriction_redirect_type'] = $request['restriction_action'];
 		}
 
 		if ( ! empty( $schema['properties']['restriction_page_id'] ) && isset( $request['restriction_page_id'] ) ) {
@@ -448,7 +448,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			$instructors = $request['instructors'];
 
 			// When creating, if the instructor is not set, set it with the post author id.
-
 			if ( $creating && ! isset( $instructors ) ) {
 				$instructors = array_filter( array( $membership->get( 'author' ) ) );
 			}
@@ -487,6 +486,8 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		// On creation, since the restriction message has a non empty default, the restriction_add_notice,
+		// will be set to 'yes'.
 		$to_set['restriction_add_notice'] = empty( $to_set['restriction_notice'] ) ? 'no' : 'yes';
 
 		// Are we creating a membership?
@@ -517,7 +518,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $course->set_bulk( $to_set, true );
+			$update = $membership->set_bulk( $to_set, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
