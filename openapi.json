@@ -4411,7 +4411,7 @@
                 "example": 789
               },
               "redirect_type": {
-                "description": "Determines the redirction behavior of the user's browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `post_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.",
+                "description": "Determines the redirection behavior of the user's browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `post_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.",
                 "type": "string",
                 "enum": [
                   "self",
@@ -5892,7 +5892,7 @@
                 }
               },
               "restriction_action": {
-                "description": "Determines the action to take when content restricted by the membership is accessed by a non-member.<br>\n`none`: Remain on page and display the message `restriction_message`.\n`membership`: Redirect to the membership's permalink.\n`page`: Redirect to the permalink of the page identified by `restriction_page_id`.\n`custom`: Redirct to the URL identified by `restriction_url`.\n",
+                "description": "Determines the action to take when content restricted by the membership is accessed by a non-member.<br>\n`none`: Remain on page and display the message `restriction_message`.\n`membership`: Redirect to the membership's permalink.\n`page`: Redirect to the permalink of the page identified by `restriction_page_id`.\n`custom`: Redirect to the URL identified by `restriction_url`.\n",
                 "type": "string",
                 "enum": [
                   "none",
@@ -5941,7 +5941,7 @@
             "type": "object",
             "properties": {
               "restriction_message": {
-                "description": "Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.",
+                "description": "Message to display to non-members after a `restriction_action` redirect. When `restriction_action` is `none` replaces the page content with this message.",
                 "type": "string",
                 "default": "You must belong to the [lifterlms_membership_link id=\"1234\"] membership to access this content."
               }
@@ -5964,13 +5964,13 @@
             "type": "object",
             "properties": {
               "restriction_message": {
-                "description": "Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.",
+                "description": "Message to display to non-members after a `restriction_action` redirect. When `restriction_action` is `none` replaces the page content with this message.",
                 "type": "object",
                 "properties": {
                   "rendered": {
                     "description": "Rendered message content.",
                     "type": "string",
-                    "default": "You must belong to the <a href=\"https//example.com/membership/gold\">Gold</a> membership to access this content."
+                    "default": "You must belong to the <a href=\"https://example.com/membership/gold\">Gold</a> membership to access this content."
                   },
                   "raw": {
                     "description": "Raw message content.",
