@@ -28,7 +28,7 @@ allOf:
           `none`: Remain on page and display the message `restriction_message`.
           `membership`: Redirect to the membership's permalink.
           `page`: Redirect to the permalink of the page identified by `restriction_page_id`.
-          `custom`: Redirct to the URL identified by `restriction_url`.
+          `custom`: Redirect to the URL identified by `restriction_url`.
         type: string
         enum:
           - none
