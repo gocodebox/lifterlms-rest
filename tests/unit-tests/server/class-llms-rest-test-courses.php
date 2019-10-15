@@ -9,7 +9,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @version 1.0.0-beta.7
+ * @since [version] Add missing quotes in enrollment/access default messages shortcodes.
+ * @version [version]
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
@@ -433,7 +434,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since Add checks on nullable dates.
+	 * @since 1.0.0-beta.7 Add checks on nullable dates.
+	 * @since [version] Add missing quotes in enrollment/access default messages shortcodes.
 	 */
 	public function test_create_course() {
 
@@ -520,16 +522,16 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Check defaults.
 		// Access period messages.
-		$this->assertEquals( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].', $res_data['access_opens_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].' ), $res_data['access_opens_message']['rendered'] );
-		$this->assertEquals( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].', $res_data['access_closes_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].' ), $res_data['access_closes_message']['rendered'] );
+		$this->assertEquals( 'This course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="start_date"].', $res_data['access_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="start_date"].' ), $res_data['access_opens_message']['rendered'] );
+		$this->assertEquals( 'This course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="end_date"].', $res_data['access_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="end_date"].' ), $res_data['access_closes_message']['rendered'] );
 
 		// Enrollment period messages.
-		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
-		$this->assertEquals( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].', $res_data['enrollment_closes_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].' ), $res_data['enrollment_closes_message']['rendered'] );
+		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
+		$this->assertEquals( 'Enrollment in this course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_end_date"].', $res_data['enrollment_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_end_date"].' ), $res_data['enrollment_closes_message']['rendered'] );
 
 		// Capacity enabled.
 		$this->assertFalse( $res_data['capacity_enabled'] );

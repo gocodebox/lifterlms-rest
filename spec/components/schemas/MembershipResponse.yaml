@@ -4,13 +4,13 @@ allOf:
   - type: object
     properties:
       restriction_message:
-        description: Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.
+        description: Message to display to non-members after a `restriction_action` redirect. When `restriction_action` is `none` replaces the page content with this message.
         type: object
         properties:
           rendered:
             description: Rendered message content.
             type: string
-            default: You must belong to the <a href="https//example.com/membership/gold">Gold</a> membership to access this content.
+            default: You must belong to the <a href="https://example.com/membership/gold">Gold</a> membership to access this content.
           raw:
             description: Raw message content.
             type: string
