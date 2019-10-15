@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [vresion]
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
