@@ -35,6 +35,8 @@ defined( 'ABSPATH' ) || exit;
  * @since [version] Fixed `sales_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
  *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
+ *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
+ *                     Add missing quotes in enrollment/access default messages shortcodes.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -673,6 +675,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     which the consumer cannot avoid having no direct control on those properties.
 	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 * @since [version] Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 *                     Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -776,6 +779,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 *                     Added logic to prevent trying to update "derived only" courses's properties (`time_period`, `enrollment_period`, `has_prerequisite`)
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
+	 * @since [version] Call `set_bulk()` llms post method passing `true` as second parameter,
+	 *                     so to instruct it to return a WP_Error on failure.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -949,7 +954,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $course->set_bulk( $to_set );
+			$update = $course->set_bulk( $to_set, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
