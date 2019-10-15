@@ -11,7 +11,8 @@
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
  * @since [version]  When retrieving a course, added check on `sales_page_*` defaults.
  *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
- *                     Add missing quotes in enrollment/access default messages shortcodes.
+ *                     Added missing quotes in enrollment/access default messages shortcodes.
+ *                     Added `rest_taxonomies` property.
  * @version [version]
  *
  * @todo update tests to check links.
@@ -32,6 +33,18 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @var string
 	 */
 	protected $post_type = 'course';
+
+	/**
+	 * Taxonomies shown in rest.
+	 *
+	 * @var string[]
+	 */
+	protected $rest_taxonomies = array(
+		'course_cat',
+		'course_difficulty',
+		'course_tag',
+		'course_track',
+	);
 
 	/**
 	 *
@@ -1297,7 +1310,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 401, $response->get_status() );
 
 	}
-
 
 	/**
 	 * Test list course content.
