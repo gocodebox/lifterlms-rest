@@ -3,7 +3,7 @@ allOf:
   - type: object
     properties:
       restriction_message:
-        description: Message to display to non-members after a `restriction_action` redirct. When `restriction_action` is `none` replaces the page content with this message.
+        description: Message to display to non-members after a `restriction_action` redirect. When `restriction_action` is `none` replaces the page content with this message.
         type: string
         default: You must belong to the [lifterlms_membership_link id="1234"] membership to access this content.
   #     access_closes_message:
