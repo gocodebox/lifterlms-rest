@@ -9,7 +9,9 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @since [version] Add missing quotes in enrollment/access default messages shortcodes.
+ * @since [version]  When retrieving a course, added check on `sales_page_*` defaults.
+ *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+ *                     Add missing quotes in enrollment/access default messages shortcodes.
  * @version [version]
  *
  * @todo update tests to check links.
@@ -354,6 +356,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added check on `sales_page_*` defaults. Also renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+
 	 */
 	public function test_get_course() {
 
@@ -361,14 +365,20 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Setup course.
 		$course   = $this->factory->course->create_and_get();
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $course->get( 'id' ) );
 
 		// Success.
 		$this->assertEquals( 200, $response->get_status() );
 
-		// Check retrieved course matches the created ones.
-		$this->llms_posts_fields_match( $course, $response->get_data() );
+		$res_data = $response->get_data();
 
+		// Check retrieved course matches the created ones.
+		$this->llms_posts_fields_match( $course, $res_data );
+
+		// Sales page type.
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
+		$this->assertFalse( array_key_exists( 'sales_page_page_id', $res_data ) );
+		$this->assertFalse( array_key_exists( 'sales_page_url', $res_data ) );
 	}
 
 
@@ -500,6 +510,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course defaults are correctly set.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Renamed `sales_page_page_type` to `sales_page_type` according to the specs.
 	 */
 	public function test_create_course_check_defaults() {
 		wp_set_current_user( $this->user_allowed );
@@ -558,7 +569,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'open', $res_data['ping_status'] );
 
 		// Sales page type.
-		$this->assertEquals( 'none', $res_data['sales_page_page_type'] );
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
 
 		// Status.
 		$this->assertEquals( 'publish', $res_data['status'] );
