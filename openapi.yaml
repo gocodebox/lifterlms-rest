@@ -4182,10 +4182,6 @@ components:
                       href: /wp-json/wp-v2/membership_cat?post=123
                     - taxonomy: membership_tag
                       href: /wp-json/wp-v2/membership_tag?post=123
-                    - taxonomy: membership_difficulty
-                      href: /wp-json/wp-v2/membership_difficulty?post=123
-                    - taxonomy: membership_track
-                      href: /wp-json/wp-v2/membership_track?post=123
                   items:
                     type: object
                     properties:
