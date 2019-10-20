@@ -10,7 +10,7 @@ allOf:
       permalink:
         example: https://example.com/membership/getting-started-with-lifterlms
       post_type:
-        default: membership
+        default: llms_membership
         type: string
       categories:
         description: List of membership categories.
