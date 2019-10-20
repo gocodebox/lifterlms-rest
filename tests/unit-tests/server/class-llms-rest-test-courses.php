@@ -345,7 +345,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
 
-		// Bad request, order param allowed are only "desc" and "asc" (emum).
+		// Bad request, order param allowed are only "desc" and "asc" (enum).
 		$request->set_param( 'order', 'not_desc' );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );

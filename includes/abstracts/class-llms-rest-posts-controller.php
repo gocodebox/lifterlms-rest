@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Fix wp:featured_media link, we don't expose any embeddable field.
  *                     Also `self` and `collection` links prepared in the parent class.
  *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
- *                     fired after inserting/uodateing an llms post into the database.
+ *                     fired after inserting/updating an llms post into the database.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
