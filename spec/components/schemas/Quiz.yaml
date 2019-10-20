@@ -36,9 +36,8 @@ properties:
   post_type:
     allOf:
       - $ref: '#/components/schemas/PostType'
-      - readOnly: true
-        type: string
-        default: llms_quiz
+    type: string
+    default: llms_quiz
   status:
     description: The publication status of the quiz.
     type: string
