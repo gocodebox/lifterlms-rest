@@ -885,6 +885,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 */
 	protected function prepare_item_for_database( $request ) {
 
+		$prepared_item = [];
+
 		// LLMS Post ID.
 		if ( isset( $request['id'] ) ) {
 			$existing_object = $this->get_object( absint( $request['id'] ) );
