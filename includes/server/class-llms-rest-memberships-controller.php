@@ -2,9 +2,9 @@
 /**
  * REST Memberships Controller Class
  *
- * @since   [version]
  * @package LifterLMS_REST/Classes/Controllers
  *
+ * @since   [version]
  * @version [version]
  */
 
