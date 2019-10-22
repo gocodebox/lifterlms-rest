@@ -1087,7 +1087,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $course_id, 'enrollments' ) ),
 		);
 
-		// Insturctors.
+		// Instructors.
 		$course_links['instructors'] = array(
 			'href' => add_query_arg(
 				'post',
