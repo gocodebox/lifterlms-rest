@@ -808,16 +808,10 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Instructors.
 		if ( ! empty( $schema['properties']['instructors'] ) ) {
 
-			$instructors = $request['instructors'];
+			$instructors = array();
 
-			// When creating, if the instructor is not set, set it with the post author id.
-			if ( $creating && ! isset( $instructors ) ) {
-				$instructors = array_filter( array( $course->get( 'author' ) ) );
-			}
-
-			if ( ! empty( $instructors ) ) {
-
-				foreach ( $instructors as $instructor_id ) {
+			if ( isset( $request['instructors'] ) ) {
+				foreach ( $request['instructors'] as $instructor_id ) {
 					$user_data = get_userdata( $instructor_id );
 					if ( ! empty( $user_data ) ) {
 						$instructors[] = array(
@@ -828,7 +822,10 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				}
 			}
 
-			if ( ! empty( $instructors ) ) {
+			// When creating always make sure the instructors are set.
+			// Note: `$course->set_instructor( $instructors )` when `$instructors` is empty
+			// will set the course's author as course's instructor.
+			if ( $creating || ( ! $creating && isset( $request['instructors'] ) ) ) {
 				$course->set_instructors( $instructors );
 			}
 		}
