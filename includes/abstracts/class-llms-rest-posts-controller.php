@@ -25,6 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
  *                     fired after inserting/updateing an llms post into the database.
  * @since [version] Return links to those taxonomies which have an accessible rest route.
+ *                     Initialize `$prepared_item` array before adding values to it.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -880,6 +881,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Prepares a single post for create or update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Initialize `$prepared_item` array before adding values to it.
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
