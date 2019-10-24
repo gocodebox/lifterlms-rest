@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.8
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Fixed lesson progression callback name when defining the filters to be removed while preparing the item for response.
  *                     Added `llms_rest_lesson_item_schema`, `llms_rest_pre_insert_lesson`, `llms_rest_prepare_lesson_object_response`, `llms_rest_lesson_links` filter hooks.
  *                     Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
- * @since [version] Call `set_bulk()` llms post method passing `true` as second parameter,
+ * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
  *                     so to instruct it to return a WP_Error on failure.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
@@ -252,7 +252,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Updates a single llms lesson.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Call `set_bulk()` llms post method passing `true` as second parameter,
+	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
 	 *
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.

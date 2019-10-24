@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.8
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Also `self` and `collection` links prepared in the parent class.
  *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
  *                     fired after inserting/updateing an llms post into the database.
- * @since [version] Return links to those taxonomies which have an accessible rest route.
+ * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
  *                     Initialize `$prepared_item` array before adding values to it.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
@@ -881,7 +881,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Prepares a single post for create or update.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Initialize `$prepared_item` array before adding values to it.
+	 * @since 1.0.0-beta.8 Initialize `$prepared_item` array before adding values to it.
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -1196,7 +1196,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
-	 * @since [version] Return links to those taxonomies which have an accessible rest route.
+	 * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.

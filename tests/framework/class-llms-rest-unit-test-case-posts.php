@@ -6,8 +6,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
- * @since [version] Add tests on getting links to terms based on the current user caps.
- * @version [version]
+ * @since 1.0.0-beta.8 Add tests on getting links to terms based on the current user caps.
+ * @version 1.0.0-beta.8
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -43,7 +43,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test getting links to terms based on the current user caps.
 	 * @group what
-	 * @since [version]
+	 * @since 1.0.0-beta.8
 	 */
 	public function test_get_links_terms() {
 

@@ -1,6 +1,21 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.8 - 2019-10-24
+--------------------------
+
++ Return links to those taxonomies which have an accessible rest route.
++ Initialize `$prepared_item` array before adding values to it. Thanks [@pondermatic](https://github.com/pondermatic)!
++ Fixed `sales_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
++ Load webhook actions a little bit later, to avoid PHP warnings on first plugin activation.
++ Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
++ Add missing quotes in enrollment/access default messages shortcodes.
++ Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
++ Add missing quotes in enrollment/access default messages shortcodes.
++ `sales_page_page_id` and `sales_page_url` always returned in edit context.
++ Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
+
+
 v1.0.0-beta.7 - 2019-09-27
 --------------------------
 

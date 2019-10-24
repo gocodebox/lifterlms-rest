@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.8
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                     to support WordPress version prior to 5.1.
  *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
  *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
- * @since [version] Fixed `sales_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
+ * @since 1.0.0-beta.8 Fixed `sales_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
  *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
@@ -181,7 +181,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Course's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Add missing quotes in enrollment/access default messages shortcodes.
 	 *
 	 * @return array
@@ -541,7 +541,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
+	 * @since 1.0.0-beta.8 Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
 	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Always return `sales_page_url` and `sales_page_page_id` when in 'edit' context.
 	 *
@@ -676,7 +676,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     passed to `$course->set_bulk()` only if they differ from their current values, otherwise we'd get a WP_Error
 	 *                     which the consumer cannot avoid having no direct control on those properties.
 	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
-	 * @since [version] Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
 	 * @param WP_REST_Request $request Request object.
@@ -781,7 +781,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 *                     Added logic to prevent trying to update "derived only" courses's properties (`time_period`, `enrollment_period`, `has_prerequisite`)
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
-	 * @since [version] Call `set_bulk()` llms post method passing `true` as second parameter,
+	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
