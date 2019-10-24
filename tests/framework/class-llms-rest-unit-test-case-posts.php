@@ -6,7 +6,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
- * @version 1.0.0-beta.7
+ * @since [version] Add tests on getting links to terms based on the current user caps.
+ * @version [version]
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -36,6 +37,51 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		// clean the db from this post type
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
+	}
+
+
+	/**
+	 * Test getting links to terms based on the current user caps.
+	 * @group what
+	 * @since [version]
+	 */
+	public function test_get_links_terms() {
+
+		if ( empty( $this->rest_taxonomies ) ) {
+			$this->markTestSkipped( 'No taxonomies to test' );
+			return;
+		}
+
+		// create a post first.
+		$llms_post = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+		$llms_post = llms_get_post($llms_post);
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$links    = $response->get_links();
+
+		// I expect no wp terms, as who made the request has no right caps to show the posts's taxonomies in rest.
+		$this->assertArrayNotHasKey( 'https://api.w.org/term', $links );
+
+		// same request with right caps.
+		$instructor = $this->factory->instructor->create();
+		wp_set_current_user( $instructor );
+
+		// clean and register the taxonomies again so that the show_in_rest property is set to true.
+		foreach ( get_object_taxonomies( $this->post_type ) as $taxonomy ) {
+			unregister_taxonomy( $taxonomy );
+		}
+		LLMS_Post_Types::register_taxonomies();
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$links    = $response->get_links();
+
+		// I expect wp terms, as who made the request has the right caps to show the llms_post's taxonomies in rest.
+		$this->assertArrayHasKey( 'https://api.w.org/term', $links );
+		$this->assertEquals(
+			wp_list_pluck( wp_list_pluck($links['https://api.w.org/term'], 'attributes' ), 'taxonomy' ),
+			$this->rest_taxonomies
+		);
+
 	}
 
 	/**
@@ -88,7 +134,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		$expected = $this->filter_expected_fields( $expected, $llms_post );
 
 		/**
-		 * The rtrim below is not ideal but at the moment we have templates printed after the course summary (e.g. prerequisites) that,
+		 * The rtrim below is not ideal but at the moment we have templates printed after the llms_post summary (e.g. prerequisites) that,
 		 * even when printing no data they still print "\n". Let's pretend we're not interested in testing the trailing "\n" presence.
 		 */
 		foreach ( $expected as $key => $value ) {
