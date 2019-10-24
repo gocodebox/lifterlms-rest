@@ -37,7 +37,5 @@ properties:
   post_type:
     allOf:
       - $ref: '#/components/schemas/PostType'
-      - type: string
-        default: section
-        readOnly: true
-
+    type: string
+    default: section

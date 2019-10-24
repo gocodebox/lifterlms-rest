@@ -3,4 +3,12 @@ in: query
 description: Filter results to those of a specific `post_type`.
 required: false
 schema:
-  $ref: '#/components/schemas/PostType'
+  type: string
+  enum:
+    - course
+    - lesson
+    - llms_membership
+    - llms_question
+    - llms_quiz
+    - section
+  default: course

@@ -27,9 +27,8 @@ properties:
   post_type:
     allOf:
       - $ref: '#/components/schemas/PostType'
-      - readOnly: true
-        type: string
-        default: llms_question
+    type: string
+    default: llms_question
   order:
     description: Order of the question within its immediate parent.
     type: integer
