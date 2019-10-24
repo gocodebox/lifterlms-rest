@@ -8,7 +8,8 @@
  * @group api_keys_query
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Added call to parent::setup() so that $this->factory is set.
+ * @version [version]
  */
 class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -16,6 +17,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Setup test.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added call to parent::setup() so that $this->factory is set.
 	 *
 	 * @return void
 	 */
@@ -23,7 +25,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_api_keys" );
-
+		parent::setUp();
 	}
 
 	/**
