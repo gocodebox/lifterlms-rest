@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.8
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -184,7 +184,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Add missing quotes in enrollment/access default messages shortcodes.
-	 *                     Make sure instructors list is either not empty and composed by real user ids.
+	 * @since [version] Make sure instructors list is either not empty and composed by real user ids.
 	 *
 	 * @return array
 	 */
@@ -769,7 +769,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Updates a single llms course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Allow `prerequisite` and `prerequisite_track` to be ted.
+	 * @since 1.0.0-beta.7 Allow `prerequisite` and `prerequisite_track` to be cleared (set to 0).
 	 *                     Also:
 	 *                     - if `prerequisite` is not a valid course the course `prerequisite` will be set to 0;
 	 *                     - if `prerequisite_track` is not a valid course track, the course `prerequisite_track` will be set to 0.
@@ -786,7 +786,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
-	 *                     Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+	 * @since [version] Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
 	 *                     Also made sure course's `instructor` is at least set as the post author.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
