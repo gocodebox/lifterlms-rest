@@ -236,7 +236,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		/**
-		 * Filters the lesson data for a response.
+		 * Filters a lesson before it is inserted via the REST API.
 		 *
 		 * @since 1.0.0-beta.7
 		 *
@@ -771,7 +771,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 *
 		 * @since 1.0.0-beta.7
 		 *
-		 * @param array       links   Links for the given lesson.
+		 * @param array       $links  Links for the given lesson.
 		 * @param LLMS_Lesson $lesson Lesson object.
 		 */
 		return apply_filters( 'llms_rest_lesson_links', $links, $lesson );
