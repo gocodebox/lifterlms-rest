@@ -23,6 +23,10 @@ properties:
     readOnly: true
   status:
     $ref: '#/components/schemas/EnrollmentStatus'
+  trigger:
+    description: 'The enrollment trigger.'
+    type: string
+    readOnly: true
   _links:
     description: A map of links to other related API resources.
     readOnly: true

@@ -40,6 +40,8 @@ post:
   description: Create a new enrollment for a student in a course or membership.
   tags:
     - Student Enrollments
+  parameters:
+    - $ref: '#/components/parameters/EnrollmentTrigger'
   responses:
     201:
       description: Successfully created the student's enrollment.
@@ -61,6 +63,8 @@ patch:
   description: Update an enrollment for a student in a course or membership.
   tags:
     - Student Enrollments
+  parameters:
+    - $ref: '#/components/parameters/EnrollmentTrigger'
   requestBody:
     required: true
     content:
@@ -88,6 +92,8 @@ delete:
   description: Deletes the record of a student's enrollment in a course or membership.
   tags:
     - Student Enrollments
+  parameters:
+    - $ref: '#/components/parameters/EnrollmentTrigger'
   responses:
     204:
       description: Successfully deleted student's enrollment.
