@@ -9,6 +9,10 @@
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
+	/**
+	 * @var LLMS_REST_Controller
+	 */
+	protected $endpoint;
 
 	/**
 	 * Server object
@@ -23,6 +27,20 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @var string
 	 */
 	protected $route;
+
+	/**
+	 * ID of user that is allowed to perform an action in the test.
+	 *
+	 * @var int
+	 */
+	protected $user_allowed;
+
+	/**
+	 * ID of user that is forbidden to an perform action in the test.
+	 *
+	 * @var int
+	 */
+	protected $user_forbidden;
 
 	/**
 	 * Setup our test server.

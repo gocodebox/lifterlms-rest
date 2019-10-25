@@ -9,7 +9,11 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @version 1.0.0-beta.7
+ * @since 1.0.0-beta.8  When retrieving a course, added check on `sales_page_*` defaults.
+ *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+ *                     Added missing quotes in enrollment/access default messages shortcodes.
+ *                     Added `rest_taxonomies` property.
+ * @version 1.0.0-beta.8
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
@@ -29,6 +33,18 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @var string
 	 */
 	protected $post_type = 'course';
+
+	/**
+	 * Taxonomies shown in rest.
+	 *
+	 * @var string[]
+	 */
+	protected $rest_taxonomies = array(
+		'course_cat',
+		'course_difficulty',
+		'course_tag',
+		'course_track',
+	);
 
 	/**
 	 *
@@ -342,7 +358,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
 
-		// Bad request, order param allowed are only "desc" and "asc" (emum).
+		// Bad request, order param allowed are only "desc" and "asc" (enum).
 		$request->set_param( 'order', 'not_desc' );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -353,6 +369,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.8 Added check on `sales_page_*` defaults. Also renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+
 	 */
 	public function test_get_course() {
 
@@ -360,14 +378,20 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Setup course.
 		$course   = $this->factory->course->create_and_get();
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course->get( 'id' ) ) );
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $course->get( 'id' ) );
 
 		// Success.
 		$this->assertEquals( 200, $response->get_status() );
 
-		// Check retrieved course matches the created ones.
-		$this->llms_posts_fields_match( $course, $response->get_data() );
+		$res_data = $response->get_data();
 
+		// Check retrieved course matches the created ones.
+		$this->llms_posts_fields_match( $course, $res_data );
+
+		// Sales page type.
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
+		$this->assertFalse( array_key_exists( 'sales_page_page_id', $res_data ) );
+		$this->assertFalse( array_key_exists( 'sales_page_url', $res_data ) );
 	}
 
 
@@ -433,7 +457,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since Add checks on nullable dates.
+	 * @since 1.0.0-beta.7 Add checks on nullable dates.
+	 * @since 1.0.0-beta.8 Add missing quotes in enrollment/access default messages shortcodes.
 	 */
 	public function test_create_course() {
 
@@ -498,6 +523,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course defaults are correctly set.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` to `sales_page_type` according to the specs.
 	 */
 	public function test_create_course_check_defaults() {
 		wp_set_current_user( $this->user_allowed );
@@ -520,16 +546,16 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Check defaults.
 		// Access period messages.
-		$this->assertEquals( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].', $res_data['access_opens_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'This course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="start_date"].' ), $res_data['access_opens_message']['rendered'] );
-		$this->assertEquals( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].', $res_data['access_closes_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'This course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="end_date"].' ), $res_data['access_closes_message']['rendered'] );
+		$this->assertEquals( 'This course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="start_date"].', $res_data['access_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="start_date"].' ), $res_data['access_opens_message']['rendered'] );
+		$this->assertEquals( 'This course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="end_date"].', $res_data['access_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'This course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="end_date"].' ), $res_data['access_closes_message']['rendered'] );
 
 		// Enrollment period messages.
-		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
-		$this->assertEquals( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].', $res_data['enrollment_closes_message']['raw'] );
-		$this->assertEquals( do_shortcode( 'Enrollment in this course closed on [lifterlms_course_info id=' . $res_data['id'] . ' key="enrollment_end_date"].' ), $res_data['enrollment_closes_message']['rendered'] );
+		$this->assertEquals( 'Enrollment in this course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_start_date"].', $res_data['enrollment_opens_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course opens on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_start_date"].' ), $res_data['enrollment_opens_message']['rendered'] );
+		$this->assertEquals( 'Enrollment in this course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_end_date"].', $res_data['enrollment_closes_message']['raw'] );
+		$this->assertEquals( do_shortcode( 'Enrollment in this course closed on [lifterlms_course_info id="' . $res_data['id'] . '" key="enrollment_end_date"].' ), $res_data['enrollment_closes_message']['rendered'] );
 
 		// Capacity enabled.
 		$this->assertFalse( $res_data['capacity_enabled'] );
@@ -556,7 +582,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'open', $res_data['ping_status'] );
 
 		// Sales page type.
-		$this->assertEquals( 'none', $res_data['sales_page_page_type'] );
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
 
 		// Status.
 		$this->assertEquals( 'publish', $res_data['status'] );
@@ -1284,7 +1310,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 401, $response->get_status() );
 
 	}
-
 
 	/**
 	 * Test list course content.

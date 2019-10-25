@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version 1.0.0-beta.8
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -32,6 +32,12 @@ defined( 'ABSPATH' ) || exit;
  *                     to support WordPress version prior to 5.1.
  *                     Overridden `get_object_id()` method to avoid using the deprecated `LLMS_Course::get_id()` which,
  *                     as coded in the `LLMS_REST_Controller_Stubs::get_object_id()` takes precedence over `get( 'id' )`.
+ * @since 1.0.0-beta.8 Fixed `sales_page_type` not returned as `none` if course's `sales_page_content_type` property is empty.
+ *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+ *                     Add missing quotes in enrollment/access default messages shortcodes.
+ *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
+ *                     Add missing quotes in enrollment/access default messages shortcodes.
+ *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -175,6 +181,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Course's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 *                     Add missing quotes in enrollment/access default messages shortcodes.
 	 *
 	 * @return array
 	 */
@@ -378,7 +386,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'This course closed on [lifterlms_course_info id={{course_id}} key="end_date"].', 'lifterlms' ),
+				'default'     => __( 'This course closed on [lifterlms_course_info id="{{course_id}}" key="end_date"].', 'lifterlms' ),
 			),
 			'access_opens_date'         => array(
 				'description' => __(
@@ -412,7 +420,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'This course opens on [lifterlms_course_info id={{course_id}} key="start_date"].', 'lifterlms' ),
+				'default'     => __( 'This course opens on [lifterlms_course_info id="{{course_id}}" key="start_date"].', 'lifterlms' ),
 			),
 			'enrollment_closes_date'    => array(
 				'description' => __(
@@ -446,7 +454,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info id={{course_id}} key="enrollment_end_date"].', 'lifterlms' ),
+				'default'     => __( 'Enrollment in this course closed on [lifterlms_course_info id="{{course_id}}" key="enrollment_end_date"].', 'lifterlms' ),
 			),
 			'enrollment_opens_date'     => array(
 				'description' => __(
@@ -480,7 +488,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 						'readonly'    => true,
 					),
 				),
-				'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info id={{course_id}} key="enrollment_start_date"].', 'lifterlms' ),
+				'default'     => __( 'Enrollment in this course opens on [lifterlms_course_info id="{{course_id}}" key="enrollment_start_date"].', 'lifterlms' ),
 			),
 			'sales_page_page_id'        => array(
 				'description' => __(
@@ -493,7 +501,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'sanitize_callback' => 'absint',
 				),
 			),
-			'sales_page_page_type'      => array(
+			'sales_page_type'      => array(
 				'description' => __(
 					'Determines the type of sales page content to display.<br> - <code>none</code> displays the course content.<br> - <code>content</code> displays alternate content from the <code>excerpt</code> property.<br> - <code>page</code> redirects to the WordPress page defined in <code>content_page_id</code>.<br> - <code>url</code> redirects to the URL defined in <code>content_page_url</code>',
 					'lifterlms'
@@ -503,7 +511,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'enum'        => array_keys( llms_get_sales_page_types() ),
 				'context'     => array( 'view', 'edit' ),
 			),
-			'sales_page_page_url'       => array(
+			'sales_page_url'       => array(
 				'description' => __(
 					'The URL of the sales page content. Required when <code>content_type</code> equals <code>url</code>. Only returned when the <code>content_type</code> equals <code>url</code>.',
 					'lifterlms'
@@ -533,6 +541,9 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.8 Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
+	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 *                     Always return `sales_page_url` and `sales_page_page_id` when in 'edit' context.
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -641,13 +652,14 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		// Sales page page type.
-		$data['sales_page_page_type'] = $course->get( 'sales_page_content_type' );
+		$data['sales_page_type'] = $course->get( 'sales_page_content_type' );
+		$data['sales_page_type'] = $data['sales_page_type'] ? $data['sales_page_type'] : 'none';
 
 		// Sales page id/url.
-		if ( 'page' === $data['sales_page_page_type'] ) {
+		if ( 'page' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
 			$data['sales_page_page_id'] = $course->get( 'sales_page_content_page_id' );
-		} elseif ( 'url' === $data['sales_page_page_type'] ) {
-			$data['sales_page_page_url'] = $course->get( 'sales_page_content_url' );
+		} elseif ( 'url' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
+			$data['sales_page_url'] = $course->get( 'sales_page_content_url' );
 		}
 
 		return $data;
@@ -663,8 +675,9 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     course's properties `time_period` and `enrollment_period` whose values are derived from them and need to be
 	 *                     passed to `$course->set_bulk()` only if they differ from their current values, otherwise we'd get a WP_Error
 	 *                     which the consumer cannot avoid having no direct control on those properties.
-	 *
-	 * Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
+	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
+	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 *                     Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -727,8 +740,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Sales page.
-		if ( ! empty( $schema['properties']['sales_page_page_type'] ) && isset( $request['sales_page_page_type'] ) ) {
-			$prepared_item['sales_page_content_type'] = $request['sales_page_page_type'];
+		if ( ! empty( $schema['properties']['sales_page_type'] ) && isset( $request['sales_page_type'] ) ) {
+			$prepared_item['sales_page_content_type'] = $request['sales_page_type'];
 		}
 
 		if ( ! empty( $schema['properties']['sales_page_page_id'] ) && isset( $request['sales_page_page_id'] ) ) {
@@ -740,8 +753,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
-		if ( ! empty( $schema['properties']['sales_page_page_url'] ) && isset( $request['sales_page_page_url'] ) ) {
-			$prepared_item['sales_page_content_url'] = $request['sales_page_page_url'];
+		if ( ! empty( $schema['properties']['sales_page_url'] ) && isset( $request['sales_page_url'] ) ) {
+			$prepared_item['sales_page_content_url'] = $request['sales_page_url'];
 		}
 
 		return $prepared_item;
@@ -768,6 +781,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 *                     Added logic to prevent trying to update "derived only" courses's properties (`time_period`, `enrollment_period`, `has_prerequisite`)
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
+	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
+	 *                     so to instruct it to return a WP_Error on failure.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -941,7 +956,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $course->set_bulk( $to_set );
+			$update = $course->set_bulk( $to_set, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
@@ -1074,7 +1089,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			'href' => rest_url( sprintf( '/%s/%s/%d/%s', $this->namespace, $this->rest_base, $course_id, 'enrollments' ) ),
 		);
 
-		// Insturctors.
+		// Instructors.
 		$course_links['instructors'] = array(
 			'href' => add_query_arg(
 				'post',

@@ -36,12 +36,12 @@
       "composer config-cs"
     ],
     "tests-install": [
-      "vendor/bin/llms-tests teardown llms_rest_tests root password 127.0.0.1",
-      "vendor/bin/llms-tests install llms_rest_tests root password 127.0.0.1",
-      "vendor/bin/llms-tests plugin lifterlms"
+      "\"vendor/bin/llms-tests\" teardown llms_rest_tests root password 127.0.0.1",
+      "\"vendor/bin/llms-tests\" install llms_rest_tests root password 127.0.0.1",
+      "\"vendor/bin/llms-tests\" plugin lifterlms"
     ],
     "tests-run": [
-      "vendor/bin/phpunit"
+      "\"vendor/bin/phpunit\""
     ]
   }
 }

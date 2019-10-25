@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version 1.0.0-beta.8
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,7 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *                     Fix wp:featured_media link, we don't expose any embeddable field.
  *                     Also `self` and `collection` links prepared in the parent class.
  *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
- *                     fired after inserting/uodateing an llms post into the database.
+ *                     fired after inserting/updateing an llms post into the database.
+ * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
+ *                     Initialize `$prepared_item` array before adding values to it.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -879,11 +881,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Prepares a single post for create or update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.8 Initialize `$prepared_item` array before adding values to it.
 	 *
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
+
+		$prepared_item = array();
 
 		// LLMS Post ID.
 		if ( isset( $request['id'] ) ) {
@@ -1191,6 +1196,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
+	 * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
 	 * @return array Links for the given object.
@@ -1224,8 +1230,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			foreach ( $taxonomies as $tax ) {
 				$taxonomy_obj = get_taxonomy( $tax );
 
-				// Skip taxonomies that are not set to be shown in LLMS REST.
-				if ( empty( $taxonomy_obj->show_in_llms_rest ) ) {
+				// Skip taxonomies that are not set to be shown in REST and LLMS REST.
+				if ( empty( $taxonomy_obj->show_in_rest ) || empty( $taxonomy_obj->show_in_llms_rest ) ) {
 					continue;
 				}
 
