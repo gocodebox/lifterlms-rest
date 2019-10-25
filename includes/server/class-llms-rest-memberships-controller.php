@@ -575,7 +575,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $membership->set_bulk( $to_set );
+			$update = $membership->set_bulk( $to_set, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
