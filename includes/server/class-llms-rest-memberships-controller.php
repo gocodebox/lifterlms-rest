@@ -581,7 +581,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
-		if ( $error->has_errors() ) {
+		if ( $error->errors ) {
 			return $error;
 		}
 
