@@ -416,6 +416,28 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test creating a membership without an `instructors` argument.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_membership_without_instructors() {
+		wp_set_current_user( $this->user_allowed );
+
+		// Create membership with empty instructors.
+		$membership_args                = $this->sample_membership_args;
+		unset( $membership_args['instructors'] );
+		$response = $this->perform_mock_request( 'POST', $this->route, $membership_args );
+		$this->assertEquals( 201, $response->get_status() );
+
+		// The membership object should NOT have zero instructors.
+		// Do not use LLMS_Membership->get_instructors() because it will default to `post_author`.
+		$membership = new LLMS_Membership( $response->data['id'] );
+		$instructors = $membership->get( 'instructors' );
+		$this->assertCount( 1, $instructors );
+		$this->assertEquals( $this->user_allowed, $instructors[0]['id'] );
+	}
+
+	/**
 	 * Test creating a single membership with taxonomies.
 	 *
 	 * @since [version]

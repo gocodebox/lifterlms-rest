@@ -537,21 +537,28 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Instructors.
-		if ( ! empty( $schema['properties']['instructors'] ) && isset( $request['instructors'] ) ) {
+		if ( ! empty( $schema['properties']['instructors'] ) ) {
 
 			$instructors = array();
 
-			foreach ( $request['instructors'] as $instructor_id ) {
-				$user_data = get_userdata( $instructor_id );
-				if ( ! empty( $user_data ) ) {
-					$instructors[] = array(
-						'id'   => $instructor_id,
-						'name' => $user_data->display_name,
-					);
+			if ( isset( $request['instructors'] ) ) {
+				foreach ( $request['instructors'] as $instructor_id ) {
+					$user_data = get_userdata( $instructor_id );
+					if ( ! empty( $user_data ) ) {
+						$instructors[] = array(
+							'id'   => $instructor_id,
+							'name' => $user_data->display_name,
+						);
+					}
 				}
 			}
 
-			$membership->set_instructors( $instructors );
+			// When creating, always make sure the instructors are set.
+			// Note: `$membership->set_instructor( $instructors )` when `$instructors` is empty
+			// will set the membership's author as membership's instructor.
+			if ( $membership || ( ! $creating && isset( $request['instructors'] ) ) ) {
+				$membership->set_instructors( $instructors );
+			}
 		}
 
 		$to_set = array();
