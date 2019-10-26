@@ -279,18 +279,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Retrieve an ID from the object.
-	 *
-	 * @since [version]
-	 *
-	 * @param LLMS_Membership $object LLMS_Membership object.
-	 * @return int
-	 */
-	protected function get_object_id( $object ) {
-		return $object->get( 'id' );
-	}
-
-	/**
 	 * Maps a taxonomy name to the relative rest base.
 	 *
 	 * @since [version]
