@@ -123,7 +123,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'List of courses to automatically enroll students into when they\'re enrolled into the membership.',
 				'lifterlms' ),
 			'type'        => 'array',
-			'default'     => [],
+			'default'     => array(),
 			'items'       => array(
 				'type' => 'integer',
 			),
