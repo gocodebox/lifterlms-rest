@@ -180,23 +180,19 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'properties'  => array(
 				'raw'      => array(
 					'description' => __( 'Raw message content.', 'lifterlms' ),
-					'default'     => __(
-						'You must belong to the [lifterlms_membership_link id="1234"] membership to access this content.',
-						'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 				),
 				'rendered' => array(
 					'description' => __( 'Rendered message content.', 'lifterlms' ),
-					'default'     => __(
-						'You must belong to the <a href="https://example.com/membership/gold">Gold</a> membership ' .
-						'to access this content.',
-						'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 			),
+			'default'     => __(
+				'You must belong to the [lifterlms_membership_link id="{{membership_id}}"] membership to access this content.',
+				'lifterlms' ),
 		);
 		$schema['properties']['restriction_page_id'] = array(
 			'description' => __(
@@ -330,15 +326,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['restriction_redirect_type'] = $request['restriction_action'];
 		}
 
-		// Restriction message.
-		if ( ! empty( $schema['properties']['restriction_message'] ) && isset( $request['restriction_message'] ) ) {
-			if ( is_string( $request['restriction_message'] ) ) {
-				$prepared_item['restriction_notice'] = $request['restriction_message'];
-			} elseif ( isset( $request['restriction_message']['raw'] ) ) {
-				$prepared_item['restriction_notice'] = $request['restriction_message']['raw'];
-			}
-		}
-
 		// Restriction page id.
 		if ( ! empty( $schema['properties']['restriction_page_id'] ) && isset( $request['restriction_page_id'] ) ) {
 			$page = get_post( $request['restriction_page_id'] );
@@ -456,12 +443,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'raw'      => $membership->get( 'restriction_notice', $raw = true ),
 			'rendered' => do_shortcode( $membership->get( 'restriction_notice' ) ),
 		);
-		if ( empty( $data['restriction_message']['raw'] ) ) {
-			$data['restriction_message']['raw']      = 'You must belong to the [lifterlms_membership_link id="' .
-			                                           $membership->get( 'id' ) .
-			                                           '"] membership to access this content.';
-			$data['restriction_message']['rendered'] = do_shortcode( $data['restriction_message']['raw'] );
-		}
 
 		// Restriction page id.
 		if ( 'page' === $data['restriction_action'] || 'edit' === $context ) {
@@ -529,7 +510,9 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Updates a single llms membership.
+	 * Updates an existing single LLMS_Membership in the database.
+	 *
+	 * This method should be used for membership properties that require the membership id in order to be saved in the database.
 	 *
 	 * @since [version]
 	 *
@@ -572,6 +555,51 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		$to_set = array();
+
+		/**
+		 * The following properties have a default value that contains a placeholder, e.g. `{{membership_id}}`,
+		 * that can be "expanded" only after the membership has been created.
+		 */
+		// Restriction message.
+		if ( ! empty( $schema['properties']['restriction_message'] ) ) {
+			if ( isset( $request['restriction_message'] ) ) {
+				if ( is_string( $request['restriction_message'] ) ) {
+					$to_set['restriction_notice'] = $request['restriction_message'];
+				} elseif ( isset( $request['restriction_message']['raw'] ) ) {
+					$to_set['restriction_notice'] = $request['restriction_message']['raw'];
+				}
+			} elseif ( $creating ) {
+				$to_set['restriction_notice'] = $schema['properties']['restriction_message']['properties']['raw']['default'];
+			}
+		}
+
+		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+		// On creation, since the restriction message has a non empty default, the restriction_add_notice,
+		// will be set to 'yes'.
+		$to_set['restriction_add_notice'] = empty( $to_set['restriction_notice'] ) ? 'no' : 'yes';
+
+		// Are we creating a membership? TODO what about updating when message is empty?
+		// If so, replace the placeholder with the actual membership id.
+		if ( $creating ) {
+			$_to_expand_props = array(
+				'restriction_notice',
+			);
+			$membership_id    = $membership->get( 'id' );
+			foreach ( $_to_expand_props as $prop ) {
+				if ( ! empty( $to_set[ $prop ] ) ) {
+					$to_set[ $prop ] = str_replace( '{{membership_id}}', $membership_id, $to_set[ $prop ] );
+				}
+			}
+		} else { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
+			$_props = array(
+				'restriction_add_notice',
+			);
+			foreach ( $_props as $_prop ) {
+				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $membership->get( $_prop ) ) {
+					unset( $to_set[ $_prop ] );
+				}
+			}
+		}
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
