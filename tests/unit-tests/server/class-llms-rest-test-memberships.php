@@ -121,10 +121,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 					$this->factory->user->create( array( 'role' => 'instructor', ) ),
 				),
 				'restriction_action'  => 'none',
-				'restriction_message' => array(
-					'raw'      => 'You must belong to the Gold membership to access this content.',
-					'rendered' => 'You must belong to the Gold membership to access this content.',
-				),
+				'restriction_message' => 'You must belong to the [lifterlms_membership_link id="{{membership_id}}"] ' .
+				                         'membership to access this content.',
 				'restriction_page_id' => 0,
 				'restriction_url'     => '',
 				'sales_page_page_id'  => 0,
@@ -154,7 +152,6 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 			'date_created',
 			'status',
 			'restriction_action',
-			'restriction_message',
 			'restriction_page_id',
 			'restriction_url',
 			'sales_page_page_id',
@@ -165,6 +162,10 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		foreach ( $properties as $property ) {
 			$this->assertEquals( $membership_args[ $property ], $response_data[ $property ] );
 		}
+
+		$restriction_message_raw = str_replace( '{{membership_id}}', $response_data['id'], $membership_args['restriction_message'] );
+		$this->assertEquals( $restriction_message_raw, $response_data['restriction_message']['raw'] );
+		$this->assertEquals( do_shortcode( $restriction_message_raw ), $response_data['restriction_message']['rendered'] );
 	}
 
 	/**
@@ -294,14 +295,10 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'none', $response_data['restriction_action'] );
 
 		// Restriction message.
-		$this->assertEquals(
-			'You must belong to the [lifterlms_membership_link id="' . $response_data['id'] . '"] membership to access this content.',
-			$response_data['restriction_message']['raw']
-		);
-		$this->assertEquals(
-			do_shortcode( 'You must belong to the [lifterlms_membership_link id="' . $response_data['id'] . '"] membership to access this content.' ),
-			$response_data['restriction_message']['rendered']
-		);
+		$restriction_message_raw = 'You must belong to the [lifterlms_membership_link id="' . $response_data['id'] . '"] ' .
+		                           'membership to access this content.';
+		$this->assertEquals( $restriction_message_raw, $response_data['restriction_message']['raw'] );
+		$this->assertEquals( do_shortcode( $restriction_message_raw ), $response_data['restriction_message']['rendered'] );
 
 		// Sales page type.
 		$this->assertEquals( 'none', $response_data['sales_page_type'] );
@@ -1145,10 +1142,12 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Update.
 		$update_data = array(
-			'title'        => 'A TITLE UPDATED',
-			'content'      => '<p>CONTENT UPDATED</p>',
-			'date_created' => '2019-10-31 15:32:15',
-			'status'       => 'draft',
+			'title'               => 'A TITLE UPDATED',
+			'content'             => '<p>CONTENT UPDATED</p>',
+			'date_created'        => '2019-10-31 15:32:15',
+			'restriction_message' => "You must belong to the UPDATED [lifterlms_membership_link id=\"$membership_id\"] " .
+			                         'membership to access this content.',
+			'status'              => 'draft',
 			'instructors'  => array( $instructor_id ),
 		);
 		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
@@ -1167,6 +1166,10 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $update_data['date_created'], $response_data['date_created'] );
 		$this->assertEquals( $update_data['status'], $response_data['status'] );
 		$this->assertEqualSets( array( $instructor_id ), $response_data['instructors'] );
+
+		$restriction_message_raw = $update_data['restriction_message'];
+		$this->assertEquals( $restriction_message_raw, $response_data['restriction_message']['raw'] );
+		$this->assertEquals( do_shortcode( $restriction_message_raw ), $response_data['restriction_message']['rendered'] );
 	}
 
 	/**
