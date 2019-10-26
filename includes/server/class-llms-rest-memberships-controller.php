@@ -361,9 +361,32 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	protected function prepare_links( $membership ) {
 		$parent_links = parent::prepare_links( $membership );
-		$id           = $membership->get( 'id' );
+		unset( $parent_links['content'] );
+		$id = $membership->get( 'id' );
 
 		$links = array();
+
+		// Access plans.
+		// TODO implement `llms/v1/access-plans` route API
+		$links['access_plans'] = array(
+			'href' => add_query_arg(
+				'post',
+				$id,
+				rest_url( sprintf( '%s/%s', $this->namespace, 'access-plans' ) )
+			),
+		);
+
+		// Auto enrollment courses.
+		$auto_enroll_courses = implode( ',', $membership->get_auto_enroll_courses() );
+		if ( $auto_enroll_courses ) {
+			$links['auto_enrollment_courses'] = array(
+				'href' => add_query_arg(
+					'include',
+					$auto_enroll_courses,
+					rest_url( sprintf( '%s/%s', 'llms/v1', 'courses' ) )
+				),
+			);
+		}
 
 		// Enrollments.
 		$links['enrollments'] = array(
@@ -375,7 +398,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'href' => add_query_arg(
 				'post',
 				$id,
-				rest_url( sprintf( '%s/%s', 'llms/v1', 'instructors' ) )
+				rest_url( sprintf( '%s/%s', $this->namespace, 'instructors' ) )
 			),
 		);
 
@@ -384,7 +407,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'href' => add_query_arg(
 				'enrolled_in',
 				$id,
-				rest_url( sprintf( '%s/%s', 'llms/v1', 'students' ) )
+				rest_url( sprintf( '%s/%s', $this->namespace, 'students' ) )
 			),
 		);
 
