@@ -118,11 +118,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 				'catalog_visibility'  => 'search',
 				'instructors'         => array(
 					get_current_user_id(),
-					$this->factory->user->create(
-						array(
-							'role' => 'instructor',
-						)
-					),
+					$this->factory->user->create( array( 'role' => 'instructor', ) ),
 				),
 				'restriction_action'  => 'none',
 				'restriction_message' => array(
@@ -373,6 +369,54 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->assertEquals( $sample_membership_args['enrollment_opens_date'], $response_data['enrollment_opens_date'] );
 			$this->assertEquals( $sample_membership_args['enrollment_closes_date'], $response_data['enrollment_closes_date'] );
 		}*/
+
+	/**
+	 * Test creating a membership with an instructor that doesn't exist.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_membership_with_bad_instructor() {
+		wp_set_current_user( $this->user_allowed );
+
+		// Create instructor.
+		$good_instructor_id = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		$bad_instructor_id  = $good_instructor_id + 9;
+		$membership_args    = $this->sample_membership_args;
+
+		// Create membership with non-existing instructor.
+		$membership_args['instructors'] = array( $bad_instructor_id );
+		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
+		$this->assertEquals( 201, $response->get_status() );
+		$this->assertEqualSets( array( $this->user_allowed ), $response->data['instructors'] );
+
+		// Create membership with existing instructor and non-existing instructor.
+		$membership_args['instructors'] = array( $good_instructor_id, $bad_instructor_id );
+		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
+		$this->assertEquals( 201, $response->get_status() );
+		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+
+		// Create membership with non-existing instructor and existing instructor.
+		$membership_args['instructors'] = array( $bad_instructor_id, $good_instructor_id );
+		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
+		$this->assertEquals( 201, $response->get_status() );
+		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+	}
+
+	/**
+	 * Test creating a membership with an empty instructors array.
+	 *
+	 * @since [version]
+	 */
+	public function test_create_membership_with_empty_instructors() {
+		wp_set_current_user( $this->user_allowed );
+
+		// Create membership with empty instructors.
+		$membership_args                = $this->sample_membership_args;
+		$membership_args['instructors'] = array();
+		$response = $this->perform_mock_request( 'POST', $this->route, $membership_args );
+		$this->assertEquals( 201, $response->get_status() );
+		$this->assertEqualSets( array( $this->user_allowed ), $response->data['instructors'] );
+	}
 
 	/**
 	 * Test creating a single membership with taxonomies.
@@ -1091,13 +1135,13 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a membership.
 	 *
 	 * @since [version]
-	 * @since 1.0.0-beta.7 Add tests on prerequisites.
 	 */
 	public function test_update_membership() {
-		// Create a membership first.
-		$membership = $this->factory->membership->create_and_get();
-
 		wp_set_current_user( $this->user_allowed );
+
+		// Create membership and instructor.
+		$membership_id = $this->factory->membership->create();
+		$instructor_id = $this->factory->user->create( array( 'role' => 'instructor' ) );
 
 		// Update.
 		$update_data = array(
@@ -1105,9 +1149,9 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 			'content'      => '<p>CONTENT UPDATED</p>',
 			'date_created' => '2019-10-31 15:32:15',
 			'status'       => 'draft',
+			'instructors'  => array( $instructor_id ),
 		);
-
-		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $membership->get( 'id' ), $update_data );
+		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
 
 		// Success.
 		$this->assertEquals( 200, $response->get_status() );
@@ -1122,6 +1166,65 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		);
 		$this->assertEquals( $update_data['date_created'], $response_data['date_created'] );
 		$this->assertEquals( $update_data['status'], $response_data['status'] );
+		$this->assertEqualSets( array( $instructor_id ), $response_data['instructors'] );
+	}
+
+	/**
+	 * Test updating a membership with an instructor that does not exist.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_membership_with_bad_instructor() {
+		wp_set_current_user( $this->user_allowed );
+
+		// Create membership, before update instructor, after update instructor and non-existing instructor.
+		$membership_id          = $this->factory->membership->create();
+		$membership             = new LLMS_Membership( $membership_id );
+		$original_instructor_id = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		$good_instructor_id     = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		$bad_instructor_id      = $good_instructor_id + 9;
+
+		// Update membership with non-existing instructor.
+		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
+		$update_data = array( 'instructors' => array( $bad_instructor_id ) );
+		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEqualSets( array( $original_instructor_id ), $response->data['instructors'] );
+
+		// Update membership with existing instructor and non-existing instructor.
+		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
+		$update_data = array( 'instructors' => array( $good_instructor_id, $bad_instructor_id ) );
+		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+
+		// Update membership with non-existing instructor and existing instructor.
+		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
+		$update_data = array( 'instructors' => array( $bad_instructor_id, $good_instructor_id ) );
+		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+	}
+
+	/**
+	 * Test updating a membership with an empty instructors array.
+	 *
+	 * @since [version]
+	 */
+	public function test_update_membership_with_empty_instructors() {
+		wp_set_current_user( $this->user_allowed );
+
+		// Create membership with instructor.
+		$instructor_id = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		$membership_id = $this->factory->membership->create();
+		$membership = new LLMS_Membership( $membership_id );
+		$membership->set_instructors( array( array( 'id' => $instructor_id ) ) );
+
+		// Update membership with empty instructors.
+		$update_data = array( 'instructors' => array() );
+		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEqualSets( array( $instructor_id ), $response->data['instructors'] );
 	}
 
 	/**
