@@ -521,10 +521,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 */
 	public function test_delete_forbidden_membership() {
 		// create a membership first.
+		wp_set_current_user( $this->user_allowed );
 		$membership = $this->factory->membership->create_and_get();
 
+		// Delete membership.
 		wp_set_current_user( $this->user_forbidden );
-
 		$response = $this->perform_mock_request( 'DELETE', $this->route . '/' . $membership->get( 'id' ) );
 
 		// Forbidden.
@@ -562,10 +563,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 */
 	public function test_delete_membership_without_authorization() {
 		// Create a membership first.
+		wp_set_current_user( $this->user_allowed );
 		$membership = $this->factory->membership->create_and_get();
 
+		// Delete membership.
 		wp_set_current_user( 0 );
-
 		$response = $this->perform_mock_request( 'DELETE', $this->route . '/' . $membership->get( 'id' ) );
 
 		// Unauthorized.
@@ -1037,7 +1039,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @since [version]
 	 */
 	public function test_get_nonexistent_membership() {
-		wp_set_current_user( 0 );
+		wp_set_current_user( $this->user_allowed );
 
 		// Setup membership.
 		$membership_id = $this->factory->membership->create();
@@ -1116,6 +1118,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 */
 	public function test_update_forbidden_membership() {
 		// create a membership first.
+		wp_set_current_user( $this->user_allowed );
 		$membership = $this->factory->membership->create_and_get();
 
 		wp_set_current_user( $this->user_forbidden );
@@ -1237,11 +1240,13 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 */
 	public function test_update_membership_without_authorization() {
 		// create a membership first.
-		$membership = $this->factory->membership->create_and_get();
+		wp_set_current_user( $this->user_allowed );
+		$membership_id = $this->factory->membership->create();
+		$membership = new LLMS_Membership( $membership_id );
 
 		wp_set_current_user( 0 );
 
-		$request = new WP_REST_Request( 'POST', $this->route . '/' . $membership->get( 'id' ) );
+		$request = new WP_REST_Request( 'POST', $this->route . '/' . $membership_id );
 		$request->set_body_params( $this->sample_membership_args );
 		$response = $this->server->dispatch( $request );
 
