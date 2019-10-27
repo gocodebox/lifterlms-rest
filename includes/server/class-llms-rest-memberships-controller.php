@@ -70,12 +70,13 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_enrollments_collection_params() {
 		$query_params = $this->enrollments_controller->get_collection_params();
-
 		unset( $query_params['post'] );
 
 		$query_params['student'] = array(
-			'description'       => __( 'Limit results to a specific student or a list of students. Accepts a single ' .
-			                           'student id or a comma separated list of student ids.', 'lifterlms' ),
+			'description'       => __(
+				'Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids.',
+				'lifterlms'
+			),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -118,24 +119,27 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 
-		$schema['properties']['auto_enroll']         = array(
+		$schema['properties']['auto_enroll'] = array(
 			'description' => __(
 				'List of courses to automatically enroll students into when they\'re enrolled into the membership.',
-				'lifterlms' ),
+				'lifterlms'
+			),
 			'type'        => 'array',
 			'default'     => array(),
 			'items'       => array(
 				'type' => 'integer',
 			),
 		);
-		$schema['properties']['catalog_visibility']  = array(
+
+		$schema['properties']['catalog_visibility'] = array(
 			'description' => __( 'Visibility of the membership in catalogs and search results.', 'lifterlms' ),
 			'type'        => 'string',
 			'enum'        => array_keys( llms_get_product_visibility_options() ),
 			'default'     => 'catalog_search',
 			'context'     => array( 'view', 'edit' ),
 		);
-		$schema['properties']['categories']          = array(
+
+		$schema['properties']['categories'] = array(
 			'description' => __( 'List of membership categories.', 'lifterlms' ),
 			'type'        => 'array',
 			'items'       => array(
@@ -143,34 +147,35 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			),
 			'context'     => array( 'view', 'edit' ),
 		);
-		$schema['properties']['instructors']         = array(
+
+		$schema['properties']['instructors'] = array(
 			'description' => __(
 				'List of post instructors. Defaults to current user when creating a new post.',
-				'lifterlms' ),
+				'lifterlms'
+			),
 			'type'        => 'array',
 			'items'       => array(
 				'type' => 'integer',
 			),
 			'context'     => array( 'view', 'edit' ),
 		);
-		$schema['properties']['restriction_action']  = array(
+
+		$schema['properties']['restriction_action'] = array(
 			'description' => __(
-				'Determines the action to take when content restricted by the membership is accessed by a non-member. ' .
-				'- `none`: Remain on page and display the message `restriction_message`. ' .
-				'- `membership`: Redirect to the membership\'s permalink. ' .
-				'- `page`: Redirect to the permalink of the page identified by `restriction_page_id`. ' .
-				'- `custom`: Redirect to the URL identified by `restriction_url`.',
-				'lifterlms' ),
+				'Determines the action to take when content restricted by the membership is accessed by a non-member. - `none`: Remain on page and display the message `restriction_message`. - `membership`: Redirect to the membership\'s permalink. - `page`: Redirect to the permalink of the page identified by `restriction_page_id`. - `custom`: Redirect to the URL identified by `restriction_url`.',
+				'lifterlms'
+			),
 			'type'        => 'string',
 			'default'     => 'none',
 			'enum'        => array( 'none', 'membership', 'page', 'custom' ),
 			'context'     => array( 'view', 'edit' ),
 		);
+
 		$schema['properties']['restriction_message'] = array(
 			'description' => __(
-				'Message to display to non-members after a `restriction_action` redirect. ' .
-				'When `restriction_action` is `none` replaces the page content with this message.',
-				'lifterlms' ),
+				'Message to display to non-members after a `restriction_action` redirect. When `restriction_action` is `none` replaces the page content with this message.',
+				'lifterlms'
+			),
 			'type'        => 'object',
 			'context'     => array( 'view', 'edit' ),
 			'arg_options' => array(
@@ -192,22 +197,27 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			),
 			'default'     => __(
 				'You must belong to the [lifterlms_membership_link id="{{membership_id}}"] membership to access this content.',
-				'lifterlms' ),
+				'lifterlms'
+			),
 		);
+
 		$schema['properties']['restriction_page_id'] = array(
 			'description' => __(
 				'WordPress page ID used for redirecting non-members when `restriction_action` is `page`.',
-				'lifterlms' ),
+				'lifterlms'
+			),
 			'type'        => 'integer',
 			'context'     => array( 'view', 'edit' ),
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
 			),
 		);
-		$schema['properties']['restriction_url']     = array(
+
+		$schema['properties']['restriction_url'] = array(
 			'description' => __(
 				'URL used for redirecting non-members when `restriction_action` is `custom`.',
-				'lifterlms' ),
+				'lifterlms'
+			),
 			'type'        => 'string',
 			'context'     => array( 'view', 'edit' ),
 			'format'      => 'uri',
@@ -215,35 +225,35 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'sanitize_callback' => 'esc_url_raw',
 			),
 		);
-		$schema['properties']['sales_page_page_id']  = array(
+
+		$schema['properties']['sales_page_page_id'] = array(
 			'description' => __(
-				'The WordPress page ID of the sales page. Required when `sales_page_type` equals `page`. ' .
-				'Only returned when the `sales_page_type` equals `page`.',
-				'lifterlms' ),
+				'The WordPress page ID of the sales page. Required when `sales_page_type` equals `page`. Only returned when the `sales_page_type` equals `page`.',
+				'lifterlms'
+			),
 			'type'        => 'integer',
 			'context'     => array( 'view', 'edit' ),
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
 			),
 		);
-		$schema['properties']['sales_page_type']     = array(
+
+		$schema['properties']['sales_page_type'] = array(
 			'description' => __(
-				'Defines alternate content displayed to visitors and non-enrolled students when accessing the post. ' .
-				'- `none` displays the post content. ' .
-				'- `content` displays alternate content from the `excerpt` property.' .
-				'- `page` redirects to the WordPress page defined in `content_page_id`.' .
-				'- `url` redirects to the URL defined in `content_page_url`.',
-				'lifterlms' ),
+				'Defines alternate content displayed to visitors and non-enrolled students when accessing the post. - `none` displays the post content. - `content` displays alternate content from the `excerpt` property. - `page` redirects to the WordPress page defined in `content_page_id`. - `url` redirects to the URL defined in `content_page_url`.',
+				'lifterlms'
+			),
 			'type'        => 'string',
 			'default'     => 'none',
 			'enum'        => array_keys( llms_get_sales_page_types() ),
 			'context'     => array( 'view', 'edit' ),
 		);
-		$schema['properties']['sales_page_url']      = array(
+
+		$schema['properties']['sales_page_url'] = array(
 			'description' => __(
-				'The URL of the sales page content. Required when `sales_page_type` equals `url`. ' .
-				'Only returned when the `sales_page_type` equals `url`.',
-				'lifterlms' ),
+				'The URL of the sales page content. Required when `sales_page_type` equals `url`. Only returned when the `sales_page_type` equals `url`.',
+				'lifterlms'
+			),
 			'type'        => 'string',
 			'context'     => array( 'view', 'edit' ),
 			'format'      => 'uri',
@@ -251,7 +261,8 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'sanitize_callback' => 'esc_url_raw',
 			),
 		);
-		$schema['properties']['tags']                = array(
+
+		$schema['properties']['tags'] = array(
 			'description' => __( 'List of membership tags.', 'lifterlms' ),
 			'type'        => 'array',
 			'items'       => array(
@@ -281,7 +292,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * @return LLMS_Membership|WP_Error
 	 */
 	protected function get_object( $id ) {
-		/** @var LLMS_Membership $membership */
+		/** IDE helper. @var LLMS_Membership $membership*/
 		$membership = llms_get_post( $id );
 
 		return is_a( $membership, 'LLMS_Membership' ) ? $membership : llms_rest_not_found_error();
