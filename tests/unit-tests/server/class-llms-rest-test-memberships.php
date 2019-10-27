@@ -1264,7 +1264,6 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		// create a membership first.
 		wp_set_current_user( $this->user_allowed );
 		$membership_id = $this->factory->membership->create();
-		$membership = new LLMS_Membership( $membership_id );
 
 		wp_set_current_user( 0 );
 
