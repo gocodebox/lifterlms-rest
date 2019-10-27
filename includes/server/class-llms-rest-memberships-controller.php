@@ -260,6 +260,15 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'context'     => array( 'view', 'edit' ),
 		);
 
+		/**
+		 * Filter item schema for the membership controller.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $schema Item schema data.
+		 */
+		$schema = apply_filters( 'llms_rest_membership_item_schema', $schema );
+
 		return $schema;
 	}
 
@@ -349,8 +358,18 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['sales_page_content_url'] = $request['sales_page_url'];
 		}
 
-		return $prepared_item;
+		/**
+		 * Filters the membership data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $prepared_item Array of membership item properties prepared for database.
+		 * @param WP_REST_Request $request       Full details about the request.
+		 * @param array           $schema        The item schema.
+		 */
+		$prepared_item = apply_filters( 'llms_rest_pre_insert_membership', $prepared_item, $request, $schema );
 
+		return $prepared_item;
 	}
 
 	/**
@@ -360,14 +379,11 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $membership ) {
-		$parent_links = parent::prepare_links( $membership );
-		unset( $parent_links['content'] );
+		$links = parent::prepare_links( $membership );
+		unset( $links['content'] );
 		$id = $membership->get( 'id' );
 
-		$links = array();
-
 		// Access plans.
-		// TODO implement `llms/v1/access-plans` route API
 		$links['access_plans'] = array(
 			'href' => add_query_arg(
 				'post',
@@ -383,7 +399,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'href' => add_query_arg(
 					'include',
 					$auto_enroll_courses,
-					rest_url( sprintf( '%s/%s', 'llms/v1', 'courses' ) )
+					rest_url( sprintf( '%s/%s', $this->namespace, 'courses' ) )
 				),
 			);
 		}
@@ -411,7 +427,17 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			),
 		);
 
-		return array_merge( $parent_links, $links );
+		/**
+		 * Filters the membership's links.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $links      Links for the given membership.
+		 * @param LLMS_Membership $membership LLMS Membership object.
+		 */
+		$links = apply_filters( 'llms_rest_membership_links', $links, $membership );
+
+		return $links;
 	}
 
 	/**
@@ -485,6 +511,17 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		if ( 'custom' === $data['sales_page_type'] || 'edit' === $context ) {
 			$data['sales_page_url'] = $membership->get( 'sales_page_content_url' );
 		}
+
+		/**
+		 * Filters the membership data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $data       Array of lesson properties prepared for response.
+		 * @param LLMS_Membership $membership Membership object.
+		 * @param WP_REST_Request $request    Full details about the request.
+		 */
+		$data = apply_filters( 'llms_rest_prepare_membership_object_response', $data, $membership, $request );
 
 		return $data;
 	}
