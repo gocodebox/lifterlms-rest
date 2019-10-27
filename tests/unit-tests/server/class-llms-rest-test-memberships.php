@@ -15,6 +15,16 @@
  */
 class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
+	 * Default restriction message.
+	 *
+	 * @see LLMS_REST_Memberships_Controller::get_item_schema()
+	 *
+	 * @var string
+	 */
+	protected $default_restriction_message = 'You must belong to the [lifterlms_membership_link id="{{membership_id}}"] ' .
+	                                         'membership to access this content.';
+
+	/**
 	 * Post type.
 	 *
 	 * @var string
@@ -121,8 +131,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 					$this->factory->user->create( array( 'role' => 'instructor', ) ),
 				),
 				'restriction_action'  => 'none',
-				'restriction_message' => 'You must belong to the [lifterlms_membership_link id="{{membership_id}}"] ' .
-				                         'membership to access this content.',
+				'restriction_message' => $this->default_restriction_message,
 				'restriction_page_id' => 0,
 				'restriction_url'     => '',
 				'sales_page_page_id'  => 0,
@@ -295,10 +304,9 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'none', $response_data['restriction_action'] );
 
 		// Restriction message.
-		$restriction_message_raw = 'You must belong to the [lifterlms_membership_link id="' . $response_data['id'] . '"] ' .
-		                           'membership to access this content.';
-		$this->assertEquals( $restriction_message_raw, $response_data['restriction_message']['raw'] );
-		$this->assertEquals( do_shortcode( $restriction_message_raw ), $response_data['restriction_message']['rendered'] );
+		$restriction_message = str_replace( '{{membership_id}}', $response_data['id'], $this->default_restriction_message );
+		$this->assertEquals( $restriction_message, $response_data['restriction_message']['raw'] );
+		$this->assertEquals( do_shortcode( $restriction_message ), $response_data['restriction_message']['rendered'] );
 
 		// Sales page type.
 		$this->assertEquals( 'none', $response_data['sales_page_type'] );
@@ -1170,8 +1178,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 			'title'               => 'A TITLE UPDATED',
 			'content'             => '<p>CONTENT UPDATED</p>',
 			'date_created'        => '2019-10-31 15:32:15',
-			'restriction_message' => "You must belong to the UPDATED [lifterlms_membership_link id=\"$membership_id\"] " .
-			                         'membership to access this content.',
+			'restriction_message' => str_replace( '{{membership_id}}', $membership_id, $this->default_restriction_message ),
 			'status'              => 'draft',
 			'instructors'  => array( $instructor_id ),
 		);
