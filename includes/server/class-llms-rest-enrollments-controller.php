@@ -85,9 +85,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		if ( in_array( $method, array( 'PATCH', 'POST', WP_REST_Server::DELETABLE ), true ) ) {
 			$args = array(
 				'trigger' => array(
-					'description' => __( 'The trigger of the enrollment to act on.', 'lifterlms' ),
-					'type'        => 'string',
-					'default'     => 'any',
+					'description'       => __( 'The trigger of the enrollment to act on.', 'lifterlms' ),
+					'type'              => 'string',
+					'default'           => 'any',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => 'rest_validate_request_arg',
 				),
 			);
 		} else {
