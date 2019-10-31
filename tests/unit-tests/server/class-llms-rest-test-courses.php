@@ -9,10 +9,16 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp().
- * @since 1.0.0-beta.8  When retrieving a course, added check on `sales_page_*` defaults.
- *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+ * @since 1.0.0-beta.8 When retrieving a course, added check on `sales_page_*` defaults.
+ *                     Renamed `sales_page_page_type` and `sales_page_page_url` properties,
+ *                     respectively to `sales_page_type` and `sales_page_url` according to the specs.
  *                     Added missing quotes in enrollment/access default messages shortcodes.
  *                     Added `rest_taxonomies` property.
+ * @since [verison] Added checks on `sales_page_page_id` and
+ *                     `sales_page_page_url` always returned in `edit` context.
+ *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+ *                     Added `@return` to doc.
+ *                     Use the far less predictable `wp_wp_rand()` in place of `wp_rand()`.
  * @version 1.0.0-beta.8
  *
  * @todo update tests to check links.
@@ -52,6 +58,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
+	 *
+	 * @return void
 	 */
 	public function setUp() {
 
@@ -88,6 +96,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test route registration.
 	 *
 	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
 	 */
 	public function test_register_routes() {
 
@@ -106,6 +116,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses() {
 
@@ -114,10 +127,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		// create 12 courses.
 		$courses = $this->factory->course->create_many( 12, array( 'sections' => 0 ) );
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		$this->assertEquals( 10, count( $res_data ) ); // default per_page is 10.
@@ -138,6 +154,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses pagination success.
 	 *
 	 * @since 1.0.0-beta.7
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_with_pagination() {
 
@@ -150,9 +168,12 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test list courses include arg
+	 * Test list courses include arg.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_include() {
 
@@ -160,17 +181,21 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// create 15 courses.
 		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
-		$request = new WP_REST_Request( 'GET', $this->route );
 
-		// get only the 2nd and 3rd course.
-		$request->set_param( 'include', "$courses[1], $courses[2]" );
-
-		$response = $this->server->dispatch( $request );
-
-		$res_data = $response->get_data();
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				// get only the 2nd and 3rd course.
+				'include' => "$courses[1], $courses[2]",
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
+
+		$res_data = $response->get_data();
 		$this->assertEquals( 2, count( $res_data ) );
 
 		// Check retrieved courses are the same as the second and third generated courses.
@@ -181,9 +206,12 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test list courses exclude arg
+	 * Test list courses exclude arg.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_exclude() {
 
@@ -191,18 +219,23 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// create 15 courses.
 		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
-		$request = new WP_REST_Request( 'GET', $this->route );
 
-		// get only the 2nd and 3rd course.
-		$request->set_param( 'exclude', "$courses[0], $courses[1]" );
-
-		$response = $this->server->dispatch( $request );
-
-		$res_data = $response->get_data();
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			// esclude 1st and 2nd course.
+			array(
+				'exclude' => "$courses[0], $courses[1]",
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
+
+		$res_data = $response->get_data();
 		$this->assertEquals( 3, count( $res_data ) );
+
 		// Check retrieved data do not contain first and second created courses.
 		$this->assertEquals( array_slice( $courses, 2 ), wp_list_pluck( $res_data, 'id' ) );
 	}
@@ -211,6 +244,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses ordered by id desc.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_ordered_by_id_desc() {
 
@@ -218,16 +254,20 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// create 5 courses.
 		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
-		$request = new WP_REST_Request( 'GET', $this->route );
-		$request->set_param( 'order', 'desc' ); // default is 'asc'.
 
-		$response = $this->server->dispatch( $request );
-
-		$res_data = $response->get_data();
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'order' => 'desc', // default is 'asc'.
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
+		$res_data = $response->get_data();
 		// Check retrieved courses are the same as the generated ones but in the reversed order.
 		// Note: the check can be done in this simple way as by default the rest api courses are ordered by id.
 		$reversed_data = array_reverse( $res_data );
@@ -241,6 +281,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses ordered by title.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_ordered_by_title() {
 
@@ -256,10 +299,17 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$course_second = new LLMS_Course( $courses[2] );
 		$course_second->set( 'title', 'Course C' );
 
-		$request = new WP_REST_Request( 'GET', $this->route );
-		$request->set_param( 'orderby', 'title' ); // default is id.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'orderby' => 'title', // default is id.
+			)
+		);
 
-		$response = $this->server->dispatch( $request );
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 
@@ -267,12 +317,16 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'Course A', $res_data[0]['title']['rendered'] );
 		$this->assertEquals( 'Course B', $res_data[1]['title']['rendered'] );
 		$this->assertEquals( 'Course C', $res_data[2]['title']['rendered'] );
+
 	}
 
 	/**
 	 * Test list courses ordered by title
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_ordered_by_title_desc() {
 
@@ -288,11 +342,19 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$course_second = new LLMS_Course( $courses[2] );
 		$course_second->set( 'title', 'Course C' );
 
-		$request = new WP_REST_Request( 'GET', $this->route );
-		$request->set_param( 'orderby', 'title' ); // default is id.
-		$request->set_param( 'order', 'desc' ); // default is 'asc'.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'orderby' => 'title', // default is id.
+				'order'   => 'desc', // default is 'asc'.
+			)
+		);
 
-		$response = $this->server->dispatch( $request );
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+
 		$res_data = $response->get_data();
 
 		// Check retrieved courses are ordered by title desc.
@@ -302,48 +364,12 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test getting courses without permission.
-	 *
-	 * @since 1.0.0-beta.1
-	 *//*
-	public function test_get_courses_without_permission() {
-
-		wp_set_current_user( 0 );
-
-		// Setup course.
-		$this->factory->course->create();
-
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
-
-		// Check we don't have permissions to make this request.
-		$this->assertEquals( 401, $response->get_status() );
-
-	}
-	*/
-
-	/**
-	 * Test getting courses: forbidden request.
-	 *
-	 * @since 1.0.0-beta.1
-	 *//*
-	public function test_get_courses_forbidden() {
-
-		wp_set_current_user( $this->user_forbidden );
-
-		// Setup course.
-		$this->factory->course->create();
-
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route ) );
-
-		// Check we're not allowed to get results.
-		$this->assertEquals( 403, $response->get_status() );
-
-	}*/
-
-	/**
 	 * Test getting courses: bad request.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_courses_bad_request() {
 
@@ -351,17 +377,32 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// create 5 courses.
 		$courses = $this->factory->course->create_many( 5, array( 'sections' => 0 ) );
-		$request = new WP_REST_Request( 'GET', $this->route );
 
 		// Bad request, there's no page 2.
-		$request->set_param( 'page', 2 );
-		$response = $this->server->dispatch( $request );
-		$this->assertEquals( 400, $response->get_status() );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'page' => 2,
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// Bad request, order param allowed are only "desc" and "asc" (enum).
-		$request->set_param( 'order', 'not_desc' );
-		$response = $this->server->dispatch( $request );
-		$this->assertEquals( 400, $response->get_status() );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'order' => 'not_desc',
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 400, $response );
 
 	}
 
@@ -369,8 +410,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.8 Added check on `sales_page_*` defaults. Also renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-
+	 * @since 1.0.0-beta.8 Added check on `sales_page_*` defaults.
+	 *                     Also renamed `sales_page_page_type` and `sales_page_page_url` properties,
+	 *                     respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 * @since [verison] Added checks on `sales_page_page_id` and
+	 *                     `sales_page_page_url` always returned in `edit` context.
+	 *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_course() {
 
@@ -378,10 +425,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Setup course.
 		$course   = $this->factory->course->create_and_get();
-		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $course->get( 'id' ) );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course->get( 'id' )
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 
@@ -392,53 +442,34 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'none', $res_data['sales_page_type'] );
 		$this->assertFalse( array_key_exists( 'sales_page_page_id', $res_data ) );
 		$this->assertFalse( array_key_exists( 'sales_page_url', $res_data ) );
-	}
 
+		// Check that in edit context `sales_page_page_id` and `sales_page_url`,
+		// are still returned.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course->get( 'id' ),
+			array(),
+			array( 'context' => 'edit' )
+		);
 
-	/**
-	 * Test getting single course without permission.
-	 *
-	 * @since 1.0.0-beta.1
-	 */
-	/*
-	public function test_get_course_without_permission() {
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
 
-		wp_set_current_user( 0 );
+		$res_data = $response->get_data();
 
-		// Setup course.
-		$course_id = $this->factory->course->create();
-		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id ) );
-
-		// Check we don't have permissions to make this request.
-		$this->assertEquals( 401, $response->get_status() );
-
-	}
-	*/
-
-	/**
-	 * Test getting forbidden single course.
-	 *
-	 * @since 1.0.0-beta.1
-	 */
-	/*
-	public function test_get_course_forbidden() {
-
-		wp_set_current_user( $this->user_forbidden );
-
-		// Setup course.
-		$course_id = $this->factory->course->create();
-		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id ) );
-
-		// Check we're not allowed to get results.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertEquals( 'none', $res_data['sales_page_type'] );
+		$this->assertTrue( array_key_exists( 'sales_page_page_id', $res_data ) );
+		$this->assertTrue( array_key_exists( 'sales_page_url', $res_data ) );
 
 	}
-	*/
 
 	/**
 	 * Test getting single course that doesn't exist.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_get_nonexistent_course() {
 
@@ -446,10 +477,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Setup course.
 		$course_id = $this->factory->course->create();
-		$response  = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course_id . '4' ) );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course_id . '4'
+		);
 
 		// the course doesn't exists.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertResponseStatusEquals( 404, $response );
 
 	}
 
@@ -459,19 +494,20 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Add checks on nullable dates.
 	 * @since 1.0.0-beta.8 Add missing quotes in enrollment/access default messages shortcodes.
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course() {
 
 		wp_set_current_user( $this->user_allowed );
 
-		$request = new WP_REST_Request( 'POST', $this->route );
-
 		$catalog_visibility = array_keys( llms_get_product_visibility_options() )[2];
 		$sample_course_args = array_merge(
 			$this->sample_course_args,
 			array(
-				'catalog_visibility' => $catalog_visibility,
-				'instructors'        => array(
+				'catalog_visibility'     => $catalog_visibility,
+				'instructors'            => array(
 					get_current_user_id(),
 					$this->factory->user->create(
 						array(
@@ -479,7 +515,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 						)
 					),
 				),
-				'video_tile'         => true,
+				'video_tile'             => true,
 				'access_opens_date'      => '',
 				'access_closes_date'     => '',
 				'enrollment_opens_date'  => '',
@@ -487,11 +523,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request->set_body_params( $sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_course_args
+		);
 
 		// Success.
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -515,7 +554,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'enrollment_closes_date',
 		);
 		foreach ( $date_props as $empty_prop ) {
-			$this->assertEquals( '', $res_data[$empty_prop] );
+			$this->assertEquals( '', $res_data[ $empty_prop ] );
 		}
 	}
 
@@ -524,11 +563,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` to `sales_page_type` according to the specs.
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_check_defaults() {
-		wp_set_current_user( $this->user_allowed );
 
-		$request = new WP_REST_Request( 'POST', $this->route );
+		wp_set_current_user( $this->user_allowed );
 
 		$course_args = array(
 			'title'                  => 'Title',
@@ -539,8 +580,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'enrollment_closes_date' => '2019-05-22 17:22:08',
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		$res_data = $response->get_data();
 
@@ -602,12 +646,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * These props, when set, alter the rendered content so we test them separetaly.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_special() {
 
 		wp_set_current_user( $this->user_allowed );
-
-		$request = new WP_REST_Request( 'POST', $this->route );
 
 		$sample_course_args = array_merge(
 			$this->sample_course_args,
@@ -624,11 +669,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request->set_body_params( $sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_course_args
+		);
 
 		// Success.
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -649,6 +697,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course with taxonomies
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_with_taxonomies() {
 
@@ -679,13 +730,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			$taxonomies
 		);
 
-		$request = new WP_REST_Request( 'POST', $this->route );
-
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		// Terms have not ben created, I expect the course is created with empty taxonomies.
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -726,11 +778,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			$taxonomies
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		// Terms have been created, I expect the course is created with taxonomies set.
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -743,6 +798,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course with taxonomies
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_with_prerequisites() {
 		wp_set_current_user( $this->user_allowed );
@@ -755,10 +813,15 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request = new WP_REST_Request( 'POST', $this->route );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
+
 		$res_data = $response->get_data();
 
 		// Courses with id 2 do not exist, hence I expect an empty prerequisite property.
@@ -787,8 +850,15 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
+
 		$res_data = $response->get_data();
 
 		// I expect prerequisites now match.
@@ -806,12 +876,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test course "periods".
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_and_periods() {
 
 		wp_set_current_user( $this->user_allowed );
-
-		$request = new WP_REST_Request( 'POST', $this->route );
 
 		$course_args = array_merge(
 			$this->sample_course_args,
@@ -821,8 +892,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -841,8 +918,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -853,8 +936,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		// Check that the created course's 'enrollment_period' is enabled, since one of enrollment_opens_date and enrollment_closes_date is set.
 		$this->assertEquals( 'yes', $course->get( 'enrollment_period' ) );
 
-		$request->set_body_params( $this->sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$this->sample_course_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -872,11 +961,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_and_raws() {
-		wp_set_current_user( $this->user_allowed );
 
-		$request = new WP_REST_Request( 'POST', $this->route );
+		wp_set_current_user( $this->user_allowed );
 
 		$course_raw_messages = array(
 			'length'                    => array(
@@ -907,8 +998,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			$course_raw_messages
 		);
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
 
 		$res_data = $response->get_data();
 
@@ -922,63 +1019,81 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test producing bad request error when creating a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *                     Use the far less predictable `wp_wp_rand()` in place of `wp_rand()`.
+	 * @return void
 	 */
 	public function test_create_course_bad_request() {
 
 		wp_set_current_user( $this->user_allowed );
-
-		$request = new WP_REST_Request( 'POST', $this->route );
 
 		$course_args = $this->sample_course_args;
 
 		// Creating a course passing an id produces a bad request.
 		$course_args['id'] = '123';
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		// Bad request.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// create a course without title.
 		$course_args = $this->sample_course_args;
 		unset( $course_args['title'] );
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
 		// Bad request.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// create a course without content.
 		$course_args = $this->sample_course_args;
 		unset( $course_args['content'] );
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
+
 		// Bad request.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// status param must respect the item scehma, hence one of "publish" "pending" "draft" "auto-draft" "future" "private" "trash".
 		$course_args           = $this->sample_course_args;
 		$status                = array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) );
-		$course_args['status'] = $status[0] . rand() . 'not_in_enum';
+		$course_args['status'] = $status[0] . wp_rand() . 'not_in_enum';
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		// Bad request.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// catalog_visibility param must respect the item schema, hence one of array_keys( llms_get_product_visibility_options() ).
 		$course_args                       = $this->sample_course_args;
 		$catalog_visibility                = array_keys( llms_get_product_visibility_options() );
-		$course_args['catalog_visibility'] = $catalog_visibility[0] . rand() . 'not_in_enum';
+		$course_args['catalog_visibility'] = $catalog_visibility[0] . wp_rand() . 'not_in_enum';
 
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$course_args
+		);
 
 		// Bad request.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 	}
 
@@ -986,18 +1101,22 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating single course without permissions.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_without_permissions() {
 
 		wp_set_current_user( 0 );
 
-		$request = new WP_REST_Request( 'POST', $this->route );
-
-		$request->set_body_params( $this->sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$this->sample_course_args
+		);
 
 		// Unhauthorized.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
 
 	}
 
@@ -1005,18 +1124,22 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single course creation.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_create_course_forbidden() {
 
 		wp_set_current_user( $this->user_forbidden );
 
-		$request = new WP_REST_Request( 'POST', $this->route );
-
-		$request->set_body_params( $this->sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$this->sample_course_args
+		);
 
 		// Forbidden.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
 	}
 
@@ -1026,6 +1149,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Add tests on prerequisites.
+	 * @since [version] Use `$this->assertResponseStatusEquals()` util.
+	 *
+	 * @return void
 	 */
 	public function test_update_course() {
 
@@ -1042,10 +1168,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'status'       => 'draft',
 		);
 
-		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $course->get( 'id' ), $update_data );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $course->get( 'id' ),
+			$update_data
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 
@@ -1070,10 +1200,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			'prerequisite_track' => $prerequisite_track_id,
 		);
 
-		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $course->get( 'id' ), $update_data );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $course->get( 'id' ),
+			$update_data
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 
@@ -1093,6 +1227,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a nonexistent course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_update_nonexistent_course() {
 
@@ -1100,14 +1237,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$id = 48987456;
 
-		$request     = new WP_REST_Request( 'POST', $this->route . '/' . $id );
-		$course_args = $this->sample_course_args;
-		$request->set_body_params( $course_args );
-		$response = $this->server->dispatch( $request );
-		$res_data = $response->get_data();
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $id,
+			$this->sample_course_args
+		);
 
 		// Not found.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertResponseStatusEquals( 404, $response );
 
 	}
 
@@ -1115,6 +1252,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single course update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_update_forbidden_course() {
 
@@ -1123,13 +1263,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( $this->user_forbidden );
 
-		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
-
-		$request->set_body_params( $this->sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $course->get( 'id' ),
+			$this->sample_course_args
+		);
 
 		// Bad request.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
 	}
 
@@ -1137,6 +1278,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course update without authorization.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_update_course_without_authorization() {
 
@@ -1145,13 +1289,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( 0 );
 
-		$request = new WP_REST_Request( 'POST', $this->route . '/' . $course->get( 'id' ) );
-
-		$request->set_body_params( $this->sample_course_args );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $course->get( 'id' ),
+			$this->sample_course_args
+		);
 
 		// Unauthorized.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
 
 	}
 
@@ -1159,6 +1304,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_delete_course() {
 
@@ -1167,12 +1315,17 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		// create a course first.
 		$course = $this->factory->course->create_and_get();
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-		$request->set_param( 'force', true );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' ),
+			array(),
+			array(
+				'force' => true,
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 204, $response->get_status() );
+		$this->assertResponseStatusEquals( 204, $response );
 		// empty body.
 		$this->assertEquals( null, $response->get_data() );
 
@@ -1185,6 +1338,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test trashing a single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_trash_course() {
 
@@ -1193,12 +1349,17 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		// create a course first.
 		$course = $this->factory->course->create_and_get();
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-		$request->set_param( 'force', false );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' ),
+			array(),
+			array(
+				'force' => false,
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		// Non empty body.
@@ -1211,12 +1372,17 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'trash', $res_data['status'] );
 
 		// Trash again I expect the same as above.
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-		$request->set_param( 'force', false );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' ),
+			array(),
+			array(
+				'force' => false,
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		// Non empty body.
@@ -1234,24 +1400,32 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a nonexistent single course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_delete_nonexistent_course() {
 
 		wp_set_current_user( $this->user_allowed );
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/747484940' );
-
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/747484940'
+		);
 
 		// Post not found, so it's "deleted".
-		$this->assertEquals( 204, $response->get_status() );
+		$this->assertResponseStatusEquals( 204, $response );
 		$this->assertEquals( '', $response->get_data() );
+
 	}
 
 	/**
 	 * Test getting bad request response when deleting a course.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_delete_bad_request_course() {
 
@@ -1260,12 +1434,17 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		// create a course first.
 		$course = $this->factory->course->create_and_get();
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-		$request->set_param( 'force', 'bad_parameter_value' );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' ),
+			array(),
+			array(
+				'force' => 'bad_parameter_value',
+			)
+		);
 
 		// Bad request because of a bad parameter.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertResponseStatusEquals( 400, $response );
 
 	}
 
@@ -1273,6 +1452,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course update without authorization.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_delete_forbidden_course() {
 
@@ -1281,12 +1463,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( $this->user_forbidden );
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' )
+		);
 
 		// Forbidden.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
 	}
 
@@ -1294,6 +1477,9 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course deletion without authorization.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 *
+	 * @return void
 	 */
 	public function test_delete_course_without_authorization() {
 
@@ -1302,12 +1488,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( 0 );
 
-		$request = new WP_REST_Request( 'DELETE', $this->route . '/' . $course->get( 'id' ) );
-
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $course->get( 'id' )
+		);
 
 		// Unauthorized.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
 
 	}
 
@@ -1315,8 +1502,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list course content.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @todo test order and orderby
+	 *
+	 * @return void
 	 */
 	public function test_get_course_content() {
 
@@ -1329,10 +1519,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/content' ) );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course . '/content'
+		);
 
 		// We have no sections for this course so we expect a 404.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertResponseStatusEquals( 404, $response );
 
 		// create 1 course with 5 sections.
 		$course = $this->factory->course->create(
@@ -1341,10 +1534,13 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/content' ) );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course . '/content'
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		$this->assertEquals( 5, count( $res_data ) );
@@ -1355,37 +1551,53 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list course content.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @todo test order and orderby
+	 *
+	 * @return void
 	 */
 	public function test_get_course_enrollments() {
 
 		wp_set_current_user( $this->user_allowed );
 
 		// create 1 course.
-		$course   = $this->factory->course->create();
-		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' ) );
+		$course = $this->factory->course->create();
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course . '/enrollments'
+		);
 
 		// We have no students enrolled for this course so we expect a 404.
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertResponseStatusEquals( 404, $response );
 
 		// create 5 students and enroll them.
 		$student_ids = $this->factory->student->create_and_enroll_many( 5, $course );
-		$response    = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' ) );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course . '/enrollments'
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		$this->assertEquals( 5, count( $res_data ) );
 
 		// Filter by student_id.
-		$request = new WP_REST_Request( 'GET', $this->route . '/' . $course . '/enrollments' );
-		$request->set_param( 'student', "$student_ids[0]" );
-		$response = $this->server->dispatch( $request );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $course . '/enrollments',
+			array(),
+			array(
+				'student' => "$student_ids[0]",
+			)
+		);
 
 		// Success.
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertResponseStatusEquals( 200, $response );
 
 		$res_data = $response->get_data();
 		$this->assertEquals( 1, count( $res_data ) );
