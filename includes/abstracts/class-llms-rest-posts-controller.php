@@ -61,7 +61,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * LLMS post class name.
 	 *
 	 * @since [version]
-	 *
 	 * @var string;
 	 */
 	protected $llms_post_class;
