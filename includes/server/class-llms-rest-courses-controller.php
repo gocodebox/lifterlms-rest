@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
  * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
+ *                     Fixed `sales_page_url` not returned in `edit` context.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -518,7 +519,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
 	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 *                     Always return `sales_page_url` and `sales_page_page_id` when in 'edit' context.
+	 *                     Always return `sales_page_url` and `sales_page_page_id` when in `edit` context.
+	 * @since [version] Fixed `sales_page_url` not returned in `edit` context.
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -630,10 +632,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$data['sales_page_type'] = $course->get( 'sales_page_content_type' );
 		$data['sales_page_type'] = $data['sales_page_type'] ? $data['sales_page_type'] : 'none';
 
-		// Sales page id/url.
+		// Sales page id.
 		if ( 'page' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
 			$data['sales_page_page_id'] = $course->get( 'sales_page_content_page_id' );
-		} elseif ( 'url' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
+		}
+
+		// Sales page url.
+		if ( 'url' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
 			$data['sales_page_url'] = $course->get( 'sales_page_content_url' );
 		}
 
