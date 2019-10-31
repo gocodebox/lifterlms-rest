@@ -484,8 +484,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
       x-code-samples:
         - lang: cURL
           source: |
@@ -1421,8 +1419,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   /memberships:
     get:
       summary: List memberships
@@ -1583,8 +1579,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   '/memberships/{id}/enrollments':
     parameters:
       - name: id
@@ -1881,8 +1875,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   /quizzes:
     get:
       summary: List quizzes
@@ -2052,8 +2044,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   /sections:
     get:
       summary: List sections
@@ -2648,8 +2638,6 @@ paths:
           $ref: '#/components/responses/Error401'
         '403':
           $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
   '/students/{id}/progress/{post_id}':
     parameters:
       - name: id
