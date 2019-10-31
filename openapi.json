@@ -54,6 +54,10 @@
       "description": "The sections API allows you to create, view, update, and delete sections.\n\nSections are used within courses to organize content (lessons) into groups.\n\n## Section Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/SectionResponse\" showReadOnly={true} showWriteOnly={true} />\n"
     },
     {
+      "name": "Lessons",
+      "description": "The lessons API allows you to create, view, update, and delete lessons.\n\n## Lesson Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/LessonResponse\" showReadOnly={true} showWriteOnly={true} />\n"
+    },
+    {
       "name": "Students",
       "description": "Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the \"student\" role).\n\nThe students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.\n\n## Student Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Student\" showReadOnly={true} showWriteOnly={true} />\n"
     },
