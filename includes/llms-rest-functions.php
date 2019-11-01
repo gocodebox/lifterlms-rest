@@ -83,5 +83,3 @@ function llms_rest_random_hash() {
 	}
 	return bin2hex( openssl_random_pseudo_bytes( 20 ) );
 }
-
-
