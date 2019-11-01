@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
+ * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  * @since [version] In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
  *                     Also made sure course's `instructor` is at least set as the post author.
  *                     Defined `instructors` validate callback so to make sure instructors list is either not empty and composed by real user ids.
@@ -139,19 +140,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Get object.
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param int $id Object ID.
-	 * @return LLMS_Course|WP_Error
-	 */
-	protected function get_object( $id ) {
-		$course = llms_get_post( $id );
-		return $course && is_a( $course, 'LLMS_Course' ) ? $course : llms_rest_not_found_error();
-	}
-
-	/**
 	 * Retrieve an ID from the object
 	 *
 	 * @since 1.0.0-beta.7
@@ -164,19 +152,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// For example.
 		return $object->get( 'id' );
 
-	}
-
-	/**
-	 * Get an LLMS_Course
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param array $object_args Object args.
-	 * @return LLMS_Post_Model|WP_Error
-	 */
-	protected function create_llms_post( $object_args ) {
-		$object = new LLMS_Course( 'new', $object_args );
-		return $object && is_a( $object, 'LLMS_Course' ) ? $object : llms_rest_not_found_error();
 	}
 
 	/**

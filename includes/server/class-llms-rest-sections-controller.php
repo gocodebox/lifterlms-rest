@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Fix the way we get the section's parent course object when building the resource links.
+ * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
@@ -177,33 +178,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_parent_id() {
 		return isset( $this->parent_id ) ? $this->parent_id : null;
-	}
-
-
-	/**
-	 * Get object.
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param int $id Object ID.
-	 * @return LLMS_Section|WP_Error
-	 */
-	protected function get_object( $id ) {
-		$section = llms_get_post( $id );
-		return $section && is_a( $section, 'LLMS_Section' ) ? $section : llms_rest_not_found_error();
-	}
-
-	/**
-	 * Get an LLMS_Section
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param array $section_args Section args.
-	 * @return LLMS_Post_Model|WP_Error
-	 */
-	protected function create_llms_post( $section_args ) {
-		$section = new LLMS_Section( 'new', $section_args );
-		return $section && is_a( $section, 'LLMS_Section' ) ? $section : llms_rest_not_found_error();
 	}
 
 	/**

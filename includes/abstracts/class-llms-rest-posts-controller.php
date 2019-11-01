@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *                     fired after inserting/updateing an llms post into the database.
  * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
  *                     Initialize `$prepared_item` array before adding values to it.
+ * @since [version] Implemented a generic way to create and get an llms post object instance given a `post_type`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -55,6 +56,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		'date_updated',
 		'menu_order',
 	);
+
+	/**
+	 * LLMS post class name.
+	 *
+	 * @since [version]
+	 * @var string;
+	 */
+	protected $llms_post_class;
 
 	/**
 	 * Retrieves an array of arguments for the delete endpoint.
@@ -1179,15 +1188,55 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Get object.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $id Object ID.
+	 * @return LLMS_Course|WP_Error
+	 */
+	protected function get_object( $id ) {
+
+		$class = $this->llms_post_class_from_post_type();
+
+		if ( ! $class ) {
+			return new WP_Error(
+				'llms_rest_cannot_get_object',
+				/* translators: %s: post type */
+				sprintf( __( 'The %s cannot be retrieved.', 'lifterlms' ), $this->post_type ),
+				array( 'status' => 500 )
+			);
+		}
+
+		$object = llms_get_post( $id );
+		return $object && is_a( $object, $class ) ? $object : llms_rest_not_found_error();
+	}
+
+	/**
 	 * Create an LLMS_Post_Model
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Fix wp:featured_media link, we don't expose any embeddable field.
+	 * @since [version] Implement generic llms post creation.
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
 	 */
-	abstract protected function create_llms_post( $object_args );
+	protected function create_llms_post( $object_args ) {
+
+		$class = $this->llms_post_class_from_post_type();
+
+		if ( ! $class ) {
+			return new WP_Error(
+				'llms_rest_cannot_create_object',
+				/* translators: %s: post type */
+				sprintf( __( 'The %s cannot be created.', 'lifterlms' ), $this->post_type ),
+				array( 'status' => 500 )
+			);
+		}
+
+		$object = new $class( 'new', $object_args );
+		return $object && is_a( $object, $class ) ? $object : llms_rest_not_found_error();
+	}
 
 	/**
 	 * Prepare links for the request.
@@ -1196,6 +1245,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
 	 * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
 	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
+	 *                     Fix wp:featured_media link, we don't expose any embeddable field.
 	 * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
@@ -1597,6 +1647,35 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		// Double-check the request password.
 		return hash_equals( $object->get( 'password' ), $request['password'] );
+	}
+
+	/**
+	 * Get the llms post model class from the controller post type.
+	 *
+	 * @since [version]
+	 *
+	 * @return string|bool The llms post model class name if it exists or FALSE if it doesn't.
+	 */
+	protected function llms_post_class_from_post_type() {
+
+		if ( isset( $this->llms_post_class ) ) {
+			return $this->llms_post_class;
+		}
+
+		$post_type = explode( '_', str_replace( 'llms_', '', $this->post_type ) );
+		$class     = 'LLMS';
+
+		foreach ( $post_type as $part ) {
+			$class .= '_' . ucfirst( $part );
+		}
+
+		if ( class_exists( $class ) ) {
+			$this->llms_post_class = $class;
+		} else {
+			$this->llms_post_class = false;
+		}
+
+		return $this->llms_post_class;
 	}
 
 }

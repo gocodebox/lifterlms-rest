@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.8
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
  * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
  *                     so to instruct it to return a WP_Error on failure.
+ * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -95,32 +96,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_parent_id() {
 		return isset( $this->parent_id ) ? $this->parent_id : null;
-	}
-
-	/**
-	 * Get object.
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param int $id Object ID.
-	 * @return LLMS_Lesson|WP_Error
-	 */
-	protected function get_object( $id ) {
-		$lesson = llms_get_post( $id );
-		return $lesson && is_a( $lesson, 'LLMS_Lesson' ) ? $lesson : llms_rest_not_found_error();
-	}
-
-	/**
-	 * Get an LLMS_Lesson
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @param array $lesson_args Lesson args.
-	 * @return LLMS_Post_Model|WP_Error
-	 */
-	protected function create_llms_post( $lesson_args ) {
-		$lesson = new LLMS_Lesson( 'new', $lesson_args );
-		return $lesson && is_a( $lesson, 'LLMS_Lesson' ) ? $lesson : llms_rest_not_found_error();
 	}
 
 	/**
