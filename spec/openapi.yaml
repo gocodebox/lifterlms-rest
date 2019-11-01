@@ -173,6 +173,14 @@ tags:
 
       <SchemaDefinition schemaRef="#/components/schemas/SectionResponse" showReadOnly={true} showWriteOnly={true} />
 
+  - name: Lessons
+    description: |
+      The lessons API allows you to create, view, update, and delete lessons.
+
+      ## Lesson Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/LessonResponse" showReadOnly={true} showWriteOnly={true} />
+
   - name: Students
     description: |
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).

@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @since [version] In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
  *                     Also made sure course's `instructor` is at least set as the post author.
  *                     Defined `instructors` validate callback so to make sure instructors list is either not empty and composed by real user ids.
+ *                     Fixed `sales_page_url` not returned in `edit` context.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -548,7 +549,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
 	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 *                     Always return `sales_page_url` and `sales_page_page_id` when in 'edit' context.
+	 *                     Always return `sales_page_url` and `sales_page_page_id` when in `edit` context.
+	 * @since [version] Fixed `sales_page_url` not returned in `edit` context.
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -660,10 +662,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$data['sales_page_type'] = $course->get( 'sales_page_content_type' );
 		$data['sales_page_type'] = $data['sales_page_type'] ? $data['sales_page_type'] : 'none';
 
-		// Sales page id/url.
+		// Sales page id.
 		if ( 'page' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
 			$data['sales_page_page_id'] = $course->get( 'sales_page_content_page_id' );
-		} elseif ( 'url' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
+		}
+
+		// Sales page url.
+		if ( 'url' === $data['sales_page_type'] || 'edit' === $request['context'] ) {
 			$data['sales_page_url'] = $course->get( 'sales_page_content_url' );
 		}
 
