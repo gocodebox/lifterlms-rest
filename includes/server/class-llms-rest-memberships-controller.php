@@ -48,20 +48,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Get an LLMS_Membership.
-	 *
-	 * @since [version]
-	 *
-	 * @param array $object_args Object args.
-	 * @return LLMS_Post_Model|WP_Error
-	 */
-	protected function create_llms_post( $object_args ) {
-		$object = new LLMS_Membership( 'new', $object_args );
-
-		return $object && is_a( $object, 'LLMS_Membership' ) ? $object : llms_rest_not_found_error();
-	}
-
-	/**
 	 * Retrieves the query params for the enrollments objects collection.
 	 *
 	 * @since [version]
@@ -156,6 +142,9 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			'type'        => 'array',
 			'items'       => array(
 				'type' => 'integer',
+			),
+			'arg_options' => array(
+				'validate_callback' => 'llms_validate_instructors',
 			),
 			'context'     => array( 'view', 'edit' ),
 		);
@@ -281,21 +270,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		$schema = apply_filters( 'llms_rest_membership_item_schema', $schema );
 
 		return $schema;
-	}
-
-	/**
-	 * Get object.
-	 *
-	 * @since [version]
-	 *
-	 * @param int $id Object ID.
-	 * @return LLMS_Membership|WP_Error
-	 */
-	protected function get_object( $id ) {
-		/** IDE helper. @var LLMS_Membership $membership*/
-		$membership = llms_get_post( $id );
-
-		return is_a( $membership, 'LLMS_Membership' ) ? $membership : llms_rest_not_found_error();
 	}
 
 	/**

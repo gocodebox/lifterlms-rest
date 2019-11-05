@@ -2,16 +2,15 @@
 /**
  * Tests for Memberships API.
  *
- * @since   [version]
  * @package LifterLMS_Rest/Tests/Controllers
  *
- * @group   REST
- * @group   rest_memberships
+ * @group REST
+ * @group rest_memberships
  *
+ * @since [version]
  * @version [version]
  *
- * @todo    update tests to check links.
- * @todo    do more tests on the membership update/delete.
+ * @todo do more tests on the membership update/delete.
  */
 class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
@@ -82,10 +81,27 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	);
 
 	/**
+	 * Array of link $rels expected for each item.
+	 *
+	 * @var string[]
+	 */
+	private $expected_link_rels = array(
+		'self',
+		'collection',
+		'access_plans',
+		'auto_enrollment_courses',
+		'enrollments',
+		'instructors',
+		'students',
+	);
+
+	/**
 	 *
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function setUp() {
 		parent::setUp();
@@ -114,6 +130,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -182,6 +200,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_and_raws() {
 		wp_set_current_user( $this->user_allowed );
@@ -208,6 +228,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test producing bad request error when creating a single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_bad_request() {
 		wp_set_current_user( $this->user_allowed );
@@ -266,6 +288,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single membership defaults are correctly set.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_check_defaults() {
 		wp_set_current_user( $this->user_allowed );
@@ -322,6 +346,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single membership creation.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_forbidden() {
 		wp_set_current_user( $this->user_forbidden );
@@ -333,52 +359,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test creating a single membership special props.
-	 * These props, when set, alter the rendered content so we test them separately.
-	 *
-	 * @since [version]
-	 */
-	/*	public function test_create_membership_special() {
-			wp_set_current_user( $this->user_allowed );
-
-			$membership_args = array_merge(
-				$this->sample_membership_args,
-				array(
-					'audio_embed'            => 'https://www.youtube.com/abc',
-					'video_embed'            => 'www.youtube.com/efg',
-					'capacity_limit'         => 22,
-					'capacity_enabled'       => true,
-					'capacity_message'       => 'Enrollment has closed because the maximum number of allowed students has been reached.',
-					'access_opens_date'      => '2019-05-22 17:20:05',
-					'access_closes_date'     => '2019-05-22 17:23:08',
-					'enrollment_opens_date'  => '2019-05-22 17:22:05',
-					'enrollment_closes_date' => '2019-05-22 17:22:08',
-				)
-			);
-			$response = $this->perform_mock_request( 'POST', $this->route, $membership_args );
-
-			// Success.
-			$this->assertEquals( 201, $response->get_status() );
-
-			$response_data = $response->get_data();
-
-			$this->assertEquals( esc_url_raw( $sample_membership_args['audio_embed'] ), $response_data['audio_embed'] );
-			$this->assertEquals( esc_url_raw( $sample_membership_args['video_embed'] ), $response_data['video_embed'] );
-			$this->assertEquals( $sample_membership_args['capacity_enabled'], $response_data['capacity_enabled'] );
-			$this->assertEquals( do_shortcode( $sample_membership_args['capacity_message'] ), $response_data['capacity_message']['rendered'] );
-			$this->assertEquals( $sample_membership_args['capacity_limit'], $response_data['capacity_limit'] );
-
-			// Dates.
-			$this->assertEquals( $sample_membership_args['access_opens_date'], $response_data['access_opens_date'] );
-			$this->assertEquals( $sample_membership_args['access_closes_date'], $response_data['access_closes_date'] );
-			$this->assertEquals( $sample_membership_args['enrollment_opens_date'], $response_data['enrollment_opens_date'] );
-			$this->assertEquals( $sample_membership_args['enrollment_closes_date'], $response_data['enrollment_closes_date'] );
-		}*/
-
-	/**
 	 * Test creating a membership with an instructor that doesn't exist.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_with_bad_instructor() {
 		wp_set_current_user( $this->user_allowed );
@@ -391,26 +376,21 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		// Create membership with non-existing instructor.
 		$membership_args['instructors'] = array( $bad_instructor_id );
 		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
-		$this->assertEquals( 201, $response->get_status() );
-		$this->assertEqualSets( array( $this->user_allowed ), $response->data['instructors'] );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// Create membership with existing instructor and non-existing instructor.
 		$membership_args['instructors'] = array( $good_instructor_id, $bad_instructor_id );
 		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
-		$this->assertEquals( 201, $response->get_status() );
-		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+		$this->assertResponseStatusEquals( 400, $response );
 
-		// Create membership with non-existing instructor and existing instructor.
-		$membership_args['instructors'] = array( $bad_instructor_id, $good_instructor_id );
-		$response                       = $this->perform_mock_request( 'POST', $this->route, $membership_args );
-		$this->assertEquals( 201, $response->get_status() );
-		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
 	}
 
 	/**
 	 * Test creating a membership with an empty instructors array.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_with_empty_instructors() {
 		wp_set_current_user( $this->user_allowed );
@@ -419,14 +399,15 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		$membership_args                = $this->sample_membership_args;
 		$membership_args['instructors'] = array();
 		$response = $this->perform_mock_request( 'POST', $this->route, $membership_args );
-		$this->assertEquals( 201, $response->get_status() );
-		$this->assertEqualSets( array( $this->user_allowed ), $response->data['instructors'] );
+		$this->assertEquals( 400, $response->get_status() );
 	}
 
 	/**
 	 * Test creating a membership without an `instructors` argument.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_without_instructors() {
 		wp_set_current_user( $this->user_allowed );
@@ -449,6 +430,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single membership with taxonomies.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_with_taxonomies() {
 		wp_set_current_user( $this->user_allowed );
@@ -515,6 +498,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating single membership without permissions.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_create_membership_without_permissions() {
 		wp_set_current_user( 0 );
@@ -529,6 +514,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting bad request response when deleting a membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_delete_bad_request_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -548,6 +535,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single membership update without authorization.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_delete_forbidden_membership() {
 		// create a membership first.
@@ -566,6 +555,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_delete_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -590,6 +581,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single membership deletion without authorization.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_delete_membership_without_authorization() {
 		// Create a membership first.
@@ -608,6 +601,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a nonexistent single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_delete_nonexistent_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -626,6 +621,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test the item schema.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_item_schema() {
 		$schema = $this->endpoint->get_item_schema();
@@ -645,6 +642,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting a single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -666,7 +665,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since [version]
 	 *
-	 * @todo  test order and orderby
+	 * @return void
 	 */
 	public function test_get_membership_enrollments() {
 		wp_set_current_user( $this->user_allowed );
@@ -705,6 +704,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test get single membership with forbidden context.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_membership_forbidden() {
 		wp_set_current_user( $this->user_forbidden );
@@ -723,25 +724,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test getting single membership without permission.
-	 *
-	 * @since [version]
-	 */
-	/*	public function test_get_membership_without_permission() {
-			wp_set_current_user( 0 );
-
-			// Setup membership.
-			$membership_id = $this->factory->membership->create();
-			$response      = $this->perform_mock_request( 'GET', $this->route . '/' . $membership_id );
-
-			// Check we don't have permissions to make this request.
-			$this->assertEquals( 401, $response->get_status() );
-		}*/
-
-	/**
 	 * Test list memberships.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships() {
 		wp_set_current_user( $this->user_allowed );
@@ -772,6 +759,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting memberships: bad request.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_bad_request() {
 		wp_set_current_user( $this->user_allowed );
@@ -795,6 +784,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships exclude arg.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_exclude() {
 		wp_set_current_user( $this->user_allowed );
@@ -821,6 +812,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test get memberships with forbidden context.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_forbidden() {
 		wp_set_current_user( $this->user_forbidden );
@@ -843,6 +836,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships include arg.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_include() {
 		wp_set_current_user( $this->user_allowed );
@@ -871,6 +866,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships ordered by id ascending.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_ordered_by_id_ascending() {
 		wp_set_current_user( $this->user_allowed );
@@ -899,6 +896,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships ordered by id descending.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_ordered_by_id_descending() {
 		wp_set_current_user( $this->user_allowed );
@@ -928,6 +927,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting memberships orderby `menu_order`.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_ordered_by_menu_order() {
 		wp_set_current_user( $this->user_allowed );
@@ -975,6 +976,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships ordered by title.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_ordered_by_title() {
 		wp_set_current_user( $this->user_allowed );
@@ -1006,6 +1009,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships ordered by title descending.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_ordered_by_title_descending() {
 		wp_set_current_user( $this->user_allowed );
@@ -1037,6 +1042,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list memberships pagination success.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_memberships_with_pagination() {
 		wp_set_current_user( $this->user_allowed );
@@ -1047,26 +1054,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test getting memberships without permission.
-	 *
-	 * @since [version]
-	 */
-	/*	public function test_get_memberships_without_permission() {
-			wp_set_current_user( 0 );
-
-			// Setup membership.
-			$this->factory->membership->create();
-
-			$response = $this->perform_mock_request( 'GET', $this->route );
-
-			// Check we don't have permissions to make this request.
-			$this->assertEquals( 401, $response->get_status() );
-		}*/
-
-	/**
 	 * Test getting single membership that doesn't exist.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_get_nonexistent_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -1081,9 +1073,52 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test links.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_links() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// create two courses to autoenroll.
+		$course_ids = $this->factory->course->create_many( 2, array( 0, 0, 0, 0 ) );
+		// create 3 memberships.
+		$memberships = $this->factory->post->create_many( 3, array( 'post_type' => 'llms_membership' ) );
+
+		$i = 1;
+		foreach ( $memberships as $membership_id ) {
+			$membership = new LLMS_Membership( $membership_id );
+			/**
+			 * add auto enroll except for the latest membership.
+			 */
+			if ( 3 !== $i++ ) {
+				$membership->add_auto_enroll_courses( $course_ids, true );
+			}
+			$response = $this->perform_mock_request( 'GET', $this->route . '/' . $membership->get( 'id' ) );
+			$expected_link_rels = array();
+			if ( empty( $membership->get_auto_enroll_courses() ) ) {
+				foreach ( $this->expected_link_rels as $link_rel ) {
+					if ( 'auto_enrollment_courses' !== $link_rel ) {
+						$expected_link_rels[] = $link_rel;
+					}
+				}
+			} else {
+				$expected_link_rels = $this->expected_link_rels;
+			}
+			$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
+		}
+
+	}
+
+	/**
 	 * Test route registration.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_register_routes() {
 		$routes = $this->server->get_routes();
@@ -1098,6 +1133,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test trashing a single membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_trash_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -1145,6 +1182,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single membership update.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_forbidden_membership() {
 		// create a membership first.
@@ -1165,6 +1204,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_membership() {
 		wp_set_current_user( $this->user_allowed );
@@ -1208,6 +1249,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a membership with an instructor that does not exist.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_membership_with_bad_instructor() {
 		wp_set_current_user( $this->user_allowed );
@@ -1223,28 +1266,21 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
 		$update_data = array( 'instructors' => array( $bad_instructor_id ) );
 		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEqualSets( array( $original_instructor_id ), $response->data['instructors'] );
+		$this->assertResponseStatusEquals( 400, $response );
 
 		// Update membership with existing instructor and non-existing instructor.
 		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
 		$update_data = array( 'instructors' => array( $good_instructor_id, $bad_instructor_id ) );
 		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
-
-		// Update membership with non-existing instructor and existing instructor.
-		$membership->set_instructors( array( array( 'id' => $original_instructor_id ) ) );
-		$update_data = array( 'instructors' => array( $bad_instructor_id, $good_instructor_id ) );
-		$response    = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEqualSets( array( $good_instructor_id ), $response->data['instructors'] );
+		$this->assertResponseStatusEquals( 400, $response );
 	}
 
 	/**
 	 * Test updating a membership with an empty instructors array.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_membership_with_empty_instructors() {
 		wp_set_current_user( $this->user_allowed );
@@ -1258,14 +1294,15 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		// Update membership with empty instructors.
 		$update_data = array( 'instructors' => array() );
 		$response = $this->perform_mock_request( 'POST', $this->route . '/' . $membership_id, $update_data );
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEqualSets( array( $instructor_id ), $response->data['instructors'] );
+		$this->assertResponseStatusEquals( 400, $response );
 	}
 
 	/**
 	 * Test single membership update without authorization.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_membership_without_authorization() {
 		// create a membership first.
@@ -1286,6 +1323,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a nonexistent membership.
 	 *
 	 * @since [version]
+	 *
+	 * @return void
 	 */
 	public function test_update_nonexistent_membership() {
 		wp_set_current_user( $this->user_allowed );
