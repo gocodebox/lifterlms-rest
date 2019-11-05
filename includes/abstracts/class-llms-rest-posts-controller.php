@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.8
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -27,6 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
  *                     Initialize `$prepared_item` array before adding values to it.
  * @since [version] Implemented a generic way to create and get an llms post object instance given a `post_type`.
+ *                     In `get_objects_from_query()` avoid performing an additional query, just return the already retrieved posts.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -679,16 +680,17 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Retrieve an array of objects from the result of $this->get_objects_query().
+	 * Retrieve an array of objects from the result of `$this->get_objects_query()`.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Avoid performing an additional query, just return the already retrieved posts.
 	 *
 	 * @param WP_Query $query WP_Query query result.
 	 * @return WP_Post[]
 	 */
 	protected function get_objects_from_query( $query ) {
 
-		return $query->get_posts();
+		return $query->posts;
 
 	}
 
