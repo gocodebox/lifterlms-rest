@@ -170,7 +170,7 @@ class LLMS_REST_Admin_Form_Controller {
 		}
 
 		// validate the decoded consumer key looks like the stored truncated key.
-		$consumer_key = base64_decode( $consumer_key );
+		$consumer_key = base64_decode( $consumer_key ); //phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- This is benign usage.
 		if ( substr( $consumer_key, -7 ) !== $key->get( 'truncated_key' ) ) {
 			return false;
 		}

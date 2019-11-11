@@ -173,7 +173,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 							add_query_arg(
 								array(
 									'id' => $key->get( 'id' ),
-									'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) ),
+									'ck' => base64_encode( $key->get( 'consumer_key_one_time' ) ), //phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- This is benign usage.
 								),
 								'admin.php'
 							)
