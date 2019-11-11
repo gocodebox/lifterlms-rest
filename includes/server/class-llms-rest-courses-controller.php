@@ -42,6 +42,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Fixed `sales_page_url` not returned in `edit` context.
  *                     Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  *                     `llms_rest_course_filters_removed_for_response` filter hook added.
+ *                     Added `llms_rest_course_item_schema`, `llms_rest_pre_insert_course`, `llms_rest_prepare_course_object_response`, `llms_rest_course_links` filter hooks.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -162,7 +163,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Add missing quotes in enrollment/access default messages shortcodes.
 	 * @since [version] Make sure instructors list is either not empty and composed by real user ids.
-	 *
+	 *                     Added `llms_rest_course_item_schema` filter hook.
 	 * @return array
 	 */
 	public function get_item_schema() {
@@ -515,7 +516,14 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$schema['properties'] = array_merge( (array) $schema['properties'], $course_properties );
 
-		return $schema;
+		/**
+		 * Filter item schema for the course controller.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $schema Item schema data.
+		 */
+		return apply_filters( 'llms_rest_course_item_schema', $schema );
 
 	}
 
@@ -527,6 +535,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Always return `sales_page_url` and `sales_page_page_id` when in `edit` context.
 	 * @since [version] Fixed `sales_page_url` not returned in `edit` context.
+	 *                     Added `llms_rest_prepare_course_object_response` filter hook.
 	 *
 	 * @param LLMS_Course     $course  Course object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -648,7 +657,16 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			$data['sales_page_url'] = $course->get( 'sales_page_content_url' );
 		}
 
-		return $data;
+		/**
+		 * Filters the course data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $data    Array of course properties prepared for response.
+		 * @param LLMS_Course     $course  Course object.
+		 * @param WP_REST_Request $request Full details about the request.
+		 */
+		return apply_filters( 'llms_rest_prepare_course_object_response', $data, $course, $request );
 
 	}
 
@@ -663,6 +681,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     which the consumer cannot avoid having no direct control on those properties.
 	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
+	 * @since [version] Added `llms_rest_pre_insert_course` filter hook.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -742,7 +761,16 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['sales_page_content_url'] = $request['sales_page_url'];
 		}
 
-		return $prepared_item;
+		/**
+		 * Filters the course data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $prepared_item Array of course item properties prepared for database.
+		 * @param WP_REST_Request $request       Full details about the request.
+		 * @param array           $schema        The item schema.
+		 */
+		return apply_filters( 'llms_rest_pre_insert_course', $prepared_item, $request, $schema );
 
 	}
 
@@ -1071,7 +1099,10 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param LLMS_Course $course  LLMS Course.
+	 * @since 1.0.0-beta.1
+	 * @since [version] Added `llms_rest_course_links` filter hook.
+	 *
+	 * @param LLMS_Course $course LLMS Course.
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $course ) {
@@ -1130,7 +1161,17 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			),
 		);
 
-		return array_merge( $links, $course_links );
+		$links = array_merge( $links, $course_links );
+
+		/**
+		 * Filters the courses's links.
+		 *
+		 * @since [version]
+		 *
+		 * @param array       $links  Links for the given lesson.
+		 * @param LLMS_Course $course Course object.
+		 */
+		return apply_filters( 'llms_rest_course_links', $links, $course );
 	}
 
 	/**
