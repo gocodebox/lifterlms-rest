@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Controller for Student Progress
+ * REST Controller for Student Progress.
  *
  * @package  LifterLMS_REST/Classes
  *

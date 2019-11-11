@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Students_Controller class..
+ * LLMS_REST_Students_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added `prepare_args_for_total_count_query()` method override.

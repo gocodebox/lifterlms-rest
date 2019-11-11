@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Enrollments Controller Class
+ * REST Enrollments Controller.
  *
  * @package LLMS_REST
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Enrollments_Controller
+ * LLMS_REST_Enrollments_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.

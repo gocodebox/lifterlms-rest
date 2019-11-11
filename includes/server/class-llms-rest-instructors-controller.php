@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Instructors_Controller class..
+ * LLMS_REST_Instructors_Controller class.
  *
  * @since 1.0.0-beta.1
  */
