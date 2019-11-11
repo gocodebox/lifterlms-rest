@@ -79,20 +79,31 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array Array of action/filters to be removed for response.
 	 */
 	protected function get_filters_to_be_removed_for_response( $membership ) {
-		if ( ! llms_blocks_is_post_migrated( $membership->get( 'id' ) ) ) {
-			return array();
+
+		$filters = array();
+
+		if ( llms_blocks_is_post_migrated( $membership->get( 'id' ) ) ) {
+			$filters = array(
+				// hook => [callback, priority].
+				'lifterlms_single_membership_after_summary' => array(
+					// Membership Information.
+					array(
+						'callback' => 'lifterlms_template_pricing_table',
+						'priority' => 10,
+					),
+				),
+			);
 		}
 
-		return array(
-			// hook => [callback, priority].
-			'lifterlms_single_membership_after_summary' => array(
-				// Membership Information.
-				array(
-					'callback' => 'lifterlms_template_pricing_table',
-					'priority' => 10,
-				),
-			),
-		);
+		/**
+		 * Modify the array of filters to be removed before building the response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $filters    Array of filters to be removed.
+		 * @param LLMS_Membership $membership Membership object.
+		 */
+		return apply_filters( 'llms_rest_llms_membership_filters_removed_for_response', $filters, $membership );
 	}
 
 	/**

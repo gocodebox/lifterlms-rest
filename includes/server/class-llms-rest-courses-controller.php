@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Courses Controller Class
+ * REST Courses Controller Class.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Courses_Controller
+ * LLMS_REST_Courses_Controller.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
@@ -36,11 +36,12 @@ defined( 'ABSPATH' ) || exit;
  *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
- * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  * @since [version] In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
  *                     Also made sure course's `instructor` is at least set as the post author.
  *                     Defined `instructors` validate callback so to make sure instructors list is either not empty and composed by real user ids.
  *                     Fixed `sales_page_url` not returned in `edit` context.
+ *                     Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
+ *                     `llms_rest_course_filters_removed_for_response` filter hook added.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -989,70 +990,82 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] `llms_rest_course_filters_removed_for_response` filter hook added.
 	 *
 	 * @param LLMS_Course $course Course object.
 	 * @return array Array of action/filters to be removed for response.
 	 */
 	protected function get_filters_to_be_removed_for_response( $course ) {
 
-		if ( ! llms_blocks_is_post_migrated( $course->get( 'id' ) ) ) {
-			return array();
+		$filters = array();
+
+		if ( llms_blocks_is_post_migrated( $course->get( 'id' ) ) ) {
+			$filters = array(
+				// hook => [callback, priority].
+				'lifterlms_single_course_after_summary' => array(
+					// Course Information.
+					array(
+						'callback' => 'lifterlms_template_single_meta_wrapper_start',
+						'priority' => 5,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_length',
+						'priority' => 10,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_difficulty',
+						'priority' => 20,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_course_tracks',
+						'priority' => 25,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_course_categories',
+						'priority' => 30,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_course_tags',
+						'priority' => 35,
+					),
+					array(
+						'callback' => 'lifterlms_template_single_meta_wrapper_end',
+						'priority' => 50,
+					),
+					// Course Progress.
+					array(
+						'callback' => 'lifterlms_template_single_course_progress',
+						'priority' => 60,
+					),
+					// Course Syllabus.
+					array(
+						'callback' => 'lifterlms_template_single_syllabus',
+						'priority' => 90,
+					),
+					// Instructors.
+					array(
+						'callback' => 'lifterlms_template_course_author',
+						'priority' => 40,
+					),
+					// Pricing Table.
+					array(
+						'callback' => 'lifterlms_template_pricing_table',
+						'priority' => 60,
+					),
+				),
+			);
 		}
 
-		return array(
-			// hook => [callback, priority].
-			'lifterlms_single_course_after_summary' => array(
-				// Course Information.
-				array(
-					'callback' => 'lifterlms_template_single_meta_wrapper_start',
-					'priority' => 5,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_length',
-					'priority' => 10,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_difficulty',
-					'priority' => 20,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_course_tracks',
-					'priority' => 25,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_course_categories',
-					'priority' => 30,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_course_tags',
-					'priority' => 35,
-				),
-				array(
-					'callback' => 'lifterlms_template_single_meta_wrapper_end',
-					'priority' => 50,
-				),
-				// Course Progress.
-				array(
-					'callback' => 'lifterlms_template_single_course_progress',
-					'priority' => 60,
-				),
-				// Course Syllabus.
-				array(
-					'callback' => 'lifterlms_template_single_syllabus',
-					'priority' => 90,
-				),
-				// Instructors.
-				array(
-					'callback' => 'lifterlms_template_course_author',
-					'priority' => 40,
-				),
-				// Pricing Table.
-				array(
-					'callback' => 'lifterlms_template_pricing_table',
-					'priority' => 60,
-				),
-			),
-		);
+		/**
+		 * Modify the array of filters to be removed before building the response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array       $filters Array of filters to be removed.
+		 * @param LLMS_Course $course  Course object.
+		 */
+		return apply_filters( 'llms_rest_course_filters_removed_for_response', $filters, $course );
+
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Lessons Controller Class
+ * REST Lessons Controller Class.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * LLMS_REST_Lessons_Controller
+ * LLMS_REST_Lessons_Controller.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
@@ -27,6 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
  *                     so to instruct it to return a WP_Error on failure.
  * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
+ *                     `llms_rest_lesson_filters_removed_for_response` filter hook added.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -629,31 +630,42 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed lesson progression callback name.
+	 * @since [version] `llms_rest_lesson_filters_removed_for_response` filter hook added.
 	 *
-	 * @param LLMS_Section $lesson Lesson object.
+	 * @param LLMS_Lesson $lesson Lesson object.
 	 * @return array Array of action/filters to be removed for response.
 	 */
 	protected function get_filters_to_be_removed_for_response( $lesson ) {
 
-		if ( ! llms_blocks_is_post_migrated( $lesson->get( 'id' ) ) ) {
-			return array();
+		$filters = array();
+
+		if ( llms_blocks_is_post_migrated( $lesson->get( 'id' ) ) ) {
+			$filters = array(
+				// hook => [callback, priority].
+				'lifterlms_single_lesson_after_summary' => array(
+					// Lesson Navigation.
+					array(
+						'callback' => 'lifterlms_template_lesson_navigation',
+						'priority' => 20,
+					),
+					// Lesson Progression.
+					array(
+						'callback' => 'lifterlms_template_complete_lesson_link',
+						'priority' => 10,
+					),
+				),
+			);
 		}
 
-		return array(
-			// hook => [callback, priority].
-			'lifterlms_single_lesson_after_summary' => array(
-				// Lesson Navigation.
-				array(
-					'callback' => 'lifterlms_template_lesson_navigation',
-					'priority' => 20,
-				),
-				// Lesson Progression.
-				array(
-					'callback' => 'lifterlms_template_complete_lesson_link',
-					'priority' => 10,
-				),
-			),
-		);
+		/**
+		 * Modify the array of filters to be removed before building the response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array       $filters Array of filters to be removed.
+		 * @param LLMS_Lesson $lesson  Lesson object.
+		 */
+		return apply_filters( 'llms_rest_lesson_filters_removed_for_response', $filters, $lesson );
 
 	}
 
