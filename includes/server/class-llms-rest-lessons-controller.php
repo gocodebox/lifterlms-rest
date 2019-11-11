@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Added `prepare_item_for_database()`, `update_additional_object_fields()` method.
  * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
  *                     so to instruct it to return a WP_Error on failure.
- * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
+ * @since 1.0.0-beta.9 Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  *                     `llms_rest_lesson_filters_removed_for_response` filter hook added.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
@@ -630,7 +630,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed lesson progression callback name.
-	 * @since [version] `llms_rest_lesson_filters_removed_for_response` filter hook added.
+	 * @since 1.0.0-beta.9 `llms_rest_lesson_filters_removed_for_response` filter hook added.
 	 *
 	 * @param LLMS_Lesson $lesson Lesson object.
 	 * @return array Array of action/filters to be removed for response.
@@ -660,7 +660,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Modify the array of filters to be removed before building the response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array       $filters Array of filters to be removed.
 		 * @param LLMS_Lesson $lesson  Lesson object.

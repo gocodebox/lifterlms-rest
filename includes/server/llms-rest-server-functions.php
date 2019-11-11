@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @since [version] Added an util to validate a list of instructors.
+ * @since 1.0.0-beta.9 Added an util to validate a list of instructors.
  */
 
 /**
@@ -87,7 +87,7 @@ function llms_rest_server_error( $message = '' ) {
 /**
  * Validate submitted array of integers is an array of real real user ids.
  *
- * @since [version]
+ * @since 1.0.0-beta.9
  *
  * @param array $instructors Array of instructors id.
  *

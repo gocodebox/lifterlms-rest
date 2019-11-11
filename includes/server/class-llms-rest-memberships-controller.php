@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since   [version]
- * @version [version]
+ * @since   1.0.0-beta.9
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Memberships_Controller class.
  *
- * @since [version]
+ * @since 1.0.0-beta.9
  */
 class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
@@ -40,7 +40,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 */
 	public function __construct() {
 		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
@@ -50,7 +50,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the enrollments objects collection.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -73,7 +73,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param LLMS_Membership $membership Membership object.
 	 * @return array Array of action/filters to be removed for response.
@@ -98,7 +98,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Modify the array of filters to be removed before building the response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $filters    Array of filters to be removed.
 		 * @param LLMS_Membership $membership Membership object.
@@ -109,7 +109,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Membership's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return array
 	 */
@@ -274,7 +274,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filter item schema for the membership controller.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -286,7 +286,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Maps a taxonomy name to the relative rest base.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param object $taxonomy The taxonomy object.
 	 * @return string The taxonomy rest base.
@@ -305,7 +305,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepares a single post for create or update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -357,7 +357,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the membership data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $prepared_item Array of membership item properties prepared for database.
 		 * @param WP_REST_Request $request       Full details about the request.
@@ -426,7 +426,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the membership's links.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $links      Links for the given membership.
 		 * @param LLMS_Membership $membership LLMS Membership object.
@@ -439,7 +439,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param LLMS_Membership $membership Membership object.
 	 * @param WP_REST_Request $request    Full details about the request.
@@ -511,7 +511,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the membership data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $data       Array of lesson properties prepared for response.
 		 * @param LLMS_Membership $membership Membership object.
@@ -525,7 +525,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -558,7 +558,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * This method should be used for membership properties that require the membership id in order to be saved in the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param LLMS_Membership $membership    LLMS_Membership instance.
 	 * @param WP_REST_Request $request       Full details about the request.

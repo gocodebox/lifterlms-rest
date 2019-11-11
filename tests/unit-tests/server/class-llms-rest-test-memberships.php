@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_memberships
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.9
+ * @version 1.0.0-beta.9
  *
  * @todo do more tests on the membership update/delete.
  */
@@ -45,7 +45,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $sample_membership_args = array();
 
 	/**
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 * @var array
 	 */
 	private $schema_properties = array(
@@ -99,7 +99,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * Setup our test server, endpoints, and user info.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -129,7 +129,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -199,7 +199,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test create membership with raw properties.
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -227,7 +227,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test producing bad request error when creating a single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -287,7 +287,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single membership defaults are correctly set.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -345,7 +345,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test forbidden single membership creation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -361,7 +361,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a membership with an instructor that doesn't exist.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -388,7 +388,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a membership with an empty instructors array.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -405,7 +405,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a membership without an `instructors` argument.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -429,7 +429,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single membership with taxonomies.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -497,7 +497,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating single membership without permissions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -513,7 +513,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting bad request response when deleting a membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -534,7 +534,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single membership update without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -554,7 +554,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -580,7 +580,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single membership deletion without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -600,7 +600,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a nonexistent single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -620,7 +620,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -641,7 +641,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting a single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -663,7 +663,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list membership content.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -703,7 +703,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test get single membership with forbidden context.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -726,7 +726,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -758,7 +758,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting memberships: bad request.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -783,7 +783,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships exclude arg.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -811,7 +811,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test get memberships with forbidden context.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -835,7 +835,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships include arg.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -865,7 +865,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships ordered by id ascending.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -895,7 +895,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships ordered by id descending.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -926,7 +926,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting memberships orderby `menu_order`.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -975,7 +975,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships ordered by title.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1008,7 +1008,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships ordered by title descending.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1041,7 +1041,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list memberships pagination success.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1056,7 +1056,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting single membership that doesn't exist.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1075,7 +1075,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test links.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1116,7 +1116,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test route registration.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1132,7 +1132,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test trashing a single membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1181,7 +1181,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test forbidden single membership update.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1203,7 +1203,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1248,7 +1248,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a membership with an instructor that does not exist.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1278,7 +1278,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a membership with an empty instructors array.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1300,7 +1300,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test single membership update without authorization.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */
@@ -1322,7 +1322,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a nonexistent membership.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return void
 	 */

@@ -1,6 +1,30 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.9 - 2019-11-11
+--------------------------
+
+##### Updates
+
++ Added memberships controller, huge thanks to [@pondermatic](https://github.com/pondermatic)!
++ Added new filters:
+
+  + `llms_rest_lesson_filters_removed_for_response`
+  + `llms_rest_course_item_schema`
+  + `llms_rest_pre_insert_course`
+  + `llms_rest_prepare_course_object_response`
+  + `llms_rest_course_links`
+
++ Improved validation when defining instructors for courses.
++ Improved performance on post collection listing functions.
+
+##### Bug fixes
+
++ Ensure that a course instructor is always set for courses.
++ Fixed `sales_page_url` not returned in `edit` context.
++ In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+
+
 v1.0.0-beta.8 - 2019-10-24
 --------------------------
 

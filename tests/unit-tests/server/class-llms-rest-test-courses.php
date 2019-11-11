@@ -116,7 +116,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -171,7 +171,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses include arg.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -209,7 +209,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses exclude arg.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -244,7 +244,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses ordered by id desc.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -281,7 +281,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses ordered by title.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -324,7 +324,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list courses ordered by title
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -367,7 +367,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting courses: bad request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -467,7 +467,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting single course that doesn't exist.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -494,7 +494,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Add checks on nullable dates.
 	 * @since 1.0.0-beta.8 Add missing quotes in enrollment/access default messages shortcodes.
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -561,7 +561,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course without a list of instructors.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 */
 	public function test_create_course_create_with_empty_instructors() {
 
@@ -582,7 +582,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single course with incorrect list of instructors.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 */
 	public function test_create_course_create_with_bad_instructors_list() {
 		wp_set_current_user( $this->user_allowed );
@@ -623,7 +623,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` to `sales_page_type` according to the specs.
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -706,7 +706,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * These props, when set, alter the rendered content so we test them separetaly.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -757,7 +757,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course with taxonomies
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -858,7 +858,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating a single course with taxonomies
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -936,7 +936,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test course "periods".
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1021,7 +1021,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1079,7 +1079,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test producing bad request error when creating a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *                     Use the far less predictable `wp_wp_rand()` in place of `wp_rand()`.
 	 * @return void
 	 */
@@ -1161,7 +1161,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test creating single course without permissions.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1184,7 +1184,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single course creation.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1209,7 +1209,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Add tests on prerequisites.
-	 * @since [version] Use `$this->assertResponseStatusEquals()` util.
+	 * @since 1.0.0-beta.9 Use `$this->assertResponseStatusEquals()` util.
 	 *
 	 * @return void
 	 */
@@ -1287,7 +1287,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test updating a nonexistent course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1312,7 +1312,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test forbidden single course update.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1338,7 +1338,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course update without authorization.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1364,7 +1364,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1398,7 +1398,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test trashing a single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1460,7 +1460,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test deleting a nonexistent single course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1483,7 +1483,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test getting bad request response when deleting a course.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1512,7 +1512,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course update without authorization.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1537,7 +1537,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test single course deletion without authorization.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @return void
 	 */
@@ -1562,7 +1562,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list course content.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @todo test order and orderby
 	 *
@@ -1611,7 +1611,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test list course content.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
+	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
 	 * @todo test order and orderby
 	 *

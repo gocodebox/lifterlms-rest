@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Call `set_bulk()` llms post method passing `true` as second parameter, so to instruct it to return a WP_Error on failure.
  *                     Add missing quotes in enrollment/access default messages shortcodes.
  *                     `sales_page_page_id` and `sales_page_url` always returned in edit context.
- * @since [version] In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+ * @since 1.0.0-beta.9 In `update_additional_object_fields()` method, use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
  *                     Also made sure course's `instructor` is at least set as the post author.
  *                     Defined `instructors` validate callback so to make sure instructors list is either not empty and composed by real user ids.
  *                     Fixed `sales_page_url` not returned in `edit` context.
@@ -162,7 +162,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Add missing quotes in enrollment/access default messages shortcodes.
-	 * @since [version] Make sure instructors list is either not empty and composed by real user ids.
+	 * @since 1.0.0-beta.9 Make sure instructors list is either not empty and composed by real user ids.
 	 *                     Added `llms_rest_course_item_schema` filter hook.
 	 * @return array
 	 */
@@ -519,7 +519,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filter item schema for the course controller.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -534,7 +534,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.8 Fixed `sales_page_type` not set as `none` if course's `sales_page_content_type` property is empty.
 	 *                     Also Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
 	 *                     Always return `sales_page_url` and `sales_page_page_id` when in `edit` context.
-	 * @since [version] Fixed `sales_page_url` not returned in `edit` context.
+	 * @since 1.0.0-beta.9 Fixed `sales_page_url` not returned in `edit` context.
 	 *                     Added `llms_rest_prepare_course_object_response` filter hook.
 	 *
 	 * @param LLMS_Course     $course  Course object.
@@ -660,7 +660,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the course data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $data    Array of course properties prepared for response.
 		 * @param LLMS_Course     $course  Course object.
@@ -681,7 +681,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     which the consumer cannot avoid having no direct control on those properties.
 	 *                     Made `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
 	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 * @since [version] Added `llms_rest_pre_insert_course` filter hook.
+	 * @since 1.0.0-beta.9 Added `llms_rest_pre_insert_course` filter hook.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -764,7 +764,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the course data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $prepared_item Array of course item properties prepared for database.
 		 * @param WP_REST_Request $request       Full details about the request.
@@ -795,7 +795,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     if their values didn't really change, otherwise we'd get a WP_Error which the consumer cannot avoid having no direct control on those properties.
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
-	 * @since [version] Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
+	 * @since 1.0.0-beta.9 Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
 	 *                     Also made sure course's `instructor` is at least set as the post author.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
@@ -1018,7 +1018,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] `llms_rest_course_filters_removed_for_response` filter hook added.
+	 * @since 1.0.0-beta.9 `llms_rest_course_filters_removed_for_response` filter hook added.
 	 *
 	 * @param LLMS_Course $course Course object.
 	 * @return array Array of action/filters to be removed for response.
@@ -1087,7 +1087,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Modify the array of filters to be removed before building the response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array       $filters Array of filters to be removed.
 		 * @param LLMS_Course $course  Course object.
@@ -1100,7 +1100,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added `llms_rest_course_links` filter hook.
+	 * @since 1.0.0-beta.9 Added `llms_rest_course_links` filter hook.
 	 *
 	 * @param LLMS_Course $course LLMS Course.
 	 * @return array Links for the given object.
@@ -1166,7 +1166,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the courses's links.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array       $links  Links for the given lesson.
 		 * @param LLMS_Course $course Course object.

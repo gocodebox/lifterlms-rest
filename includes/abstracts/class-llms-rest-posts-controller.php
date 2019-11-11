@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *                     fired after inserting/updateing an llms post into the database.
  * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
  *                     Initialize `$prepared_item` array before adding values to it.
- * @since [version] Implemented a generic way to create and get an llms post object instance given a `post_type`.
+ * @since 1.0.0-beta.9 Implemented a generic way to create and get an llms post object instance given a `post_type`.
  *                     In `get_objects_from_query()` avoid performing an additional query, just return the already retrieved posts.
  *                     Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
@@ -63,7 +63,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * LLMS post class name.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 * @var string;
 	 */
 	protected $llms_post_class;
@@ -685,7 +685,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Retrieve an array of objects from the result of `$this->get_objects_query()`.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Avoid performing an additional query, just return the already retrieved posts.
+	 * @since 1.0.0-beta.9 Avoid performing an additional query, just return the already retrieved posts.
 	 *
 	 * @param WP_Query $query WP_Query query result.
 	 * @return WP_Post[]
@@ -1194,7 +1194,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Course|WP_Error
@@ -1220,7 +1220,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Create an LLMS_Post_Model
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Implement generic llms post creation.
+	 * @since 1.0.0-beta.9 Implement generic llms post creation.
 	 *
 	 * @param array $object_args Object args.
 	 * @return LLMS_Post_Model|WP_Error
@@ -1369,7 +1369,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Get action/filters to be removed before preparing the item for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
+	 * @since 1.0.0-beta.9 Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
 	 *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
 	 *
 	 * @param LLMS_Post_Model $object LLMS_Post_Model object.
@@ -1382,7 +1382,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 *
 		 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.9
 		 *
 		 * @param array           $filters Array of filters to be removed.
 		 * @param LLMS_Post_Model $object  LLMS_Post_Model object.
@@ -1660,7 +1660,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the llms post model class from the controller post type.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.9
 	 *
 	 * @return string|bool The llms post model class name if it exists or FALSE if it doesn't.
 	 */

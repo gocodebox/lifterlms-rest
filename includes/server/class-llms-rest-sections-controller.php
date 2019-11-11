@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.9
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Fix the way we get the section's parent course object when building the resource links.
- * @since [version] Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
+ * @since 1.0.0-beta.9 Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
