@@ -484,7 +484,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					'sanitize_callback' => 'absint',
 				),
 			),
-			'sales_page_type'      => array(
+			'sales_page_type'           => array(
 				'description' => __(
 					'Determines the type of sales page content to display.<br> - <code>none</code> displays the course content.<br> - <code>content</code> displays alternate content from the <code>excerpt</code> property.<br> - <code>page</code> redirects to the WordPress page defined in <code>content_page_id</code>.<br> - <code>url</code> redirects to the URL defined in <code>content_page_url</code>',
 					'lifterlms'
@@ -494,7 +494,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'enum'        => array_keys( llms_get_sales_page_types() ),
 				'context'     => array( 'view', 'edit' ),
 			),
-			'sales_page_url'       => array(
+			'sales_page_url'            => array(
 				'description' => __(
 					'The URL of the sales page content. Required when <code>content_type</code> equals <code>url</code>. Only returned when the <code>content_type</code> equals <code>url</code>.',
 					'lifterlms'
