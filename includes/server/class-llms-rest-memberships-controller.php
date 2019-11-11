@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Memberships Controller Class
+ * REST Memberships Controller.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Memberships_Controller.
+ * LLMS_REST_Memberships_Controller class.
  *
  * @since [version]
  */

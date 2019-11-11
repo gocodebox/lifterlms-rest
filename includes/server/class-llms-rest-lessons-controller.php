@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Lessons Controller Class.
+ * REST Lessons Controller.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * LLMS_REST_Lessons_Controller.
+ * LLMS_REST_Lessons_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.

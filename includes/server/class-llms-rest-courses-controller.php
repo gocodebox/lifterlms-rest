@@ -1,6 +1,6 @@
 <?php
 /**
- * REST Courses Controller Class.
+ * REST Courses Controller.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Courses_Controller.
+ * LLMS_REST_Courses_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
