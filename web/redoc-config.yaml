@@ -20,4 +20,5 @@ requiredPropsFirst: true
 sortPropsAlphabetically: true
 
 # Use a specific build version
+# Currently using rc.22 until https://github.com/Redocly/redoc/issues/1152 is fixed (rc.22 is not the latest release yet).
 redocURL: https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.22/bundles/redoc.standalone.js
