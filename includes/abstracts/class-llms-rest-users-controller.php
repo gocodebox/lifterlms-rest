@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -667,7 +667,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
 		if ( ! empty( $request['roles'] ) ) {
 			$user = $object->get_user();
-			array_map( array( $user, 'add_role' ), $request['roles'] );
+			array_map( array( $user, 'set_role' ), $request['roles'] );
 		}
 
 		return $object;
