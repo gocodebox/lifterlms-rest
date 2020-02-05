@@ -35,7 +35,7 @@ references:
       - run:
           name: Run PHP Unit Tests
           command: |
-            if [ ! -z "${CC_TEST_REPORTER_ID}" ] && [ "test-php-73" == "${CIRCLE_JOB}" ]; then
+            if [ ! -z "${CC_TEST_REPORTER_ID}" ] && [ "test-php-74" == "${CIRCLE_JOB}" ]; then
                 /cc-test-reporter before-build
                 export COMPOSER_PROCESS_TIMEOUT=1200
                 composer run-script tests-run -- --coverage-clover clover.xml
@@ -45,12 +45,6 @@ references:
             fi
 
 jobs:
-  test-php-71:
-    docker:
-      - image: thomasplevy/llms-testing-env:php71
-        <<: [ *common_env_vars ]
-    <<: [ *common ]
-
   test-php-72:
     docker:
       - image: thomasplevy/llms-testing-env:php72
@@ -60,6 +54,12 @@ jobs:
   test-php-73:
     docker:
       - image: thomasplevy/llms-testing-env:php73
+        <<: [ *common_env_vars ]
+    <<: [ *common ]
+
+  test-php-74:
+    docker:
+      - image: thomasplevy/llms-testing-env:php74
         <<: [ *common_env_vars ]
     <<: [ *common ]
 
@@ -129,15 +129,15 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - test-php-71:
-          filters:
-            branches:
-              only: /.*/
       - test-php-72:
           filters:
             branches:
               only: /.*/
       - test-php-73:
+          filters:
+            branches:
+              only: /.*/
+      - test-php-74:
           filters:
             branches:
               only: /.*/
