@@ -8,7 +8,7 @@
  * @group webhooks_query
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Call parent method from setUp().
  */
 class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -16,10 +16,13 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Setup test.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call parent method.
 	 *
 	 * @return void
 	 */
 	public function setUp() {
+
+		parent::setUp();
 
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_webhooks" );
