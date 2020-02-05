@@ -9,7 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -880,6 +880,49 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$this->assertArrayHasKey( $this->route, $routes );
 		$this->assertArrayHasKey( $this->route . '/(?P<id>[\d]+)', $routes );
 
+	}
+
+	/**
+	 * Test setting roles.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_set_roles() {
+
+		$updating = $this->factory->student->create();
+		$route    = sprintf( '%1$s/%2$d', $this->route, $updating );
+		wp_set_current_user( $this->user_admin );
+
+		$request_bodies = array(
+			// Add instructors_assistant.
+			array(
+				'roles' => array(
+					'instructors_assistant',
+					'student',
+				),
+			),
+			// Remove instructors_assistant.
+			array(
+				'roles' => array(
+					'student',
+				),
+			),
+			// Replace student with lms_manager.
+			array(
+				'roles' => array(
+					'lms_manager',
+				),
+			),
+		);
+
+		foreach ( $request_bodies as $key => $body ) {
+			$response = $this->perform_mock_request( 'POST', $route, $body );
+			$this->assertResponseStatusEquals( 200, $response );
+			$response_data = $response->get_data();
+			$this->assertEqualSets( $request_bodies[ $key ]['roles'], $response_data['roles'] );
+		}
 	}
 
 	/**
