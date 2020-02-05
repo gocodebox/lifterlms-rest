@@ -667,7 +667,10 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
 		if ( ! empty( $request['roles'] ) ) {
 			$user = $object->get_user();
-			array_map( array( $user, 'set_role' ), $request['roles'] );
+			$user->set_role('');
+			foreach ( $request['roles'] as $role ) {
+				$user->add_role( $role );
+			}
 		}
 
 		return $object;
