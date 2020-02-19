@@ -2590,6 +2590,8 @@ paths:
       description: Create a new enrollment for a student in a course or membership.
       tags:
         - Student Enrollments
+      parameters:
+        - $ref: '#/components/parameters/EnrollmentTrigger'
       responses:
         '201':
           description: Successfully created the student's enrollment.
@@ -2610,6 +2612,8 @@ paths:
       description: Update an enrollment for a student in a course or membership.
       tags:
         - Student Enrollments
+      parameters:
+        - $ref: '#/components/parameters/EnrollmentTrigger'
       requestBody:
         required: true
         content:
@@ -2636,6 +2640,8 @@ paths:
       description: Deletes the record of a student's enrollment in a course or membership.
       tags:
         - Student Enrollments
+      parameters:
+        - $ref: '#/components/parameters/EnrollmentTrigger'
       responses:
         '204':
           description: Successfully deleted student's enrollment.
@@ -3564,6 +3570,10 @@ components:
           readOnly: true
         status:
           $ref: '#/components/schemas/EnrollmentStatus'
+        trigger:
+          description: The enrollment trigger.
+          type: string
+          readOnly: true
         _links:
           description: A map of links to other related API resources.
           readOnly: true
@@ -5477,6 +5487,14 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/EnrollmentStatus'
+    EnrollmentTrigger:
+      name: trigger
+      in: query
+      description: The trigger of the enrollment to act on.
+      required: false
+      schema:
+        type: string
+        default: any
     Exclude:
       name: exclude
       in: query
