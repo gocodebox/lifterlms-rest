@@ -212,7 +212,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		/**
-		 * Filters the lesson data for a response.
+		 * Filters a lesson before it is inserted via the REST API.
 		 *
 		 * @since 1.0.0-beta.7
 		 *

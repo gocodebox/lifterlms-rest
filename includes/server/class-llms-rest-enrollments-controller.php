@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,14 +15,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Don't output "Last" page link header on the last page.
- * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
+ * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single
+ *                     enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
  *                     The single enrollment can be read only by who can view the enrollment's student.
- *                     Enrollment's post_id and student_id casted to integer, and fix calling to some undefined functions.
+ *                     Enrollment's post_id and student_id casted to integer, and fix calling
+ *                     to some undefined functions.
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     `prepare_object_query()` renamed to `prepare_object_query_args()`.
- *                     Added: `get_objects_from_query()`, `prepare_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
+ *                     Added: `get_objects_from_query()`, `prepare_objects_query()`,
+ *                     `get_pagination_data_from_query()`, `prepare_collection_items_for_response()`
+ *                     methods overrides.
  *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
  *                     Fixed description of the `post_id` path parameter.
+ * @since [version] Added `trigger` property and as param for creation/update/and deletion requests.
+ *                     Added `get_endpoint_args_for_item_schema()` method override.
+ *                     Use backticks in args and item schema properties descriptions where convenient.
+ *                     Filter prepared enrollment for response in order to include only fields available for response.
+ *                     Added `llms_rest_enrollents_item_schema`, `llms_rest_prepare_enrollment_object_response`,
+ *                     `llms_rest_enrollment_links` filter hooks.
+ *                     Also fix return when the enrollment to be deleted doesn't exist.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -60,10 +71,42 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Retrieves an array of endpoint arguments from the item schema for the controller.
+	 *
+	 * @since [version]
+	 *
+	 * @param string $method Optional. HTTP method of the request. The arguments for `CREATABLE` requests are
+	 *                       checked for required values and may fall-back to a given default, this is not done
+	 *                       on `EDITABLE` requests. Default WP_REST_Server::CREATABLE.
+	 * @return array Endpoint arguments.
+	 */
+	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
+
+		if ( in_array( $method, array( 'PATCH', 'POST', WP_REST_Server::DELETABLE ), true ) ) {
+			$args = array(
+				'trigger' => array(
+					'description'       => __( 'The trigger of the enrollment to act on.', 'lifterlms' ),
+					'type'              => 'string',
+					'default'           => 'any',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => 'rest_validate_request_arg',
+				),
+			);
+		} else {
+			$args = parent::get_endpoint_args_for_item_schema( $method );
+		}
+
+		return $args;
+
+	}
+
+	/**
 	 * Register routes.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed description of the `post_id` path parameter.
+	 * @since [version] Add `trigger` param for create/update/delete endpoints.
+	 *                     Use backticks in args descriptions.
 	 *
 	 * @return void
 	 */
@@ -89,7 +132,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			array(
 				'args'   => array(
 					'post_id' => array(
-						'description' => __( 'Unique course or membership Identifier. The WordPress Post ID.', 'lifterlms' ),
+						'description' => __( 'Unique course or membership Identifier. The WordPress Post `ID.`', 'lifterlms' ),
 						'type'        => 'integer',
 					),
 				),
@@ -103,7 +146,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_item' ),
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
-					'args'                => array(),
+					'args'                => $this->get_endpoint_args_for_item_schema( 'POST' ),
 				),
 				array(
 					'methods'             => 'PATCH',
@@ -115,7 +158,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::DELETABLE ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -127,7 +170,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to read items.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although the single enrollment permission will be checked in `LLMS_REST_Enrollments_Controller::get_objects()`.
+	 * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although
+	 *                     the single enrollment permission will be checked in
+	 *                     `LLMS_REST_Enrollments_Controller::get_objects()`.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -220,13 +265,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to create an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle the `trigger` param.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
 	 */
 	public function create_item_permissions_check( $request ) {
 
-		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], false );
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], $request['trigger'], false );
 
 		if ( $enrollment_exists ) {
 			return llms_rest_bad_request_error( __( 'Cannot create existing enrollment. Use the PATCH method if you want to update an existing enrollment', 'lifterlms' ) );
@@ -244,6 +290,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Creates a single enrollment.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle the `trigger` param.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -252,6 +299,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$user_id = (int) $request['id'];
 		$post_id = (int) $request['post_id'];
+
+		// The default trigger for the `LLMS_Student::enroll()` method is 'unspecified'.
+		$trigger = $request['trigger'] && 'any' !== $request['trigger'] ? $request['trigger'] : 'unspecified';
 
 		// check both students and product exist.
 		$student = new LLMS_Student( $user_id );
@@ -271,7 +321,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		// Enroll.
-		$enroll = $student->enroll( $post_id, 'admin_' . get_current_user_id() );
+		$enroll = $student->enroll( $post_id, $trigger );
 
 		// Something went wrong internally.
 		if ( ! $enroll ) {
@@ -298,13 +348,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle the `trigger` param.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
 	 */
 	public function update_item_permissions_check( $request ) {
 
-		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], $request['trigger'] );
 		if ( is_wp_error( $enrollment_exists ) ) {
 			return $enrollment_exists;
 		}
@@ -322,6 +373,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
+	 * @since [version] Handle `trigger` param.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -347,11 +399,15 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return llms_rest_bad_request_error();
 		}
 
+		if ( 'any' !== $request['trigger'] && $request['trigger'] !== $student->get_enrollment_trigger( $post_id ) ) {
+			return llms_rest_not_found_error();
+		}
+
 		$schema = $this->get_item_schema();
 
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 
-			$updated_status = $this->handle_status_update( $student, $post_id, $request['status'] );
+			$updated_status = $this->handle_status_update( $student, $post_id, $request['status'], $request['trigger'] );
 
 			// Something went wrong internally.
 			if ( ! $updated_status ) {
@@ -387,13 +443,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since The`trigger` param is now taken into account.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
 	 */
 	public function delete_item_permissions_check( $request ) {
 
-		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], $request['trigger'] );
 		if ( is_wp_error( $enrollment_exists ) ) {
 			// Enrollment not found, we don't return a 404.
 			if ( in_array( 'llms_rest_not_found', $enrollment_exists->get_error_codes(), true ) ) {
@@ -415,26 +472,29 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Deletes a single llms post.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] The`trigger` param is now taken into account.
+	 *                     Also fix return when the enrollment to be deleted doesn't exist.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
 
-		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'] );
-		$response          = new WP_REST_Response();
+		$response = new WP_REST_Response();
 		$response->set_status( 204 );
+
+		$enrollment_exists = $this->enrollment_exists( (int) $request['id'], (int) $request['post_id'], $request['trigger'] );
 
 		if ( is_wp_error( $enrollment_exists ) ) {
 			// Enrollment not found, we don't return a 404.
 			if ( in_array( 'llms_rest_not_found', $enrollment_exists->get_error_codes(), true ) ) {
-				return true;
+				return $response;
 			}
 
 			return $enrollment_exists;
 		}
 
-		$result = llms_delete_student_enrollment( (int) $request['id'], (int) $request['post_id'] );
+		$result = llms_delete_student_enrollment( (int) $request['id'], (int) $request['post_id'], $request['trigger'] );
 
 		if ( ! $result ) {
 			return llms_rest_server_error( __( 'The enrollment cannot be deleted.', 'lifterlms' ) );
@@ -448,13 +508,15 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check enrollment existence.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added the `trigger` param.
 	 *
 	 * @param int     $student_id Student ID.
-	 * @param int     $post_id The course/membership ID.
-	 * @param boolean $wp_error Optional. Whether return a WP_Error instance or a boolean. Default true (returns WP_Error).
+	 * @param int     $post_id    The course/membership ID.
+	 * @param string  $trigger    Optional. The enrollment trigger. Default 'any'.
+	 * @param boolean $wp_error   Optional. Whether return a WP_Error instance or a boolean. Default true (returns WP_Error).
 	 * @return WP_Error|boolean
 	 */
-	protected function enrollment_exists( $student_id, $post_id, $wp_error = true ) {
+	protected function enrollment_exists( $student_id, $post_id, $trigger = 'any', $wp_error = true ) {
 
 		$student = llms_get_student( $student_id );
 
@@ -468,6 +530,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			return $wp_error ? llms_rest_not_found_error() : false;
 		}
 
+		if ( 'any' !== $trigger && $trigger !== $student->get_enrollment_trigger( $post_id ) ) {
+			return $wp_error ? llms_rest_not_found_error() : false;
+		}
+
 		return true;
 
 	}
@@ -476,7 +542,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.4 Fix call to undefined function llms_rest_bad_request(), must be llms_rest_bad_request_error().
+	 * @since 1.0.0-beta.4 Fix call to undefined function llms_rest_bad_request(),
+	 *                     must be llms_rest_bad_request_error().
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -503,6 +570,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare enrollments objects query.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Set query limit to 1.
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -515,6 +583,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$args['id']            = $student_id;
 		$args['post']          = $post_id;
 		$args['no_found_rows'] = true;
+		$args['per_page']      = 1;
 
 		$args = $this->prepare_items_query( $args );
 
@@ -580,7 +649,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get the Enrollments's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 *
+	 * @since [version] Added the `trigger` property.
+	 *                     Added backticks in properties description where convenient.
+	 *                     Added `llms_rest_enrollents_item_schema` filter hook.
 	 * @return array
 	 */
 	public function get_item_schema() {
@@ -603,12 +674,12 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'readonly'    => true,
 				),
 				'date_created' => array(
-					'description' => __( 'Creation date. Format: Y-m-d H:i:s', 'lifterlms' ),
+					'description' => __( 'Creation date. Format: `Y-m-d H:i:s`', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
 				'date_updated' => array(
-					'description' => __( 'Date last modified. Format: Y-m-d H:i:s', 'lifterlms' ),
+					'description' => __( 'Date last modified. Format: `Y-m-d H:i:s`', 'lifterlms' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -619,10 +690,25 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'type'        => 'string',
 				),
+				'trigger'      => array(
+					'description' => __( 'The enrollment trigger. Default is `any`.', 'lifterlms' ),
+					'context'     => array( 'view', 'edit' ),
+					'type'        => 'string',
+					'default'     => 'any',
+					'readonly'    => true,
+				),
 			),
 		);
 
-		return $schema;
+		/**
+		 * Filter item schema for the enrollments controller.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $schema Item schema data.
+		 */
+		return apply_filters( 'llms_rest_enrollents_item_schema', $schema );
+
 	}
 
 	/**
@@ -777,6 +863,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
+	 * @since [version] Added subquery to retrive the enrollments trigger.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.
@@ -797,7 +884,10 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				)
 			);
 		} else {
-			$limit = '';
+			$limit = $wpdb->prepare(
+				'LIMIT %d',
+				$query_args['per_page']
+			);
 		}
 
 		/**
@@ -841,6 +931,20 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			)
 		);
 
+		// Trigger.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$trigger = $wpdb->prepare(
+			"(
+				SELECT DISTINCT user_id, post_id, meta_value
+				FROM {$wpdb->prefix}lifterlms_user_postmeta as upm
+				WHERE upm.{$id_column} = %d
+				$filter AND upm.meta_key = '_enrollment_trigger'
+			)",
+			array(
+				$query_args['id'],
+			)
+		);
+
 		if ( isset( $query_args['status'] ) ) {
 			$filter .= $wpdb->prepare( ' AND upm2.meta_value = %s', $query_args['status'] );
 		}
@@ -859,12 +963,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$query->items = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status
+				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status, upm3.meta_value as etrigger
 				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
-				  WHERE upm.meta_key = '_start_date'
-				  AND upm.{$id_column} = %d
-				  {$filter}
+				JOIN {$trigger} as upm3 ON upm.post_id = upm3.post_id AND upm.user_id = upm3.user_id
+				WHERE upm.meta_key = '_start_date'
+				AND upm.{$id_column} = %d
+				{$filter}
 				{$order}
 				{$limit};
 				",
@@ -881,6 +986,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			foreach ( $query->items as $key => $item ) {
 				$query->items[ $key ]->post_id    = (int) $item->post_id;
 				$query->items[ $key ]->student_id = (int) $item->student_id;
+				$query->items[ $key ]->trigger    = (string) $item->etrigger;
+				unset( $query->items[ $key ]->etrigger );
 			}
 		}
 
@@ -894,6 +1001,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Filter enrollment to include only fields available for response.
+	 *                     Added `llms_rest_prepare_enrollment_object_response` filter hook.
 	 *
 	 * @param stdClass        $enrollment Enrollment object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -911,8 +1020,19 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			$prepared_enrollment['post_id']
 		);
 
-		return $prepared_enrollment;
+		// Filter data including only schema props.
+		$data = array_intersect_key( $prepared_enrollment, array_flip( $this->get_fields_for_response( $request ) ) );
 
+		/**
+		 * Filters the enrollment data for a response.
+		 *
+		 * @since [version]
+		 *
+		 * @param array           $data       Array of enrollment properties prepared for response.
+		 * @param stdClass        $enrollment Enrollment object.
+		 * @param WP_REST_Request $request    Full details about the request.
+		 */
+		return apply_filters( 'llms_rest_prepare_enrollment_object_response', $data, $enrollment, $request );
 	}
 
 	/**
@@ -963,27 +1083,41 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				break;
 		endswitch;
 
-		return $links;
+		/**
+		 * Filters the enrollment's links.
+		 *
+		 * @since [version]
+		 *
+		 * @param array    $links      Links for the given enrollment.
+		 * @param stdClass $enrollment Enrollment object.
+		 */
+		return apply_filters( 'llms_rest_enrollment_links', $links, $enrollment );
+
 	}
 
 	/**
 	 * Handles the enrollment status update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added the `trigger` paramater.
+	 *
 	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.
-	 * @param string       $status Status.
+	 * @param string       $status  Status.
+	 * @param string       $trigger The enrollment trigger.
 	 * @return boolean
 	 */
-	protected function handle_status_update( $student, $post_id, $status ) {
+	protected function handle_status_update( $student, $post_id, $status, $trigger ) {
 
 		// Status.
 		switch ( $status ) :
 			case 'enrolled':
-				$updated = $student->enroll( $post_id, 'admin_' . get_current_user_id() );
+				// The default trigger for the `LLMS_Student::enroll()` method is 'unspecified'.
+				$trigger = $trigger && 'any' !== $trigger ? $trigger : 'unspecified';
+				$updated = $student->enroll( $post_id, 'admin_' . get_current_user_id(), $trigger );
 				break;
 			default:
-				$updated = $student->unenroll( $post_id, $trigger = 'any', $status );
+				$updated = $student->unenroll( $post_id, $trigger, $status );
 		endswitch;
 
 		return $updated;
@@ -1015,7 +1149,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		global $wpdb;
 
 		$inner_query = $wpdb->prepare(
-			"SELECT upm2.meta_id FROM ( SELECT * FROM {$wpdb->prefix}lifterlms_user_postmeta ) AS upm2 WHERE upm2.meta_key = '_start_date' AND upm2.user_id = %d AND upm2.post_id = %d ORDER BY upm2.updated_date DESC LIMIT 1",
+			"
+			SELECT upm2.meta_id
+			FROM ( SELECT * FROM {$wpdb->prefix}lifterlms_user_postmeta ) AS upm2
+			WHERE upm2.meta_key = '_start_date' AND upm2.user_id = %d AND upm2.post_id = %d
+			ORDER BY upm2.updated_date DESC
+			LIMIT 1
+			",
 			$student_id,
 			$post_id
 		);
