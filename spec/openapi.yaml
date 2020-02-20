@@ -355,6 +355,21 @@ tags:
 
       <SchemaDefinition schemaRef="#/components/schemas/GroupInvitation" showReadOnly={true} showWriteOnly={true} />
 
+  - name: Group Members
+    description: |
+
+      The group members API allows listing and retrieval of group members. The role of a member within a group may be updated and removed from a group using this API as well.
+
+      It is not possible to *add* a memeber directly to a group. Instead a new group invitation should be created (and accepted by the user).
+
+      ## Requirements
+
+      The groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.
+
+      ## Group Member Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/GroupMember" showReadOnly={true} showWriteOnly={true} />
+
   - name: Group Seats
     description: |
 
@@ -415,5 +430,6 @@ x-tagGroups:
       - Add-On Requirements
       - Groups
       - Group Invitations
+      - Group Members
       - Group Seats
 
