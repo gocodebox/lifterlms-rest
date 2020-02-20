@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0-beta.9",
     "title": "LifterLMS REST API",
-    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Public Beta\nAs of LifterLMS version 3.34.0, the LifterLMS REST API is included in the LifterLMS core plugin for public evaluation and testing.\nThe specification may change slightly over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!\nIf you're interested in contributing or discussing the REST API, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack).\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS Version 3.34.0+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Libraries and Tools\n### Official Libraries\nLifterLMS develops and maintains official libraries for different programming languages so you can easily build around the REST API.\n\n  + [Node/Javascript](https://github.com/gocodebox/llms-api-node)\n  + PHP (coming soon)\n\n### Tools\nSome useful tools to help develop and access the REST API:\n\n  + [Postman](https://www.getpostman.com/) - A multi platform REST API GUI client.\n  + [RESTCLient](https://addons.mozilla.org/en-US/firefox/addon/restclient/) - A free Firefox add-on.\n  + [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) - A free Google Chrome extension.\n  + [RequestBin](https://requestbin.com/) - A free service allowing you to quickly test webhooks.\n\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer Secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF\n```",
+    "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Public Beta\nAs of LifterLMS version 3.34.0, the LifterLMS REST API is included in the LifterLMS core plugin for public evaluation and testing.\nThe specification may change over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!\nIf you're interested in contributing or discussing the REST API, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack).\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS Version 3.34.0+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Libraries and Tools\n### Official Libraries\nLifterLMS develops and maintains official libraries for different programming languages so you can easily build around the REST API.\n\n  + [Node/Javascript](https://github.com/gocodebox/llms-api-node)\n  + PHP (coming soon)\n\n### Tools\nSome useful tools to help develop and access the REST API:\n\n  + [Postman](https://www.getpostman.com/) - A multi platform REST API GUI client.\n  + [RESTCLient](https://addons.mozilla.org/en-US/firefox/addon/restclient/) - A free Firefox add-on.\n  + [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) - A free Google Chrome extension.\n  + [RequestBin](https://requestbin.com/) - A free service allowing you to quickly test webhooks.\n\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer Secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF\n```",
     "x-logo": {
       "altText": "LifterLMS",
       "url": "https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png",
@@ -59,7 +59,7 @@
     },
     {
       "name": "Students",
-      "description": "Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the \"student\" role).\n\nThe students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.\n\n## Student Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Student\" showReadOnly={true} showWriteOnly={true} />\n"
+      "description": "Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the \"student\" role).\n\nThe students API allows you to create, view, update, and delete student accounts as well as view information about the student's LMS content.\n\n## Student Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Student\" showReadOnly={true} showWriteOnly={true} />\n"
     },
     {
       "name": "Student Enrollments",
@@ -72,6 +72,22 @@
     {
       "name": "Webhooks",
       "description": "Webhooks can be created to notify you about LMS-related events that happen on your site.\n\nThe Webhooks API allows you to create, view, update, and delete webhooks.\n\nWebhooks may additionally be managed on the LifterLMS Webhooks screen on your site's WordPress admin panel.\n\n## Topics\n\nThe `topic` is a combination of the resource (e.g. student) and event (e.g. created). Each `topic` maps to one or more hook names (e.g. `llms_user_registered`). The proper hooks are automatically added based on the `topic`.\n\nThe following topics are available:\n\n+ Courses\n  + `course.created`\n  + `course.updated`\n  + `course.deleted`\n  + `course.restored`\n+ Sections\n  + `section.created`\n  + `section.updated`\n  + `section.deleted`\n  + `section.restored`\n+ Lessons\n  + `lesson.created`\n  + `lesson.updated`\n  + `lesson.deleted`\n  + `lesson.restored`\n+ Memberships\n  + `membership.created`\n  + `membership.updated`\n  + `membership.deleted`\n  + `membership.restored`\n+ Students\n  + `student.created`\n  + `student.updated`\n  + `student.deleted`\n+ Student Enrollment\n  + `enrollment.created`\n  + `enrollment.updated`\n  + `enrollment.deleted`\n+ Student Progress\n  + `progress.updated`\n  + `progress.deleted`\n+ Instructors\n  + `instructor.created`\n  + `instructor.updated`\n  + `instructor.deleted`\n\nCustom topics can also be used in order to create a webhook triggered by an arbitrary WordPress hook. For a custom topic use the `action` resource with any hook as the event. For example, to create a webhook triggered by the `user_register` hook the topic would be `action.user_register`.\n\n## Delivery\n\nWebhook payloads are delivered in the background using wp-cron and `wp_remote_post()` (HTTP POST).\n\nCustom headers are supplied to assist with the receipt of the webhook:\n\n| Header                   | Description                                        | Example             |\n| ------------------------ | -------------------------------------------------- | ------------------- |\n| X-LLMS-Webhook-Source    | The URL of the LifterLMS website.                  | https://example.tld |\n| X-LLMS-Webhook-Topic     | The webhook `topic` property.                      | student.created     |\n| X-LLMS-Webhook-Resource  | The webhook `resource` property.                   | student             |\n| X-LLMS-Webhook-Event     | The webhook `event` property.                      | created             |\n| X-LLMS-Webhook-Signature | A base64 encoded HMAC-SHA256 hash of the payload.  |                     |\n| X-LLMS-Webhook-ID        | The unique webhook identifier (WordPress post ID). | 654                 |\n| X-LLMS-Delivery-ID       | A unique ID for the webhook delivery.              | 765                 |\n\nThe payload is a JSON-encoded object of the API resource as if retrieved by a `GET` request.\n\nThe payload for a custom hook will be a JSON-encoded version of the first parameter supplied by the hook.\n\n## Signature Verification\n\nWebhooks are signed by LifterLMS and the event's unique signature is included in the `X-LLMS-Webhook-Signature` header. The signature allows you to verify that the webhook was sent by LifterLMS and not by a third party. We recommend verifying all webhooks and discarding any payloads which cannot be verified.\n\nThe `X-LLMS-Webhook-Signature` contains a timestamp and one or more signatures. The timestamp is prefixed by `t=` and the signatures are prefixed by `v` and an integer. Currently the only valid signature scheme is `v1`.\n\n```\nX-LLMS-Webhook-Signature: t=1562715579,v1=0d579d62ef442b6e2d1d522924aafed480fdaaacbe498486a94445de8b995819\n```\n\nThe signature is generated using a hash-based message authentication code ([HMAC](https://en.wikipedia.org/wiki/HMAC)) with [SHA-256](https://en.wikipedia.org/wiki/SHA-2).\n\nTo verify a webhook signature you must construct an _expected_ webhook signature which you can then compare against the webhook signature supplied with delivery.\n\n#### Step 1: Extract the timestamps and signatures from the header\n\nSplit the header, using the `,` character as the separator, to get a list of elements. Then split each element, using the `=` character as the separator, to get a prefix and value pair.\n\nThe value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature. You can discard all other elements.\n\n#### Step 2: Prepare the payload string for signing\n\nYou achieve this by concatenating:\n\n+ The timestamp (as a string)\n+ The character `.`\n+ The actual JSON payload (i.e. the request's body)\n\n#### Step 3: Generate the expected signature string\n\nCompute an HMAC with the SHA256 hash function. Use the endpoints signing secret as the key, and use the string from Step 2 as the message.\n\n#### Step 4: Compare the signatures\n\nCompare the signature(s) in the header to the expected signature. If a signature matches, compute the difference between the current timestamp and the received timestamp, then decide if the difference is within your tolerance. We recommend accepting a difference of no more than five minutes between the provided timestamp and the current time.\n\n## Webook Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/Webhook\" showReadOnly={true} showWriteOnly={true} />\n"
+    },
+    {
+      "name": "Add-On Requirements",
+      "description": "API documentation for add-ons developed and maintained by the LifterLMS core team are included for completeness, however the API endpoints for each add-on are only available when the required add-on plugin is installed and activated on your LifterLMS-powered website.\n"
+    },
+    {
+      "name": "Groups",
+      "description": "\nGroups are an organizational unit of students. The groups API allows you to create, view, update, and delete groups.\n\n## Requirements\n\nThe groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.\n\n## Group Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/GroupResponse\" showReadOnly={true} showWriteOnly={true} />\n"
+    },
+    {
+      "name": "Group Invitations",
+      "description": "\nThe group invitations API allows creation, deletion, and listing of group invitations.\n\n## Requirements\n\nThe groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.\n\n## Group Invitation Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/GroupInvitation\" showReadOnly={true} showWriteOnly={true} />\n"
+    },
+    {
+      "name": "Group Seats",
+      "description": "\nThe group seats API allows querying and updating information related to the number of seats available for a group.\n\n## Requirements\n\nThe groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.\n\n## Group Seat Properties\n\n<SchemaDefinition schemaRef=\"#/components/schemas/GroupSeat\" showReadOnly={true} showWriteOnly={true} />\n"
     }
   ],
   "x-tagGroups": [
@@ -113,6 +129,15 @@
       "name": "Webhooks",
       "tags": [
         "Webhooks"
+      ]
+    },
+    {
+      "name": "Add-Ons",
+      "tags": [
+        "Add-On Requirements",
+        "Groups",
+        "Group Invitations",
+        "Group Seats"
       ]
     }
   ],
@@ -1181,6 +1206,583 @@
                   "items": {
                     "$ref": "#/components/schemas/Enrollment"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      }
+    },
+    "/groups": {
+      "get": {
+        "summary": "List groups",
+        "description": "Retrieves a list of all groups.",
+        "tags": [
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "date_created"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of groups",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/group?page=1>; rel=\"first\",\n</wp-json/llms/v1/group?page=2>; rel=\"prev\",\n</wp-json/llms/v1/group?page=4>; rel=\"next\",\n</wp-json/llms/v1/group?page=5>; rel=\"last\"\n"
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a group",
+        "description": "Creates a new group.",
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GroupRequest"
+                  },
+                  {
+                    "required": [
+                      "email"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/groups/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique group Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a group",
+        "description": "Retrieve the details of an existing group.",
+        "tags": [
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update a group",
+        "description": "Update the specified group by setting the values of the parameters passed. Any parameters not provided will be left unchanged.",
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a group",
+        "description": "Delete an existing group.",
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "force": {
+                    "description": "Bypass the trash and force group deletion.",
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully moved the group to the trash.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/GroupResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "trash"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Successfully deleted the group."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/groups/{id}/invitations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique group Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List group invitations",
+        "description": "Retrieves a list of all group invitations.",
+        "tags": [
+          "Group Invitations"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Order"
+          },
+          {
+            "name": "orderby",
+            "description": "Specify the sort field for a collection of results.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "date_created"
+              ],
+              "default": "id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Include"
+          },
+          {
+            "$ref": "#/components/parameters/Exclude"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a list of group invitations",
+            "headers": {
+              "Link": {
+                "description": "Pagination links for the collection.",
+                "schema": {
+                  "type": "string",
+                  "example": "</wp-json/llms/v1/group/123/invitations?page=1>; rel=\"first\",\n</wp-json/llms/v1/group/123/invitations?page=2>; rel=\"prev\",\n</wp-json/llms/v1/group/123/invitations?page=4>; rel=\"next\",\n</wp-json/llms/v1/group/123/invitations?page=5>; rel=\"last\"\n"
+                }
+              },
+              "X-WP-Total": {
+                "$ref": "#/components/headers/PaginationTotalResults"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/PaginationTotalPages"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupInvitation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an invitation",
+        "description": "Creates a new group invitation.",
+        "tags": [
+          "Group Invitations"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupInvitation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the group invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupInvitation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/groups/{id}/invitations/{invitation_id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Unique group Identifier. The WordPress Post `ID`.",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        },
+        {
+          "name": "invitation_id",
+          "in": "path",
+          "description": "Unique invitation Identifier",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve a group invitation",
+        "description": "Retrieve the details of an existing group invitation.",
+        "tags": [
+          "Group Invitations"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Context"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the group invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupInvitation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a group invitation",
+        "description": "Delete an existing group invitation.",
+        "tags": [
+          "Group Invitations"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the group."
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          }
+        }
+      }
+    },
+    "/groups/{id}/seats": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "Unique group Identifer. The WordPress User `ID`.",
+          "example": 123,
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ResourceId"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get group seats",
+        "description": "Retrieves information about the group's seats.",
+        "tags": [
+          "Group Seats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the groups's seats.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSeat"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update group seats",
+        "description": "Update the seat information for a group.",
+        "tags": [
+          "Group Seats"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupSeat"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the group's seats.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupSeat"
                 }
               }
             }
@@ -5435,6 +6037,394 @@
             }
           }
         ]
+      },
+      "Group": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Unique group identifier. The WordPress Post `ID`.",
+                "readOnly": true
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/Post"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "readOnly": true,
+                "example": 1987
+              },
+              "slug": {
+                "description": "Group URL slug.",
+                "type": "string",
+                "example": "team-codebox"
+              },
+              "permalink": {
+                "description": "Post URL.",
+                "type": "string",
+                "example": "https://example.com/group/team-codebox",
+                "readOnly": true
+              },
+              "post_type": {
+                "default": "llms_group",
+                "type": "string",
+                "readOnly": true
+              },
+              "post": {
+                "description": "WordPress post ID of the course or membership accessible by the group.",
+                "type": "integer",
+                "minimum": 1,
+                "example": 1234
+              },
+              "visibility": {
+                "description": "Visibility of the group profile.\n\nThe available options and the default value are dependent of the site's global settings. For example, if the site's group visibility option is \"closed\" than no groups on the site can be set to anything other than \"closed\". The default value will always equal the site's global setting.\n",
+                "type": "string",
+                "enum": [
+                  "open",
+                  "private",
+                  "closed"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "GroupInvitation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "allOf": [
+              {
+                "description": "Unique Invitation Identifier."
+              },
+              {
+                "$ref": "#/components/schemas/ResourceId"
+              }
+            ]
+          },
+          "accept_link": {
+            "description": "URL used to accept the invitation.",
+            "type": "string",
+            "readOnly": true,
+            "example": "https://example.com/dashboard?invite=eb5d96fa7cfa7eb0469511c142c6de2f"
+          },
+          "email": {
+            "description": "Email address of the invited group member.\n\nIf no email address is supplied, an open invitation link will be created. Only one such record\nmay exist for the group. An attempt to create a new one when one already exists will result in\na `400 Bad Request` Error response.\n",
+            "type": "string",
+            "example": "stephen@example.net",
+            "default": ""
+          },
+          "role": {
+            "description": "Group member role.",
+            "type": "string",
+            "default": "member",
+            "enum": [
+              "member",
+              "leader",
+              "admin"
+            ]
+          },
+          "_links": {
+            "description": "A map of links to other related API resources.",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "self": {
+                "description": "REST URI to the group invitation.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123/invitations/456"
+                    }
+                  }
+                }
+              },
+              "collection": {
+                "description": "REST URI to the API key collection.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123/invitations"
+                    }
+                  }
+                }
+              },
+              "group": {
+                "description": "Rest URI to the group resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "GroupRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentRequest"
+          },
+          {
+            "$ref": "#/components/schemas/Group"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "logo": {
+                "description": "WordPress post ID of the attachment post for the group's logo image.",
+                "type": "integer",
+                "example": 1987,
+                "minimum": 0
+              },
+              "banner": {
+                "description": "WordPress post ID of the attachment post for the group's banner image.",
+                "type": "integer",
+                "example": 1897,
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      },
+      "GroupResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostContentResponse"
+          },
+          {
+            "$ref": "#/components/schemas/Group"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "logo": {
+                "description": "Group logo image.",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "WordPress post ID of the attachment post.",
+                    "example": 1987,
+                    "minimum": 0
+                  },
+                  "source_url": {
+                    "description": "Full URL to the attachment file. If no `logo.id` is set, `logo.source_url` will default to the sitewide group logo image url.",
+                    "example": "https://example.com/wp-content/uploads/2020/01/team-codebox-logo.jpg"
+                  }
+                }
+              },
+              "banner": {
+                "description": "Group banner image.",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "WordPress post ID of the attachment post.",
+                    "example": 1897,
+                    "minimum": 0
+                  },
+                  "source_url": {
+                    "description": "Full URL to the attachment file. If no `banner.id` is set, `banner.source_url` will default to the sitewide group banner image url.",
+                    "example": "https://example.com/wp-content/uploads/2020/01/team-codebox-banner.jpg"
+                  }
+                }
+              },
+              "_links": {
+                "description": "A map of links to other related API resources.",
+                "type": "object",
+                "readOnly": true,
+                "properties": {
+                  "self": {
+                    "description": "REST URI to the course.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/groups/1234"
+                        }
+                      }
+                    }
+                  },
+                  "collection": {
+                    "description": "REST URI to the course collection.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/groups"
+                        }
+                      }
+                    }
+                  },
+                  "post": {
+                    "description": "Rest URI to the post resource.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "course",
+                            "membership"
+                          ],
+                          "example": "course"
+                        },
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/courses/456"
+                        }
+                      }
+                    }
+                  },
+                  "enrollments": {
+                    "description": "REST URI to the collection of the groups's enrollments.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/groups/1234/enrollments"
+                        }
+                      }
+                    }
+                  },
+                  "instructors": {
+                    "description": "REST URI to the collection of the course's instructors.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/instructors?post=1234"
+                        }
+                      }
+                    }
+                  },
+                  "students": {
+                    "description": "REST URI to the collection of the course's enrolled students.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/llms/v1/students?enrolled_in=1234"
+                        }
+                      }
+                    }
+                  },
+                  "logo": {
+                    "description": "REST URI to the WordPress attachement.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/wp/v2/media/1987"
+                        }
+                      }
+                    }
+                  },
+                  "banner": {
+                    "description": "REST URI to the WordPress attachement.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "href": {
+                          "type": "string",
+                          "example": "/wp-json/wp/v2/media/1897"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GroupSeat": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "description": "Number of available seats.\n\nDuring a `PUT` request, must be >= `used`.\n",
+            "type": "integer",
+            "minimum": 1,
+            "example": 20
+          },
+          "used": {
+            "description": "Number of used seats.\n\nThis value is calculated by adding the number of group current members to the number of open invitations.\n",
+            "type": "integer",
+            "minimum": 1,
+            "example": 5,
+            "readOnly": true
+          },
+          "open": {
+            "description": "Number of remaining seats.\n\nThis value is calculated by subtracting the `used` property from the `total` property.\n",
+            "type": "integer",
+            "minimum": 0,
+            "example": 15,
+            "readOnly": true
+          },
+          "_links": {
+            "description": "A map of links to other related API resources.",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "self": {
+                "description": "REST URI to the group seats resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123/seats"
+                    }
+                  }
+                }
+              },
+              "group": {
+                "description": "Rest URI to the group resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "Instructor": {
         "allOf": [

@@ -7,7 +7,7 @@ info:
     LifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.
     ## Public Beta
     As of LifterLMS version 3.34.0, the LifterLMS REST API is included in the LifterLMS core plugin for public evaluation and testing.
-    The specification may change slightly over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!
+    The specification may change over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!
     If you're interested in contributing or discussing the REST API, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack).
     ## Requirements
     To use the latest version of the REST API you must be using the following:
@@ -152,7 +152,7 @@ tags:
     description: |
       Students are members of your site who are (or were) enrolled in your courses and memberships. Students can be any WordPress user account on your site (not exclusively the "student" role).
 
-      The students API allows you to create, view, update, and delete student accounts  as well as view information about the student's LMS content.
+      The students API allows you to create, view, update, and delete student accounts as well as view information about the student's LMS content.
 
       ## Student Properties
 
@@ -288,6 +288,45 @@ tags:
       ## Webook Properties
 
       <SchemaDefinition schemaRef="#/components/schemas/Webhook" showReadOnly={true} showWriteOnly={true} />
+  - name: Add-On Requirements
+    description: |
+      API documentation for add-ons developed and maintained by the LifterLMS core team are included for completeness, however the API endpoints for each add-on are only available when the required add-on plugin is installed and activated on your LifterLMS-powered website.
+  - name: Groups
+    description: |
+
+      Groups are an organizational unit of students. The groups API allows you to create, view, update, and delete groups.
+
+      ## Requirements
+
+      The groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.
+
+      ## Group Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/GroupResponse" showReadOnly={true} showWriteOnly={true} />
+  - name: Group Invitations
+    description: |
+
+      The group invitations API allows creation, deletion, and listing of group invitations.
+
+      ## Requirements
+
+      The groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.
+
+      ## Group Invitation Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/GroupInvitation" showReadOnly={true} showWriteOnly={true} />
+  - name: Group Seats
+    description: |
+
+      The group seats API allows querying and updating information related to the number of seats available for a group.
+
+      ## Requirements
+
+      The groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.
+
+      ## Group Seat Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/GroupSeat" showReadOnly={true} showWriteOnly={true} />
 x-tagGroups:
   - name: API Keys
     tags:
@@ -311,6 +350,12 @@ x-tagGroups:
   - name: Webhooks
     tags:
       - Webhooks
+  - name: Add-Ons
+    tags:
+      - Add-On Requirements
+      - Groups
+      - Group Invitations
+      - Group Seats
 paths:
   /access-plans:
     get:
@@ -974,6 +1019,367 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Enrollment'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+  /groups:
+    get:
+      summary: List groups
+      description: Retrieves a list of all groups.
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - date_created
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+      responses:
+        '200':
+          description: Successfully returned a list of groups
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: |
+                  </wp-json/llms/v1/group?page=1>; rel="first",
+                  </wp-json/llms/v1/group?page=2>; rel="prev",
+                  </wp-json/llms/v1/group?page=4>; rel="next",
+                  </wp-json/llms/v1/group?page=5>; rel="last"
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create a group
+      description: Creates a new group.
+      tags:
+        - Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/GroupRequest'
+                - required:
+                    - email
+      responses:
+        '201':
+          description: Successfully created the group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: Unique group Identifier. The WordPress Post `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Retrieve a group
+      description: Retrieve the details of an existing group.
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Successfully retrieved the group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update a group
+      description: Update the specified group by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+        - Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+      responses:
+        '200':
+          description: Successfully updated the group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete a group
+      description: Delete an existing group.
+      tags:
+        - Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force:
+                  description: Bypass the trash and force group deletion.
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Successfully moved the group to the trash.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/GroupResponse'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        default: trash
+        '204':
+          description: Successfully deleted the group.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}/invitations':
+    parameters:
+      - name: id
+        in: path
+        description: Unique group Identifier. The WordPress Post `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: List group invitations
+      description: Retrieves a list of all group invitations.
+      tags:
+        - Group Invitations
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - date_created
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+      responses:
+        '200':
+          description: Successfully returned a list of group invitations
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: |
+                  </wp-json/llms/v1/group/123/invitations?page=1>; rel="first",
+                  </wp-json/llms/v1/group/123/invitations?page=2>; rel="prev",
+                  </wp-json/llms/v1/group/123/invitations?page=4>; rel="next",
+                  </wp-json/llms/v1/group/123/invitations?page=5>; rel="last"
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupInvitation'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+    post:
+      summary: Create an invitation
+      description: Creates a new group invitation.
+      tags:
+        - Group Invitations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInvitation'
+      responses:
+        '201':
+          description: Successfully created the group invitation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}/invitations/{invitation_id}':
+    parameters:
+      - name: id
+        in: path
+        description: Unique group Identifier. The WordPress Post `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+      - name: invitation_id
+        in: path
+        description: Unique invitation Identifier
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Retrieve a group invitation
+      description: Retrieve the details of an existing group invitation.
+      tags:
+        - Group Invitations
+      parameters:
+        - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Successfully retrieved the group invitation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Delete a group invitation
+      description: Delete an existing group invitation.
+      tags:
+        - Group Invitations
+      responses:
+        '204':
+          description: Successfully deleted the group.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}/seats':
+    parameters:
+      - name: id
+        description: Unique group Identifer. The WordPress User `ID`.
+        example: 123
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Get group seats
+      description: Retrieves information about the group's seats.
+      tags:
+        - Group Seats
+      responses:
+        '200':
+          description: Successfully retrieved the groups's seats.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSeat'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    put:
+      summary: Update group seats
+      description: Update the seat information for a group.
+      tags:
+        - Group Seats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupSeat'
+      responses:
+        '200':
+          description: Successfully updated the group's seats.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSeat'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -3703,6 +4109,288 @@ components:
                 status:
                   default: 404
                   type: integer
+    Group:
+      allOf:
+        - type: object
+          properties:
+            id:
+              description: Unique group identifier. The WordPress Post `ID`.
+              readOnly: true
+        - $ref: '#/components/schemas/Post'
+        - type: object
+          properties:
+            id:
+              readOnly: true
+              example: 1987
+            slug:
+              description: Group URL slug.
+              type: string
+              example: team-codebox
+            permalink:
+              description: Post URL.
+              type: string
+              example: 'https://example.com/group/team-codebox'
+              readOnly: true
+            post_type:
+              default: llms_group
+              type: string
+              readOnly: true
+            post:
+              description: WordPress post ID of the course or membership accessible by the group.
+              type: integer
+              minimum: 1
+              example: 1234
+            visibility:
+              description: |
+                Visibility of the group profile.
+
+                The available options and the default value are dependent of the site's global settings. For example, if the site's group visibility option is "closed" than no groups on the site can be set to anything other than "closed". The default value will always equal the site's global setting.
+              type: string
+              enum:
+                - open
+                - private
+                - closed
+    GroupInvitation:
+      type: object
+      properties:
+        id:
+          allOf:
+            - description: Unique Invitation Identifier.
+            - $ref: '#/components/schemas/ResourceId'
+        accept_link:
+          description: URL used to accept the invitation.
+          type: string
+          readOnly: true
+          example: 'https://example.com/dashboard?invite=eb5d96fa7cfa7eb0469511c142c6de2f'
+        email:
+          description: |
+            Email address of the invited group member.
+
+            If no email address is supplied, an open invitation link will be created. Only one such record
+            may exist for the group. An attempt to create a new one when one already exists will result in
+            a `400 Bad Request` Error response.
+          type: string
+          example: stephen@example.net
+          default: ''
+        role:
+          description: Group member role.
+          type: string
+          default: member
+          enum:
+            - member
+            - leader
+            - admin
+        _links:
+          description: A map of links to other related API resources.
+          readOnly: true
+          type: object
+          properties:
+            self:
+              description: REST URI to the group invitation.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123/invitations/456
+            collection:
+              description: REST URI to the API key collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123/invitations
+            group:
+              description: Rest URI to the group resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123
+    GroupRequest:
+      allOf:
+        - $ref: '#/components/schemas/PostContentRequest'
+        - $ref: '#/components/schemas/Group'
+        - type: object
+          properties:
+            logo:
+              description: WordPress post ID of the attachment post for the group's logo image.
+              type: integer
+              example: 1987
+              minimum: 0
+            banner:
+              description: WordPress post ID of the attachment post for the group's banner image.
+              type: integer
+              example: 1897
+              minimum: 0
+    GroupResponse:
+      allOf:
+        - $ref: '#/components/schemas/PostContentResponse'
+        - $ref: '#/components/schemas/Group'
+        - type: object
+          properties:
+            logo:
+              description: Group logo image.
+              type: object
+              properties:
+                id:
+                  description: WordPress post ID of the attachment post.
+                  example: 1987
+                  minimum: 0
+                source_url:
+                  description: 'Full URL to the attachment file. If no `logo.id` is set, `logo.source_url` will default to the sitewide group logo image url.'
+                  example: 'https://example.com/wp-content/uploads/2020/01/team-codebox-logo.jpg'
+            banner:
+              description: Group banner image.
+              type: object
+              properties:
+                id:
+                  description: WordPress post ID of the attachment post.
+                  example: 1897
+                  minimum: 0
+                source_url:
+                  description: 'Full URL to the attachment file. If no `banner.id` is set, `banner.source_url` will default to the sitewide group banner image url.'
+                  example: 'https://example.com/wp-content/uploads/2020/01/team-codebox-banner.jpg'
+            _links:
+              description: A map of links to other related API resources.
+              type: object
+              readOnly: true
+              properties:
+                self:
+                  description: REST URI to the course.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/groups/1234
+                collection:
+                  description: REST URI to the course collection.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/groups
+                post:
+                  description: Rest URI to the post resource.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - course
+                          - membership
+                        example: course
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/courses/456
+                enrollments:
+                  description: REST URI to the collection of the groups's enrollments.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/groups/1234/enrollments
+                instructors:
+                  description: REST URI to the collection of the course's instructors.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/instructors?post=1234
+                students:
+                  description: REST URI to the collection of the course's enrolled students.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/llms/v1/students?enrolled_in=1234
+                logo:
+                  description: REST URI to the WordPress attachement.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/wp/v2/media/1987
+                banner:
+                  description: REST URI to the WordPress attachement.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        example: /wp-json/wp/v2/media/1897
+    GroupSeat:
+      type: object
+      properties:
+        total:
+          description: |
+            Number of available seats.
+
+            During a `PUT` request, must be >= `used`.
+          type: integer
+          minimum: 1
+          example: 20
+        used:
+          description: |
+            Number of used seats.
+
+            This value is calculated by adding the number of group current members to the number of open invitations.
+          type: integer
+          minimum: 1
+          example: 5
+          readOnly: true
+        open:
+          description: |
+            Number of remaining seats.
+
+            This value is calculated by subtracting the `used` property from the `total` property.
+          type: integer
+          minimum: 0
+          example: 15
+          readOnly: true
+        _links:
+          description: A map of links to other related API resources.
+          readOnly: true
+          type: object
+          properties:
+            self:
+              description: REST URI to the group seats resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123/seats
+            group:
+              description: Rest URI to the group resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123
     Instructor:
       allOf:
         - type: object
