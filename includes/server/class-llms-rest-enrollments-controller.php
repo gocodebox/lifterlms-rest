@@ -640,8 +640,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
-		$query_params['context'] = 'view';
-
 		return $query_params;
 	}
 
