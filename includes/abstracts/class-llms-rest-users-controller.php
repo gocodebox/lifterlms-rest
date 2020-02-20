@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
+ * @since [version] Fixed setting roles instead of appending them when updating user.
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -636,6 +637,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Updates additional information not handled by WP Core insert/update user functions.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed setting roles instead of appending them.
 	 *
 	 * @param int             $object_id WP User id.
 	 * @param array           $prepared Prepared item data.
@@ -667,7 +669,10 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
 		if ( ! empty( $request['roles'] ) ) {
 			$user = $object->get_user();
-			array_map( array( $user, 'add_role' ), $request['roles'] );
+			$user->set_role( '' );
+			foreach ( $request['roles'] as $role ) {
+				$user->add_role( $role );
+			}
 		}
 
 		return $object;
