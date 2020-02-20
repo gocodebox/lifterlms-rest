@@ -7,10 +7,18 @@
  * @group api_keys
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Fix failing tests.
+ * @version [version]
  */
 class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 
+	/**
+	 * Setup the test case.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 
 		parent::setUp();
@@ -125,6 +133,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the delete() method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Store key id for use after it's deleted.
 	 *
 	 * @return void
 	 */
@@ -140,15 +149,16 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 			'description' => 'Test Key',
 			'user_id' => $this->factory->user->create(),
 		) );
+		$id = $orig->get( 'id' );
 
 		// Returns true.
-		$this->assertTrue( $this->keys->delete( $orig->get( 'id' ) ) );
+		$this->assertTrue( $this->keys->delete( $id ) );
 
 		// Action was run.
 		$this->assertEquals( $expected_actions, did_action( 'llms_rest_api_key_deleted' ) );
 
 		// Can't find via new get.
-		$this->assertFalse( $this->keys->get( $orig->get( 'id' ) ) );
+		$this->assertFalse( $this->keys->get( $id ) );
 
 	}
 

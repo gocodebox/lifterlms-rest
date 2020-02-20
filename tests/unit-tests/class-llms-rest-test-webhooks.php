@@ -7,7 +7,8 @@
  * @group webhooks
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Fix failing tests.
+ * @version [version]
  */
 class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -172,6 +173,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test deleting a webhook.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Store hook id for use after the hook is deleted.
 	 *
 	 * @return void
 	 */
@@ -182,17 +184,19 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 			'delivery_url' => 'https://mock.com',
 		) );
 
+		$id = $hook->get( 'id' );
+
 		// Can't delete a non-existant webhook.
-		$this->assertFalse( $this->webhooks->delete( $hook->get( 'id' ) + 1 ) );
+		$this->assertFalse( $this->webhooks->delete( $id + 1 ) );
 
 		// Deleted.
-		$this->assertTrue( $this->webhooks->delete( $hook->get( 'id' ) ) );
+		$this->assertTrue( $this->webhooks->delete( $id ) );
 
 		// Can't be found.
-		$this->assertFalse( $this->webhooks->get( $hook->get( 'id' ) ) );
+		$this->assertFalse( $this->webhooks->get( $id ) );
 
 		// Can't be deleted again.
-		$this->assertFalse( $this->webhooks->delete( $hook->get( 'id' ) ) );
+		$this->assertFalse( $this->webhooks->delete( $id ) );
 
 	}
 

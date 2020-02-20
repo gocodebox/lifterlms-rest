@@ -8,7 +8,8 @@
  * @group admin_forms
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @since [version] Fixed failing tests.
+ * @version [version]
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -339,6 +340,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 * Test the "Revoke" nonce URL for deleting api keys.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Store key id in a variable so we can look it up later.
 	 *
 	 * @return void
 	 */
@@ -375,6 +377,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 			'description' => 'Test Key',
 			'user_id' => $this->factory->user->create(),
 		) );
+		$key_id = $key->get( 'id' );
 		$this->mockGetRequest( array(
 			'revoke-key' => $key->get( 'id' ),
 			'key-revoke-nonce' => wp_create_nonce( 'revoke' ),
@@ -391,7 +394,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 		} catch ( LLMS_Unit_Test_Exception_Redirect $exception ) {
 
 			// Key will no longer exist.
-			$this->assertFalse( LLMS_REST_API()->keys()->get( $key->get( 'id' ) ) );
+			$this->assertFalse( LLMS_REST_API()->keys()->get( $key_id ) );
 
 			// Should have an admin notice.
 			$notices = LLMS_Admin_Notices::get_notices();
@@ -407,6 +410,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 * Test the delete nonce URL for deleting webhooks.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Store webhook id in a variable so we can look it up later.
 	 *
 	 * @return void
 	 */
@@ -443,6 +447,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 			'topic' => 'course.created',
 			'delivery_url' => 'https://mock.tld',
 		) );
+		$webhook_id = $webhook->get( 'id' );
 		$this->mockGetRequest( array(
 			'delete-webhook' => $webhook->get( 'id' ),
 			'delete-webhook-nonce' => wp_create_nonce( 'delete' ),
@@ -459,7 +464,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 		} catch ( LLMS_Unit_Test_Exception_Redirect $exception ) {
 
 			// Key will no longer exist.
-			$this->assertFalse( LLMS_REST_API()->webhooks()->get( $webhook->get( 'id' ) ) );
+			$this->assertFalse( LLMS_REST_API()->webhooks()->get( $webhook_id ) );
 
 			// Should have an admin notice.
 			$notices = LLMS_Admin_Notices::get_notices();

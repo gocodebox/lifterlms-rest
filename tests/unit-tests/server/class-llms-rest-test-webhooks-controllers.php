@@ -9,7 +9,8 @@
  * @group rest_webhooks
  *
  * @since 1.0.0-beta.3
- * @version 1.0.0-beta.3
+ * @since [version] Fixed failing tests.
+ * @version [version]
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -197,6 +198,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * Public function test delete item.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Used stored hook id instead of reading it from the db.
 	 *
 	 * @return void
 	 */
@@ -206,13 +208,13 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 		$id = $hook->get( 'id' );
 
 		wp_set_current_user( $this->user_allowed );
-		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $hook->get( 'id' ) ) );
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
 		$this->assertResponseStatusEquals( 204, $res );
 
 		$this->assertFalse( LLMS_REST_API()->webhooks()->get( $id ) );
 
 		// Deleting agin still results in 204.
-		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $hook->get( 'id' ) ) );
+		$res = $this->perform_mock_request( 'DELETE', sprintf( '%1$s/%2$d', $this->route, $id ) );
 		$this->assertResponseStatusEquals( 204, $res );
 
 	}
