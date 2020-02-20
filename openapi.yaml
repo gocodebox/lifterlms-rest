@@ -315,6 +315,20 @@ tags:
       ## Group Invitation Properties
 
       <SchemaDefinition schemaRef="#/components/schemas/GroupInvitation" showReadOnly={true} showWriteOnly={true} />
+  - name: Group Members
+    description: |
+
+      The group members API allows listing and retrieval of group members. The role of a member within a group may be updated and removed from a group using this API as well.
+
+      It is not possible to *add* a memeber directly to a group. Instead a new group invitation should be created (and accepted by the user).
+
+      ## Requirements
+
+      The groups API is only available through the [LifterLMS Groups advanced add-on](https://lifterlms.com/product/groups). This plugin must be installed and activated in order to utilize the Groups API.
+
+      ## Group Member Properties
+
+      <SchemaDefinition schemaRef="#/components/schemas/GroupMember" showReadOnly={true} showWriteOnly={true} />
   - name: Group Seats
     description: |
 
@@ -355,6 +369,7 @@ x-tagGroups:
       - Add-On Requirements
       - Groups
       - Group Invitations
+      - Group Members
       - Group Seats
 paths:
   /access-plans:
@@ -1327,6 +1342,142 @@ paths:
       responses:
         '204':
           description: Successfully deleted the group.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}/members':
+    parameters:
+      - name: id
+        in: path
+        description: Unique group Identifier. The WordPress Post `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: List group members
+      description: Retrieves a list of all group members.
+      tags:
+        - Group Members
+      parameters:
+        - $ref: '#/components/parameters/Context'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Order'
+        - name: orderby
+          description: Specify the sort field for a collection of results.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - date_created
+            default: id
+        - $ref: '#/components/parameters/Include'
+        - $ref: '#/components/parameters/Exclude'
+      responses:
+        '200':
+          description: Successfully returned a list of group members
+          headers:
+            Link:
+              description: Pagination links for the collection.
+              schema:
+                type: string
+                example: |
+                  </wp-json/llms/v1/group/123/members?page=1>; rel="first",
+                  </wp-json/llms/v1/group/123/members?page=2>; rel="prev",
+                  </wp-json/llms/v1/group/123/members?page=4>; rel="next",
+                  </wp-json/llms/v1/group/123/members?page=5>; rel="last"
+            X-WP-Total:
+              $ref: '#/components/headers/PaginationTotalResults'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/PaginationTotalPages'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupMember'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+  '/groups/{id}/members/{member_id}':
+    parameters:
+      - name: id
+        in: path
+        description: Unique group Identifier. The WordPress Post `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+      - name: member_id
+        in: path
+        description: Unique member Identifier. The WordPress User `ID`.
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+    get:
+      summary: Retrieve a group member
+      description: Retrieve the details of an existing group member.
+      tags:
+        - Group Members
+      parameters:
+        - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Successfully retrieved the group member.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    post:
+      summary: Update a group member
+      description: Update the details of an existing group member.
+      tags:
+        - Group Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupMember'
+      responses:
+        '200':
+          description: Successfully updated the group member.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMember'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+    delete:
+      summary: Remove a group member
+      description: Remove an existing group member.
+      tags:
+        - Group Members
+      responses:
+        '204':
+          description: Successfully removed from the member from the group.
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -4212,6 +4363,87 @@ components:
                   href:
                     type: string
                     example: /wp-json/llms/v1/groups/123
+    GroupMember:
+      description: Group Member User Object
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/ResourceId'
+            - description: Unique Member Identifer. The WordPress User `ID`.
+              example: 789
+        email:
+          description: The user's email address.
+          type: string
+          example: jamie@lifterlms.com
+          readOnly: true
+        avatar_urls:
+          description: |
+            A list of the Gravatars available for the user.
+
+            The object key is the size (in pixels) of the avatar and the value is the Gravatar's URL.
+          type: object
+          readOnly: true
+          properties:
+            '24':
+              type: string
+              example: 'https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=24&d=mm&r=g'
+            '48':
+              type: string
+              example: 'https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=48&d=mm&r=g'
+            '96':
+              type: string
+              example: 'https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=48&d=mm&r=g'
+        nickname:
+          description: The user's chosen nickname.
+          type: string
+          example: JamieC
+          readOnly: true
+        name:
+          description: The user's public display name.
+          type: string
+          example: Jamie Cook
+          readOnly: true
+        group_role:
+          description: The user's role within the group.
+          type: string
+          enum:
+            - member
+            - leader
+            - admin
+          default: member
+        _links:
+          description: A map of links to other related API resources.
+          type: object
+          readOnly: true
+          properties:
+            self:
+              description: REST URI to the student.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123/members/789
+            collection:
+              description: REST URI to the student collection.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123/members
+            student:
+              description: REST URI to the student.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/students/789
     GroupRequest:
       allOf:
         - $ref: '#/components/schemas/PostContentRequest'
