@@ -1375,7 +1375,6 @@ paths:
             enum:
               - id
               - name
-              - date_created
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
@@ -1475,6 +1474,8 @@ paths:
       description: Remove an existing group member.
       tags:
         - Group Members
+      parameters:
+        - $ref: '#/components/parameters/EnrollmentTrigger'
       responses:
         '204':
           description: Successfully removed from the member from the group.

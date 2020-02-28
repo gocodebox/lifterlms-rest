@@ -1761,8 +1761,7 @@
               "type": "string",
               "enum": [
                 "id",
-                "name",
-                "date_created"
+                "name"
               ],
               "default": "id"
             }
@@ -1918,6 +1917,11 @@
         "description": "Remove an existing group member.",
         "tags": [
           "Group Members"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnrollmentTrigger"
+          }
         ],
         "responses": {
           "204": {
