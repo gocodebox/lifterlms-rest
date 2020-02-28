@@ -31,9 +31,10 @@ defined( 'ABSPATH' ) || exit;
  *                     Added `get_endpoint_args_for_item_schema()` method override.
  *                     Use backticks in args and item schema properties descriptions where convenient.
  *                     Filter prepared enrollment for response in order to include only fields available for response.
- *                     Added `llms_rest_enrollents_item_schema`, `llms_rest_prepare_enrollment_object_response`,
+ *                     Added `llms_rest_enrollments_item_schema`, `llms_rest_prepare_enrollment_object_response`,
  *                     `llms_rest_enrollment_links` filter hooks.
  *                     Also fix return when the enrollment to be deleted doesn't exist.
+ * @since [version] Fixed 'context' query parameter schema.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -618,6 +619,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Build the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed 'context' query parameter schema.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -640,8 +642,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
-		$query_params['context'] = 'view';
-
 		return $query_params;
 	}
 
@@ -651,7 +651,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Added the `trigger` property.
 	 *                     Added backticks in properties description where convenient.
-	 *                     Added `llms_rest_enrollents_item_schema` filter hook.
+	 *                     Added `llms_rest_enrollments_item_schema` filter hook.
 	 * @return array
 	 */
 	public function get_item_schema() {
@@ -707,7 +707,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		return apply_filters( 'llms_rest_enrollents_item_schema', $schema );
+		return apply_filters( 'llms_rest_enrollments_item_schema', $schema );
 
 	}
 
