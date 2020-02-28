@@ -34,6 +34,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Added `llms_rest_enrollments_item_schema`, `llms_rest_prepare_enrollment_object_response`,
  *                     `llms_rest_enrollment_links` filter hooks.
  *                     Also fix return when the enrollment to be deleted doesn't exist.
+ * @since [version] Fixed 'context' query parameter schema.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -618,6 +619,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Build the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed 'context' query parameter schema.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -639,8 +641,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
-
-		$query_params['context'] = 'view';
 
 		return $query_params;
 	}
