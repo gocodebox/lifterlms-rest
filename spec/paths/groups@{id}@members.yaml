@@ -25,7 +25,6 @@ get:
         enum:
           - id
           - name
-          - date_created
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'

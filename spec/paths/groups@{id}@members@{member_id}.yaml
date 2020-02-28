@@ -68,6 +68,8 @@ delete:
   description: Remove an existing group member.
   tags:
     - Group Members
+  parameters:
+    - $ref: '#/components/parameters/EnrollmentTrigger'
   responses:
     204:
       description: Successfully removed from the member from the group.
