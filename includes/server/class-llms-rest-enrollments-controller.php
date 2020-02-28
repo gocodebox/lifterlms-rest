@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.10
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *                     methods overrides.
  *                     `get_items()` method removed, now abstracted in LLMS_REST_Controller.
  *                     Fixed description of the `post_id` path parameter.
- * @since [version] Added `trigger` property and as param for creation/update/and deletion requests.
+ * @since 1.0.0-beta.10 Added `trigger` property and as param for creation/update/and deletion requests.
  *                     Added `get_endpoint_args_for_item_schema()` method override.
  *                     Use backticks in args and item schema properties descriptions where convenient.
  *                     Filter prepared enrollment for response in order to include only fields available for response.
@@ -74,7 +74,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves an array of endpoint arguments from the item schema for the controller.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.10
 	 *
 	 * @param string $method Optional. HTTP method of the request. The arguments for `CREATABLE` requests are
 	 *                       checked for required values and may fall-back to a given default, this is not done
@@ -106,7 +106,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed description of the `post_id` path parameter.
-	 * @since [version] Add `trigger` param for create/update/delete endpoints.
+	 * @since 1.0.0-beta.10 Add `trigger` param for create/update/delete endpoints.
 	 *                     Use backticks in args descriptions.
 	 *
 	 * @return void
@@ -266,7 +266,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to create an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Handle the `trigger` param.
+	 * @since 1.0.0-beta.10 Handle the `trigger` param.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -291,7 +291,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Creates a single enrollment.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Handle the `trigger` param.
+	 * @since 1.0.0-beta.10 Handle the `trigger` param.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -349,7 +349,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Handle the `trigger` param.
+	 * @since 1.0.0-beta.10 Handle the `trigger` param.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -374,7 +374,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
-	 * @since [version] Handle `trigger` param.
+	 * @since 1.0.0-beta.10 Handle `trigger` param.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -473,7 +473,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Deletes a single llms post.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] The`trigger` param is now taken into account.
+	 * @since 1.0.0-beta.10 The`trigger` param is now taken into account.
 	 *                     Also fix return when the enrollment to be deleted doesn't exist.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -509,7 +509,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check enrollment existence.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the `trigger` param.
+	 * @since 1.0.0-beta.10 Added the `trigger` param.
 	 *
 	 * @param int     $student_id Student ID.
 	 * @param int     $post_id    The course/membership ID.
@@ -571,7 +571,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare enrollments objects query.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Set query limit to 1.
+	 * @since 1.0.0-beta.10 Set query limit to 1.
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -619,7 +619,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Build the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed 'context' query parameter schema.
+	 * @since 1.0.0-beta.10 Fixed 'context' query parameter schema.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -649,7 +649,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Get the Enrollments's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the `trigger` property.
+	 * @since 1.0.0-beta.10 Added the `trigger` property.
 	 *                     Added backticks in properties description where convenient.
 	 *                     Added `llms_rest_enrollments_item_schema` filter hook.
 	 * @return array
@@ -703,7 +703,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		/**
 		 * Filter item schema for the enrollments controller.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.10
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -863,7 +863,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
-	 * @since [version] Added subquery to retrive the enrollments trigger.
+	 * @since 1.0.0-beta.10 Added subquery to retrive the enrollments trigger.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.
@@ -1001,7 +1001,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Filter enrollment to include only fields available for response.
+	 * @since 1.0.0-beta.10 Filter enrollment to include only fields available for response.
 	 *                     Added `llms_rest_prepare_enrollment_object_response` filter hook.
 	 *
 	 * @param stdClass        $enrollment Enrollment object.
@@ -1026,7 +1026,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		/**
 		 * Filters the enrollment data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.10
 		 *
 		 * @param array           $data       Array of enrollment properties prepared for response.
 		 * @param stdClass        $enrollment Enrollment object.
@@ -1086,7 +1086,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		/**
 		 * Filters the enrollment's links.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.10
 		 *
 		 * @param array    $links      Links for the given enrollment.
 		 * @param stdClass $enrollment Enrollment object.
@@ -1099,7 +1099,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Handles the enrollment status update.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the `trigger` paramater.
+	 * @since 1.0.0-beta.10 Added the `trigger` paramater.
 	 *
 	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.

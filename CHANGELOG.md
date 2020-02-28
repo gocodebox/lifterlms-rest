@@ -1,6 +1,17 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.10 - 2020-02-28
+---------------------------
+
++ Added text domain to i18n functions that were missing the domain.
++ Fixed setting roles instead of appending them when updating user, thanks [@pondermatic](https://github.com/pondermatic)!
++ Added a "trigger" parameter to enrollment-related endpoints.
++ Added `llms_rest_enrollments_item_schema`, `llms_rest_prepare_enrollment_object_response`, `llms_rest_enrollment_links` filter hooks.
++ Fixed return when the enrollment to be deleted doesn't exist, returns `204` instead of `404`.
++ Fixed 'context' query parameter schema, thanks [@pondermatic](https://github.com/pondermatic)!
+
+
 v1.0.0-beta.9 - 2019-11-11
 --------------------------
 

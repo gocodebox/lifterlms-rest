@@ -7,7 +7,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.10
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()` on stub method.
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` stub.
- * @since [version] Add text domain to i18n functions.
+ * @since 1.0.0-beta.10 Add text domain to i18n functions.
  */
 abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
@@ -45,7 +45,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * Determine if the current user can view the requested item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Add text domain to i18n functions.
+	 * @since 1.0.0-beta.10 Add text domain to i18n functions.
 	 *
 	 * @param int $item_id WP_User id.
 	 * @return bool
@@ -61,7 +61,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * Determine if the current user can view the object.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Add text domain to i18n functions.
+	 * @since 1.0.0-beta.10 Add text domain to i18n functions.
 	 *
 	 * @param object $object Object.
 	 * @return bool

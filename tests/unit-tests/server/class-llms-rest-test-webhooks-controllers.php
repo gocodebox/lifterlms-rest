@@ -9,8 +9,8 @@
  * @group rest_webhooks
  *
  * @since 1.0.0-beta.3
- * @since [version] Fixed failing tests.
- * @version [version]
+ * @since 1.0.0-beta.10 Fixed failing tests.
+ * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -198,7 +198,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * Public function test delete item.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Used stored hook id instead of reading it from the db.
+	 * @since 1.0.0-beta.10 Used stored hook id instead of reading it from the db.
 	 *
 	 * @return void
 	 */

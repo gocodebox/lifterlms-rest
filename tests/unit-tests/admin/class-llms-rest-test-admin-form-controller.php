@@ -8,8 +8,8 @@
  * @group admin_forms
  *
  * @since 1.0.0-beta.1
- * @since [version] Fixed failing tests.
- * @version [version]
+ * @since 1.0.0-beta.10 Fixed failing tests.
+ * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -340,7 +340,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 * Test the "Revoke" nonce URL for deleting api keys.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Store key id in a variable so we can look it up later.
+	 * @since 1.0.0-beta.10 Store key id in a variable so we can look it up later.
 	 *
 	 * @return void
 	 */
@@ -410,7 +410,7 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 * Test the delete nonce URL for deleting webhooks.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Store webhook id in a variable so we can look it up later.
+	 * @since 1.0.0-beta.10 Store webhook id in a variable so we can look it up later.
 	 *
 	 * @return void
 	 */

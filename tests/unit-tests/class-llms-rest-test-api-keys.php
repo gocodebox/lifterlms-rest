@@ -7,8 +7,8 @@
  * @group api_keys
  *
  * @since 1.0.0-beta.1
- * @since [version] Fix failing tests.
- * @version [version]
+ * @since 1.0.0-beta.10 Fix failing tests.
+ * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -133,7 +133,7 @@ class LLMS_REST_Test_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the delete() method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Store key id for use after it's deleted.
+	 * @since 1.0.0-beta.10 Store key id for use after it's deleted.
 	 *
 	 * @return void
 	 */

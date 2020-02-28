@@ -9,8 +9,8 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @since [version] Added test_set_roles().
- * @version [version]
+ * @since 1.0.0-beta.10 Added test_set_roles().
+ * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -886,7 +886,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test setting roles.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.10
 	 *
 	 * @return void
 	 */

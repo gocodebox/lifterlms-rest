@@ -9,8 +9,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added links test.
- * @since [version] Added test on the trigger property/param.
- * @version [version]
+ * @since 1.0.0-beta.10 Added test on the trigger property/param.
+ * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -261,7 +261,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test get single student enrollment
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added test on the trigger property.
+	 * @since 1.0.0-beta.10 Added test on the trigger property.
 	 */
     public function test_get_enrollment() {
 
@@ -352,7 +352,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test create enrollment.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added test on the trigger property.
+	 * @since 1.0.0-beta.10 Added test on the trigger property.
 	 */
 	public function test_create_enrollment() {
 
@@ -410,7 +410,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test update enrollment status.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added test on the trigger property/arg.
+	 * @since 1.0.0-beta.10 Added test on the trigger property/arg.
 	 */
 	public function test_update_enrollment_status() {
 
@@ -485,7 +485,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test update enrollment creation date.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added test on the trigger arg.
+	 * @since 1.0.0-beta.10 Added test on the trigger arg.
 	 */
 	public function test_update_enrollment_creation_date() {
 
@@ -542,7 +542,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test producing 404 request errort.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Improve tests on update and add tests on the trigger arg.
+	 * @since 1.0.0-beta.10 Improve tests on update and add tests on the trigger arg.
 	 */
 	public function test_enrollments_not_found() {
 
@@ -594,7 +594,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test deleting a single enrollment.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added tests on trigger arg.
+	 * @since 1.0.0-beta.10 Added tests on trigger arg.
 	 */
 	public function test_delete_enrollment() {
 
