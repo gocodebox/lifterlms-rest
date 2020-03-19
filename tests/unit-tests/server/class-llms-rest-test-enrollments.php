@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for Enrollments API.
+ * Tests for Enrollments API
  *
  * @package LifterLMS_Rest/Tests
  *
@@ -10,7 +10,7 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added links test.
  * @since 1.0.0-beta.10 Added test on the trigger property/param.
- * @version 1.0.0-beta.10
+ * @since [version] Fixed pagination test taking into account course post revisions.
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -119,6 +119,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test list student enrollments pagination.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Fixed pagination test taking into account course post revisions.
 	 */
 	public function test_get_enrollments_pagination() {
 
@@ -138,8 +139,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		$route = $this->parse_route( $user_id );
 
-		$this->pagination_test( $route, $start_course_id, 10, 'post_id' );
-
+		$this->pagination_test( $route, $start_course_id, 10, 'post_id', $total = 25, $ids_step = 2 );
 	}
 
 	/**
