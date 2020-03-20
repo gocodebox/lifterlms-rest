@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.9
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -30,6 +30,8 @@ defined( 'ABSPATH' ) || exit;
  *                     In `get_objects_from_query()` avoid performing an additional query, just return the already retrieved posts.
  *                     Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
+ * @since [version] Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
+ *                     must be false when updating.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -205,7 +207,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
-	 *                  fired after inserting/uodateing an llms post into the database.
+	 *                     fired after inserting/uodateing an llms post into the database.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -434,9 +436,11 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Don't execute `$object->set_bulk()` when there's no data to update:
-	 *                    this fixes an issue when updating only properties which are not handled in `prepare_item_for_database()`.
-	 *                  Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
-	 *                    fired after inserting/uodateing an llms post into the database.
+	 *                     this fixes an issue when updating only properties which are not handled in `prepare_item_for_database()`.
+	 *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
+	 *                     fired after inserting/uodateing an llms post into the database.
+	 * @since [version] Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
+	 *                     must be false when updating.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -479,7 +483,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 * @param array           $schema   The item schema.
 		 * @param bool            $creating True when creating a post, false when updating.
 		 */
-		do_action( "llms_rest_insert_{$this->post_type}", $object, $request, $schema, true );
+		do_action( "llms_rest_insert_{$this->post_type}", $object, $request, $schema, false );
 
 		$object_id = $object->get( 'id' );
 
@@ -518,7 +522,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 * @param array           $schema   The item schema.
 		 * @param bool            $creating True when creating a post, false when updating.
 		 */
-		do_action( "llms_rest_after_insert_{$this->post_type}", $object, $request, $schema, true );
+		do_action( "llms_rest_after_insert_{$this->post_type}", $object, $request, $schema, false );
 
 		return $this->prepare_item_for_response( $object, $request );
 
