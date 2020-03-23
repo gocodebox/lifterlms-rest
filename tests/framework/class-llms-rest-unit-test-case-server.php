@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @since [version] Fixed pagination test taking into account post revisions.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -131,22 +131,27 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * Utility to perform pagination test.
+	 * Utility to perform pagination test
 	 *
 	 * @since 1.0.0-beta.7
-	 *
-	 * @param string $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
-	 * @param int    $start_id Optional. The id of the first item. Default 1.
-	 * @param int    $per_page The number of items per page. Default 10.
-	 * @param string $id_field The field name for the id item that should be present in the response. Set to empty to not perform any check.
-	 * @param int    $total    Total expected items.
+ 	 * @since [version] Post revisions are now taken into account when comparing list of resource ids.
+ 	 *
+	 * @param string   $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
+	 * @param int      $start_id Optional. The id of the first item. Default `1`.
+	 * @param int      $per_page Optional. The number of items per page. Default `10`.
+	 * @param string   $id_field Optional. The field name for the id item that should be present in the response. Set to empty to not perform any check. Default `'id'`.
+	 * @param int      $total    Optional. Total expected items. Default `25`
+	 * @param int|null $ids_step Optional. Ids difference between two subsequent resources. Default `null`.
 	 * @return void
 	 */
-	protected function pagination_test( $route = '', $start_id = 1, $per_page = 10, $id_field = 'id', $total = 25 ) {
+	protected function pagination_test( $route = '', $start_id = 1, $per_page = 10, $id_field = 'id', $total = 25, $ids_step = null ) {
 
 		$route       = empty( $route ) ? $this->route : $route;
 		$total_pages = (int) ceil( $total / $per_page );
 		$initial_id  = $start_id;
+		if ( is_null( $ids_step ) ) {
+			$ids_step = isset( $this->post_type ) && post_type_supports( $this->post_type, 'revisions' ) ? 2 : 1;
+		}
 
 		for ( $i = 1; $i <= $total_pages; $i++ ) {
 
@@ -181,9 +186,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 			}
 
 			if ( $id_field) {
-				$stop_id = ( $i !== $total_pages ) ? ( $start_id + $per_page - 1 ) : ( $total + $initial_id - 1 );
-				$this->assertEquals( range( $start_id, $stop_id ), wp_list_pluck( $body, $id_field ) );
-				$start_id += $per_page;
+				$stop_id = ( $i !== $total_pages ) ? ( $start_id + ( $per_page * $ids_step ) - $ids_step ) : ( $initial_id + ( $total * $ids_step ) - $ids_step );
+				$this->assertEquals( range( $start_id, $stop_id, $ids_step ), wp_list_pluck( $body, $id_field ) );
+				$start_id += $per_page * $ids_step;
 			}
 
 		}

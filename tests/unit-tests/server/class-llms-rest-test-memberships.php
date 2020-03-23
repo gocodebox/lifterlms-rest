@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for Memberships API.
+ * Tests for Memberships API
  *
  * @package LifterLMS_Rest/Tests/Controllers
  *
@@ -8,11 +8,12 @@
  * @group rest_memberships
  *
  * @since 1.0.0-beta.9
- * @version 1.0.0-beta.9
+ * @since [version] Fixed `post_type` property.
  *
  * @todo do more tests on the membership update/delete.
  */
 class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
+
 	/**
 	 * Default restriction message.
 	 *
@@ -28,7 +29,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @var string
 	 */
-	protected $post_type = 'membership';
+	protected $post_type = 'llms_membership';
 
 	/**
 	 * Route.
