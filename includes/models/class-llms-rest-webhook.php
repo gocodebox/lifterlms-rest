@@ -1,24 +1,27 @@
 <?php
 /**
- * Webhook Model.
+ * Webhook Model
  *
- * @package  LifterLMS_REST/Models
+ * @package LifterLMS_REST/Models
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Webhook class.
+ * LLMS_REST_Webhook class
  *
  * @since 1.0.0-beta.1
+ * @since [version] When validating a resource:
+ *                      - Skipped autosaves and revisions.
+ *                      - Implemented a new way to consider a resource as just created. Thanks WooCoommerce.
  */
 class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 	/**
-	 * Delivers the webhook.
+	 * Delivers the webhook
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -42,13 +45,13 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		);
 
 		/**
-		 * Modify HTTP args used to deliver the webhook.
+		 * Modify HTTP args used to deliver the webhook
 		 *
 		 * @since 1.0.0-beta.1
 		 *
-		 * @param array $http_args HTTP request args suitable for `wp_remote_request()`.
-		 * @param LLMS_REST_Webhook $this Webhook object.
-		 * @param mixed $args First argument passed to the action triggering the webhook.
+		 * @param array             $http_args HTTP request args suitable for `wp_remote_request()`.
+		 * @param LLMS_REST_Webhook $this      Webhook object.
+		 * @param mixed             $args      First argument passed to the action triggering the webhook.
 		 */
 		$http_args = apply_filters( 'llms_rest_webhook_delivery_args', $http_args, $this, $args );
 
@@ -74,31 +77,31 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		$this->delivery_after( $delivery_id, $http_args, $res, $duration );
 
 		/**
-		 * Fires after a webhook is delivered.
+		 * Fires after a webhook is delivered
 		 *
 		 * @since 1.0.0-beta.1
 		 *
-		 * @param array $http_args HTTP request args.
-		 * @param WP_Error|array $res Remote response.
-		 * @param int $duration Executing time.
-		 * @param array $args Numeric array of arguments from the originating hook.
-		 * @param LLMS_REST_Webhook $this Webhook object.
+		 * @param array             $http_args HTTP request args.
+		 * @param WP_Error|array    $res       Remote response.
+		 * @param int               $duration  Executing time.
+		 * @param array             $args      Numeric array of arguments from the originating hook.
+		 * @param LLMS_REST_Webhook $this      Webhook object.
 		 */
 		do_action( 'llms_rest_webhook_delivery', $http_args, $res, $duration, $args, $this );
 
 	}
 
 	/**
-	 * Fires after delivery.
+	 * Fires after delivery
 	 *
 	 * Logs data when loggind enabled and updates state data.
 	 *
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $delivery_id Webhook delivery id (for logging).
-	 * @param array  $req_args HTTP Request Arguments used to deliver the webhook.
-	 * @param array  $res Results from `wp_safe_remote_request()`.
-	 * @param float  $duration Time (in microseconds) it took to generate and deliver the webhook.
+	 * @param array  $req_args    HTTP Request Arguments used to deliver the webhook.
+	 * @param array  $res         Results from `wp_safe_remote_request()`.
+	 * @param float  $duration    Time (in microseconds) it took to generate and deliver the webhook.
 	 * @return void
 	 */
 	protected function delivery_after( $delivery_id, $req_args, $res, $duration ) {
@@ -162,7 +165,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Add actions for all the webhooks hooks.
+	 * Add actions for all the webhooks hooks
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -177,7 +180,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the webhook is currently pending delivery.
+	 * Determine if the webhook is currently pending delivery
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -190,7 +193,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the current action is valid for the webhook.
+	 * Determine if the current action is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -217,10 +220,10 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		}
 
 		/**
-		 * Determine if the current action is valid for the webhook.
+		 * Determine if the current action is valid for the webhook
 		 *
-		 * @param bool $ret Whether or not the action is valid.
-		 * @param array $args Numeric array of arguments from the originating hook.
+		 * @param bool              $ret  Whether or not the action is valid.
+		 * @param array             $args Numeric array of arguments from the originating hook.
 		 * @param LLMS_REST_Webhook $this Webhook object.
 		 */
 		return apply_filters( 'llms_rest_webhook_is_valid_action', $ret, $args, $this );
@@ -228,7 +231,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the current post-related action is valid for the webhook.
+	 * Determine if the current post-related action is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -254,28 +257,46 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the the resource is valid for the webhook.
+	 * Determine if the the resource is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Skipped autosaves and revisions.
+	 *                      Implemented a new way to consider a resource as just created. Thanks WooCoommerce.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
 	 */
 	protected function is_valid_resource( $args ) {
 
-		if ( in_array( $this->get_resource(), LLMS_REST_API()->webhooks()->get_post_type_resources(), true ) ) {
+		$resource = $this->get_resource();
+
+		if ( in_array( $resource, LLMS_REST_API()->webhooks()->get_post_type_resources(), true ) ) {
+
+			$post_resource = get_post( absint( $args[0] ) );
 
 			// Ignore auto-drafts.
-			if ( in_array( get_post_status( absint( $args[0] ) ), array( 'new', 'auto-draft' ), true ) ) {
+			if ( in_array( get_post_status( $post_resource ), array( 'new', 'auto-draft' ), true ) ) {
 				return false;
 			}
 
-			// Evaluate the 3rd arg of `save_post` hooks to only trigger the hook during the appropriate events.
-			if ( false !== strpos( current_action(), 'save_post' ) ) {
+			if ( false !== strpos( current_action(), 'save_post' ) || false !== strpos( current_action(), 'edit_post' ) ) {
+
+				// Ignore autosaves and revisions.
+				if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || is_int( wp_is_post_revision( $post_resource ) ) || is_int( wp_is_post_autosave( $resource ) ) ) {
+					return false;
+				}
+
+				// Drafts don't have post_date_gmt so calculate it here.
+				$gmt_date = get_gmt_from_date( $post_resource->post_date );
+
+				// A resource is considered created when the hook is executed within 10 seconds of the post creation date.
+				$resource_created = ( ( time() - 10 ) <= strtotime( $gmt_date ) );
+
 				$event = $this->get_event();
 
-				if ( 'created' === $event && ( isset( $args[2] ) && true === $args[2] ) ) {
-					// If 3rd arg is "true" the hook is triggerd because of an update, don't trigger the hook.
+				if ( ( 'created' === $event && false !== strpos( current_action(), 'save_post' ) ) && ! $resource_created ) {
+					return false;
+				} elseif ( ( 'updated' === $event && false !== strpos( current_action(), 'edit_post' ) ) && $resource_created ) {
 					return false;
 				}
 			}
@@ -286,7 +307,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the current user-related action is valid for the webhook.
+	 * Determine if the current user-related action is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -313,7 +334,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Processes information from the origination action hook.
+	 * Processes information from the origination action hook
 	 *
 	 * Determines if the webhook should be delivered and whether or not it should be scheduled or delivered immediately.
 	 *
@@ -330,25 +351,26 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		}
 
 		/**
-		 * Disable background processing of webhooks by returning a falsy.
+		 * Disable background processing of webhooks by returning a falsy
 		 *
 		 * Note: disabling async processing may create delays for users of your site.
 		 *
-		 * @param bool $async Whether async processing is enabled or not.
-		 * @param LLMS_REST_Webhook $this Webhook object.
-		 * @param array $args Numeric array of arguments from the originating hook.
+		 * @param bool              $async Whether async processing is enabled or not.
+		 * @param LLMS_REST_Webhook $this  Webhook object.
+		 * @param array             $args  Numeric array of arguments from the originating hook.
 		 */
 		if ( apply_filters( 'llms_rest_webhook_deliver_async', true, $this, $args ) ) {
 			return $this->schedule( $args );
 		}
 
 		$this->set( 'pending_delivery', 1 )->save();
+
 		return $this->deliver( $args );
 
 	}
 
 	/**
-	 * Perform a test ping to the delivery url.
+	 * Perform a test ping to the delivery url
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -386,7 +408,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determines if an originating action qualifies for webhook delivery.
+	 * Determines if an originating action qualifies for webhook delivery
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -403,16 +425,16 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		/**
 		 * Skip or hijack webhook delivery scheduling
 		 *
-		 * @param bool $deliver Whether or not to deliver webhook delivery.
-		 * @param LLMS_REST_Webhook $this Webhook object.
-		 * @param array $args Numeric array of arguments from the originating hook.
+		 * @param bool              $deliver Whether or not to deliver webhook delivery.
+		 * @param LLMS_REST_Webhook $this    Webhook object.
+		 * @param array             $args    Numeric array of arguments from the originating hook.
 		 */
 		return apply_filters( 'llms_rest_webhook_should_deliver', $deliver, $this, $args );
 
 	}
 
 	/**
-	 * Schedule the webhook for async delivery.
+	 * Schedule the webhook for async delivery
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -436,7 +458,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		$next = as_next_scheduled_action( 'lifterlms_rest_deliver_webhook_async', $schedule_args, 'llms-webhooks' );
 
 		/**
-		 * Determines the time period required to wait between delivery of the webhook.
+		 * Determines the time period required to wait between delivery of the webhook
 		 *
 		 * If the webhook has already been scheduled within this time period it will not be sent again
 		 * until the period expires. For example, the default time period is 300 seconds (5 minutes).
@@ -446,9 +468,9 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		 *
 		 * @since 1.0.0-beta.1
 		 *
-		 * @param int $delay Time (in seconds).
-		 * @param array $args Numeric array of arguments from the originating hook.
-		 * @param LLMS_REST_Webhook $this Webhook object.
+		 * @param int               $delay Time (in seconds).
+		 * @param array             $args  Numeric array of arguments from the originating hook.
+		 * @param LLMS_REST_Webhook $this  Webhook object.
 		 */
 		$delay = apply_filters( 'llms_rest_webhook_repeat_delay', 300, $args, $this );
 
