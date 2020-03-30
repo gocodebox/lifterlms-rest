@@ -10,7 +10,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.10 Added test_set_roles().
- * @version 1.0.0-beta.10
+ * @since [version] Added tests on custom fields request-db mapping.
+ * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -207,6 +208,31 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 			wp_set_current_user( $this->factory->user->create( array( 'role' => $role ) ) );
 			$this->assertTrue( $this->endpoint->create_item_permissions_check( $request ) );
 		}
+
+	}
+
+	/**
+	 * Test custom fields correctly mapped.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_user_custom_fields_map() {
+
+		wp_set_current_user( $this->user_admin );
+		$data = $this->get_mock_student_data( 5 );
+
+		$res = $this->perform_mock_request( 'POST', $this->route, $data );
+
+		$this->assertResponseStatusEquals( 201, $res );
+
+		$res_data = $res->get_data();
+		$student  = llms_get_student($res_data['id']);
+		// check the `billing_postcode` meta is empty.
+		$this->assertEmpty( $student->get( 'billing_postcode' )  );
+		// check that `billing_postcode` maps to the llms student `billing_zip` meta.
+		$this->assertEquals( $res_data['billing_postcode'], $student->get( 'billing_zip' ) );
 
 	}
 
@@ -650,7 +676,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 	}
 
-	public function test_get_items_enrollement_filters() {
+	public function test_get_items_enrollment_filters() {
 
 		wp_set_current_user( $this->user_admin );
 
@@ -776,16 +802,22 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	}
 
 	/**
-	 * Test the prepare_object_for_response() method.
+	 * Test the prepare_object_for_response() method
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Updated taking into account custom fields request-db mapping.
 	 *
 	 * @return void
 	 */
 	public function test_prepare_object_for_response() {
 
 		$data = $this->get_mock_student_data( 1 );
-		$student = $this->get_student_with_data( $data );
+
+		// `billing_postcode` resource's property is the `billing_zip` llms student property.
+		$db_data                = $data;
+		$db_data['billing_zip'] = $db_data['billing_postcode'];
+
+		$student = $this->get_student_with_data( $db_data );
 		$prepared = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'prepare_object_for_response', array( $student, new WP_REST_Request( 'GET', $this->route ) ) );
 
 		foreach ( $data as $key => $val ) {
@@ -1053,6 +1085,5 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		}
 
 	}
-
 
 }
