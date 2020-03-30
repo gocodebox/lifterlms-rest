@@ -14,8 +14,6 @@
     "url": "https://github.com/gocodebox/lifterlms-rest/issues"
   },
   "devDependencies": {
-    "gulp": "^4.0.0",
-    "lifterlms-lib-tasks": "^3.6.2",
     "swagger-repo": "^2.0.0-rc.13"
   },
   "scripts": {
