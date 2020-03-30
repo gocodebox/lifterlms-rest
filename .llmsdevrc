@@ -1,8 +1,0 @@
-{
-	"update": {
-		"files": [
-			"./**",
-			"*lifterlms*.php, ./spec/openapi.yaml"
-		]
-	}
-}
