@@ -2,20 +2,21 @@
 /**
  * CRUD Webhooks
  *
- * @package  LifterLMS_REST/Classes
+ * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.6
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Webhooks class.
+ * LLMS_REST_Webhooks class
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix formatting error on the default webhook name string.
  * @since 1.0.0-beta.6 "access plan" not "access_plan" for human reading.
+ * @since [version] `'save_post_*'` hooks number of arguments reduced to two.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -236,6 +237,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Retrieve a list of hooks for each topic.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] `'save_post_*'` hooks number of arguments reduced to two.
 	 *
 	 * @return array
 	 */
@@ -245,7 +247,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Courses.
 			'course.created'      => array(
-				'save_post_course' => 3,
+				'save_post_course' => 2,
 			),
 			'course.updated'      => array(
 				'edit_post_course' => 2,
@@ -260,7 +262,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Sections.
 			'section.created'     => array(
-				'save_post_section' => 3,
+				'save_post_section' => 2,
 			),
 			'section.updated'     => array(
 				'edit_post_section' => 2,
@@ -272,7 +274,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Lessons.
 			'lesson.created'      => array(
-				'save_post_lesson' => 3,
+				'save_post_lesson' => 2,
 			),
 			'lesson.updated'      => array(
 				'edit_post_lesson' => 2,
@@ -287,7 +289,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Memberships.
 			'membership.created'  => array(
-				'save_post_llms_membership' => 3,
+				'save_post_llms_membership' => 2,
 			),
 			'membership.updated'  => array(
 				'edit_post_llms_membership' => 2,
@@ -302,7 +304,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Access Plans.
 			'access_plan.created' => array(
-				'save_post_llms_access_plan' => 3,
+				'save_post_llms_access_plan' => 2,
 			),
 			'access_plan.updated' => array(
 				'edit_post_llms_access_plan' => 2,
@@ -314,7 +316,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Orders.
 			'order.created'       => array(
-				'save_post_llms_order' => 3,
+				'save_post_llms_order' => 2,
 			),
 			'order.updated'       => array(
 				'edit_post_llms_order' => 2,
@@ -326,7 +328,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 			// Transactions.
 			'transaction.created' => array(
-				'save_post_llms_transaction' => 3,
+				'save_post_llms_transaction' => 2,
 			),
 			'transaction.updated' => array(
 				'edit_post_llms_transaction' => 2,

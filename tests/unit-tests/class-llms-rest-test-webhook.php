@@ -9,7 +9,7 @@
  * @group webhook_model
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.6
+ * @since [version] `test_is_valid_resource()` updated to take into account the new way to discriminate between course creation/update.
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -626,6 +626,14 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	/**
+	 * Test whether a resource is valid
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Test updated to take into account the new way to discriminate between course creation/update
+	 *
+	 * @return void
+	 */
 	public function test_is_valid_resource() {
 
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
@@ -637,14 +645,18 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 		global $wp_current_filter;
 		$wp_current_filter = array( 'save_post_course' );
-		$this->assertTrue( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course, false ) ) ) );
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course, true ) ) ) );
+		$this->assertTrue( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course ) ) ) );
+
+		// Alter the post creation date so to simulate an update: A resource is considered created when the hook is executed within 10 seconds of the post creation date.
+		$course->post_date = date( 'Y-m-d H:i:s', strtotime('-11 seconds') );
+		wp_update_post( $course );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course ) ) ) );
 		$wp_current_filter = array();
 
 		// it's a draft.
 		$course->post_status = 'auto-draft';
 		wp_update_post( $course );
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course, false ) ) ) );
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'is_valid_resource', array( array( $course->ID, $course ) ) ) );
 
 	}
 
