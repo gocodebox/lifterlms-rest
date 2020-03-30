@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.11
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  *                     In `get_objects_from_query()` avoid performing an additional query, just return the already retrieved posts.
  *                     Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
- * @since [version] Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
+ * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
  *                     must be false when updating.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
@@ -439,7 +439,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *                     this fixes an issue when updating only properties which are not handled in `prepare_item_for_database()`.
 	 *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                     fired after inserting/uodateing an llms post into the database.
-	 * @since [version] Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
+	 * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
 	 *                     must be false when updating.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since [version] Fixed pagination test taking into account post revisions.
+ * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -134,7 +134,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Utility to perform pagination test
 	 *
 	 * @since 1.0.0-beta.7
- 	 * @since [version] Post revisions are now taken into account when comparing list of resource ids.
+ 	 * @since 1.0.0-beta.11 Post revisions are now taken into account when comparing list of resource ids.
  	 *
 	 * @param string   $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
 	 * @param int      $start_id Optional. The id of the first item. Default `1`.

@@ -10,8 +10,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.10 Added test_set_roles().
- * @since [version] Added tests on custom fields request-db mapping.
- * @version [version]
+ * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
+ * @version 1.0.0-beta.11
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -214,7 +214,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test custom fields correctly mapped.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.11
 	 *
 	 * @return void
 	 */
@@ -805,7 +805,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the prepare_object_for_response() method
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Updated taking into account custom fields request-db mapping.
+	 * @since 1.0.0-beta.11 Updated taking into account custom fields request-db mapping.
 	 *
 	 * @return void
 	 */

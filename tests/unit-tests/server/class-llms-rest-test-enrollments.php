@@ -10,7 +10,7 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added links test.
  * @since 1.0.0-beta.10 Added test on the trigger property/param.
- * @since [version] Fixed pagination test taking into account course post revisions.
+ * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -119,7 +119,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test list student enrollments pagination.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Fixed pagination test taking into account course post revisions.
+	 * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
 	 */
 	public function test_get_enrollments_pagination() {
 

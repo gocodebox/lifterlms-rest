@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.11
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix formatting error on the default webhook name string.
  * @since 1.0.0-beta.6 "access plan" not "access_plan" for human reading.
- * @since [version] `'save_post_*'` hooks number of arguments reduced to two.
+ * @since 1.0.0-beta.11 `'save_post_*'` hooks number of arguments reduced to two.
  */
 class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
@@ -237,7 +237,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Retrieve a list of hooks for each topic.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] `'save_post_*'` hooks number of arguments reduced to two.
+	 * @since 1.0.0-beta.11 `'save_post_*'` hooks number of arguments reduced to two.
 	 *
 	 * @return array
 	 */

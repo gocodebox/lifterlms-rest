@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.11
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
  * @since 1.0.0-beta.10 Fixed setting roles instead of appending them when updating user.
- * @since [version] Correctly map request's `billing_postcode` param to `billing_zip` meta.
+ * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -490,7 +490,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * array values are the database fields.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Correctly map request's `billing_postcode` param to `billing_zip` meta.
+	 * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
 	 *
 	 * @return array
 	 */
@@ -641,7 +641,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Fixed setting roles instead of appending them.
-	 * @since [version] Made sure to set user's meta with the correct db key.
+	 * @since 1.0.0-beta.11 Made sure to set user's meta with the correct db key.
 	 *
 	 * @param int             $object_id WP User id.
 	 * @param array           $prepared  Prepared item data.

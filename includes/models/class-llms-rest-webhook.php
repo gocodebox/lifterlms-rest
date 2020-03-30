@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Models
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.11
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Webhook class
  *
  * @since 1.0.0-beta.1
- * @since [version] When validating a resource:
+ * @since 1.0.0-beta.11 When validating a resource:
  *                      - Skipped autosaves and revisions.
  *                      - Implemented a new way to consider a resource as just created. Thanks WooCoommerce.
  */
@@ -260,7 +260,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Determine if the the resource is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Skipped autosaves and revisions.
+	 * @since 1.0.0-beta.11 Skipped autosaves and revisions.
 	 *                      Implemented a new way to consider a resource as just created. Thanks WooCoommerce.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.

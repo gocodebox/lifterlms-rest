@@ -9,7 +9,7 @@
  * @group webhook_model
  *
  * @since 1.0.0-beta.1
- * @since [version] `test_is_valid_resource()` updated to take into account the new way to discriminate between course creation/update.
+ * @since 1.0.0-beta.11 `test_is_valid_resource()` updated to take into account the new way to discriminate between course creation/update.
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -630,7 +630,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test whether a resource is valid
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Test updated to take into account the new way to discriminate between course creation/update
+	 * @since 1.0.0-beta.11 Test updated to take into account the new way to discriminate between course creation/update
 	 *
 	 * @return void
 	 */

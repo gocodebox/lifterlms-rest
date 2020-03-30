@@ -8,7 +8,7 @@
  * @group rest_memberships
  *
  * @since 1.0.0-beta.9
- * @since [version] Fixed `post_type` property.
+ * @since 1.0.0-beta.11 Fixed `post_type` property.
  *
  * @todo do more tests on the membership update/delete.
  */
