@@ -15,6 +15,29 @@
     "lifterlms/lifterlms-tests": "dev-master",
     "lifterlms/lifterlms-cs": "dev-master"
   },
+  "archive": {
+    "exclude": [
+      ".*",
+      "*.lock",
+      "*.xml",
+      "*.xml.dist",
+
+      "CHANGELOG.md",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+
+      "dist",
+      "docs",
+      "node_modules",
+      "spec",
+      "tests",
+      "tmp",
+      "web",
+      "web_deploy",
+      "wordpress"
+    ]
+  },
   "scripts": {
     "config-cs": [
       "\"vendor/bin/phpcs\" --config-set installed_paths ../../../vendor/wp-coding-standards/wpcs,../../../vendor/lifterlms/lifterlms-cs,../../../vendor/phpcompatibility/php-compatibility,../../../vendor/phpcompatibility/phpcompatibility-paragonie,../../../vendor/phpcompatibility/phpcompatibility-wp",
