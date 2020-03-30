@@ -1,6 +1,13 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.11 - 2020-03-30
+---------------------------
+
++ Bugfix: Correctly store user `billing_postcode` meta data.
++ Bugfix: Fixed issue preventing course.created (and other post.created) webhooks from firing.
+
+
 v1.0.0-beta.10 - 2020-02-28
 ---------------------------
 
