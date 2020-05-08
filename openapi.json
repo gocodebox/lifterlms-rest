@@ -1549,9 +1549,7 @@
             "schema": {
               "type": "string",
               "enum": [
-                "id",
-                "name",
-                "date_created"
+                "id"
               ],
               "default": "id"
             }
@@ -1561,6 +1559,32 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "email",
+            "description": "Limit results to a list of email addresses. Accepts a single email or a comma-separated list of emails.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "jeffrey@fakewebsite.tld"
+            }
+          },
+          {
+            "name": "role",
+            "description": "Limit results to a list of roles. Accepts a single role or a comma-separated list of roles.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "member",
+                "leader",
+                "admin"
+              ],
+              "example": "leader,admin",
+              "default": "member,leader,admin"
+            }
           }
         ],
         "responses": {
@@ -6371,7 +6395,7 @@
                 }
               },
               "collection": {
-                "description": "REST URI to the API key collection.",
+                "description": "REST URI to the collection.",
                 "type": "array",
                 "items": {
                   "type": "object",
