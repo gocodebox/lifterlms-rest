@@ -24,11 +24,28 @@ get:
         type: string
         enum:
           - id
-          - name
-          - date_created
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
+    - name: email
+      description: Limit results to a list of email addresses. Accepts a single email or a comma-separated list of emails.
+      in: query
+      required: false
+      schema:
+        type: string
+        example: jeffrey@fakewebsite.tld
+    - name: role
+      description: Limit results to a list of roles. Accepts a single role or a comma-separated list of roles.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - member
+          - leader
+          - admin
+        example: leader,admin
+        default: member,leader,admin
   responses:
     200:
       description: Successfully returned a list of group invitations
