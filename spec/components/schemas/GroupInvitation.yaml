@@ -42,7 +42,7 @@ properties:
               type: string
               example: /wp-json/llms/v1/groups/123/invitations/456
       collection:
-        description: REST URI to the API key collection.
+        description: REST URI to the collection.
         type: array
         items:
           type: object
