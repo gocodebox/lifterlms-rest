@@ -1,46 +1,41 @@
 <?php
 /**
- * REST Server functions.
+ * REST Server functions
  *
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.9
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * REST Server functions.
- *
- * @package LifterLMS_REST/Functions
- *
- * @since 1.0.0-beta.1
- * @since 1.0.0-beta.9 Added an util to validate a list of instructors.
- */
-
-/**
  * Return a WP_Error with proper code, message and status for unauthorized requests.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Added a second paramater to avoid checking if the user is logged in.
  *
- * @param string $message Optional. The custom error message. Default empty string.
- *                        When no custom message is provided a predefined message will be used.
+ * @param string  $message             Optional. The custom error message. Default empty string.
+ *                                     When no custom message is provided a predefined message will be used.
+ * @param boolean $check_authenticated Optional. Whether or not checking if the current user is logged in. Default `true`.
  * @return WP_Error
  */
-function llms_rest_authorization_required_error( $message = '' ) {
-	if ( is_user_logged_in() ) {
+function llms_rest_authorization_required_error( $message = '', $check_authenticated = true ) {
+	if ( $check_authenticated && is_user_logged_in() ) {
 		// 403.
 		$error_code = 'llms_rest_forbidden_request';
 		$_message   = __( 'You are not authorized to perform this request.', 'lifterlms' );
+		$status     = '403';
 	} else {
 		// 401.
 		$error_code = 'llms_rest_unauthorized_request';
 		$_message   = __( 'The API credentials were invalid.', 'lifterlms' );
+		$status     = '401';
 	}
 
 	$message = ! $message ? $_message : $message;
-	return new WP_Error( $error_code, $message, array( 'status' => rest_authorization_required_code() ) );
+	return new WP_Error( $error_code, $message, array( 'status' => $status ) );
 }
 
 /**
