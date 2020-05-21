@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.5
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.5 is_rest_request() accesses uses `filter_var` instead of `llms_filter_input()`.
  *                     Load all includes to accommodate plugins and themes that call `determine_current_user` early.
+ * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+ *                      to avoid infinite loops.
  */
 class LLMS_REST_Authentication {
 
@@ -62,6 +64,8 @@ class LLMS_REST_Authentication {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.5 Load all includes to accommodate plugins and themes that call `determine_current_user` early.
+	 * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+	 *                      to avoid infinite loops.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/determine_current_user/
 	 *
@@ -91,7 +95,7 @@ class LLMS_REST_Authentication {
 		}
 
 		if ( ! hash_equals( $key->get( 'consumer_secret' ), $creds['secret'] ) ) {
-			$this->set_error( llms_rest_authorization_required_error() );
+			$this->set_error( llms_rest_authorization_required_error( '', false ) );
 			return false;
 		}
 
@@ -128,6 +132,10 @@ class LLMS_REST_Authentication {
 	/**
 	 * Check if the API Key can perform the request.
 	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+	 *                      to avoid infinite loops.
+	 *
 	 * @param mixed           $result  Response to replace the requested version with.
 	 * @param WP_REST_Server  $server  Server instance.
 	 * @param WP_REST_Request $request Request used to generate the response.
@@ -139,7 +147,7 @@ class LLMS_REST_Authentication {
 
 			$allowed = $this->api_key->has_permission( $request->get_method() );
 			if ( ! $allowed ) {
-				return llms_rest_authorization_required_error();
+				return llms_rest_authorization_required_error( '', false );
 			}
 
 			// Update the API key's last access time.

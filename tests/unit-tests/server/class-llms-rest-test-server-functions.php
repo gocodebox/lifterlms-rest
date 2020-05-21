@@ -8,7 +8,8 @@
  * @group rest_functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [versuib] Test the llms_rest_authorization_required_error() function `$check_authenticated` parameter.
+ * @version [version]
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -60,6 +61,48 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertIsWPError( $err );
 		$this->assertWPErrorCodeEquals( 'llms_rest_forbidden_request', $err );
 		$this->assertWPErrorDataEquals( array( 'status' => 403 ), $err );
+		$this->assertWPErrorMessageEquals( 'My message.', $err );
+
+	}
+
+	/**
+	 * Test the llms_rest_authorization_required_error() function `$check_authenticated` parameter.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_authorization_required_error_with_check_authenticated_false() {
+
+		// Default.
+		$err = llms_rest_authorization_required_error('', false);
+		$this->assertIsWPError( $err );
+		$this->assertWPErrorCodeEquals( 'llms_rest_unauthorized_request', $err );
+		$this->assertWPErrorDataEquals( array( 'status' => 401 ), $err );
+		$this->assertWPErrorMessageEquals( 'The API credentials were invalid.', $err );
+
+		//  Custom message.
+		$err = llms_rest_authorization_required_error( 'My message.', false );
+		$this->assertIsWPError( $err );
+		$this->assertWPErrorCodeEquals( 'llms_rest_unauthorized_request', $err );
+		$this->assertWPErrorDataEquals( array( 'status' => 401 ), $err );
+		$this->assertWPErrorMessageEquals( 'My message.', $err );
+
+		// Log in.
+		wp_set_current_user( $this->factory->user->create() );
+
+		// Default.
+		$err = llms_rest_authorization_required_error('', false);
+		$this->assertIsWPError( $err );
+		$this->assertWPErrorCodeEquals( 'llms_rest_unauthorized_request', $err );
+		$this->assertWPErrorDataEquals( array( 'status' => 401 ), $err );
+		$this->assertWPErrorMessageEquals( 'The API credentials were invalid.', $err );
+
+		//  Custom message.
+		$err = llms_rest_authorization_required_error( 'My message.', false );
+		$this->assertIsWPError( $err );
+		$this->assertWPErrorCodeEquals( 'llms_rest_unauthorized_request', $err );
+		$this->assertWPErrorDataEquals( array( 'status' => 401 ), $err );
 		$this->assertWPErrorMessageEquals( 'My message.', $err );
 
 	}
