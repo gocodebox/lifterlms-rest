@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.11
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
  * @since 1.0.0-beta.10 Fixed setting roles instead of appending them when updating user.
  * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
+ * @since [version] TODO
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -39,6 +40,26 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		'email',
 		'name',
 		'registered_date',
+	);
+
+	/**
+	 * Whether search is allowed
+	 *
+	 * @var boolean
+	 */
+	protected $is_searchable = true;
+
+	/**
+	 * Schema properties to query search columns mapping
+	 *
+	 * @var array
+	 */
+	protected $search_columns_mapping = array(
+		'id'       => 'ID',
+		'username' => 'user_login',
+		'email'    => 'user_email',
+		'url'      => 'user_url',
+		'name'     => 'display_name',
 	);
 
 	/**
@@ -408,6 +429,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Parse `search` and `search_columns` args.
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
@@ -438,6 +460,14 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
 		if ( ! empty( $prepared['exclude'] ) ) {
 			$args['exclude'] = $prepared['exclude'];
+		}
+
+		if ( ! empty( $prepared['search'] ) ) {
+			$args['search'] = $prepared['search'];
+		}
+
+		if ( ! empty( $prepared['search_columns'] ) ) {
+			$args['search_columns'] = $prepared['search_columns'];
 		}
 
 		return new WP_User_Query( $args );
