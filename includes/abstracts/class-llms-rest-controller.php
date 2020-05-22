@@ -311,10 +311,12 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 			if ( ! empty( $this->search_columns_mapping ) ) {
 
-				if ( ! empty( $prepared['search_columns'] ) ) {
-					// Filter search columns by context.
-					$search_columns = array_keys( $this->filter_response_by_context( array_flip( $prepared['search_columns'] ), $request['context'] ) );
+				if ( empty( $prepared['search_columns'] ) ) {
+					return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
 				}
+
+				// Filter search columns by context.
+				$search_columns = array_keys( $this->filter_response_by_context( array_flip( $prepared['search_columns'] ), $request['context'] ) );
 
 				// Check if one of more unallowed search columns have been provided as request query params (not merged with defaults).
 				if ( ! empty( $request->get_query_params()['search_columns'] ) ) {
@@ -334,7 +336,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 				$prepared['search_columns'] = array();
 
-				// Map our search columns into WP_User compatible ones.
+				// Map our search columns into query compatible ones.
 				foreach ( $search_columns as $search_column ) {
 					if ( isset( $this->search_columns_mapping[ $search_column ] ) ) {
 						$prepared['search_columns'][] = $this->search_columns_mapping[ $search_column ];
