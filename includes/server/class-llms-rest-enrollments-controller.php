@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.10
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -35,6 +35,7 @@ defined( 'ABSPATH' ) || exit;
  *                     `llms_rest_enrollment_links` filter hooks.
  *                     Also fix return when the enrollment to be deleted doesn't exist.
  *                     Fixed 'context' query parameter schema.
+ * @since [version] Updated `$this->prepare_collection_query_args()` to reflect changes in the parent class.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -783,32 +784,22 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare enrollments objects query.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Updated to reflect changes in the parent class.
 	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return array
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array|WP_Error
 	 */
 	protected function prepare_collection_query_args( $request ) {
 
-		// Retrieve the list of registered collection query parameters.
-		$registered_params = $this->get_collection_params();
-		$args              = array();
-
-		/*
-		* For each known parameter which is both registered and present in the request,
-		* set the parameter's value on the query $args.
-		*/
-		foreach ( array_keys( $registered_params ) as $param ) {
-			if ( isset( $request[ $param ] ) ) {
-				$args[ $param ] = $request[ $param ];
-			}
+		$prepared = parent::prepare_collection_query_args( $request );
+		if ( is_wp_error( $prepared ) ) {
+			return $wp_error;
 		}
 
-		$args['id']   = $request['id'];
-		$args['page'] = ! isset( $args['page'] ) ? 1 : $args['page'];
+		$prepared['id']   = $request['id'];
+		$prepared['page'] = ! isset( $prepared['page'] ) ? 1 : $prepared['page'];
 
-		$args = $this->prepare_items_query( $args, $request );
-
-		return $args;
+		return $this->prepare_items_query( $prepared, $request );
 
 	}
 

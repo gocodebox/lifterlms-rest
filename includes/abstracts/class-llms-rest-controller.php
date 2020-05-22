@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Break `get_items()` method into `prepare_collection_query_args()`, `prepare_args_for_total_count_query()`,
  *                  `prepare_collection_items_for_response()` and `add_header_pagination()` methods so to improve abstraction.
  *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- * @since [version] TODO
+ * @since [version] Added logic to perform a collection search.
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -37,6 +37,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $orderby_properties = array(
 		'id',
 	);
+
+	/**
+	 * Whether search is allowed
+	 *
+	 * @var boolean
+	 */
+	protected $is_searchable = false;
 
 	/**
 	 * Create an item.
@@ -109,7 +116,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Retrieves the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] TODO.
+	 * @since [version] Added `search_columns` collection param for searchable resources.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -203,7 +210,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results.
 	 * @since 1.0.0-beta.7 Broken into several methods so to improve abstraction.
-	 * @since [version] Prepare collection search.
+	 * @since [version] Return early if `prepare_collection_query_args()` is a `WP_Error`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -211,7 +218,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	public function get_items( $request ) {
 
 		$prepared = $this->prepare_collection_query_args( $request );
-		$prepared = $this->prepare_collection_query_search_args( $prepared, $request );
 		if ( is_wp_error( $prepared ) ) {
 			return $prepared;
 		}
@@ -247,24 +253,46 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Prepare args for search and call collection params to query args map method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function prepare_collection_query_args( $request ) {
 
 		// Prepare all set args.
-		$params   = array_keys( $this->get_collection_params() );
-		$prepared = array();
+		$registered = $this->get_collection_params();
+		$prepared   = array();
 
-		foreach ( $params as $key ) {
+		foreach ( $registered as $key => $value ) {
 			if ( isset( $request[ $key ] ) ) {
 				$prepared[ $key ] = $request[ $key ];
 			}
 		}
 
+		$prepared = $this->prepare_collection_query_search_args( $prepared, $request );
+		if ( is_wp_error( $prepared ) ) {
+			return $prepared;
+		}
+
+		$prepared = $this->map_params_to_query_args( $prepared, $registered, $request );
+
 		return $prepared;
 
+	}
+
+	/**
+	 * Map schema to query arguments to retrieve a collection of objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared   Array of collection arguments.
+	 * @param array           $registered Registered collection params.
+	 * @param WP_REST_Request $request    Full details about the request.
+	 * @return array|WP_Error
+	 */
+	protected function map_params_to_query_args( $prepared, $registered, $request ) {
+		return $prepared;
 	}
 
 	/**
@@ -278,39 +306,50 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function prepare_collection_query_search_args( $prepared, $request ) {
 
-		$args = $prepared;
-
 		// Search?
 		if ( ! empty( $prepared['search'] ) ) {
 
-			if ( ! empty( $prepared['search_columns'] ) ) {
-				// Filter search columns by context.
-				$prepared['search_columns'] = array_keys( $this->filter_response_by_context( array_flip( $prepared['search_columns'] ), $request['context'] ) );
-			}
+			if ( ! empty( $this->search_columns_mapping ) ) {
 
-			if ( empty( $prepared['search_columns'] ) ) {
-				return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
-			}
+				if ( ! empty( $prepared['search_columns'] ) ) {
+					// Filter search columns by context.
+					$search_columns = array_keys( $this->filter_response_by_context( array_flip( $prepared['search_columns'] ), $request['context'] ) );
+				}
 
-			$args['search_columns'] = array();
+				// Check if one of more unallowed search columns have been provided as request query params (not merged with defaults).
+				if ( ! empty( $request->get_query_params()['search_columns'] ) ) {
 
-			/**
-			 * Map our search columns into WP_User compatible ones
-			 */
-			foreach ( $prepared['search_columns'] as $search_column ) {
-				if ( isset( $this->search_columns_mapping[ $search_column ] ) ) {
-					$args['search_columns'][] = $this->search_columns_mapping[ $search_column ];
+					$forbidden_columns = array_diff( $prepared['search_columns'], $search_columns );
+
+					if ( ! empty( $forbidden_columns ) ) {
+						return llms_rest_authorization_required_error(
+							sprintf(
+								// Translators: %1$s comma separated list of search columns.
+								__( 'You are not allowed to search into the provided column(s): %1$s', 'lifterlms' ),
+								implode( ',', $forbidden_columns )
+							)
+						);
+					}
+				}
+
+				$prepared['search_columns'] = array();
+
+				// Map our search columns into WP_User compatible ones.
+				foreach ( $search_columns as $search_column ) {
+					if ( isset( $this->search_columns_mapping[ $search_column ] ) ) {
+						$prepared['search_columns'][] = $this->search_columns_mapping[ $search_column ];
+					}
+				}
+
+				if ( empty( $prepared['search_columns'] ) ) {
+					return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
 				}
 			}
 
-			if ( empty( $args['search_columns'] ) ) {
-				return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
-			}
-
-			$args['search'] = '*' . $prepared['search'] . '*';
+			$prepared['search'] = '*' . $prepared['search'] . '*';
 		}
 
-		return $args;
+		return $prepared;
 	}
 
 	/**

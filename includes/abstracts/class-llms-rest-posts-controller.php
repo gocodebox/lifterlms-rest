@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.11
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
  * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
  *                     must be false when updating.
+ * @since [version] Moved parameters to query args mapping from `$this->prepare_collection_params()` to `$this->map_params_to_query_args()`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -351,15 +352,40 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Moved parameters to query args mapping into a different method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function prepare_collection_query_args( $request ) {
 
-		// Retrieve the list of registered collection query parameters.
-		$registered = $this->get_collection_params();
-		$args       = array();
+		$prepared = parent::prepare_collection_query_args( $request );
+		if ( is_wp_error( $prepared ) ) {
+			return $wp_error;
+		}
+
+		// Force the post_type argument, since it's not a user input variable.
+		$prepared['post_type'] = $this->post_type;
+
+		$query_args = $this->prepare_items_query( $prepared, $request );
+
+		return $query_args;
+
+	}
+
+	/**
+	 * Map schema to query arguments to retrieve a collection of objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared   Array of collection arguments.
+	 * @param array           $registered Registered collection params.
+	 * @param WP_REST_Request $request    Full details about the request.
+	 * @return array|WP_Error
+	 */
+	protected function map_params_to_query_args( $prepared, $registered, $request ) {
+
+		$args = array();
 
 		/*
 		* This array defines mappings between public API query parameters whose
@@ -373,6 +399,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			'page'    => 'paged',
 			'exclude' => 'post__not_in',
 			'include' => 'post__in',
+			'search'  => 's',
 		);
 
 		/*
@@ -390,13 +417,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			$args['posts_per_page'] = $request['per_page'];
 		}
 
-		// Force the post_type argument, since it's not a user input variable.
-		$args['post_type'] = $this->post_type;
-
-		$query_args = $this->prepare_items_query( $args, $request );
-
-		return $query_args;
-
+		return $args;
 	}
 
 	/**
