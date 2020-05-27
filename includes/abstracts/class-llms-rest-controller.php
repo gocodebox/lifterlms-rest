@@ -1,6 +1,6 @@
 <?php
 /**
- * Base REST Controller Class.
+ * Base REST Controller
  *
  * @package  LifterLMS_REST/Abstracts
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Controller class..
+ * LLMS_REST_Controller class
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
@@ -19,6 +19,8 @@ defined( 'ABSPATH' ) || exit;
  *                  `prepare_collection_items_for_response()` and `add_header_pagination()` methods so to improve abstraction.
  *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  * @since [version] Added logic to perform a collection search.
+ *                      Added `object_inserted()` and `object_completely_inserted()` methods called after an object is
+ *                      respectively inserted in the DB and all its additional fields have been updated as well (completely inserted).
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -49,6 +51,9 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Create an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 *                      respectively inserted in the DB and all its additional fields have been
+	 *                      updated as well (completely inserted).
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -61,15 +66,20 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$item   = $this->prepare_item_for_database( $request );
 		$object = $this->create_object( $item, $request );
+		$schema = $this->get_item_schema();
 
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
+		$this->object_inserted( $object, $request, $schema, true );
+
 		$fields_update = $this->update_additional_fields_for_object( $item, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		$this->object_completely_inserted( $object, $request, $schema, true );
 
 		$request->set_param( 'context', 'edit' );
 
@@ -81,6 +91,62 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		return $response;
 
+	}
+
+	/**
+	 * Called right after a resource is inserted (created/updated).
+	 *
+	 * @since [version]
+	 *
+	 * @param object          $object   Inserted or updated object.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param array           $schema   The item schema.
+	 * @param bool            $creating True when creating a post, false when updating.
+	 */
+	protected function object_inserted( $object, $request, $schema, $creating ) {
+
+		$type = $this->get_object_type();
+		/**
+		 * Fires after a single llms resource is created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
+		 *
+		 * @since [version]
+		 *
+		 * @param object          $object   Inserted or updated object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_insert_{$type}", $object, $request, $schema, $creating );
+	}
+
+	/**
+	 * Called right after a resource is completely inserted (created/updated).
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post       $object   Inserted or updated object.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param array           $schema   The item schema.
+	 * @param bool            $creating True when creating a post, false when updating.
+	 */
+	protected function object_completely_inserted( $object, $request, $schema, $creating ) {
+
+		$type = $this->get_object_type();
+		/**
+		 * Fires after a single llms resource is completely created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
+		 *
+		 * @since [version]
+		 *
+		 * @param object          $object   Inserted or updated object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_after_insert_{$type}", $object, $request, $schema, $creating );
 	}
 
 	/**
@@ -644,6 +710,9 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Update item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 *                      respectively inserted in the DB and all its additional fields have been
+	 *                      updated as well (completely inserted).
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -657,15 +726,20 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$item   = $this->prepare_item_for_database( $request );
 		$object = $this->update_object( $item, $request );
+		$schema = $this->get_item_schema();
 
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
+		$this->object_inserted( $object, $request, $schema, false );
+
 		$fields_update = $this->update_additional_fields_for_object( $item, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		$this->object_completely_inserted( $object, $request, $schema, false );
 
 		$request->set_param( 'context', 'edit' );
 

@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Resource Controller for Students.
+ * REST Resource Controller for Students
  *
- * @package  LifterLMS_REST/Classes/Controllers
+ * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added `prepare_args_for_total_count_query()` method override.
+ * @since [version] Added item schema filter.
+ *                      Added 'llms_rest_student_registered' action hook - fired after student's creation.
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
@@ -131,6 +133,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * Get the item schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added item schema filter.
 	 *
 	 * @return array
 	 */
@@ -139,7 +142,14 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		$schema                                   = parent::get_item_schema();
 		$schema['properties']['roles']['default'] = array( 'student' );
 
-		return $schema;
+		/**
+		 * Filter item schema for the studend controller.
+		 *
+		 * @since [version]
+		 *
+		 * @param array $schema Item schema data.
+		 */
+		return apply_filters( 'llms_rest_student_item_schema', $schema );
 
 	}
 
@@ -302,6 +312,34 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		// run the query again on page one to get a proper total count.
 		$args['page'] = 1;
 		return $args;
+	}
+
+	/**
+	 * Called right after a student is completely inserted (created/updated).
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Student    $student  Inserted or updated llms student.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param array           $schema   The item schema.
+	 * @param bool            $creating True when creating a post, false when updating.
+	 */
+	protected function object_completely_inserted( $student, $request, $schema, $creating ) {
+
+		parent::object_completely_inserted( $student, $request, $schema, $creating );
+
+		if ( $creating ) {
+			/**
+			 * Fires after a LifterLMS student has been created via the REST API.
+			 *
+			 * @since [version]
+			 *
+			 * @param LLMS_Student    $student Inserted or updated llms student.
+			 * @param WP_REST_Request $request Request object.
+			 * @param array           $schema  The item schema.
+			 */
+			do_action( 'llms_rest_student_registered', $this->get_object_id( $student ), $request, $schema );
+		}
 	}
 
 	/**
