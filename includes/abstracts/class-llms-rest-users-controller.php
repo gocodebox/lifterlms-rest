@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
  * @since 1.0.0-beta.10 Fixed setting roles instead of appending them when updating user.
  * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
- * @since 1.0.0-beta.12 TODO
+ * @since 1.0.0-beta.12 Add `search` and `search_columns` collection filtering.
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
