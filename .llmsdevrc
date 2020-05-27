@@ -2,7 +2,9 @@
 	"update": {
 		"files": [
 			"./**",
-			"*lifterlms*.php, ./spec/openapi.yaml"
+			"./*.php,./**/*.php",
+			"*lifterlms*.php, ./spec/openapi.yaml",
+			"*lifterlms*.php"
 		]
 	}
 }
