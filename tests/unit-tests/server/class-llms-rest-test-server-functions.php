@@ -9,7 +9,7 @@
  *
  * @since 1.0.0-beta.1
  * @since [versuib] Test the llms_rest_authorization_required_error() function `$check_authenticated` parameter.
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -68,7 +68,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test the llms_rest_authorization_required_error() function `$check_authenticated` parameter.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */

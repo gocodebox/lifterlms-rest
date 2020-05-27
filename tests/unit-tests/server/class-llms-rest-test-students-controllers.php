@@ -11,9 +11,9 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.10 Added test_set_roles().
  * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
- * @since [version] Added tests on students search.
+ * @since 1.0.0-beta.12 Added tests on students search.
  *                      Added tests on firing student registration action hook.
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -1091,7 +1091,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search no results
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1116,7 +1116,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search with results all available fields
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1149,7 +1149,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search with wrong search columns
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1187,7 +1187,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search with unallowed search columns
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1212,7 +1212,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search with allowed search columns
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1247,7 +1247,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test search no results trying to search for existing email.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */
@@ -1276,7 +1276,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	/**
 	 * Test firing student registration action hook
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @return void
 	 */

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.5 is_rest_request() accesses uses `filter_var` instead of `llms_filter_input()`.
  *                     Load all includes to accommodate plugins and themes that call `determine_current_user` early.
- * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+ * @since 1.0.0-beta.12 Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
  *                      to avoid infinite loops.
  */
 class LLMS_REST_Authentication {
@@ -64,7 +64,7 @@ class LLMS_REST_Authentication {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.5 Load all includes to accommodate plugins and themes that call `determine_current_user` early.
-	 * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+	 * @since 1.0.0-beta.12 Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
 	 *                      to avoid infinite loops.
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/determine_current_user/
@@ -133,7 +133,7 @@ class LLMS_REST_Authentication {
 	 * Check if the API Key can perform the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
+	 * @since 1.0.0-beta.12 Call `llms_rest_authorization_required_error()` instructing to not check if the current user is logged in
 	 *                      to avoid infinite loops.
 	 *
 	 * @param mixed           $result  Response to replace the requested version with.

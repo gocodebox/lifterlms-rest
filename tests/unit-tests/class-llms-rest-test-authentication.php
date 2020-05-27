@@ -7,8 +7,8 @@
  * @group auth
  *
  * @since 1.0.0-beta.1
- * @since [version] Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
- * @version [version]
+ * @since 1.0.0-beta.12 Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
+ * @version 1.0.0-beta.12
  */
 class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -24,7 +24,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the authenticate method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
+	 * @since 1.0.0-beta.12 Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
 	 *
 	 * @return void
 	 */

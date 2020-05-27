@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Break `get_items()` method into `prepare_collection_query_args()`, `prepare_args_for_total_count_query()`,
  *                  `prepare_collection_items_for_response()` and `add_header_pagination()` methods so to improve abstraction.
  *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
- * @since [version] Added logic to perform a collection search.
+ * @since 1.0.0-beta.12 Added logic to perform a collection search.
  *                      Added `object_inserted()` and `object_completely_inserted()` methods called after an object is
  *                      respectively inserted in the DB and all its additional fields have been updated as well (completely inserted).
  */
@@ -51,7 +51,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Create an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 * @since 1.0.0-beta.12 Call `object_inserted` and `object_completely_inserted` after an object is
 	 *                      respectively inserted in the DB and all its additional fields have been
 	 *                      updated as well (completely inserted).
 	 *
@@ -96,7 +96,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Called right after a resource is inserted (created/updated).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param object          $object   Inserted or updated object.
 	 * @param WP_REST_Request $request  Request object.
@@ -111,7 +111,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.12
 		 *
 		 * @param object          $object   Inserted or updated object.
 		 * @param WP_REST_Request $request  Request object.
@@ -124,7 +124,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Called right after a resource is completely inserted (created/updated).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param LLMS_Post       $object   Inserted or updated object.
 	 * @param WP_REST_Request $request  Request object.
@@ -139,7 +139,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.12
 		 *
 		 * @param object          $object   Inserted or updated object.
 		 * @param WP_REST_Request $request  Request object.
@@ -182,7 +182,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Retrieves the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added `search_columns` collection param for searchable resources.
+	 * @since 1.0.0-beta.12 Added `search_columns` collection param for searchable resources.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -276,7 +276,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results.
 	 * @since 1.0.0-beta.7 Broken into several methods so to improve abstraction.
-	 * @since [version] Return early if `prepare_collection_query_args()` is a `WP_Error`.
+	 * @since 1.0.0-beta.12 Return early if `prepare_collection_query_args()` is a `WP_Error`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -319,7 +319,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Prepare args for search and call collection params to query args map method.
+	 * @since 1.0.0-beta.12 Prepare args for search and call collection params to query args map method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -350,7 +350,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Map schema to query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param array           $prepared   Array of collection arguments.
 	 * @param array           $registered Registered collection params.
@@ -364,7 +364,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Format search query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
@@ -710,7 +710,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Update item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 * @since 1.0.0-beta.12 Call `object_inserted` and `object_completely_inserted` after an object is
 	 *                      respectively inserted in the DB and all its additional fields have been
 	 *                      updated as well (completely inserted).
 	 *

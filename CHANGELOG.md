@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.12 - 2020-05-27
+---------------------------
+
++ Fix: Prevent infinite loops encountered when invalid API keys are utilized.
++ Fix: Add an action used to fire LifterLMS core engagement and notification emails
++ Feature: Added the ability to filter student and instructor collection list requests by various user information fields.
+
+
 v1.0.0-beta.11 - 2020-03-30
 ---------------------------
 

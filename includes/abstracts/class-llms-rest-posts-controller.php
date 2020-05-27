@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
  * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
  *                     must be false when updating.
- * @since [version] Moved parameters to query args mapping from `$this->prepare_collection_params()` to `$this->map_params_to_query_args()`.
+ * @since 1.0.0-beta.12 Moved parameters to query args mapping from `$this->prepare_collection_params()` to `$this->map_params_to_query_args()`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -352,7 +352,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Moved parameters to query args mapping into a different method.
+	 * @since 1.0.0-beta.12 Moved parameters to query args mapping into a different method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -376,7 +376,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Map schema to query arguments to retrieve a collection of objects.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param array           $prepared   Array of collection arguments.
 	 * @param array           $registered Registered collection params.

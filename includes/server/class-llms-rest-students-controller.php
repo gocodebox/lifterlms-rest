@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added `prepare_args_for_total_count_query()` method override.
- * @since [version] Added item schema filter.
+ * @since 1.0.0-beta.12 Added item schema filter.
  *                      Added 'llms_rest_student_registered' action hook - fired after student's creation.
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
@@ -133,7 +133,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * Get the item schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added item schema filter.
+	 * @since 1.0.0-beta.12 Added item schema filter.
 	 *
 	 * @return array
 	 */
@@ -145,7 +145,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		/**
 		 * Filter item schema for the studend controller.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.12
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -317,7 +317,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Called right after a student is completely inserted (created/updated).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.12
 	 *
 	 * @param LLMS_Student    $student  Inserted or updated llms student.
 	 * @param WP_REST_Request $request  Request object.
@@ -332,7 +332,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 			/**
 			 * Fires after a LifterLMS student has been created via the REST API.
 			 *
-			 * @since [version]
+			 * @since 1.0.0-beta.12
 			 *
 			 * @param LLMS_Student    $student Inserted or updated llms student.
 			 * @param WP_REST_Request $request Request object.

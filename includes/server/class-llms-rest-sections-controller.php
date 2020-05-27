@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
  *                     Fix the way we get the section's parent course object when building the resource links.
  * @since 1.0.0-beta.9 Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
- * @since [version] Updated `$this->prepare_collection_query_args()` to reflect changes in the parent class.
+ * @since 1.0.0-beta.12 Updated `$this->prepare_collection_query_args()` to reflect changes in the parent class.
  */
 class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
@@ -352,7 +352,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Updated to reflect changes in the parent class.
+	 * @since 1.0.0-beta.12 Updated to reflect changes in the parent class.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error

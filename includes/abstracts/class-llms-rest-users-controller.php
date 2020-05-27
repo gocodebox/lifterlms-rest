@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Added `check_read_object_permissions()` method override.
  * @since 1.0.0-beta.10 Fixed setting roles instead of appending them when updating user.
  * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
- * @since [version] TODO
+ * @since 1.0.0-beta.12 TODO
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -429,7 +429,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Retrieve a query object based on arguments from a `get_items()` (collection) request
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Parse `search` and `search_columns` args.
+	 * @since 1.0.0-beta.12 Parse `search` and `search_columns` args.
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.12
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Return a WP_Error with proper code, message and status for unauthorized requests.
  *
  * @since 1.0.0-beta.1
- * @since [version] Added a second paramater to avoid checking if the user is logged in.
+ * @since 1.0.0-beta.12 Added a second paramater to avoid checking if the user is logged in.
  *
  * @param string  $message             Optional. The custom error message. Default empty string.
  *                                     When no custom message is provided a predefined message will be used.
