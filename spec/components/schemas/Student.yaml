@@ -8,7 +8,10 @@ allOf:
   - type: object
     properties:
       roles:
-        description: The user's WordPress user role.
+        description: |
+          The user's WordPress user role.
+
+          Only returned when `context=edit`.
         type: array
         default: [ student ]
         items:
