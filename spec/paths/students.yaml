@@ -8,6 +8,8 @@ get:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
     - $ref: '#/components/parameters/Order'
+    - $ref: '#/components/parameters/Search'
+    - $ref: '#/components/parameters/SearchColumns'
     - name: orderby
       description: Specify the sort field for a collection of results.
       in: query
