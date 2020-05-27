@@ -11,7 +11,9 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.10 Added test_set_roles().
  * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
- * @version 1.0.0-beta.11
+ * @since [version] Added tests on students search.
+ *                      Added tests on firing student registration action hook.
+ * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -1084,6 +1086,235 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 			$this->assertTrue( $this->endpoint->update_item_permissions_check( $request ) );
 		}
 
+	}
+
+	/**
+	 * Test search no results
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_noresults_all_available_fields() {
+
+		wp_set_current_user( $this->user_admin );
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search' => 'cannotfindthis',
+			)
+		);
+
+		$this->assertResponseStatusEquals( 200, $response );
+		$response_data = $response->get_data();
+		$this->assertEmpty( $response_data );
+
+	}
+
+	/**
+	 * Test search with results all available fields
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_with_results_all_available_fields() {
+
+		wp_set_current_user( $this->user_admin );
+
+		$student_id   = $this->factory->user->create( array( 'role' => 'student' ) );
+		$student_data = get_userdata( $student_id );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search' => $student_data->display_name,
+			)
+		);
+
+		$this->assertResponseStatusEquals( 200, $response );
+		$response_data = $response->get_data();
+
+		// Expect to find it in the available columns `name`.
+		$this->assertNotEmpty( $response_data );
+		$this->assertEquals( 1, count( $response_data ) );
+		$this->assertEquals( $student_data->display_name, $response_data[0]['name'] );
+
+	}
+
+	/**
+	 * Test search with wrong search columns
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_wrong_search_columns() {
+
+		wp_set_current_user( $this->user_admin );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search'         => 'whatever',
+				'search_columns' => '',
+			)
+		);
+
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'You must provide a valid set of columns to search into.', $response );
+
+		// Provide a wrong set of columns.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search'         => 'whatever',
+				'search_columns' => array('name', 'what'),
+			)
+		);
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'Invalid parameter(s): search_columns', $response );
+	}
+
+	/**
+	 * Test search with unallowed search columns
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_unallowed_search_columns() {
+
+		wp_set_current_user( $this->user_admin );
+
+		// Try to search into an unallowed field.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search'         => 'whatever',
+				'search_columns' => array('name', 'email'), // email is not allowed with the default context=view.
+			)
+		);
+		$this->assertResponseStatusEquals( 403, $response );
+		$this->assertResponseMessageEquals( 'You are not allowed to search into the provided column(s): email', $response );
+	}
+
+	/**
+	 * Test search with allowed search columns
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_allowed_search_columns() {
+
+		wp_set_current_user( $this->user_admin );
+
+		$student_id   = $this->factory->user->create( array( 'role' => 'student' ) );
+		$student_data = get_userdata( $student_id );
+
+		// Try to search into an allowed field with match
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search'         => $student_data->user_email,
+				'context'        => 'edit',
+				'search_columns' => array('name', 'email'), // email is now allowed with the context=edit.
+			)
+		);
+
+		$response_data = $response->get_data();
+
+		$this->assertNotEmpty( $response_data );
+		$this->assertEquals( 1, count( $response_data ) );
+		$this->assertEquals( $student_data->display_name, $response_data[0]['name'] );
+
+	}
+
+
+	/**
+	 * Test search no results trying to search for existing email.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search_noresults_existing_email() {
+
+		wp_set_current_user( $this->user_admin );
+
+		$student_id   = $this->factory->user->create( array( 'role' => 'student' ) );
+		$student_data = get_userdata( $student_id );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search' => $student_data->user_email,
+			)
+		);
+
+		// We cannot look for the search string in the email column, because the email field is only allowed in `context=edit`.
+		$this->assertResponseStatusEquals( 200, $response );
+		$response_data = $response->get_data();
+		$this->assertEmpty( $response_data );
+	}
+
+	/**
+	 * Test firing student registration action hook
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_firing_student_registered_hook_firing() {
+
+		$did_registration            = did_action( 'llms_rest_student_registered' );
+		$did_student_insertion       = did_action( 'llms_rest_insert_student' );
+		$did_student_insertion_after = did_action( 'llms_rest_after_insert_student' );
+
+		wp_set_current_user( $this->user_admin );
+
+		$data = $this->get_mock_student_data( 4 );
+
+		// Create, action triggered.
+		$res = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$data
+		);
+		$this->assertResponseStatusEquals( 201, $res );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_insert_student' ) );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_after_insert_student' ) );
+
+		// Update, no action triggered.
+		$updating = $this->factory->student->create();
+		$route = sprintf( '%1$s/%2$d', $this->route, $updating );
+		$res      = $this->perform_mock_request(
+			'POST',
+			$route,
+			array(
+				'first_name' => 'Whatever',
+			)
+		);
+		$this->assertResponseStatusEquals( 200, $res );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
+		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_insert_student' ) );
+		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_after_insert_student' ) );
 	}
 
 }

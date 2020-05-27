@@ -218,9 +218,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param string $method Request method.
-	 * @param string $route Request route, eg: '/llms/v1/courses'.
-	 * @param array $body Optional request body.
-	 * @param array $query Optional query arguments.
+	 * @param string $route  Request route, eg: '/llms/v1/courses'.
+	 * @param array  $body   Optional request body.
+	 * @param array  $query  Optional query arguments.
 	 * @return WP_REST_Response.
 	 */
 	protected function perform_mock_request( $method, $route, $body = array(), $query = array() ) {

@@ -42,7 +42,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Test getting links to terms based on the current user caps.
-	 * @group what
+	 *
 	 * @since 1.0.0-beta.8
 	 */
 	public function test_get_links_terms() {

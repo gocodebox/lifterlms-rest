@@ -2,12 +2,13 @@
 /**
  * Test authentication methods.
  *
- * @package  LifterLMS_REST/Tests
+ * @package LifterLMS_REST/Tests
  *
  * @group auth
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
+ * @version [version]
  */
 class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -23,6 +24,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the authenticate method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
 	 *
 	 * @return void
 	 */
@@ -62,6 +64,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 		$this->assertEquals( $expected_actions, did_action( 'llms_rest_basic_auth_success' ) );
 
 		// Correct key, incorrect secret.
+		unset($GLOBALS['current_user']); // Make sure the current user is not set: e.g. to catch possibile infinite loops on authentication error.
 		$_SERVER['HTTP_X_LLMS_CONSUMER_SECRET'] = 'fakesecret';
 		$this->assertEquals( false, $this->auth->authenticate( false ) );
 		$this->assertEquals( $expected_actions, did_action( 'llms_rest_basic_auth_success' ) );

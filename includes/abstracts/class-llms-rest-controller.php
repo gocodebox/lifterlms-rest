@@ -1,23 +1,26 @@
 <?php
 /**
- * Base REST Controller Class.
+ * Base REST Controller
  *
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Controller class..
+ * LLMS_REST_Controller class
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results & handle error conditions early in responses.
  * @since 1.0.0-beta.7 Break `get_items()` method into `prepare_collection_query_args()`, `prepare_args_for_total_count_query()`,
  *                  `prepare_collection_items_for_response()` and `add_header_pagination()` methods so to improve abstraction.
  *                  `prepare_objects_query()` renamed to `prepare_collection_query_args()`.
+ * @since [version] Added logic to perform a collection search.
+ *                      Added `object_inserted()` and `object_completely_inserted()` methods called after an object is
+ *                      respectively inserted in the DB and all its additional fields have been updated as well (completely inserted).
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -38,9 +41,19 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	);
 
 	/**
+	 * Whether search is allowed
+	 *
+	 * @var boolean
+	 */
+	protected $is_searchable = false;
+
+	/**
 	 * Create an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 *                      respectively inserted in the DB and all its additional fields have been
+	 *                      updated as well (completely inserted).
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -53,15 +66,20 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$item   = $this->prepare_item_for_database( $request );
 		$object = $this->create_object( $item, $request );
+		$schema = $this->get_item_schema();
 
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
+		$this->object_inserted( $object, $request, $schema, true );
+
 		$fields_update = $this->update_additional_fields_for_object( $item, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		$this->object_completely_inserted( $object, $request, $schema, true );
 
 		$request->set_param( 'context', 'edit' );
 
@@ -73,6 +91,62 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		return $response;
 
+	}
+
+	/**
+	 * Called right after a resource is inserted (created/updated).
+	 *
+	 * @since [version]
+	 *
+	 * @param object          $object   Inserted or updated object.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param array           $schema   The item schema.
+	 * @param bool            $creating True when creating a post, false when updating.
+	 */
+	protected function object_inserted( $object, $request, $schema, $creating ) {
+
+		$type = $this->get_object_type();
+		/**
+		 * Fires after a single llms resource is created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
+		 *
+		 * @since [version]
+		 *
+		 * @param object          $object   Inserted or updated object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_insert_{$type}", $object, $request, $schema, $creating );
+	}
+
+	/**
+	 * Called right after a resource is completely inserted (created/updated).
+	 *
+	 * @since [version]
+	 *
+	 * @param LLMS_Post       $object   Inserted or updated object.
+	 * @param WP_REST_Request $request  Request object.
+	 * @param array           $schema   The item schema.
+	 * @param bool            $creating True when creating a post, false when updating.
+	 */
+	protected function object_completely_inserted( $object, $request, $schema, $creating ) {
+
+		$type = $this->get_object_type();
+		/**
+		 * Fires after a single llms resource is completely created or updated via the REST API.
+		 *
+		 * The dynamic portion of the hook name, `$type`, refers to the object type this controller is responsible for managing.
+		 *
+		 * @since [version]
+		 *
+		 * @param object          $object   Inserted or updated object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param array           $schema   The item schema.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		do_action( "llms_rest_after_insert_{$type}", $object, $request, $schema, $creating );
 	}
 
 	/**
@@ -108,6 +182,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Retrieves the query params for the objects collection.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added `search_columns` collection param for searchable resources.
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -117,8 +192,23 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$query_params['context']['default'] = 'view';
 
-		// We're not currently implementing searching.
-		unset( $query_params['search'] );
+		// We're not currently implementing searching for all of our controllers.
+		if ( empty( $this->is_searchable ) ) {
+			unset( $query_params['search'] );
+		} elseif ( ! empty( $this->search_columns_mapping ) ) {
+
+			$search_columns = array_keys( $this->search_columns_mapping );
+
+			$query_params['search_columns'] = array(
+				'description' => __( 'Column names to be searched. Accepts a single column or a comma separated list of columns.', 'lifterlms' ),
+				'type'        => 'array',
+				'items'       => array(
+					'type' => 'string',
+					'enum' => $search_columns,
+				),
+				'default'     => $search_columns,
+			);
+		}
 
 		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
 
@@ -186,13 +276,18 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix an issue displaying a last page for lists with 0 possible results.
 	 * @since 1.0.0-beta.7 Broken into several methods so to improve abstraction.
+	 * @since [version] Return early if `prepare_collection_query_args()` is a `WP_Error`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
 
-		$prepared   = $this->prepare_collection_query_args( $request );
+		$prepared = $this->prepare_collection_query_args( $request );
+		if ( is_wp_error( $prepared ) ) {
+			return $prepared;
+		}
+
 		$query      = $this->get_objects_query( $prepared, $request );
 		$pagination = $this->get_pagination_data_from_query( $query, $prepared, $request );
 
@@ -224,24 +319,105 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Prepare args for search and call collection params to query args map method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function prepare_collection_query_args( $request ) {
 
 		// Prepare all set args.
-		$params   = array_keys( $this->get_collection_params() );
-		$prepared = array();
+		$registered = $this->get_collection_params();
+		$prepared   = array();
 
-		foreach ( $params as $key ) {
+		foreach ( $registered as $key => $value ) {
 			if ( isset( $request[ $key ] ) ) {
 				$prepared[ $key ] = $request[ $key ];
 			}
 		}
 
+		$prepared = $this->prepare_collection_query_search_args( $prepared, $request );
+		if ( is_wp_error( $prepared ) ) {
+			return $prepared;
+		}
+
+		$prepared = $this->map_params_to_query_args( $prepared, $registered, $request );
+
 		return $prepared;
 
+	}
+
+	/**
+	 * Map schema to query arguments to retrieve a collection of objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared   Array of collection arguments.
+	 * @param array           $registered Registered collection params.
+	 * @param WP_REST_Request $request    Full details about the request.
+	 * @return array|WP_Error
+	 */
+	protected function map_params_to_query_args( $prepared, $registered, $request ) {
+		return $prepared;
+	}
+
+	/**
+	 * Format search query arguments to retrieve a collection of objects.
+	 *
+	 * @since [version]
+	 *
+	 * @param array           $prepared Array of collection arguments.
+	 * @param WP_REST_Request $request  Request object.
+	 * @return array|WP_Error
+	 */
+	protected function prepare_collection_query_search_args( $prepared, $request ) {
+
+		// Search?
+		if ( ! empty( $prepared['search'] ) ) {
+
+			if ( ! empty( $this->search_columns_mapping ) ) {
+
+				if ( empty( $prepared['search_columns'] ) ) {
+					return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
+				}
+
+				// Filter search columns by context.
+				$search_columns = array_keys( $this->filter_response_by_context( array_flip( $prepared['search_columns'] ), $request['context'] ) );
+
+				// Check if one of more unallowed search columns have been provided as request query params (not merged with defaults).
+				if ( ! empty( $request->get_query_params()['search_columns'] ) ) {
+
+					$forbidden_columns = array_diff( $prepared['search_columns'], $search_columns );
+
+					if ( ! empty( $forbidden_columns ) ) {
+						return llms_rest_authorization_required_error(
+							sprintf(
+								// Translators: %1$s comma separated list of search columns.
+								__( 'You are not allowed to search into the provided column(s): %1$s', 'lifterlms' ),
+								implode( ',', $forbidden_columns )
+							)
+						);
+					}
+				}
+
+				$prepared['search_columns'] = array();
+
+				// Map our search columns into query compatible ones.
+				foreach ( $search_columns as $search_column ) {
+					if ( isset( $this->search_columns_mapping[ $search_column ] ) ) {
+						$prepared['search_columns'][] = $this->search_columns_mapping[ $search_column ];
+					}
+				}
+
+				if ( empty( $prepared['search_columns'] ) ) {
+					return llms_rest_bad_request_error( __( 'You must provide a valid set of columns to search into.', 'lifterlms' ) );
+				}
+			}
+
+			$prepared['search'] = '*' . $prepared['search'] . '*';
+		}
+
+		return $prepared;
 	}
 
 	/**
@@ -534,6 +710,9 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Update item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call `object_inserted` and `object_completely_inserted` after an object is
+	 *                      respectively inserted in the DB and all its additional fields have been
+	 *                      updated as well (completely inserted).
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -547,15 +726,20 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$item   = $this->prepare_item_for_database( $request );
 		$object = $this->update_object( $item, $request );
+		$schema = $this->get_item_schema();
 
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
+		$this->object_inserted( $object, $request, $schema, false );
+
 		$fields_update = $this->update_additional_fields_for_object( $item, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		$this->object_completely_inserted( $object, $request, $schema, false );
 
 		$request->set_param( 'context', 'edit' );
 
