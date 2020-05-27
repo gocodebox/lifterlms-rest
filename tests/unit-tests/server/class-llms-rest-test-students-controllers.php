@@ -12,6 +12,7 @@
  * @since 1.0.0-beta.10 Added test_set_roles().
  * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
  * @since [version] Added tests on students search.
+ *                      Added tests on firing student registration action hook.
  * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
@@ -1087,7 +1088,6 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 	}
 
-
 	/**
 	 * Test search no results
 	 *
@@ -1245,7 +1245,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 
 	/**
-	 * Test search no results trying to
+	 * Test search no results trying to search for existing email.
 	 *
 	 * @since [version]
 	 *
@@ -1271,7 +1271,50 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$this->assertResponseStatusEquals( 200, $response );
 		$response_data = $response->get_data();
 		$this->assertEmpty( $response_data );
+	}
 
+	/**
+	 * Test firing student registration action hook
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_firing_student_registered_hook_firing() {
+
+		$did_registration            = did_action( 'llms_rest_student_registered' );
+		$did_student_insertion       = did_action( 'llms_rest_insert_student' );
+		$did_student_insertion_after = did_action( 'llms_rest_after_insert_student' );
+
+		wp_set_current_user( $this->user_admin );
+
+		$data = $this->get_mock_student_data( 4 );
+
+		// Create, action triggered.
+		$res = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$data
+		);
+		$this->assertResponseStatusEquals( 201, $res );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_insert_student' ) );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_after_insert_student' ) );
+
+		// Update, no action triggered.
+		$updating = $this->factory->student->create();
+		$route = sprintf( '%1$s/%2$d', $this->route, $updating );
+		$res      = $this->perform_mock_request(
+			'POST',
+			$route,
+			array(
+				'first_name' => 'Whatever',
+			)
+		);
+		$this->assertResponseStatusEquals( 200, $res );
+		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
+		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_insert_student' ) );
+		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_after_insert_student' ) );
 	}
 
 }
