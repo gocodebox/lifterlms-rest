@@ -1567,6 +1567,8 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
         - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SearchColumns'
         - name: orderby
           description: Specify the sort field for a collection of results.
           in: query
@@ -2855,6 +2857,8 @@ paths:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
         - $ref: '#/components/parameters/Order'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SearchColumns'
         - name: orderby
           description: Specify the sort field for a collection of results.
           in: query
@@ -4652,7 +4656,10 @@ components:
         - type: object
           properties:
             roles:
-              description: The user's WordPress user role.
+              description: |
+                The user's WordPress user role.
+
+                Only returned when `context=edit`.
               type: array
               default:
                 - instructor
@@ -6131,7 +6138,10 @@ components:
         - type: object
           properties:
             roles:
-              description: The user's WordPress user role.
+              description: |
+                The user's WordPress user role.
+
+                Only returned when `context=edit`.
               type: array
               default:
                 - student
@@ -6188,11 +6198,17 @@ components:
             - description: Unique User Identifer. The WordPress User `ID`.
               example: 456
         email:
-          description: The user's email address.
+          description: |
+            The user's email address.
+
+            Only returned when `context=edit`.
           type: string
           example: jamie@lifterlms.com
         username:
-          description: The user's username.
+          description: |
+            The user's username.
+
+            Only returned when `context=edit`.
           type: string
           example: jamie2019
         password:
@@ -6205,7 +6221,10 @@ components:
           type: string
           example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
         registered_date:
-          description: The user's original site registration date.
+          description: |
+            The user's original site registration date.
+
+            Only returned when `context=edit`.
           type: string
           example: '2019-05-03 19:25:01'
         avatar_urls:
@@ -6230,15 +6249,24 @@ components:
           type: string
           example: 'https://myawesomewebsite.tld'
         first_name:
-          description: The user's first name.
+          description: |
+            The user's first name.
+
+            Only returned when `context=edit`.
           type: string
           example: Jamie
         last_name:
-          description: The user's last name.
+          description: |
+            The user's last name.
+
+            Only returned when `context=edit`.
           type: string
           example: Cook
         nickname:
-          description: The user's chosen nickname.
+          description: |
+            The user's chosen nickname.
+
+            Only returned when `context=edit`.
           type: string
           example: JamieC
         name:
@@ -6246,27 +6274,45 @@ components:
           type: string
           example: Jamie Cook
         billing_address_1:
-          description: Address line 1.
+          description: |
+            Address line 1.
+
+            Only returned when `context=edit`.
           type: string
           example: 1234 Somewhere Place
         billing_address_2:
-          description: Address line 2.
+          description: |
+            Address line 2.
+
+            Only returned when `context=edit`.
           type: string
           example: Suite ABC
         billing_city:
-          description: City name.
+          description: |
+            City name.
+
+            Only returned when `context=edit`.
           type: string
           example: Anywhere
         billing_state:
-          description: 'ISO code or state, province, or district name.'
+          description: |
+            ISO code or state, province, or district name.
+
+            Only returned when `context=edit`.
           type: string
           example: CA
         billing_postcode:
-          description: Postal code.
+          description: |
+            Postal code.
+
+            Only returned when `context=edit`.
           type: string
           example: 12345-678
         billing_country:
-          description: ISO country code.
+          description: |
+            ISO country code.
+
+            Only returned when `context=edit`.
           type: string
           example: US
     UserName:
@@ -6505,6 +6551,35 @@ components:
           - llms_quiz
           - section
         default: course
+    Search:
+      name: search
+      in: query
+      description: Filter results to those matching the specified search string.
+      required: false
+      schema:
+        type: string
+        example: jamie@lifterlms.com
+    SearchColumns:
+      name: search_columns
+      description: |
+        Column names to be searched. Accepts a single column name or a comma separated list of column names.
+
+        All columns can be searched when `context=edit`, when `context=view` only `id` and `name` may be specified.
+
+        When the `search` parameter is specified, the default `search_columns` defaults to all of the columns available for the given `context`.
+      in: query
+      required: false
+      schema:
+        type: string
+        example:
+          - email
+          - username
+        enum:
+          - id
+          - email
+          - name
+          - url
+          - username
   headers:
     PaginationTotalPages:
       description: Total number of pages available in the collection.
