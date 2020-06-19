@@ -57,9 +57,15 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test delete progress.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version]
+	 */
 	public function test_delete_item() {
 
-		$course = $this->factory->course->create( array( 'sections' => 0 ) );
+		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
 		$route = $this->get_route( $this->user_student, $course );
 		llms_enroll_student( $this->user_student, $course );
 		$student = llms_get_student( $this->user_student );
@@ -72,6 +78,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$response = $this->perform_mock_request( 'POST', $route, array(
 			'status' => 'complete'
 		) );
+		$this->assertEquals( 100, $student->get_progress( $course, 'course' ) );
 
 		$response = $this->perform_mock_request( 'DELETE', $route );
 		$this->assertResponseStatusEquals( 204, $response );
