@@ -14,7 +14,7 @@
     "url": "https://github.com/gocodebox/lifterlms-rest/issues"
   },
   "devDependencies": {
-    "swagger-repo": "^2.0.0-rc.13"
+    "swagger-repo": "^2.0.0-rc.15"
   },
   "scripts": {
     "start": "swagger-repo serve -p 8888",
