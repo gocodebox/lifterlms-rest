@@ -53,27 +53,24 @@ jobs:
     after_script:
       - ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT
   - name: "Test OpenAPI Spec"
-    language: node
+    language: node_js
     node: lts/*
-    workspaces:
-      create:
-        name: node-env
     before_install:
     install:
       - npm ci
     script:
       - npm run test
   - stage: deploy
-    language: node
+    language: node_js
     node: lts/*
-    workspaces:
-      use:
-        - node-env
     before_install:
     install:
+      - npm ci
     script: npm run build && npm run gh-pages
-    on:
-      branch: master
+    deploy:
+      provider: script
+      on:
+        branch: master
 
 before_install:
   # Disable xDebug for faster builds
