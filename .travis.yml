@@ -63,14 +63,11 @@ jobs:
   - stage: deploy
     language: node_js
     node_js: lts/*
+    if: branch = master
     before_install:
     install:
       - npm ci
     script: npm run build && npm run gh-pages
-    deploy:
-      provider: script
-      on:
-        branch: master
 
 before_install:
   # Disable xDebug for faster builds
