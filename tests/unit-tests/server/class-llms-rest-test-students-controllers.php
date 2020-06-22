@@ -13,7 +13,7 @@
  * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
  * @since 1.0.0-beta.12 Added tests on students search.
  *                      Added tests on firing student registration action hook.
- * @version 1.0.0-beta.12
+ * @since [version] Fix test failing on WP core 5.0.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -1150,6 +1150,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test search with wrong search columns
 	 *
 	 * @since 1.0.0-beta.12
+	 * @since [version] Fix test failing on WP core 5.0.
 	 *
 	 * @return void
 	 */
@@ -1168,7 +1169,11 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		);
 
 		$this->assertResponseStatusEquals( 400, $response );
-		$this->assertResponseMessageEquals( 'You must provide a valid set of columns to search into.', $response );
+
+		// Empty search results on WP core 5.0 never hit our custom error message.
+		global $wp_version;
+		$expected = 0 === strpos( $wp_version, '5.0' ) ? 'Invalid parameter(s): search_columns' : 'You must provide a valid set of columns to search into.';
+		$this->assertResponseMessageEquals( $expected, $response );
 
 		// Provide a wrong set of columns.
 		$response = $this->perform_mock_request(
