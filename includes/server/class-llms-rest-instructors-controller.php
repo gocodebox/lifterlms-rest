@@ -1,8 +1,8 @@
 <?php
 /**
- * REST Resource Controller for Instructors.
+ * REST Resource Controller for Instructors
  *
- * @package  LifterLMS_REST/Classes/Controllers
+ * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
  * @version 1.0.0-beta.1
@@ -11,9 +11,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Instructors_Controller class.
+ * LLMS_REST_Instructors_Controller class
  *
  * @since 1.0.0-beta.1
+ * @since [version] Fixed authentication error messages referring to 'students' or 'users' rather than 'instructors'.
  */
 class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 
@@ -155,6 +156,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * Determine if current user has permission to list users.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed authentication error message referring to 'students' rather than 'instructors'.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -162,7 +164,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 
 		if ( ! current_user_can( 'list_users' ) ) {
-			return llms_rest_authorization_required_error( __( 'You are not allowed to list students.', 'lifterlms' ) );
+			return llms_rest_authorization_required_error( __( 'You are not allowed to list instructors.', 'lifterlms' ) );
 		}
 
 		return true;
@@ -236,6 +238,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * Determine if current user has permission to update a user.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Refer to the instructor role on the authorization error message rather than the generic 'user'.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -247,7 +250,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		if ( ! current_user_can( 'edit_users', $request['id'] ) ) {
-			return llms_rest_authorization_required_error( __( 'You are not allowed to edit this user.', 'lifterlms' ) );
+			return llms_rest_authorization_required_error( __( 'You are not allowed to edit this instructor.', 'lifterlms' ) );
 		}
 
 		return $this->check_roles_permissions( $request );
