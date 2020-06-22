@@ -54,7 +54,7 @@ jobs:
       - ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT
   - name: "Test OpenAPI Spec"
     language: node_js
-    node: lts/*
+    node_js: lts/*
     before_install:
     install:
       - npm ci
@@ -62,7 +62,7 @@ jobs:
       - npm run test
   - stage: deploy
     language: node_js
-    node: lts/*
+    node_js: lts/*
     before_install:
     install:
       - npm ci
