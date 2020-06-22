@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Instructors_Controller class
  *
  * @since 1.0.0-beta.1
- * @since [version] Fixed authentication error messages referring to 'students' or 'users' rather than 'instructors'.
+ * @since 1.0.0-beta.13 Fixed authentication error messages referring to 'students' or 'users' rather than 'instructors'.
  */
 class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 
@@ -156,7 +156,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * Determine if current user has permission to list users.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed authentication error message referring to 'students' rather than 'instructors'.
+	 * @since 1.0.0-beta.13 Fixed authentication error message referring to 'students' rather than 'instructors'.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
@@ -238,7 +238,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * Determine if current user has permission to update a user.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Refer to the instructor role on the authorization error message rather than the generic 'user'.
+	 * @since 1.0.0-beta.13 Refer to the instructor role on the authorization error message rather than the generic 'user'.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error

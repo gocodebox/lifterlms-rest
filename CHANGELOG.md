@@ -1,6 +1,13 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.13 - 2020-06-22
+---------------------------
+
++ Bugfix: Fixed error response messages on the instructors endpoint.
++ Bugfix: Fixed student progress deletion endpoint issues preventing progress from being fully removed.
+
+
 v1.0.0-beta.12 - 2020-05-27
 ---------------------------
 

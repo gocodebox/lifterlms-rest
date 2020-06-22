@@ -13,7 +13,7 @@
  * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
  * @since 1.0.0-beta.12 Added tests on students search.
  *                      Added tests on firing student registration action hook.
- * @since [version] Fix test failing on WP core 5.0.
+ * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -1150,7 +1150,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test search with wrong search columns
 	 *
 	 * @since 1.0.0-beta.12
-	 * @since [version] Fix test failing on WP core 5.0.
+	 * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
 	 *
 	 * @return void
 	 */

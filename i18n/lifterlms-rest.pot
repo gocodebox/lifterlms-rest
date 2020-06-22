@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.11\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.13\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-27T15:25:05-07:00\n"
+"POT-Creation-Date: 2020-06-22T13:17:01-07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -162,7 +162,7 @@ msgid "Unique Identifier. The WordPress Post ID."
 msgstr ""
 
 #: includes/abstracts/class-llms-rest-posts-controller.php:1047
-#: includes/server/class-llms-rest-students-progress-controller.php:226
+#: includes/server/class-llms-rest-students-progress-controller.php:229
 #: includes/server/class-llms-rest-webhooks-controller.php:182
 msgid "Creation date. Format: Y-m-d H:i:s"
 msgstr ""
@@ -173,7 +173,7 @@ msgid "Creation date (in GMT). Format: Y-m-d H:i:s"
 msgstr ""
 
 #: includes/abstracts/class-llms-rest-posts-controller.php:1057
-#: includes/server/class-llms-rest-students-progress-controller.php:235
+#: includes/server/class-llms-rest-students-progress-controller.php:238
 #: includes/server/class-llms-rest-webhooks-controller.php:189
 msgid "Date last modified. Format: Y-m-d H:i:s"
 msgstr ""
@@ -1115,12 +1115,12 @@ msgid "Limit results to a specific course or membership or a list of courses and
 msgstr ""
 
 #: includes/server/class-llms-rest-enrollments-controller.php:666
-#: includes/server/class-llms-rest-students-progress-controller.php:220
+#: includes/server/class-llms-rest-students-progress-controller.php:223
 msgid "The ID of the course/membership."
 msgstr ""
 
 #: includes/server/class-llms-rest-enrollments-controller.php:672
-#: includes/server/class-llms-rest-students-progress-controller.php:214
+#: includes/server/class-llms-rest-students-progress-controller.php:217
 msgid "The ID of the student."
 msgstr ""
 
@@ -1133,7 +1133,7 @@ msgid "Date last modified. Format: `Y-m-d H:i:s`"
 msgstr ""
 
 #: includes/server/class-llms-rest-enrollments-controller.php:689
-#: includes/server/class-llms-rest-students-progress-controller.php:242
+#: includes/server/class-llms-rest-students-progress-controller.php:245
 msgid "The status of the enrollment."
 msgstr ""
 
@@ -1141,33 +1141,32 @@ msgstr ""
 msgid "The enrollment trigger. Default is `any`."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:63
+#: includes/server/class-llms-rest-instructors-controller.php:64
 msgid "You are not allowed to create new instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:81
+#: includes/server/class-llms-rest-instructors-controller.php:82
 msgid "You are not allowed to delete this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:100
+#: includes/server/class-llms-rest-instructors-controller.php:101
 msgid "Retrieve only instructors for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:108
+#: includes/server/class-llms-rest-instructors-controller.php:109
 msgid "Exclude instructors who do not have permissions for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:130
+#: includes/server/class-llms-rest-instructors-controller.php:131
 msgid "You are not allowed to view this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:165
-#: includes/server/class-llms-rest-students-controller.php:189
-msgid "You are not allowed to list students."
+#: includes/server/class-llms-rest-instructors-controller.php:167
+msgid "You are not allowed to list instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:250
-msgid "You are not allowed to edit this user."
+#: includes/server/class-llms-rest-instructors-controller.php:253
+msgid "You are not allowed to edit this instructor."
 msgstr ""
 
 #: includes/server/class-llms-rest-lessons-controller.php:137
@@ -1357,23 +1356,27 @@ msgstr ""
 msgid "You are not allowed to filter students by role."
 msgstr ""
 
+#: includes/server/class-llms-rest-students-controller.php:189
+msgid "You are not allowed to list students."
+msgstr ""
+
 #: includes/server/class-llms-rest-students-controller.php:383
 msgid "You are not allowed to edit this student."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-progress-controller.php:249
+#: includes/server/class-llms-rest-students-progress-controller.php:252
 msgid "Student's progress as a percentage."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-progress-controller.php:408
+#: includes/server/class-llms-rest-students-progress-controller.php:411
 msgid "Unique identifier for the student. The WP User ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-progress-controller.php:412
+#: includes/server/class-llms-rest-students-progress-controller.php:415
 msgid "Unique course, lesson, or section Identifer. The WordPress Post ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-progress-controller.php:506
+#: includes/server/class-llms-rest-students-progress-controller.php:509
 msgid "Created date cannot be in the future."
 msgstr ""
 

@@ -61,7 +61,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 * Test delete progress.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version]
+	 * @since 1.0.0-beta.13
 	 */
 	public function test_delete_item() {
 
