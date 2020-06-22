@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.13
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Student_Progress_Controller class.
  *
  * @since 1.0.0-beta.1
- * @since [version] Fixed student/lesson post meta key to delete when deleting a student progress.
+ * @since 1.0.0-beta.13 Fixed student/lesson post meta key to delete when deleting a student progress.
  */
 class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
@@ -85,7 +85,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Errors returned by this method should be any error other than a 404!
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed student/lesson post meta key to delete, `_is_complete` in place of `_status`.
+	 * @since 1.0.0-beta.13 Fixed student/lesson post meta key to delete, `_is_complete` in place of `_status`.
 	 *
 	 * @param obj             $object Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.

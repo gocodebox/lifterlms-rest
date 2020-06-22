@@ -20,5 +20,4 @@ requiredPropsFirst: true
 sortPropsAlphabetically: true
 
 # Use a specific build version
-# This was fixed in rc.22 https://github.com/Redocly/redoc/issues/1152 is fixed (and rc.22 is not the latest release).
-redocURL: https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.23/bundles/redoc.standalone.js
+redocURL: https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.27/bundles/redoc.standalone.js
