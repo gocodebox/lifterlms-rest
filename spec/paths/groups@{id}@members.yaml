@@ -28,6 +28,20 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
+    - name: group_role
+      description: |
+        Filter members by group role.
+
+        Accepts a single role or a comma separated list of roles.
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - member
+          - leader
+          - admin
+          - primary_admin
   responses:
     200:
       description: Successfully returned a list of group members
