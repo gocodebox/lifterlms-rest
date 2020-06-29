@@ -1795,6 +1795,21 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
+          },
+          {
+            "name": "group_role",
+            "description": "Filter members by group role.\n\nAccepts a single role or a comma separated list of roles.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "member",
+                "leader",
+                "admin",
+                "primary_admin"
+              ]
+            }
           }
         ],
         "responses": {
@@ -6452,7 +6467,7 @@
             ]
           },
           "email": {
-            "description": "The user's email address.",
+            "description": "The user's email address.\n\n Only returned when `context=edit`.\n",
             "type": "string",
             "example": "jamie@lifterlms.com",
             "readOnly": true
@@ -6477,7 +6492,7 @@
             }
           },
           "nickname": {
-            "description": "The user's chosen nickname.",
+            "description": "The user's chosen nickname.\n\n Only returned when `context=edit`.\n",
             "type": "string",
             "example": "JamieC",
             "readOnly": true
@@ -6494,7 +6509,8 @@
             "enum": [
               "member",
               "leader",
-              "admin"
+              "admin",
+              "primary_admin"
             ],
             "default": "member"
           },
@@ -6504,7 +6520,7 @@
             "readOnly": true,
             "properties": {
               "self": {
-                "description": "REST URI to the student.",
+                "description": "REST URI to the member.",
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -6517,7 +6533,7 @@
                 }
               },
               "collection": {
-                "description": "REST URI to the student collection.",
+                "description": "REST URI to the group members collection.",
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -6525,6 +6541,19 @@
                     "href": {
                       "type": "string",
                       "example": "/wp-json/llms/v1/groups/123/members"
+                    }
+                  }
+                }
+              },
+              "group": {
+                "description": "Rest URI to the group resource.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "href": {
+                      "type": "string",
+                      "example": "/wp-json/llms/v1/groups/123"
                     }
                   }
                 }

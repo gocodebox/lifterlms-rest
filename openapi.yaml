@@ -1395,6 +1395,20 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
+        - name: group_role
+          description: |
+            Filter members by group role.
+
+            Accepts a single role or a comma separated list of roles.
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - member
+              - leader
+              - admin
+              - primary_admin
       responses:
         '200':
           description: Successfully returned a list of group members
@@ -4395,7 +4409,10 @@ components:
             - description: Unique Member Identifer. The WordPress User `ID`.
               example: 789
         email:
-          description: The user's email address.
+          description: |
+            The user's email address.
+
+             Only returned when `context=edit`.
           type: string
           example: jamie@lifterlms.com
           readOnly: true
@@ -4417,7 +4434,10 @@ components:
               type: string
               example: 'https://secure.gravatar.com/avatar/30eab7b16342fe5f772ed30a36da2763?s=48&d=mm&r=g'
         nickname:
-          description: The user's chosen nickname.
+          description: |
+            The user's chosen nickname.
+
+             Only returned when `context=edit`.
           type: string
           example: JamieC
           readOnly: true
@@ -4433,6 +4453,7 @@ components:
             - member
             - leader
             - admin
+            - primary_admin
           default: member
         _links:
           description: A map of links to other related API resources.
@@ -4440,7 +4461,7 @@ components:
           readOnly: true
           properties:
             self:
-              description: REST URI to the student.
+              description: REST URI to the member.
               type: array
               items:
                 type: object
@@ -4449,7 +4470,7 @@ components:
                     type: string
                     example: /wp-json/llms/v1/groups/123/members/789
             collection:
-              description: REST URI to the student collection.
+              description: REST URI to the group members collection.
               type: array
               items:
                 type: object
@@ -4457,6 +4478,15 @@ components:
                   href:
                     type: string
                     example: /wp-json/llms/v1/groups/123/members
+            group:
+              description: Rest URI to the group resource.
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                    example: /wp-json/llms/v1/groups/123
             student:
               description: REST URI to the student.
               type: array
