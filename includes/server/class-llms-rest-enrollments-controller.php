@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Also fix return when the enrollment to be deleted doesn't exist.
  *                     Fixed 'context' query parameter schema.
  * @since 1.0.0-beta.12 Updated `$this->prepare_collection_query_args()` to reflect changes in the parent class.
+ * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
@@ -1030,11 +1031,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Prepare enrollments links for the request.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added $request parameter.
 	 *
-	 * @param object $enrollment Enrollment object data.
+	 * @param object          $enrollment Enrollment object data.
+	 * @param WP_REST_Request $request    Request object.
 	 * @return array Links for the given object.
 	 */
-	public function prepare_links( $enrollment ) {
+	public function prepare_links( $enrollment, $request ) {
 
 		$links = array(
 			'self'       => array(
