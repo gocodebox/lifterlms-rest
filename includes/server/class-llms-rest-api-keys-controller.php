@@ -468,7 +468,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * @since [version] Added $request parameter.
 	 *
 	 * @param LLMS_REST_API_Key $item API Key object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request   $request Request object.
 	 * @return array
 	 */
 	protected function prepare_links( $item, $request ) {
