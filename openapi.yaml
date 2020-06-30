@@ -1395,7 +1395,7 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
-        - name: group_role
+        - name: group_roles
           description: |
             Filter members by group role.
 
