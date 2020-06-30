@@ -63,7 +63,7 @@ jobs:
   - stage: deploy
     language: node_js
     node_js: lts/*
-    if: branch = master
+    if: branch = trunk
     before_install:
     install:
       - npm ci
