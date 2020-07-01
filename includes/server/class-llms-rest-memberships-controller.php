@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since   1.0.0-beta.9
- * @version 1.0.0-beta.9
+ * @since 1.0.0-beta.9
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,8 +14,10 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Memberships_Controller class.
  *
  * @since 1.0.0-beta.9
+ * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
+
 	/**
 	 * Enrollments controller.
 	 *
@@ -371,11 +373,16 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
+	 * @since 1.0.0-beta.9
+	 * @since [version] Added `$request` parameter.
+	 *
 	 * @param LLMS_Membership $membership LLMS Membership.
+	 * @param WP_REST_Request $request    Request object.
 	 * @return array Links for the given object.
 	 */
-	protected function prepare_links( $membership ) {
-		$links = parent::prepare_links( $membership );
+	protected function prepare_links( $membership, $request ) {
+
+		$links = parent::prepare_links( $membership, $request );
 		unset( $links['content'] );
 		$id = $membership->get( 'id' );
 
