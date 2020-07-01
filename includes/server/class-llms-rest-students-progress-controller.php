@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.13 Fixed student/lesson post meta key to delete when deleting a student progress.
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
@@ -342,7 +342,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added `$request` parameter.
+	 * @since 1.0.0-beta.14 Added `$request` parameter.
 	 *
 	 * @param obj             $object  Item object.
 	 * @param WP_REST_Request $request Request object.

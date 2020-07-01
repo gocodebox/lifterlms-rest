@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.9 Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  *                     `llms_rest_lesson_filters_removed_for_response` filter hook added.
  * @since 1.0.0-beta.12 Updated `$this->prepare_collection_query_args()` to reflect changes in the parent class.
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
@@ -683,7 +683,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *                  Fixed `parent` link href, replacing 'section' with 'sections'.
 	 *                  Following links added: `prerequisite`, `quiz`.
 	 *                  Added `llms_rest_lesson_links` filter hook.
-	 * @since [version] Added `$request` parameter.
+	 * @since 1.0.0-beta.14 Added `$request` parameter.
 	 *
 	 * @param LLMS_Lesson     $lesson  LLMS Section.
 	 * @param WP_REST_Request $request Request object.

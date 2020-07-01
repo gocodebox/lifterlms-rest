@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
  *                     Removed `create_llms_post()` and `get_object()` methods, now abstracted in `LLMS_REST_Posts_Controller` class.
  *                     `llms_rest_course_filters_removed_for_response` filter hook added.
  *                     Added `llms_rest_course_item_schema`, `llms_rest_pre_insert_course`, `llms_rest_prepare_course_object_response`, `llms_rest_course_links` filter hooks.
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
@@ -1102,7 +1102,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Added `llms_rest_course_links` filter hook.
-	 * @since [version] Added $request parameter.
+	 * @since 1.0.0-beta.14 Added $request parameter.
 	 *
 	 * @param LLMS_Course     $course  LLMS Course.
 	 * @param WP_REST_Request $request Request object.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.9
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * LLMS_REST_Memberships_Controller class.
  *
  * @since 1.0.0-beta.9
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 
@@ -374,7 +374,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @since [version] Added `$request` parameter.
+	 * @since 1.0.0-beta.14 Added `$request` parameter.
 	 *
 	 * @param LLMS_Membership $membership LLMS Membership.
 	 * @param WP_REST_Request $request    Request object.

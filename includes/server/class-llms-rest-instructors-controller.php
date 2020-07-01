@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.13 Fixed authentication error messages referring to 'students' or 'users' rather than 'instructors'.
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 
@@ -191,7 +191,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added the `$request` parameter.
+	 * @since 1.0.0-beta.14 Added the `$request` parameter.
 	 *
 	 * @param obj             $object  Item object.
 	 * @param WP_REST_Request $request Request object.

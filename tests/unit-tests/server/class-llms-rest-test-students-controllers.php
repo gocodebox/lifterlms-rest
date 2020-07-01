@@ -14,7 +14,7 @@
  * @since 1.0.0-beta.12 Added tests on students search.
  *                      Added tests on firing student registration action hook.
  * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
- * @since [version] Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -890,7 +890,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the prepare_links method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Pass second parameter to `prepare_links()`.
+	 * @since 1.0.0-beta.14 Pass second parameter to `prepare_links()`.
 	 *
 	 * @return void
 	 */

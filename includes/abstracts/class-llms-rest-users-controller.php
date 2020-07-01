@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.10 Fixed setting roles instead of appending them when updating user.
  * @since 1.0.0-beta.11 Correctly map request's `billing_postcode` param to `billing_zip` meta.
  * @since 1.0.0-beta.12 Add `search` and `search_columns` collection filtering.
- * @since [version] Only add remapped keys to the response when the schema key is present in the expected response fields array.
+ * @since 1.0.0-beta.14 Only add remapped keys to the response when the schema key is present in the expected response fields array.
  */
 abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 
@@ -579,7 +579,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	 * Prepare an object for response
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Only add remapped keys to the response when the schema key is present in the expected response fields array.
+	 * @since 1.0.0-beta.14 Only add remapped keys to the response when the schema key is present in the expected response fields array.
 	 *
 	 * @param LLMS_Abstract_User_Data $object  User object.
 	 * @param WP_REST_Request         $request Request object.
