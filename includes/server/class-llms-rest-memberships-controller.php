@@ -377,7 +377,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * @since [version] Added `$request` parameter.
 	 *
 	 * @param LLMS_Membership $membership LLMS Membership.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request    Request object.
 	 * @return array Links for the given object.
 	 */
 	protected function prepare_links( $membership, $request ) {

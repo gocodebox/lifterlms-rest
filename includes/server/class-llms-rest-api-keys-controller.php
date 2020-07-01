@@ -467,7 +467,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Added $request parameter.
 	 *
-	 * @param LLMS_REST_API_Key $item API Key object.
+	 * @param LLMS_REST_API_Key $item    API Key object.
 	 * @param WP_REST_Request   $request Request object.
 	 * @return array
 	 */

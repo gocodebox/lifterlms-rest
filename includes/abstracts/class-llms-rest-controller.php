@@ -626,7 +626,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.1
 	 * @since [version] Added $request parameter.
 	 *
-	 * @param obj             $object Item object.
+	 * @param obj             $object  Item object.
 	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
