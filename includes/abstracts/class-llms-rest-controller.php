@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.12 Added logic to perform a collection search.
  *                      Added `object_inserted()` and `object_completely_inserted()` methods called after an object is
  *                      respectively inserted in the DB and all its additional fields have been updated as well (completely inserted).
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
@@ -589,7 +590,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Prepares a single object for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.3 Return early with a WP_Error if `$object` is a WP_Error
+	 * @since 1.0.0-beta.3 Return early with a WP_Error if `$object` is a WP_Error.
+	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
 	 *
 	 * @param obj             $object Raw object from database.
 	 * @param WP_REST_Request $request Request object.
@@ -612,7 +614,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response = rest_ensure_response( $data );
 
 		// Add links.
-		$response->add_links( $this->prepare_links( $object ) );
+		$response->add_links( $this->prepare_links( $object, $request ) );
 
 		return $response;
 
@@ -622,11 +624,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Added $request parameter.
 	 *
-	 * @param obj $object Item object.
+	 * @param obj             $object  Item object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
-	protected function prepare_links( $object ) {
+	protected function prepare_links( $object, $request ) {
 
 		$base = rest_url( sprintf( '/%1$s/%2$s', $this->namespace, $this->rest_base ) );
 

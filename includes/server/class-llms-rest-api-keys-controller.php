@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added: `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
  *                  `get_items()` method abstracted and moved in LLMS_REST_Controller.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 
@@ -424,6 +425,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * Prepare an API Key for a REST response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
 	 *
 	 * @param LLMS_REST_API_Key $item API Key object.
 	 * @param WP_REST_Request   $request Request object.
@@ -453,8 +455,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		$response = rest_ensure_response( $data );
 
 		// Add links.
-		$links = $this->prepare_links( $item );
-		$response->add_links( $links );
+		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		return $response;
 
@@ -464,13 +465,15 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * Prepare a `_links` object for an API Key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Added $request parameter.
 	 *
-	 * @param LLMS_REST_API_Key $item API Key object.
+	 * @param LLMS_REST_API_Key $item    API Key object.
+	 * @param WP_REST_Request   $request Request object.
 	 * @return array
 	 */
-	protected function prepare_links( $item ) {
+	protected function prepare_links( $item, $request ) {
 
-		$links         = parent::prepare_links( $item );
+		$links         = parent::prepare_links( $item, $request );
 		$links['user'] = array(
 			'href' => rest_url( sprintf( 'wp/v2/users/%d', $item->get( 'user_id' ) ) ),
 		);

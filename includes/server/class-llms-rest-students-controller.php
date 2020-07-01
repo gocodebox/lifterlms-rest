@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.7 Added `prepare_args_for_total_count_query()` method override.
  * @since 1.0.0-beta.12 Added item schema filter.
  *                      Added 'llms_rest_student_registered' action hook - fired after student's creation.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
@@ -346,13 +347,15 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * Prepare links for the request.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Added `$request` parameter.
 	 *
-	 * @param obj $object Item object.
+	 * @param obj             $object  Item object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
-	protected function prepare_links( $object ) {
+	protected function prepare_links( $object, $request ) {
 
-		$links = parent::prepare_links( $object );
+		$links = parent::prepare_links( $object, $request );
 
 		$links['enrollments'] = array(
 			'href' => sprintf( '%s/enrollments', $links['self']['href'] ),

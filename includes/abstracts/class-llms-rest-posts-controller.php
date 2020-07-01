@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version 1.0.0-beta.14
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -33,6 +33,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
  *                     must be false when updating.
  * @since 1.0.0-beta.12 Moved parameters to query args mapping from `$this->prepare_collection_params()` to `$this->map_params_to_query_args()`.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -804,6 +805,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Prepare a single item for the REST response
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
 	 *
 	 * @param LLMS_Post_Model $object  LLMS post object.
 	 * @param WP_REST_Request $request Request object.
@@ -849,8 +851,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
 
-		$links = $this->prepare_links( $object );
-		$response->add_links( $links );
+		$response->add_links( $this->prepare_links( $object, $request ) );
 
 		return $response;
 	}
@@ -1276,13 +1277,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
 	 *                     Fix wp:featured_media link, we don't expose any embeddable field.
 	 * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
+	 * @since 1.0.0-beta.14 Added $request parameter.
 	 *
 	 * @param LLMS_Post_Model $object  Object data.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array Links for the given object.
 	 */
-	protected function prepare_links( $object ) {
+	protected function prepare_links( $object, $request ) {
 
-		$links = parent::prepare_links( $object );
+		$links = parent::prepare_links( $object, $request );
 
 		$object_id = $object->get( 'id' );
 

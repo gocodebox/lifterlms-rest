@@ -14,6 +14,7 @@
  * @since 1.0.0-beta.12 Added tests on students search.
  *                      Added tests on firing student registration action hook.
  * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
+ * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -889,13 +890,14 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the prepare_links method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.14 Pass second parameter to `prepare_links()`.
 	 *
 	 * @return void
 	 */
 	public function test_prepare_links() {
 
 		$student = $this->factory->student->create_and_get();
-		$links = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'prepare_links', array( $student ) );
+		$links = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'prepare_links', array( $student, new WP_REST_Request() ) );
 		foreach ( array( 'self', 'collection', 'enrollments', 'progress' ) as $rel ) {
 			$this->assertArrayHasKey( $rel, $links );
 		}
