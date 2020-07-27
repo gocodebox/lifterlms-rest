@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.13 Fixed student/lesson post meta key to delete when deleting a student progress.
  * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since [version] Deprecated `validate_post_id()` method.
+ *                      During updates, 404s are returned for non-existant or incompleteable posts (instead of 400s).
  */
 class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
@@ -62,7 +64,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Determine if current user has permission to delete a user.
+	 * Determine if current user has permission to delete progress.
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -400,6 +402,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Register routes.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Removed `post_id` path parameter validation.
 	 *
 	 * @return void
 	 */
@@ -417,7 +420,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 					'post_id' => array(
 						'description'       => __( 'Unique course, lesson, or section Identifer. The WordPress Post ID.', 'lifterlms' ),
 						'type'              => 'integer',
-						'validate_callback' => array( $this, 'validate_post_id' ),
 					),
 				),
 				array(
@@ -448,17 +450,48 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Determine if current user has permission to create/update an enrollment.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Allow students to update their own progress for available posts.
+	 *                      Return 404s for non-existent and incompletable posts.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error
 	 */
 	public function update_item_permissions_check( $request ) {
 
-		if ( ! current_user_can( 'edit_post', $request['post_id'] ) || ! current_user_can( 'edit_students', $request['id'] ) ) {
-			return llms_rest_authorization_required_error();
+		$post = get_post( $request['post_id'] );
+		if ( ! $post ) {
+
+			// Post doesn't exist.
+			return llms_rest_not_found_error( __( 'The requested post resource could not be found.', 'lifterlms' ) );
+		} else if ( ! in_array( $post->post_type, llms_get_completable_post_types(), true ) ) {
+
+			// Post is not completable.
+			return llms_rest_not_found_error( __( 'The requested post is not completable.', 'lifterlms' ) );
+		} elseif ( current_user_can( 'edit_post', $request['post_id'] ) && current_user_can( 'edit_students', $request['id'] ) ) {
+
+			// Admin or manager who can mark things complete on behalf of the student.
+			return true;
+		} elseif ( get_current_user_id() === $request['id'] ) {
+
+			$restricted = llms_rest_page_restricted( $request['post_id'], $request['id'] );
+
+			// Student cannot update their own progress on content they do not have access to.
+			if ( $restricted['is_restricted'] ) {
+				return llms_rest_authorization_required_error(
+					sprintf(
+						// Translators: %s = A restriction code provided as by `llms_page_restricted()`.
+						__( 'Progress cannot be updated for this student and post. Restriction reason code: "%s".', 'lifterlms' ),
+						$restricted['reason']
+					)
+				);
+			}
+
+			// Student can update their own progress on content they have access to.
+			return true;
 		}
 
-		return true;
+		// Generic auth error.
+		return llms_rest_authorization_required_error();
 
 	}
 
@@ -481,7 +514,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		foreach ( $lessons as $lesson_id ) {
-
 			if ( 'complete' === $prepared['status'] ) {
 				llms_mark_complete( $prepared['id'], $lesson_id, 'lesson', 'api_' . get_current_user_id() );
 			} elseif ( 'incomplete' === $prepared['status'] ) {
@@ -519,6 +551,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Validate the path parameter "post_id".
 	 *
 	 * @since 1.0.0-beta.1
+	 * @deprecated [version] Post ID validation is no longer used by the endpoint.
 	 *
 	 * @param int             $value Post ID.
 	 * @param WP_REST_Request $request Request object.
@@ -526,15 +559,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * @return bool
 	 */
 	public function validate_post_id( $value, $request, $param ) {
-		$post = get_post( $value );
-		if ( ! $post ) {
-			return false;
-		} elseif ( ! in_array( $post->post_type, array( 'course', 'lesson', 'section' ), true ) ) {
-			return false;
-		} elseif ( ! llms_is_user_enrolled( $request['id'], $value ) ) {
-			return false;
-		}
-
 		return true;
 	}
 

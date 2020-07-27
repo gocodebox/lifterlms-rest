@@ -8,7 +8,8 @@
  * @group rest_progress
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @since [version] Added test coverage for 404 errors during updates.
+ *                      Removed tests for deprecated `validate_post_id()` method.
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -21,6 +22,10 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
 	 */
 	public function setUp() {
 
@@ -37,6 +42,15 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Retrieve a request route with user and post data.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @param int $student_id WP_User ID.
+	 * @param int $post_id    WP_Post ID.
+	 * @return string
+	 */
 	private function get_route( $student_id, $post_id = null ) {
 		$route = str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 		if ( $post_id ) {
@@ -49,6 +63,8 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 * Test route registration.
 	 *
 	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
 	 */
 	public function test_register_routes() {
 
@@ -62,6 +78,8 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.13
+	 *
+	 * @return void
 	 */
 	public function test_delete_item() {
 
@@ -87,6 +105,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test get_item() errors.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_get_item_errors() {
 
 		$course = $this->factory->course->create( array( 'sections' => 0 ) );
@@ -106,6 +131,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test get_item() success for a course.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_get_item_course() {
 
 		$course = $this->factory->course->create( array( 'sections' => 0 ) );
@@ -126,6 +158,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test update_item() errors.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_item_errors() {
 
 		$course = $this->factory->course->create( array( 'sections' => 0 ) );
@@ -159,8 +198,55 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$this->assertResponseStatusEquals( 403, $response );
 		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $response );
 
+		wp_set_current_user( $this->user_allowed );
+
+		// 404 because post isn't completable.
+		$post     = $this->factory->post->create();
+		$route    = $this->get_route( $this->user_student, $post );
+		$response = $this->perform_mock_request( 'POST', $route, $args );
+
+		$this->assertResponseStatusEquals( 404, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_not_found', $response );
+		$this->assertResponseMessageEquals( 'The requested post is not completable.', $response );
+
+		// 404 because post doesn't exist.
+		$route    = $this->get_route( $this->user_student, ++$post );
+		$response = $this->perform_mock_request( 'POST', $route, $args );
+		$this->assertResponseStatusEquals( 404, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_not_found', $response );
+
 	}
 
+
+	public function test_update_item_lesson_not_available() {
+
+		wp_set_current_user( $this->user_student );
+
+		$course_id = $course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1, 'quizzes' => 0 ) );
+		$course    = llms_get_post( $course_id );
+		$lesson_id = $course->get_lessons( 'ids' )[0];
+
+		$args = array(
+			'status' => 'complete',
+		);
+
+		$route    = $this->get_route( $this->user_student, $lesson_id );
+		$response = $this->perform_mock_request( 'POST', $route, $args );
+
+		$this->assertResponseStatusEquals( 403, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $response );
+		$this->assertResponseMessageEquals( 'Progress cannot be updated for this student and post. Restriction reason code: "enrollment_lesson".', $response );
+
+	}
+
+
+	/**
+	 * Test update_item() success for a course.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_item_course() {
 
 		$student = llms_get_student( $this->user_student );
@@ -200,6 +286,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test update_item() success for a section.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_item_section() {
 
 		$student = llms_get_student( $this->user_student );
@@ -240,6 +333,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test update_item() success for a lesson.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_update_item_lesson() {
 
 		$student = llms_get_student( $this->user_student );
@@ -280,6 +380,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
+	/**
+	 * Test validate_date_created()
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
 	public function test_validate_date_created() {
 
 		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1 ) );
@@ -292,36 +399,6 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$this->assertWPErrorMessageEquals( 'Created date cannot be in the future.', $res );
 
 		$this->assertTrue( $this->endpoint->validate_date_created( date( DATE_RFC3339, strtotime( '-1 day' ) ), $request, 'date_created' ) );
-
-	}
-
-	public function test_validate_post_id() {
-
-		$post = $this->factory->post->create();
-		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 1 ) );
-		$course_id = $course->get( 'id' );
-		$request = new WP_REST_Request( 'POST', $this->get_route( $this->user_student, $course_id ) );
-		$request->set_url_params( array( 'id' => $this->user_student ) );
-
-		// Post doesn't exist.
-		$this->assertFalse( $this->endpoint->validate_post_id( $post + 1, $request, 'post_id' ) );
-
-		// Post type isn't supported.
-		$this->assertFalse( $this->endpoint->validate_post_id( $post, $request, 'post_id' ) );
-
-		// User isn't enrolled.
-		$this->assertFalse( $this->endpoint->validate_post_id( $course_id, $request, 'post_id' ) );
-
-		llms_enroll_student( $this->user_student, $course_id );
-
-		// Valid course.
-		$this->assertTrue( $this->endpoint->validate_post_id( $course_id, $request, 'post_id' ) );
-
-		// Valid section.
-		$this->assertTrue( $this->endpoint->validate_post_id( $course->get_sections( 'ids' )[0], $request, 'post_id' ) );
-
-		// Valid lesson.
-		$this->assertTrue( $this->endpoint->validate_post_id( $course->get_lessons( 'ids' )[0], $request, 'post_id' ) );
 
 	}
 
