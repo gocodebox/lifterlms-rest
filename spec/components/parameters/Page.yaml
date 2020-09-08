@@ -6,3 +6,4 @@ schema:
   type: integer
   minimum: 1
   default: 1
+  example: 1
