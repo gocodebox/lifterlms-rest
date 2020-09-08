@@ -11,7 +11,7 @@ const postData = {
   "permissions": "read"
 };
 
-llms.post( '/api-keys/%7Bid%7D', postData, function( err, data, res ) {
+llms.post( '/api-keys/987', postData, function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }

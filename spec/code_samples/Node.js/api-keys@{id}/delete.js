@@ -5,7 +5,7 @@ const llms = new llmsAPI( {
   "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 } );
 
-llms.delete( '/api-keys/%7Bid%7D', function( err, data, res ) {
+llms.delete( '/api-keys/987', function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }
