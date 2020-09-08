@@ -5,7 +5,7 @@ const llms = new llmsAPI( {
   "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 } );
 
-llms.get( '/groups/%7Bid%7D/invitations/%7Binvitation_id%7D?context=SOME_STRING_VALUE', function( err, data, res ) {
+llms.get( '/groups/%7Bid%7D/invitations/%7Binvitation_id%7D?context=edit', function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }

@@ -1,3 +1,3 @@
 curl --request GET \
-  --url 'https://example.tld/wp-json/llms/v1/students/123?context=SOME_STRING_VALUE' \
+  --url 'https://example.tld/wp-json/llms/v1/students/123?context=edit' \
   --user ck_XXXXXX:sk_XXXXXX

@@ -5,7 +5,7 @@ const llms = new llmsAPI( {
   "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 } );
 
-llms.get( '/lessons/%7Bid%7D?context=SOME_STRING_VALUE&password=p4%24sW0rd', function( err, data, res ) {
+llms.get( '/lessons/%7Bid%7D?context=edit&password=p4%24sW0rd', function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }

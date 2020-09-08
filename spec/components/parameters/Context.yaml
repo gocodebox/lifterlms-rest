@@ -8,3 +8,4 @@ schema:
     - view
     - edit
   default: view
+  example: edit

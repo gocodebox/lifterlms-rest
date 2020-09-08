@@ -5,7 +5,7 @@ const llms = new llmsAPI( {
   "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 } );
 
-llms.get( '/memberships/%7Bid%7D/enrollments?context=SOME_STRING_VALUE&page=SOME_INTEGER_VALUE&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&status=SOME_STRING_VALUE&student=1%2C2%2C3', function( err, data, res ) {
+llms.get( '/memberships/%7Bid%7D/enrollments?context=edit&page=SOME_INTEGER_VALUE&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&status=SOME_STRING_VALUE&student=1%2C2%2C3', function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }
