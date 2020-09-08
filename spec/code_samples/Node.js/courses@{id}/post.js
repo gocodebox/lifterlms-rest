@@ -66,7 +66,7 @@ const postData = {
   "sales_page_url": "https://example.tld/custom-sales-page"
 };
 
-llms.post( '/courses/%7Bid%7D', postData, function( err, data, res ) {
+llms.post( '/courses/123', postData, function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }

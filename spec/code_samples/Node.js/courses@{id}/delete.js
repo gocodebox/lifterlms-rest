@@ -9,7 +9,7 @@ const postData = {
   "force": false
 };
 
-llms.delete( '/courses/%7Bid%7D', postData, function( err, data, res ) {
+llms.delete( '/courses/123', postData, function( err, data, res ) {
   if ( err ) {
     throw new Error( 'Error!' );
   }

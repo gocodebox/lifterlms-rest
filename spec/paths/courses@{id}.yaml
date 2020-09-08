@@ -3,6 +3,7 @@ parameters:
     in: path
     description: Unique Course Identifier. The WordPress Post `ID`.
     required: true
+    example: 123
     schema:
       $ref: '#/components/schemas/ResourceId'
 
