@@ -14,11 +14,14 @@
     "url": "https://github.com/gocodebox/lifterlms-rest/issues"
   },
   "devDependencies": {
+    "openapi-snippet": "^0.9.1",
     "swagger-repo": "^2.0.0-rc.15"
   },
   "scripts": {
     "start": "swagger-repo serve -p 8888",
-    "build": "swagger-repo build -o web_deploy",
+    "build": "npm run build:snippets && npm run build:spec",
+    "build:snippets": "./.bin/snippets",
+    "build:spec": "swagger-repo build -o web_deploy",
     "test": "swagger-repo validate",
     "gh-pages": "swagger-repo gh-pages"
   }
