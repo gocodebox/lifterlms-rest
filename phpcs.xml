@@ -14,4 +14,10 @@
 		</properties>
 	</rule>
 
+    <!-- Exclude spec code samples -->
+    <exclude-pattern>spec/code_samples/</exclude-pattern>
+
+    <!-- Exclude bin scripts -->
+    <exclude-pattern>.bin/</exclude-pattern>
+
 </ruleset>
