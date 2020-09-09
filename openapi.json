@@ -242,7 +242,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -G\n"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -297,7 +301,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans \\\n  -d price=199.97 \\\n  -d title=\"Lifetime Access\"\n  -d post_id=123\n"
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/access-plans \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"price\":199.97,\"sku\":\"LIFETIME-999-001\",\"frequency\":0,\"length\":0,\"period\":\"year\",\"enroll_text\":\"Buy Now\",\"sale_enabled\":false,\"sale_price\":1,\"sale_date_start\":\"2019-01-23 00:00:00\",\"sale_date_end\":\"2019-03-23 23:59:59\",\"availability_restrictions\":[123,456,789],\"access_expiration\":\"lifetime\",\"access_expires\":\"string\",\"access_length\":1,\"access_period\":\"year\",\"trial_enabled\":false,\"trial_length\":1,\"trial_period\":\"week\",\"trial_price\":1.99,\"post_id\":789,\"redirect_type\":\"self\",\"redirect_page\":1,\"redirect_url\":\"https://example.tld/my/redirect\",\"redirect_forced\":false,\"visibility\":\"visible\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"title\":\"Liftetime Access\",\"content\":\"\\\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\\\n\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"price\": 199.97,\n  \"sku\": \"LIFETIME-999-001\",\n  \"frequency\": 0,\n  \"length\": 0,\n  \"period\": \"year\",\n  \"enroll_text\": \"Buy Now\",\n  \"sale_enabled\": false,\n  \"sale_price\": 1,\n  \"sale_date_start\": \"2019-01-23 00:00:00\",\n  \"sale_date_end\": \"2019-03-23 23:59:59\",\n  \"availability_restrictions\": [\n    123,\n    456,\n    789\n  ],\n  \"access_expiration\": \"lifetime\",\n  \"access_expires\": \"string\",\n  \"access_length\": 1,\n  \"access_period\": \"year\",\n  \"trial_enabled\": false,\n  \"trial_length\": 1,\n  \"trial_period\": \"week\",\n  \"trial_price\": 1.99,\n  \"post_id\": 789,\n  \"redirect_type\": \"self\",\n  \"redirect_page\": 1,\n  \"redirect_url\": \"https://example.tld/my/redirect\",\n  \"redirect_forced\": false,\n  \"visibility\": \"visible\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"title\": \"Liftetime Access\",\n  \"content\": \"\\\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\\\n\"\n};\n\nllms.post( '/access-plans', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       }
@@ -355,7 +363,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -G\n"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D?context=edit&password=p4%24sW0rd' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/access-plans/%7Bid%7D?context=edit&password=p4%24sW0rd', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -402,7 +414,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -d price=25.00\n"
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"price\":199.97,\"sku\":\"LIFETIME-999-001\",\"frequency\":0,\"length\":0,\"period\":\"year\",\"enroll_text\":\"Buy Now\",\"sale_enabled\":false,\"sale_price\":1,\"sale_date_start\":\"2019-01-23 00:00:00\",\"sale_date_end\":\"2019-03-23 23:59:59\",\"availability_restrictions\":[123,456,789],\"access_expiration\":\"lifetime\",\"access_expires\":\"string\",\"access_length\":1,\"access_period\":\"year\",\"trial_enabled\":false,\"trial_length\":1,\"trial_period\":\"week\",\"trial_price\":1.99,\"post_id\":789,\"redirect_type\":\"self\",\"redirect_page\":1,\"redirect_url\":\"https://example.tld/my/redirect\",\"redirect_forced\":false,\"visibility\":\"visible\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"title\":\"Liftetime Access\",\"content\":\"\\\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\\\n\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"price\": 199.97,\n  \"sku\": \"LIFETIME-999-001\",\n  \"frequency\": 0,\n  \"length\": 0,\n  \"period\": \"year\",\n  \"enroll_text\": \"Buy Now\",\n  \"sale_enabled\": false,\n  \"sale_price\": 1,\n  \"sale_date_start\": \"2019-01-23 00:00:00\",\n  \"sale_date_end\": \"2019-03-23 23:59:59\",\n  \"availability_restrictions\": [\n    123,\n    456,\n    789\n  ],\n  \"access_expiration\": \"lifetime\",\n  \"access_expires\": \"string\",\n  \"access_length\": 1,\n  \"access_period\": \"year\",\n  \"trial_enabled\": false,\n  \"trial_length\": 1,\n  \"trial_period\": \"week\",\n  \"trial_price\": 1.99,\n  \"post_id\": 789,\n  \"redirect_type\": \"self\",\n  \"redirect_page\": 1,\n  \"redirect_url\": \"https://example.tld/my/redirect\",\n  \"redirect_forced\": false,\n  \"visibility\": \"visible\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"title\": \"Liftetime Access\",\n  \"content\": \"\\\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\\\n\"\n};\n\nllms.post( '/access-plans/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -429,7 +445,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl https://example.tld/wp-json/llms/v1/access-plans/1234 \\\n  -X DELETE\n"
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/access-plans/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       }
@@ -554,7 +574,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/api-keys?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&user=123%2C456&user_not_in=123%2C456&permissions=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/api-keys?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&user=123%2C456&user_not_in=123%2C456&permissions=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create an API key",
@@ -622,7 +652,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/api-keys \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"user_id\":456,\"description\":\"My API Key\",\"permissions\":\"read\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"user_id\": 456,\n  \"description\": \"My API Key\",\n  \"permissions\": \"read\"\n};\n\nllms.post( '/api-keys', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/api-keys/{id}": {
@@ -632,6 +672,7 @@
           "in": "path",
           "description": "Unique API Key Identifier.",
           "required": true,
+          "example": 987,
           "schema": {
             "$ref": "#/components/schemas/ResourceId"
           }
@@ -671,7 +712,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/api-keys/987?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/api-keys/987?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update an API key",
@@ -712,7 +763,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/api-keys/987 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"user_id\":456,\"description\":\"My API Key\",\"permissions\":\"read\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"user_id\": 456,\n  \"description\": \"My API Key\",\n  \"permissions\": \"read\"\n};\n\nllms.post( '/api-keys/987', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete an API key",
@@ -733,7 +794,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/api-keys/987 \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/api-keys/987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/courses": {
@@ -818,7 +889,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a course",
@@ -866,7 +947,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/courses \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"access_opens_message\":\"This course opens on [lifterlms_course_info key=\\\"start_date\\\"].\",\"access_closes_message\":\"This course closed on [lifterlms_course_info key=\\\"end_date\\\"].\",\"enrollment_opens_message\":\"Enrollment in this course opens on [lifterlms_course_info key=\\\"enrollment_start_date\\\"].\",\"enrollment_closes_message\":\"Enrollment in this course closed on [lifterlms_course_info key=\\\"enrollment_end_date\\\"].\",\"capacity_message\":\"Enrollment has closed because the maximum number of allowed students has been reached.\",\"length\":\"7 days\",\"restricted_message\":\"You must enroll in this course to access course content.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/course/getting-started-with-lifterlms\",\"post_type\":\"course\",\"catalog_visibility\":\"catalog_search\",\"categories\":[1,2,3],\"tags\":[4,5,6],\"difficulties\":[7],\"tracks\":[8,9],\"audio_embed\":\"https://open.spotify.com/track/trackid\",\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"capacity_enabled\":false,\"capacity_limit\":25,\"prerequisite\":456,\"prerequisite_track\":789,\"access_opens_date\":\"2019-05-20 17:22:05\",\"access_closes_date\":\"2019-06-05 17:22:05\",\"enrollment_opens_date\":\"2019-05-15 12:15:00\",\"enrollment_closes_date\":\"2019-10-01 23:59:59\",\"video_tile\":false,\"instructors\":[1,2,3],\"sales_page_type\":\"none\",\"sales_page_page_id\":543,\"sales_page_url\":\"https://example.tld/custom-sales-page\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"access_opens_message\": \"This course opens on [lifterlms_course_info key=\\\"start_date\\\"].\",\n  \"access_closes_message\": \"This course closed on [lifterlms_course_info key=\\\"end_date\\\"].\",\n  \"enrollment_opens_message\": \"Enrollment in this course opens on [lifterlms_course_info key=\\\"enrollment_start_date\\\"].\",\n  \"enrollment_closes_message\": \"Enrollment in this course closed on [lifterlms_course_info key=\\\"enrollment_end_date\\\"].\",\n  \"capacity_message\": \"Enrollment has closed because the maximum number of allowed students has been reached.\",\n  \"length\": \"7 days\",\n  \"restricted_message\": \"You must enroll in this course to access course content.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/course/getting-started-with-lifterlms\",\n  \"post_type\": \"course\",\n  \"catalog_visibility\": \"catalog_search\",\n  \"categories\": [\n    1,\n    2,\n    3\n  ],\n  \"tags\": [\n    4,\n    5,\n    6\n  ],\n  \"difficulties\": [\n    7\n  ],\n  \"tracks\": [\n    8,\n    9\n  ],\n  \"audio_embed\": \"https://open.spotify.com/track/trackid\",\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"capacity_enabled\": false,\n  \"capacity_limit\": 25,\n  \"prerequisite\": 456,\n  \"prerequisite_track\": 789,\n  \"access_opens_date\": \"2019-05-20 17:22:05\",\n  \"access_closes_date\": \"2019-06-05 17:22:05\",\n  \"enrollment_opens_date\": \"2019-05-15 12:15:00\",\n  \"enrollment_closes_date\": \"2019-10-01 23:59:59\",\n  \"video_tile\": false,\n  \"instructors\": [\n    1,\n    2,\n    3\n  ],\n  \"sales_page_type\": \"none\",\n  \"sales_page_page_id\": 543,\n  \"sales_page_url\": \"https://example.tld/custom-sales-page\"\n};\n\nllms.post( '/courses', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/courses/{id}": {
@@ -876,6 +967,7 @@
           "in": "path",
           "description": "Unique Course Identifier. The WordPress Post `ID`.",
           "required": true,
+          "example": 123,
           "schema": {
             "$ref": "#/components/schemas/ResourceId"
           }
@@ -918,7 +1010,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses/123?context=edit&password=p4%24sW0rd' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses/123?context=edit&password=p4%24sW0rd', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a course",
@@ -959,7 +1061,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/courses/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"access_opens_message\":\"This course opens on [lifterlms_course_info key=\\\"start_date\\\"].\",\"access_closes_message\":\"This course closed on [lifterlms_course_info key=\\\"end_date\\\"].\",\"enrollment_opens_message\":\"Enrollment in this course opens on [lifterlms_course_info key=\\\"enrollment_start_date\\\"].\",\"enrollment_closes_message\":\"Enrollment in this course closed on [lifterlms_course_info key=\\\"enrollment_end_date\\\"].\",\"capacity_message\":\"Enrollment has closed because the maximum number of allowed students has been reached.\",\"length\":\"7 days\",\"restricted_message\":\"You must enroll in this course to access course content.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/course/getting-started-with-lifterlms\",\"post_type\":\"course\",\"catalog_visibility\":\"catalog_search\",\"categories\":[1,2,3],\"tags\":[4,5,6],\"difficulties\":[7],\"tracks\":[8,9],\"audio_embed\":\"https://open.spotify.com/track/trackid\",\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"capacity_enabled\":false,\"capacity_limit\":25,\"prerequisite\":456,\"prerequisite_track\":789,\"access_opens_date\":\"2019-05-20 17:22:05\",\"access_closes_date\":\"2019-06-05 17:22:05\",\"enrollment_opens_date\":\"2019-05-15 12:15:00\",\"enrollment_closes_date\":\"2019-10-01 23:59:59\",\"video_tile\":false,\"instructors\":[1,2,3],\"sales_page_type\":\"none\",\"sales_page_page_id\":543,\"sales_page_url\":\"https://example.tld/custom-sales-page\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"access_opens_message\": \"This course opens on [lifterlms_course_info key=\\\"start_date\\\"].\",\n  \"access_closes_message\": \"This course closed on [lifterlms_course_info key=\\\"end_date\\\"].\",\n  \"enrollment_opens_message\": \"Enrollment in this course opens on [lifterlms_course_info key=\\\"enrollment_start_date\\\"].\",\n  \"enrollment_closes_message\": \"Enrollment in this course closed on [lifterlms_course_info key=\\\"enrollment_end_date\\\"].\",\n  \"capacity_message\": \"Enrollment has closed because the maximum number of allowed students has been reached.\",\n  \"length\": \"7 days\",\n  \"restricted_message\": \"You must enroll in this course to access course content.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/course/getting-started-with-lifterlms\",\n  \"post_type\": \"course\",\n  \"catalog_visibility\": \"catalog_search\",\n  \"categories\": [\n    1,\n    2,\n    3\n  ],\n  \"tags\": [\n    4,\n    5,\n    6\n  ],\n  \"difficulties\": [\n    7\n  ],\n  \"tracks\": [\n    8,\n    9\n  ],\n  \"audio_embed\": \"https://open.spotify.com/track/trackid\",\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"capacity_enabled\": false,\n  \"capacity_limit\": 25,\n  \"prerequisite\": 456,\n  \"prerequisite_track\": 789,\n  \"access_opens_date\": \"2019-05-20 17:22:05\",\n  \"access_closes_date\": \"2019-06-05 17:22:05\",\n  \"enrollment_opens_date\": \"2019-05-15 12:15:00\",\n  \"enrollment_closes_date\": \"2019-10-01 23:59:59\",\n  \"video_tile\": false,\n  \"instructors\": [\n    1,\n    2,\n    3\n  ],\n  \"sales_page_type\": \"none\",\n  \"sales_page_page_id\": 543,\n  \"sales_page_url\": \"https://example.tld/custom-sales-page\"\n};\n\nllms.post( '/courses/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a course",
@@ -1019,7 +1131,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/courses/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"force\":false}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"force\": false\n};\n\nllms.delete( '/courses/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/courses/{id}/content": {
@@ -1116,7 +1238,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/courses/{id}/enrollments": {
@@ -1227,7 +1359,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&student=1%2C2%2C3' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&student=1%2C2%2C3', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups": {
@@ -1310,7 +1452,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a group",
@@ -1357,7 +1509,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/groups \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"team-codebox\",\"post\":1234,\"visibility\":\"open\",\"logo\":1987,\"banner\":1897}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"team-codebox\",\n  \"post\": 1234,\n  \"visibility\": \"open\",\n  \"logo\": 1987,\n  \"banner\": 1897\n};\n\nllms.post( '/groups', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}": {
@@ -1406,7 +1568,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/%7Bid%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a group",
@@ -1447,7 +1619,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"team-codebox\",\"post\":1234,\"visibility\":\"open\",\"logo\":1987,\"banner\":1897}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"team-codebox\",\n  \"post\": 1234,\n  \"visibility\": \"open\",\n  \"logo\": 1987,\n  \"banner\": 1897\n};\n\nllms.post( '/groups/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a group",
@@ -1507,7 +1689,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"force\":false}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"force\": false\n};\n\nllms.delete( '/groups/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}/invitations": {
@@ -1625,7 +1817,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&email=jeffrey%40fakewebsite.tld&role=leader%2Cadmin' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/%7Bid%7D/invitations?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&email=jeffrey%40fakewebsite.tld&role=leader%2Cadmin', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create an invitation",
@@ -1663,7 +1865,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"email\":\"stephen@example.net\",\"role\":\"member\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"email\": \"stephen@example.net\",\n  \"role\": \"member\"\n};\n\nllms.post( '/groups/%7Bid%7D/invitations', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}/invitations/{invitation_id}": {
@@ -1721,7 +1933,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations/%7Binvitation_id%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/%7Bid%7D/invitations/%7Binvitation_id%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a group invitation",
@@ -1742,7 +1964,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations/%7Binvitation_id%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/groups/%7Bid%7D/invitations/%7Binvitation_id%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}/members": {
@@ -1850,7 +2082,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&group_roles=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/%7Bid%7D/members?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&group_roles=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}/members/{member_id}": {
@@ -1908,7 +2150,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/%7Bid%7D/members/%7Bmember_id%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a group member",
@@ -1949,7 +2201,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"group_role\":\"member\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"group_role\": \"member\"\n};\n\nllms.post( '/groups/%7Bid%7D/members/%7Bmember_id%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Remove a group member",
@@ -1975,7 +2237,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D?trigger=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/groups/%7Bid%7D/members/%7Bmember_id%7D?trigger=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/groups/{id}/seats": {
@@ -2020,7 +2292,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url https://example.tld/wp-json/llms/v1/groups/123/seats \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups/123/seats', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "put": {
         "summary": "Update group seats",
@@ -2061,7 +2343,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request PUT \\\n  --url https://example.tld/wp-json/llms/v1/groups/123/seats \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"total\":20}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"total\": 20\n};\n\nllms.put( '/groups/123/seats', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/instructors": {
@@ -2189,7 +2481,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/instructors?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_in=1%2C2%2C3&post_not_in=4%2C5%2C6&roles=instructor%2Clms_manager' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/instructors?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_in=1%2C2%2C3&post_not_in=4%2C5%2C6&roles=instructor%2Clms_manager', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create an instructor",
@@ -2236,7 +2538,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/instructors \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"email\":\"jamie@lifterlms.com\",\"username\":\"jamie2019\",\"password\":\"my_l337-p@$5w0rd!\",\"description\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"registered_date\":\"2019-05-03 19:25:01\",\"url\":\"https://myawesomewebsite.tld\",\"first_name\":\"Jamie\",\"last_name\":\"Cook\",\"nickname\":\"JamieC\",\"name\":\"Jamie Cook\",\"billing_address_1\":\"1234 Somewhere Place\",\"billing_address_2\":\"Suite ABC\",\"billing_city\":\"Anywhere\",\"billing_state\":\"CA\",\"billing_postcode\":\"12345-678\",\"billing_country\":\"US\",\"roles\":[\"instructor\"]}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"email\": \"jamie@lifterlms.com\",\n  \"username\": \"jamie2019\",\n  \"password\": \"my_l337-p@$5w0rd!\",\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n  \"registered_date\": \"2019-05-03 19:25:01\",\n  \"url\": \"https://myawesomewebsite.tld\",\n  \"first_name\": \"Jamie\",\n  \"last_name\": \"Cook\",\n  \"nickname\": \"JamieC\",\n  \"name\": \"Jamie Cook\",\n  \"billing_address_1\": \"1234 Somewhere Place\",\n  \"billing_address_2\": \"Suite ABC\",\n  \"billing_city\": \"Anywhere\",\n  \"billing_state\": \"CA\",\n  \"billing_postcode\": \"12345-678\",\n  \"billing_country\": \"US\",\n  \"roles\": [\n    \"instructor\"\n  ]\n};\n\nllms.post( '/instructors', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/instructors/{id}": {
@@ -2286,7 +2598,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/instructors/123?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/instructors/123?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update an instructor",
@@ -2327,7 +2649,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/instructors/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"email\":\"jamie@lifterlms.com\",\"username\":\"jamie2019\",\"password\":\"my_l337-p@$5w0rd!\",\"description\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"registered_date\":\"2019-05-03 19:25:01\",\"url\":\"https://myawesomewebsite.tld\",\"first_name\":\"Jamie\",\"last_name\":\"Cook\",\"nickname\":\"JamieC\",\"name\":\"Jamie Cook\",\"billing_address_1\":\"1234 Somewhere Place\",\"billing_address_2\":\"Suite ABC\",\"billing_city\":\"Anywhere\",\"billing_state\":\"CA\",\"billing_postcode\":\"12345-678\",\"billing_country\":\"US\",\"roles\":[\"instructor\"]}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"email\": \"jamie@lifterlms.com\",\n  \"username\": \"jamie2019\",\n  \"password\": \"my_l337-p@$5w0rd!\",\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n  \"registered_date\": \"2019-05-03 19:25:01\",\n  \"url\": \"https://myawesomewebsite.tld\",\n  \"first_name\": \"Jamie\",\n  \"last_name\": \"Cook\",\n  \"nickname\": \"JamieC\",\n  \"name\": \"Jamie Cook\",\n  \"billing_address_1\": \"1234 Somewhere Place\",\n  \"billing_address_2\": \"Suite ABC\",\n  \"billing_city\": \"Anywhere\",\n  \"billing_state\": \"CA\",\n  \"billing_postcode\": \"12345-678\",\n  \"billing_country\": \"US\",\n  \"roles\": [\n    \"instructor\"\n  ]\n};\n\nllms.post( '/instructors/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete an instructor",
@@ -2366,7 +2698,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/instructors/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"reassign\":456}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"reassign\": 456\n};\n\nllms.delete( '/instructors/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/instructors/{id}/content": {
@@ -2485,7 +2827,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/instructors/123/content?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post=123%2C456&post_exclude=789%2C324&post_type=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/instructors/123/content?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post=123%2C456&post_exclude=789%2C324&post_type=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/lessons": {
@@ -2581,7 +2933,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a lesson",
@@ -2629,7 +2991,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/lessons \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/lesson/getting-started-with-lifterlms\",\"post_type\":\"lesson\",\"audio_embed\":\"https://open.spotify.com/track/trackid\",\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"prerequisite\":321,\"public\":false,\"parent_id\":987,\"points\":1,\"order\":1,\"drip_method\":\"none\",\"drip_days\":1,\"drip_date\":\"2019-12-12 23:23:59\",\"quiz\":{\"enabled\":true,\"id\":432,\"progression\":\"complete\"},\"assignment\":{\"enabled\":true,\"id\":876,\"progression\":\"complete\"}}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/lesson/getting-started-with-lifterlms\",\n  \"post_type\": \"lesson\",\n  \"audio_embed\": \"https://open.spotify.com/track/trackid\",\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"prerequisite\": 321,\n  \"public\": false,\n  \"parent_id\": 987,\n  \"points\": 1,\n  \"order\": 1,\n  \"drip_method\": \"none\",\n  \"drip_days\": 1,\n  \"drip_date\": \"2019-12-12 23:23:59\",\n  \"quiz\": {\n    \"enabled\": true,\n    \"id\": 432,\n    \"progression\": \"complete\"\n  },\n  \"assignment\": {\n    \"enabled\": true,\n    \"id\": 876,\n    \"progression\": \"complete\"\n  }\n};\n\nllms.post( '/lessons', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/lessons/{id}": {
@@ -2681,7 +3053,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D?context=edit&password=p4%24sW0rd' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons/%7Bid%7D?context=edit&password=p4%24sW0rd', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a lesson",
@@ -2722,7 +3104,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/lesson/getting-started-with-lifterlms\",\"post_type\":\"lesson\",\"audio_embed\":\"https://open.spotify.com/track/trackid\",\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"prerequisite\":321,\"public\":false,\"parent_id\":987,\"points\":1,\"order\":1,\"drip_method\":\"none\",\"drip_days\":1,\"drip_date\":\"2019-12-12 23:23:59\",\"quiz\":{\"enabled\":true,\"id\":432,\"progression\":\"complete\"},\"assignment\":{\"enabled\":true,\"id\":876,\"progression\":\"complete\"}}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/lesson/getting-started-with-lifterlms\",\n  \"post_type\": \"lesson\",\n  \"audio_embed\": \"https://open.spotify.com/track/trackid\",\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"prerequisite\": 321,\n  \"public\": false,\n  \"parent_id\": 987,\n  \"points\": 1,\n  \"order\": 1,\n  \"drip_method\": \"none\",\n  \"drip_days\": 1,\n  \"drip_date\": \"2019-12-12 23:23:59\",\n  \"quiz\": {\n    \"enabled\": true,\n    \"id\": 432,\n    \"progression\": \"complete\"\n  },\n  \"assignment\": {\n    \"enabled\": true,\n    \"id\": 876,\n    \"progression\": \"complete\"\n  }\n};\n\nllms.post( '/lessons/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a lesson",
@@ -2759,7 +3151,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"force\":false}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"force\": false\n};\n\nllms.delete( '/lessons/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/memberships": {
@@ -2844,7 +3246,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a membership",
@@ -2892,7 +3304,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/memberships \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"restriction_message\":\"You must belong to the [lifterlms_membership_link id=\\\"1234\\\"] membership to access this content.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/membership/getting-started-with-lifterlms\",\"post_type\":\"llms_membership\",\"categories\":[1,2,3],\"tags\":[4,5,6],\"restriction_action\":\"none\",\"restriction_page_id\":456,\"restriction_url\":\"https://example.tld/my-custom-url\",\"auto_enroll\":[456,789],\"catalog_visibility\":\"catalog_search\",\"instructors\":[1,2,3],\"sales_page_type\":\"none\",\"sales_page_page_id\":543,\"sales_page_url\":\"https://example.tld/custom-sales-page\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"restriction_message\": \"You must belong to the [lifterlms_membership_link id=\\\"1234\\\"] membership to access this content.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/membership/getting-started-with-lifterlms\",\n  \"post_type\": \"llms_membership\",\n  \"categories\": [\n    1,\n    2,\n    3\n  ],\n  \"tags\": [\n    4,\n    5,\n    6\n  ],\n  \"restriction_action\": \"none\",\n  \"restriction_page_id\": 456,\n  \"restriction_url\": \"https://example.tld/my-custom-url\",\n  \"auto_enroll\": [\n    456,\n    789\n  ],\n  \"catalog_visibility\": \"catalog_search\",\n  \"instructors\": [\n    1,\n    2,\n    3\n  ],\n  \"sales_page_type\": \"none\",\n  \"sales_page_page_id\": 543,\n  \"sales_page_url\": \"https://example.tld/custom-sales-page\"\n};\n\nllms.post( '/memberships', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/memberships/{id}": {
@@ -2944,7 +3366,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D?context=edit&password=p4%24sW0rd' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships/%7Bid%7D?context=edit&password=p4%24sW0rd', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a membership",
@@ -2985,7 +3417,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"content\":\"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\"excerpt\":\"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\"restriction_message\":\"You must belong to the [lifterlms_membership_link id=\\\"1234\\\"] membership to access this content.\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"menu_order\":0,\"slug\":\"getting-started-with-lifterlms\",\"status\":\"publish\",\"password\":\"p4$sW0rd\",\"featured_media\":987,\"comment_status\":\"open\",\"ping_status\":\"open\",\"permalink\":\"https://example.com/membership/getting-started-with-lifterlms\",\"post_type\":\"llms_membership\",\"categories\":[1,2,3],\"tags\":[4,5,6],\"restriction_action\":\"none\",\"restriction_page_id\":456,\"restriction_url\":\"https://example.tld/my-custom-url\",\"auto_enroll\":[456,789],\"catalog_visibility\":\"catalog_search\",\"instructors\":[1,2,3],\"sales_page_type\":\"none\",\"sales_page_page_id\":543,\"sales_page_url\":\"https://example.tld/custom-sales-page\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"content\": \"<!-- wp:heading -->\\\\n<h2>Lorem ipsum dolor sit amet.</h2>\\\\n<!-- /wp:heading -->\\\\n\\\\n<!-- wp:paragraph -->\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\\\n<!-- /wp:paragraph -->\",\n  \"excerpt\": \"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.\",\n  \"restriction_message\": \"You must belong to the [lifterlms_membership_link id=\\\"1234\\\"] membership to access this content.\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"menu_order\": 0,\n  \"slug\": \"getting-started-with-lifterlms\",\n  \"status\": \"publish\",\n  \"password\": \"p4$sW0rd\",\n  \"featured_media\": 987,\n  \"comment_status\": \"open\",\n  \"ping_status\": \"open\",\n  \"permalink\": \"https://example.com/membership/getting-started-with-lifterlms\",\n  \"post_type\": \"llms_membership\",\n  \"categories\": [\n    1,\n    2,\n    3\n  ],\n  \"tags\": [\n    4,\n    5,\n    6\n  ],\n  \"restriction_action\": \"none\",\n  \"restriction_page_id\": 456,\n  \"restriction_url\": \"https://example.tld/my-custom-url\",\n  \"auto_enroll\": [\n    456,\n    789\n  ],\n  \"catalog_visibility\": \"catalog_search\",\n  \"instructors\": [\n    1,\n    2,\n    3\n  ],\n  \"sales_page_type\": \"none\",\n  \"sales_page_page_id\": 543,\n  \"sales_page_url\": \"https://example.tld/custom-sales-page\"\n};\n\nllms.post( '/memberships/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a membership",
@@ -3022,7 +3464,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"force\":false}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"force\": false\n};\n\nllms.delete( '/memberships/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/memberships/{id}/enrollments": {
@@ -3136,7 +3588,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&status=SOME_STRING_VALUE&student=1%2C2%2C3' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&status=SOME_STRING_VALUE&student=1%2C2%2C3', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/quiz-questions": {
@@ -3229,7 +3691,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a quiz question",
@@ -3383,7 +3855,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/quiz-questions \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"order\":1,\"parent_id\":234,\"points\":10,\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"featured_media\":205,\"question_type\":\"choice\",\"choices\":[{\"marker\":\"A\",\"choice\":\"Red\",\"correct\":false},{\"marker\":\"B\",\"choice\":\"Green\",\"correct\":true}],\"multi_choices\":false,\"title\":\"What is your favorite color?\",\"content\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\",\"answer_clarification\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"order\": 1,\n  \"parent_id\": 234,\n  \"points\": 10,\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"featured_media\": 205,\n  \"question_type\": \"choice\",\n  \"choices\": [\n    {\n      \"marker\": \"A\",\n      \"choice\": \"Red\",\n      \"correct\": false\n    },\n    {\n      \"marker\": \"B\",\n      \"choice\": \"Green\",\n      \"correct\": true\n    }\n  ],\n  \"multi_choices\": false,\n  \"title\": \"What is your favorite color?\",\n  \"content\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\",\n  \"answer_clarification\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"\n};\n\nllms.post( '/quiz-questions', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/quiz-questions/{id}": {
@@ -3432,7 +3914,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quiz-questions/%7Bid%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a quiz question",
@@ -3540,7 +4032,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"order\":1,\"parent_id\":234,\"points\":10,\"video_embed\":\"https://www.youtube.com/watch?v=videoid\",\"featured_media\":205,\"question_type\":\"choice\",\"choices\":[{\"marker\":\"A\",\"choice\":\"Red\",\"correct\":false},{\"marker\":\"B\",\"choice\":\"Green\",\"correct\":true}],\"multi_choices\":false,\"title\":\"What is your favorite color?\",\"content\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\",\"answer_clarification\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"order\": 1,\n  \"parent_id\": 234,\n  \"points\": 10,\n  \"video_embed\": \"https://www.youtube.com/watch?v=videoid\",\n  \"featured_media\": 205,\n  \"question_type\": \"choice\",\n  \"choices\": [\n    {\n      \"marker\": \"A\",\n      \"choice\": \"Red\",\n      \"correct\": false\n    },\n    {\n      \"marker\": \"B\",\n      \"choice\": \"Green\",\n      \"correct\": true\n    }\n  ],\n  \"multi_choices\": false,\n  \"title\": \"What is your favorite color?\",\n  \"content\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\",\n  \"answer_clarification\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"\n};\n\nllms.post( '/quiz-questions/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a quiz question",
@@ -3561,7 +4063,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/quiz-questions/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/quizzes": {
@@ -3676,7 +4188,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a quiz",
@@ -3724,7 +4246,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/quizzes \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"slug\":\"final-exam\",\"status\":\"draft\",\"attempt_limiting\":true,\"attempts_allowed\":1,\"time_limiting\":true,\"time_limit\":90,\"passing_percentage\":65,\"show_correct_answer\":false,\"randomize_questions\":false,\"parent_id\":789,\"title\":\"Final Exam\",\"content\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"slug\": \"final-exam\",\n  \"status\": \"draft\",\n  \"attempt_limiting\": true,\n  \"attempts_allowed\": 1,\n  \"time_limiting\": true,\n  \"time_limit\": 90,\n  \"passing_percentage\": 65,\n  \"show_correct_answer\": false,\n  \"randomize_questions\": false,\n  \"parent_id\": 789,\n  \"title\": \"Final Exam\",\n  \"content\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"\n};\n\nllms.post( '/quizzes', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/quizzes/{id}": {
@@ -3773,7 +4305,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quizzes/%7Bid%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a quiz",
@@ -3814,7 +4356,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"slug\":\"final-exam\",\"status\":\"draft\",\"attempt_limiting\":true,\"attempts_allowed\":1,\"time_limiting\":true,\"time_limit\":90,\"passing_percentage\":65,\"show_correct_answer\":false,\"randomize_questions\":false,\"parent_id\":789,\"title\":\"Final Exam\",\"content\":\"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"slug\": \"final-exam\",\n  \"status\": \"draft\",\n  \"attempt_limiting\": true,\n  \"attempts_allowed\": 1,\n  \"time_limiting\": true,\n  \"time_limit\": 90,\n  \"passing_percentage\": 65,\n  \"show_correct_answer\": false,\n  \"randomize_questions\": false,\n  \"parent_id\": 789,\n  \"title\": \"Final Exam\",\n  \"content\": \"<h2>Lorem ipsum dolor sit amet.</h2>\\\\n\\\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\"\n};\n\nllms.post( '/quizzes/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a quiz",
@@ -3835,7 +4387,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/quizzes/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/sections": {
@@ -3931,7 +4493,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/sections?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=1234' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/sections?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=1234', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a section",
@@ -3969,7 +4541,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/sections \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"order\":1,\"parent_id\":1234}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"order\": 1,\n  \"parent_id\": 1234\n};\n\nllms.post( '/sections', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/sections/{id}": {
@@ -4018,7 +4600,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/sections/%7Bid%7D?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/sections/%7Bid%7D?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a section",
@@ -4059,7 +4651,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/sections/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"title\":\"Getting Started with LifterLMS\",\"date_created\":\"2019-05-20 17:22:05\",\"date_created_gmt\":\"2019-05-20 13:22:05\",\"order\":1,\"parent_id\":1234}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"title\": \"Getting Started with LifterLMS\",\n  \"date_created\": \"2019-05-20 17:22:05\",\n  \"date_created_gmt\": \"2019-05-20 13:22:05\",\n  \"order\": 1,\n  \"parent_id\": 1234\n};\n\nllms.post( '/sections/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a section",
@@ -4080,7 +4682,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/sections/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/sections/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/sections/{id}/content": {
@@ -4185,7 +4797,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/sections/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&parent=987' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/sections/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/students": {
@@ -4316,7 +4938,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/students?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&enrolled_in=1%2C2%2C3&enrolled_not_in=4%2C5%2C6&roles=student%2Ccustomer' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/students?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&enrolled_in=1%2C2%2C3&enrolled_not_in=4%2C5%2C6&roles=student%2Ccustomer', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a student",
@@ -4363,7 +4995,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/students \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"email\":\"jamie@lifterlms.com\",\"username\":\"jamie2019\",\"password\":\"my_l337-p@$5w0rd!\",\"description\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"registered_date\":\"2019-05-03 19:25:01\",\"url\":\"https://myawesomewebsite.tld\",\"first_name\":\"Jamie\",\"last_name\":\"Cook\",\"nickname\":\"JamieC\",\"name\":\"Jamie Cook\",\"billing_address_1\":\"1234 Somewhere Place\",\"billing_address_2\":\"Suite ABC\",\"billing_city\":\"Anywhere\",\"billing_state\":\"CA\",\"billing_postcode\":\"12345-678\",\"billing_country\":\"US\",\"roles\":[\"student\"]}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"email\": \"jamie@lifterlms.com\",\n  \"username\": \"jamie2019\",\n  \"password\": \"my_l337-p@$5w0rd!\",\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n  \"registered_date\": \"2019-05-03 19:25:01\",\n  \"url\": \"https://myawesomewebsite.tld\",\n  \"first_name\": \"Jamie\",\n  \"last_name\": \"Cook\",\n  \"nickname\": \"JamieC\",\n  \"name\": \"Jamie Cook\",\n  \"billing_address_1\": \"1234 Somewhere Place\",\n  \"billing_address_2\": \"Suite ABC\",\n  \"billing_city\": \"Anywhere\",\n  \"billing_state\": \"CA\",\n  \"billing_postcode\": \"12345-678\",\n  \"billing_country\": \"US\",\n  \"roles\": [\n    \"student\"\n  ]\n};\n\nllms.post( '/students', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/students/{id}": {
@@ -4413,7 +5055,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/students/123?context=edit' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/students/123?context=edit', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a student",
@@ -4454,7 +5106,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/students/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"email\":\"jamie@lifterlms.com\",\"username\":\"jamie2019\",\"password\":\"my_l337-p@$5w0rd!\",\"description\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"registered_date\":\"2019-05-03 19:25:01\",\"url\":\"https://myawesomewebsite.tld\",\"first_name\":\"Jamie\",\"last_name\":\"Cook\",\"nickname\":\"JamieC\",\"name\":\"Jamie Cook\",\"billing_address_1\":\"1234 Somewhere Place\",\"billing_address_2\":\"Suite ABC\",\"billing_city\":\"Anywhere\",\"billing_state\":\"CA\",\"billing_postcode\":\"12345-678\",\"billing_country\":\"US\",\"roles\":[\"student\"]}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"email\": \"jamie@lifterlms.com\",\n  \"username\": \"jamie2019\",\n  \"password\": \"my_l337-p@$5w0rd!\",\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n  \"registered_date\": \"2019-05-03 19:25:01\",\n  \"url\": \"https://myawesomewebsite.tld\",\n  \"first_name\": \"Jamie\",\n  \"last_name\": \"Cook\",\n  \"nickname\": \"JamieC\",\n  \"name\": \"Jamie Cook\",\n  \"billing_address_1\": \"1234 Somewhere Place\",\n  \"billing_address_2\": \"Suite ABC\",\n  \"billing_city\": \"Anywhere\",\n  \"billing_state\": \"CA\",\n  \"billing_postcode\": \"12345-678\",\n  \"billing_country\": \"US\",\n  \"roles\": [\n    \"student\"\n  ]\n};\n\nllms.post( '/students/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a student",
@@ -4493,7 +5155,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/students/123 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"reassign\":456}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"reassign\": 456\n};\n\nllms.delete( '/students/123', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/students/{id}/enrollments": {
@@ -4602,7 +5274,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&post=1%2C2%2C3' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/students/123/enrollments?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&post=1%2C2%2C3', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/students/{id}/enrollments/{post_id}": {
@@ -4657,7 +5339,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url https://example.tld/wp-json/llms/v1/students/123/enrollments/456 \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/students/123/enrollments/456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create student enrollment",
@@ -4693,7 +5385,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.post( '/students/123/enrollments/456?trigger=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "patch": {
         "summary": "Update student enrollment",
@@ -4739,7 +5441,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request PATCH \\\n  --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-21 14:22:05\",\"status\":\"enrolled\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-21 14:22:05\",\n  \"status\": \"enrolled\"\n};\n\nllms.patch( '/students/123/enrollments/456?trigger=SOME_STRING_VALUE', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete student enrollment",
@@ -4765,7 +5477,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/students/123/enrollments/456?trigger=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/students/{id}/progress/{post_id}": {
@@ -4820,7 +5542,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/students/123/progress/456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update student progress",
@@ -4861,7 +5593,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"date_created\":\"2019-05-21T14:22:05\",\"status\":\"incomplete\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"date_created\": \"2019-05-21T14:22:05\",\n  \"status\": \"incomplete\"\n};\n\nllms.post( '/students/123/progress/456', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete student progress",
@@ -4882,7 +5624,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/students/123/progress/456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/webhooks": {
@@ -4975,7 +5727,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/webhooks?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/webhooks?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Create a webhook",
@@ -5023,7 +5785,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/webhooks \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"A Student Enrolled in a Course\",\"status\":\"disabled\",\"topic\":\"student.created\",\"delivery_url\":\"https://example.tld/webhook-receipt/endpoint\",\"secret\":\"$P3CI41-$3CR37!\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"name\": \"A Student Enrolled in a Course\",\n  \"status\": \"disabled\",\n  \"topic\": \"student.created\",\n  \"delivery_url\": \"https://example.tld/webhook-receipt/endpoint\",\n  \"secret\": \"$P3CI41-$3CR37!\"\n};\n\nllms.post( '/webhooks', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     },
     "/webhooks/{id}": {
@@ -5067,7 +5839,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request GET \\\n  --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/webhooks/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "post": {
         "summary": "Update a webhook",
@@ -5108,7 +5890,17 @@
           "404": {
             "$ref": "#/components/responses/Error404"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request POST \\\n  --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"A Student Enrolled in a Course\",\"status\":\"disabled\",\"topic\":\"student.created\",\"delivery_url\":\"https://example.tld/webhook-receipt/endpoint\",\"secret\":\"$P3CI41-$3CR37!\"}'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nconst postData = {\n  \"name\": \"A Student Enrolled in a Course\",\n  \"status\": \"disabled\",\n  \"topic\": \"student.created\",\n  \"delivery_url\": \"https://example.tld/webhook-receipt/endpoint\",\n  \"secret\": \"$P3CI41-$3CR37!\"\n};\n\nllms.post( '/webhooks/%7Bid%7D', postData, function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       },
       "delete": {
         "summary": "Delete a webhook",
@@ -5129,7 +5921,17 @@
           "403": {
             "$ref": "#/components/responses/Error403"
           }
-        }
+        },
+        "x-code-samples": [
+          {
+            "lang": "cURL",
+            "source": "curl --request DELETE \\\n  --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \\\n  --user ck_XXXXXX:sk_XXXXXX"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.delete( '/webhooks/%7Bid%7D', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+          }
+        ]
       }
     }
   },
@@ -9289,7 +10091,8 @@
             "view",
             "edit"
           ],
-          "default": "view"
+          "default": "view",
+          "example": "edit"
         }
       },
       "EnrollmentStatus": {
@@ -9359,7 +10162,8 @@
         "schema": {
           "type": "integer",
           "minimum": 1,
-          "default": 1
+          "default": 1,
+          "example": 1
         }
       },
       "PerPage": {
