@@ -19,7 +19,8 @@
   },
   "scripts": {
     "start": "swagger-repo serve -p 8888",
-    "build": "npm run build:spec && npm run build:snippets && npm run build:spec && llms-dev pot",
+    "build": "npm run build:docs && llms-dev pot",
+    "build:docs": "npm run build:spec && npm run build:snippets && npm run build:spec",
     "build:snippets": "./.bin/snippets",
     "build:spec": "swagger-repo build -o web_deploy",
     "test": "swagger-repo validate",

@@ -22,4 +22,4 @@ jobs:
     before_install:
     install:
       - npm ci
-    script: npm run build && npm run gh-pages
+    script: npm run build:docs && npm run gh-pages
