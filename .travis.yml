@@ -18,7 +18,7 @@ jobs:
   - stage: deploy
     language: node_js
     node_js: lts/*
-    if: branch = trunk
+    if: branch = trunk AND env(GH_TOKEN) IS present
     before_install:
     install:
       - npm ci
