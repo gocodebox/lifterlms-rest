@@ -8,7 +8,7 @@
  * @group rest_lessons
  *
  * @since 1.0.0-beta.7
- * @since [version] Added tests on setting lesson parents.
+ * @since 1.0.0-beta.15 Added tests on setting lesson parents.
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -437,7 +437,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test lesson parents.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.15
 	 *
 	 * @return void
 	 */

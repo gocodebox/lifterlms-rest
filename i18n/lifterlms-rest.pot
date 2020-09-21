@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.14\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.15\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-07-01T11:13:04-07:00\n"
+"POT-Creation-Date: 2020-09-21T10:11:14-07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -915,12 +915,12 @@ msgid "List of course instructors. Defaults to current user when creating a new 
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:227
-#: includes/server/class-llms-rest-lessons-controller.php:345
+#: includes/server/class-llms-rest-lessons-controller.php:370
 msgid "URL to an oEmbed enable audio URL."
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:236
-#: includes/server/class-llms-rest-lessons-controller.php:354
+#: includes/server/class-llms-rest-lessons-controller.php:379
 msgid "URL to an oEmbed enable video URL."
 msgstr ""
 
@@ -1169,48 +1169,48 @@ msgstr ""
 msgid "You are not allowed to edit this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:138
+#: includes/server/class-llms-rest-lessons-controller.php:161
 msgid "Invalid course_id param. It must be a valid Course ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:149
+#: includes/server/class-llms-rest-lessons-controller.php:172
 #: includes/server/class-llms-rest-sections-controller.php:216
 msgid "Invalid order param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:170
+#: includes/server/class-llms-rest-lessons-controller.php:193
 msgid "Invalid drip_days param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:302
+#: includes/server/class-llms-rest-lessons-controller.php:326
 msgid "WordPress post ID of the parent item. Must be a Section ID. 0 indicates an \"orphaned\" lesson which can be edited and viewed by instructors and admins but cannot be read by students."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:310
+#: includes/server/class-llms-rest-lessons-controller.php:334
 msgid "WordPress post ID of the lesson's parent course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:318
+#: includes/server/class-llms-rest-lessons-controller.php:343
 msgid "Order of the lesson within its immediate parent."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:328
+#: includes/server/class-llms-rest-lessons-controller.php:353
 msgid "Lesson ID of the prerequisite lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:336
+#: includes/server/class-llms-rest-lessons-controller.php:361
 msgid "Determines the weight of the lesson when grading the course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:363
+#: includes/server/class-llms-rest-lessons-controller.php:388
 msgid "The date and time when the lesson becomes available. Applicable only when drip_method is date. Format: Y-m-d H:i:s."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:371
+#: includes/server/class-llms-rest-lessons-controller.php:396
 msgid "Number of days to wait before allowing access to the lesson. Applicable only when drip_method is enrollment, start, or prerequisite."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:380
+#: includes/server/class-llms-rest-lessons-controller.php:405
 msgid ""
 "Determine the method with which to make the lesson content available.\n"
 "\t\t\t\t\t<ul>\n"
@@ -1222,23 +1222,23 @@ msgid ""
 "\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:397
+#: includes/server/class-llms-rest-lessons-controller.php:422
 msgid "Denotes a lesson that's publicly accessible regardless of course enrollment."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:403
+#: includes/server/class-llms-rest-lessons-controller.php:428
 msgid "Associate a quiz with this lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:412
+#: includes/server/class-llms-rest-lessons-controller.php:437
 msgid "Determines if a quiz is enabled for the lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:418
+#: includes/server/class-llms-rest-lessons-controller.php:443
 msgid "The post ID of the associated quiz."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:427
+#: includes/server/class-llms-rest-lessons-controller.php:452
 msgid ""
 "Determines lesson progression requirements related to the quiz.\n"
 "\t\t\t\t\t\t\t<ul>\n"
@@ -1247,7 +1247,7 @@ msgid ""
 "\t\t\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:492
+#: includes/server/class-llms-rest-lessons-controller.php:517
 msgid "Filter lessons by the parent post (section) ID."
 msgstr ""
 

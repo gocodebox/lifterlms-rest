@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.15
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -105,7 +105,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepares a single lesson for create or update.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Fixed setting/updating parent section/course.
+	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -313,7 +313,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added the following properties: drip_date, drip_days, drip_method, public, quiz.
 	 *                  Added `llms_rest_lesson_item_schema` filter hook.
-	 * @since [version] Fixed `course_id` property access: it must be read-only.
+	 * @since 1.0.0-beta.15 Fixed `course_id` property access: it must be read-only.
 	 *
 	 * @return array Item schema data.
 	 */

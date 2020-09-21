@@ -1,6 +1,13 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.15 - 2020-09-21
+---------------------------
+
++ Bugfix: Created lessons will now have the derivative `course_id` property set according to the ID of the lesson's parent section.
++ Bugfix: The `course_id` property of lessons is now properly marked as read-only.
+
+
 v1.0.0-beta.14 - 2020-07-01
 ---------------------------
 
