@@ -1,6 +1,6 @@
 {
   "name": "lifterlms-rest",
-  "version": "1.0.0-beta.14",
+  "version": "1.0.0-beta.15",
   "description": "REST API feature plugin for the LifterLMS Core.",
   "author": "LifterLMS",
   "homepage": "https://lifterlms.com/",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "swagger-repo serve -p 8888",
-    "build": "npm run build:spec && npm run build:snippets && npm run build:spec",
+    "build": "npm run build:spec && npm run build:snippets && npm run build:spec && llms-dev pot",
     "build:snippets": "./.bin/snippets",
     "build:spec": "swagger-repo build -o web_deploy",
     "test": "swagger-repo validate",
