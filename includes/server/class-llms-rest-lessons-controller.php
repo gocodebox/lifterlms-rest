@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version 1.0.0-beta.15
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -105,6 +105,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepares a single lesson for create or update.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -126,7 +127,29 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Parent (section) id.
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
-			$prepared_item['parent_section'] = $request['parent_id'];
+
+			// Retrieve the parent section.
+			$parent_section = llms_get_post( $request['parent_id'] );
+
+			$prepared_item['parent_section'] = $parent_section && is_a( $parent_section, 'LLMS_Section' ) ? $request['parent_id'] : 0;
+
+			// Retrive the parent course id.
+			if ( $prepared_item['parent_section'] ) {
+				$parent_course = $parent_section->get_course();
+			}
+
+			$prepared_item['parent_course'] = ! empty( $parent_course ) && is_a( $parent_course, 'LLMS_Course' ) ? $parent_course->get( 'id' ) : 0;
+
+			/**
+			 * The parent course is 'derivate', we need to be sure that, if updating, the new value is different from the previous one
+			 * otherwise the underlying wp function `update_post_meta()` will return `false`.
+			 */
+			if ( $request['id'] ) {
+				$lesson = $this->get_object( $request['id'] );
+				if ( $lesson && $parent_course_id === $lesson->get_parent_course() ) {
+					unset( $prepared_item['parent_course'] );
+				}
+			}
 		}
 
 		// Course id.
@@ -290,6 +313,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added the following properties: drip_date, drip_days, drip_method, public, quiz.
 	 *                  Added `llms_rest_lesson_item_schema` filter hook.
+	 * @since 1.0.0-beta.15 Fixed `course_id` property access: it must be read-only.
 	 *
 	 * @return array Item schema data.
 	 */
@@ -313,6 +337,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
 				),
+				'readonly'   => true,
 			),
 			'order'        => array(
 				'description' => __( 'Order of the lesson within its immediate parent.', 'lifterlms' ),
