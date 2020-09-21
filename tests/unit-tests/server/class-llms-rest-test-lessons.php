@@ -8,7 +8,7 @@
  * @group rest_lessons
  *
  * @since 1.0.0-beta.7
- * @version 1.0.0-beta.7
+ * @since [version] Added tests on setting lesson parents.
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -382,7 +382,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$sample_lesson_additional = array(
 			'parent_id'    => 0, // checks also orphaned lessons are available.
-			'course_id'    => $course_id,
 			'drip_date'    => '', // checks also drip date can be null.
 			'order'        => 2,
 			'public'       => true,
@@ -432,6 +431,72 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$lesson   = new LLMS_Lesson( $res_data['id'] );
 
 		$this->assertFalse( $lesson->has_prerequisite() );
+	}
+
+
+	/**
+	 * Test lesson parents.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_lesson_parents() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Create a parent course, a prerequisite and a quiz.
+		$course_id = $this->factory->course->create(
+			array(
+				'sections' => 2,
+				'lessons'  => 0,
+				'quiz'     => 0,
+			)
+		);
+
+		$course     = llms_get_post( $course_id );
+
+		$sample_lesson_additional = array(
+			'parent_id' => $course->get_sections('ids')[0],
+		);
+
+		$sample_lesson = array_merge(
+			$this->sample_lesson,
+			$sample_lesson_additional
+		);
+
+		$res = $this->perform_mock_request( 'POST', $this->route, $sample_lesson );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $res );
+		$res_data = $res->get_data();
+
+		// Test course id matches.
+		$this->assertEquals( $course_id, $res_data['course_id'] );
+
+		// Test assigning the lesson to section 2 of the same course doesn't produce any error.
+		$sample_lesson['parent_id'] = $course->get_sections('ids')[1];;
+		$res = $this->perform_mock_request( 'POST', $this->route, $sample_lesson );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $res );
+		$res_data = $res->get_data();
+
+		// Test parent section id matches.
+		$this->assertEquals( $sample_lesson['parent_id'], $res_data['parent_id'] );
+		// Test course id matches.
+		$this->assertEquals( $course_id, $res_data['course_id'] );
+
+		// Test that using a non existent section produces a lesson with no parent course/section
+		$sample_lesson['parent_id'] = $course->get_sections('ids')[1]+99;
+		$res = $this->perform_mock_request( 'POST', $this->route, $sample_lesson );
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $res );
+		$res_data = $res->get_data();
+
+		$this->assertEquals( 0, $res_data['course_id'] );
+		$this->assertEquals( 0, $res_data['parent_id'] );
 	}
 
 	/**
