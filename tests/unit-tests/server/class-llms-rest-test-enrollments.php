@@ -372,7 +372,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $user_id, $res_data['student_id'] );
 		$this->assertEquals( $course_id, $res_data['post_id'] );
 		$this->assertEquals( 'enrolled', $res_data['status'] );
-		$this->assertEquals( $date_now, $res_data['date_created'], '', $this->date_delta );
+		$this->assertEqualsWithDelta( $date_now, $res_data['date_created'], 10);
 		$this->assertEquals( $res_data['date_created'], $res_data['date_updated'] );
 		$this->assertEquals( 'unspecified', $res_data['trigger'] );
 
