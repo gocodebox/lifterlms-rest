@@ -62,7 +62,7 @@ To run the phpunit test suite:
 
 + `llms-dev log:write`: Write changelog.
 + `llms-dev ver:update`: Update version numbers.
-+ `llms-dev pot`: Build a release: spec, doc code snippets, and included language files.
++ `npm run build`: Build a release: spec, doc code snippets, and included language files.
 + `llms-dev archive`: Build distributable zip file.
 + `llms-dev publish:gh`: Publish release.
 + Open a Pull Request in the LifterLMS Core to upgrade the library.

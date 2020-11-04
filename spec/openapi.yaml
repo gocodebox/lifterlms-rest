@@ -57,7 +57,7 @@ info:
 
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF
+        -u ck_d7W85twOWT0poKzDSAQzI7:cs_8bsMmRfjW1HgEFw5ad7BIF
     ```
 
     ## Header Authentication
@@ -66,8 +66,8 @@ info:
 
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
-        -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
+        -H X-LLMS-CONSUMER-KEY:ck_d7W85twOWT0poKzDSAQzI7 \
+        -H X-LLMS-CONSUMER-SECRET:cs_8bsMmRfjW1HgEFw5ad7BIF
     ```
 
   x-logo:
