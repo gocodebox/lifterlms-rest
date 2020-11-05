@@ -1,6 +1,12 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.16 - 2020-11-05
+---------------------------
+
++ Improved performance of various database queries.
+
+
 v1.0.0-beta.15 - 2020-09-21
 ---------------------------
 

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.16
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -28,7 +28,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Retrieve default arguments for a query
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Drop usage of `this->get_filter( 'default_args' )` in favor of `'llms_rest_api_key_query_default_args'`.
+	 * @since 1.0.0-beta.16 Drop usage of `this->get_filter( 'default_args' )` in favor of `'llms_rest_api_key_query_default_args'`.
 	 *
 	 * @return array
 	 */
@@ -65,7 +65,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Retrieve an array of LLMS_REST_API_Keys for the given result set returned by the query
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Drop usage of `this->get_filter( 'get_keys' )` in favor of `'llms_rest_api_key_query_get_keys'`.
+	 * @since 1.0.0-beta.16 Drop usage of `this->get_filter( 'get_keys' )` in favor of `'llms_rest_api_key_query_get_keys'`.
 	 *
 	 * @return array
 	 */
@@ -123,7 +123,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Prepare the SQL for the query
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use `$this->sql_select_columns({columns})` to determine the columns to select.
+	 * @since 1.0.0-beta.16 Use `$this->sql_select_columns({columns})` to determine the columns to select.
 	 *
 	 * @return string
 	 */
@@ -143,7 +143,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * SQL "where" clause for the query
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Drop usage of `$this->get_filter('where')` in favor of `'llms_rest_api_key_query_where'`.
+	 * @since 1.0.0-beta.16 Drop usage of `$this->get_filter('where')` in favor of `'llms_rest_api_key_query_where'`.
 	 *
 	 * @return string
 	 */
