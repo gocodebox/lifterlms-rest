@@ -57,7 +57,6 @@ function writeSnippetForTarget( obj, target ) {
 
 try {
 
-	openAPI.servers[0].url = `https://example.tld${ openAPI.servers[0].url }`;
 	const results = OpenAPISnippet.getSnippets( openAPI, targets );
 
 	results.forEach( snip => {

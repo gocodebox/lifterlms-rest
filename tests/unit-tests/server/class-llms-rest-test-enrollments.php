@@ -11,7 +11,7 @@
  * @since 1.0.0-beta.7 Added links test.
  * @since 1.0.0-beta.10 Added test on the trigger property/param.
  * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
- * @since [version] Compare dates using timestamps instead of date strings using a 60 second delta.
+ * @since 1.0.0-beta.16 Compare dates using timestamps instead of date strings using a 60 second delta.
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -263,7 +263,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added test on the trigger property.
-	 * @since [version] Compare dates as timestamps.
+	 * @since 1.0.0-beta.16 Compare dates as timestamps.
 	 */
     public function test_get_enrollment() {
 
@@ -355,7 +355,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added test on the trigger property.
-	 * @since [version] Compare dates as timestamps.
+	 * @since 1.0.0-beta.16 Compare dates as timestamps.
 	 */
 	public function test_create_enrollment() {
 

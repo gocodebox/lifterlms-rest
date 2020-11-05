@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.16
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -478,7 +478,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Load webhooks
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version]
+	 * @since 1.0.0-beta.16
 	 *
 	 * @return int Number of hooks loaded.
 	 */
@@ -488,7 +488,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		 * Limit the number of webhooks that are loaded. By default all webhooks are loaded.
 		 *
 		 * @since 1.0.0-beta.1
-		 * @since [version] When retrieving the webhooks, instantiate the webhooks query passing `no_found_rows` arg as `true`,
+		 * @since 1.0.0-beta.16 When retrieving the webhooks, instantiate the webhooks query passing `no_found_rows` arg as `true`,
 		 *                     to improve performance (no pagination is needed).
 		 * @param int $limit Number of webhooks to load. Default `null` loads all webhooks.
 		 */
