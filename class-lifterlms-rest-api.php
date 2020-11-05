@@ -238,7 +238,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return LLMS_REST_API_Webhooks
+	 * @return LLMS_REST_Webhooks
 	 */
 	public function webhooks() {
 		return LLMS_REST_Webhooks::instance();

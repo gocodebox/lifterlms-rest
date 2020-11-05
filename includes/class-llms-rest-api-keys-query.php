@@ -2,10 +2,10 @@
 /**
  * Perform db queries for API Keys
  *
- * @package  LifterLMS_REST/Classes
+ * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -28,6 +28,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Retrieve default arguments for a query
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Drop usage of `this->get_filter( 'default_args' )` in favor of `'llms_rest_api_key_query_default_args'`.
 	 *
 	 * @return array
 	 */
@@ -48,7 +49,15 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 			return $args;
 		}
 
-		return apply_filters( $this->get_filter( 'default_args' ), $args, $this );
+		/**
+		 * Filters the api keys query default args
+		 *
+		 * @since 1.0.0-beta.1
+		 *
+		 * @param array                    $args           Array of default arguments to set up the query with.
+		 * @param LLMS_REST_API_Keys_Query $api_keys_query Instance of LLMS_REST_API_Keys_Query.
+		 */
+		return apply_filters( 'llms_rest_api_key_query_default_args', $args, $this );
 
 	}
 
@@ -56,6 +65,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Retrieve an array of LLMS_REST_API_Keys for the given result set returned by the query
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Drop usage of `this->get_filter( 'get_keys' )` in favor of `'llms_rest_api_key_query_get_keys'`.
 	 *
 	 * @return array
 	 */
@@ -75,7 +85,15 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 			return $keys;
 		}
 
-		return apply_filters( $this->get_filter( 'get_keys' ), $keys, $this );
+		/**
+		 * Filters the list of API Keys
+		 *
+		 * @since 1.0.0-beta.1
+		 *
+		 * @param LLMS_REST_API_Key[]      $keys           Array of LLMS_REST_API_Key instances.
+		 * @param LLMS_REST_API_Keys_Query $api_keys_query Instance of LLMS_REST_API_Keys_Query.
+		 */
+		return apply_filters( 'llms_rest_api_key_query_get_keys', $keys, $this );
 
 	}
 
@@ -88,12 +106,12 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 */
 	protected function parse_args() {
 
-		// sanitize post & user ids.
+		// Sanitize post & user ids.
 		foreach ( array( 'include', 'exclude', 'user', 'user_not_in' ) as $key ) {
 			$this->arguments[ $key ] = $this->sanitize_id_array( $this->arguments[ $key ] );
 		}
 
-		// validate permissions.
+		// Validate permissions.
 		$permissions = $this->get( 'permissions' );
 		if ( $permissions && ! in_array( $permissions, array_keys( LLMS_REST_API()->keys()->get_permissions() ), true ) ) {
 			$this->arguments['permissions'] = '';
@@ -105,6 +123,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * Prepare the SQL for the query
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use `$this->sql_select_columns({columns})` to determine the columns to select.
 	 *
 	 * @return string
 	 */
@@ -112,7 +131,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 
 		global $wpdb;
 
-		return "SELECT SQL_CALC_FOUND_ROWS id
+		return "SELECT {$this->sql_select_columns( 'id' )}
 				FROM {$wpdb->prefix}lifterlms_api_keys
 				{$this->sql_where()}
 				{$this->sql_orderby()}
@@ -124,6 +143,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 * SQL "where" clause for the query
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Drop usage of `$this->get_filter('where')` in favor of `'llms_rest_api_key_query_where'`.
 	 *
 	 * @return string
 	 */
@@ -169,7 +189,15 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 			return $sql;
 		}
 
-		return apply_filters( $this->get_filter( 'where' ), $sql, $this );
+		/**
+		 * Filters the query WHERE clause
+		 *
+		 * @since 1.0.0-beta.1
+		 *
+		 * @param string                   $sql             The WHERE clause of the query.
+		 * @param LLMS_REST_API_Keys_Query $apy_keys__query Instance of LLMS_REST_API_Keys_Query.
+		 */
+		return apply_filters( 'llms_rest_api_key_query_where', $sql, $this );
 
 	}
 

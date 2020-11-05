@@ -39,7 +39,7 @@ function getSnippet( obj, target ) {
 function modSnippet( snip, target ) {
 
 	if ( 'shell_curl' === target ) {
-		snip = snip.replace( "--header 'authorization: Basic REPLACE_BASIC_AUTH'", '--user ck_XXXXXX:sk_XXXXXX' );
+		snip = snip.replace( "--header 'authorization: Basic REPLACE_BASIC_AUTH'", '--user ck_XXXXXX:cs_XXXXXX' );
 	}
 
 	return snip;
