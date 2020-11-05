@@ -1,5 +1,5 @@
 curl --request DELETE \
   --url https://example.tld/wp-json/llms/v1/instructors/123 \
-  --user ck_XXXXXX:sk_XXXXXX \
+  --user ck_XXXXXX:cs_XXXXXX \
   --header 'content-type: application/json' \
   --data '{"reassign":456}'
