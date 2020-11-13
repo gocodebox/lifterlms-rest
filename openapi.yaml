@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0-beta.15
+  version: 1.0.0-beta.16
   title: LifterLMS REST API
   description: |-
     # Introduction
@@ -32,6 +32,16 @@ info:
       + [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) - A free Google Chrome extension.
       + [RequestBin](https://requestbin.com/) - A free service allowing you to quickly test webhooks.
 
+    # Base URL
+    The LifterLMS REST API extends the [WordPress REST API](https://developer.wordpress.org/rest-api/) which is a [distributed API](https://developer.wordpress.org/rest-api/reference/#a-distributed-api) available individually on any WordPress website.
+
+    As a distributed API, there is no singular root or base URL to use when performing API requests.
+
+    For most WordPress websites, the base REST URL is located at `/wp-json/`, but this can be customized on a site-by-site basis.
+
+    If you're not sure what your site's base REST URL is, you can discover it using the [WordPress REST API discovery proccess](https://developer.wordpress.org/rest-api/using-the-rest-api/discovery/).
+
+    The examples found throughout this reference use `https://example.tld/wp-json/` as the base REST URL. This should be replaced with your website's actual base URL when using the REST API.
     # Authentication
     Requests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.
 
@@ -41,21 +51,21 @@ info:
     To use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -u ck_d7W85twOWT0poKzDSAQzI7:sk_8bsMmRfjW1HgEFw5ad7BIF
+        -u ck_d7W85twOWT0poKzDSAQzI7:cs_8bsMmRfjW1HgEFw5ad7BIF
     ```
     ## Header Authentication
     Alternatively, requests may be authenticated by providing the Consumer Key and Consumer Secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.
     ```
       curl https://example.tld/wp-json/llms/v1/courses \
-        -H X-LLMS-CONSUMER-KEY: ck_d7W85twOWT0poKzDSAQzI7 \
-        -H X-LLMS-CONSUMER-SECRET: sk_8bsMmRfjW1HgEFw5ad7BIF
+        -H X-LLMS-CONSUMER-KEY:ck_d7W85twOWT0poKzDSAQzI7 \
+        -H X-LLMS-CONSUMER-SECRET:cs_8bsMmRfjW1HgEFw5ad7BIF
     ```
   x-logo:
     altText: LifterLMS
     url: 'https://gocodebox.github.io/lifterlms-brand/assets/img/png/logo/lifterlms-logo.png'
     href: 'https://lifterlms.com/'
 servers:
-  - url: /wp-json/llms/v1
+  - url: 'https://example.tld/wp-json/llms/v1'
 security:
   - Basic-Authentication: []
 tags:
@@ -434,7 +444,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -484,7 +494,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/access-plans \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":1,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"string","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
         - lang: Node.js
@@ -575,7 +585,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D?context=edit&password=p4%24sW0rd' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -622,7 +632,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":1,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"string","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
         - lang: Node.js
@@ -696,7 +706,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -794,7 +804,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/api-keys?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&user=123%2C456&user_not_in=123%2C456&permissions=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -855,7 +865,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/api-keys \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"user_id":456,"description":"My API Key","permissions":"read"}'
         - lang: Node.js
@@ -915,7 +925,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/api-keys/987?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -962,7 +972,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/api-keys/987 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"user_id":456,"description":"My API Key","permissions":"read"}'
         - lang: Node.js
@@ -1005,7 +1015,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/api-keys/987 \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1077,7 +1087,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1126,7 +1136,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/courses \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","access_opens_message":"This course opens on [lifterlms_course_info key=\"start_date\"].","access_closes_message":"This course closed on [lifterlms_course_info key=\"end_date\"].","enrollment_opens_message":"Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"].","enrollment_closes_message":"Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"].","capacity_message":"Enrollment has closed because the maximum number of allowed students has been reached.","length":"7 days","restricted_message":"You must enroll in this course to access course content.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/course/getting-started-with-lifterlms","post_type":"course","catalog_visibility":"catalog_search","categories":[1,2,3],"tags":[4,5,6],"difficulties":[7],"tracks":[8,9],"audio_embed":"https://open.spotify.com/track/trackid","video_embed":"https://www.youtube.com/watch?v=videoid","capacity_enabled":false,"capacity_limit":25,"prerequisite":456,"prerequisite_track":789,"access_opens_date":"2019-05-20 17:22:05","access_closes_date":"2019-06-05 17:22:05","enrollment_opens_date":"2019-05-15 12:15:00","enrollment_closes_date":"2019-10-01 23:59:59","video_tile":false,"instructors":[1,2,3],"sales_page_type":"none","sales_page_page_id":543,"sales_page_url":"https://example.tld/custom-sales-page"}'
         - lang: Node.js
@@ -1242,7 +1252,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/courses/123?context=edit&password=p4%24sW0rd' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1289,7 +1299,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/courses/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","access_opens_message":"This course opens on [lifterlms_course_info key=\"start_date\"].","access_closes_message":"This course closed on [lifterlms_course_info key=\"end_date\"].","enrollment_opens_message":"Enrollment in this course opens on [lifterlms_course_info key=\"enrollment_start_date\"].","enrollment_closes_message":"Enrollment in this course closed on [lifterlms_course_info key=\"enrollment_end_date\"].","capacity_message":"Enrollment has closed because the maximum number of allowed students has been reached.","length":"7 days","restricted_message":"You must enroll in this course to access course content.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/course/getting-started-with-lifterlms","post_type":"course","catalog_visibility":"catalog_search","categories":[1,2,3],"tags":[4,5,6],"difficulties":[7],"tracks":[8,9],"audio_embed":"https://open.spotify.com/track/trackid","video_embed":"https://www.youtube.com/watch?v=videoid","capacity_enabled":false,"capacity_limit":25,"prerequisite":456,"prerequisite_track":789,"access_opens_date":"2019-05-20 17:22:05","access_closes_date":"2019-06-05 17:22:05","enrollment_opens_date":"2019-05-15 12:15:00","enrollment_closes_date":"2019-10-01 23:59:59","video_tile":false,"instructors":[1,2,3],"sales_page_type":"none","sales_page_page_id":543,"sales_page_url":"https://example.tld/custom-sales-page"}'
         - lang: Node.js
@@ -1409,7 +1419,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/courses/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"force":false}'
         - lang: Node.js
@@ -1494,7 +1504,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/courses/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1584,7 +1594,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/courses/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&student=1%2C2%2C3' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1658,7 +1668,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1706,7 +1716,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/groups \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"team-codebox","post":1234,"visibility":"open","logo":1987,"banner":1897}'
         - lang: Node.js
@@ -1773,7 +1783,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -1820,7 +1830,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"team-codebox","post":1234,"visibility":"open","logo":1987,"banner":1897}'
         - lang: Node.js
@@ -1893,7 +1903,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"force":false}'
         - lang: Node.js
@@ -1997,7 +2007,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&email=jeffrey%40fakewebsite.tld&role=leader%2Cadmin' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2042,7 +2052,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"email":"stephen@example.net","role":"member"}'
         - lang: Node.js
@@ -2106,7 +2116,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations/%7Binvitation_id%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2141,7 +2151,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/invitations/%7Binvitation_id%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2235,7 +2245,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&group_roles=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2292,7 +2302,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2339,7 +2349,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"group_role":"member"}'
         - lang: Node.js
@@ -2382,7 +2392,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url 'https://example.tld/wp-json/llms/v1/groups/%7Bid%7D/members/%7Bmember_id%7D?trigger=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2432,7 +2442,7 @@ paths:
           source: |-
             curl --request GET \
               --url https://example.tld/wp-json/llms/v1/groups/123/seats \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2479,7 +2489,7 @@ paths:
           source: |-
             curl --request PUT \
               --url https://example.tld/wp-json/llms/v1/groups/123/seats \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"total":20}'
         - lang: Node.js
@@ -2597,7 +2607,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/instructors?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_in=1%2C2%2C3&post_not_in=4%2C5%2C6&roles=instructor%2Clms_manager' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2645,7 +2655,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/instructors \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"email":"jamie@lifterlms.com","username":"jamie2019","password":"my_l337-p@$5w0rd!","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","registered_date":"2019-05-03 19:25:01","url":"https://myawesomewebsite.tld","first_name":"Jamie","last_name":"Cook","nickname":"JamieC","name":"Jamie Cook","billing_address_1":"1234 Somewhere Place","billing_address_2":"Suite ABC","billing_city":"Anywhere","billing_state":"CA","billing_postcode":"12345-678","billing_country":"US","roles":["instructor"]}'
         - lang: Node.js
@@ -2721,7 +2731,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/instructors/123?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -2768,7 +2778,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/instructors/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"email":"jamie@lifterlms.com","username":"jamie2019","password":"my_l337-p@$5w0rd!","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","registered_date":"2019-05-03 19:25:01","url":"https://myawesomewebsite.tld","first_name":"Jamie","last_name":"Cook","nickname":"JamieC","name":"Jamie Cook","billing_address_1":"1234 Somewhere Place","billing_address_2":"Suite ABC","billing_city":"Anywhere","billing_state":"CA","billing_postcode":"12345-678","billing_country":"US","roles":["instructor"]}'
         - lang: Node.js
@@ -2846,7 +2856,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/instructors/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"reassign":456}'
         - lang: Node.js
@@ -2943,7 +2953,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/instructors/123/content?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post=123%2C456&post_exclude=789%2C324&post_type=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3023,7 +3033,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3072,7 +3082,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/lessons \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/lesson/getting-started-with-lifterlms","post_type":"lesson","audio_embed":"https://open.spotify.com/track/trackid","video_embed":"https://www.youtube.com/watch?v=videoid","prerequisite":321,"public":false,"parent_id":987,"points":1,"order":1,"drip_method":"none","drip_days":1,"drip_date":"2019-12-12 23:23:59","quiz":{"enabled":true,"id":432,"progression":"complete"},"assignment":{"enabled":true,"id":876,"progression":"complete"}}'
         - lang: Node.js
@@ -3163,7 +3173,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D?context=edit&password=p4%24sW0rd' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3210,7 +3220,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/lesson/getting-started-with-lifterlms","post_type":"lesson","audio_embed":"https://open.spotify.com/track/trackid","video_embed":"https://www.youtube.com/watch?v=videoid","prerequisite":321,"public":false,"parent_id":987,"points":1,"order":1,"drip_method":"none","drip_days":1,"drip_date":"2019-12-12 23:23:59","quiz":{"enabled":true,"id":432,"progression":"complete"},"assignment":{"enabled":true,"id":876,"progression":"complete"}}'
         - lang: Node.js
@@ -3294,7 +3304,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/lessons/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"force":false}'
         - lang: Node.js
@@ -3372,7 +3382,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3421,7 +3431,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/memberships \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","restriction_message":"You must belong to the [lifterlms_membership_link id=\"1234\"] membership to access this content.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/membership/getting-started-with-lifterlms","post_type":"llms_membership","categories":[1,2,3],"tags":[4,5,6],"restriction_action":"none","restriction_page_id":456,"restriction_url":"https://example.tld/my-custom-url","auto_enroll":[456,789],"catalog_visibility":"catalog_search","instructors":[1,2,3],"sales_page_type":"none","sales_page_page_id":543,"sales_page_url":"https://example.tld/custom-sales-page"}'
         - lang: Node.js
@@ -3519,7 +3529,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D?context=edit&password=p4%24sW0rd' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3566,7 +3576,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","content":"<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->","excerpt":"Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.","restriction_message":"You must belong to the [lifterlms_membership_link id=\"1234\"] membership to access this content.","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"slug":"getting-started-with-lifterlms","status":"publish","password":"p4$sW0rd","featured_media":987,"comment_status":"open","ping_status":"open","permalink":"https://example.com/membership/getting-started-with-lifterlms","post_type":"llms_membership","categories":[1,2,3],"tags":[4,5,6],"restriction_action":"none","restriction_page_id":456,"restriction_url":"https://example.tld/my-custom-url","auto_enroll":[456,789],"catalog_visibility":"catalog_search","instructors":[1,2,3],"sales_page_type":"none","sales_page_page_id":543,"sales_page_url":"https://example.tld/custom-sales-page"}'
         - lang: Node.js
@@ -3657,7 +3667,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"force":false}'
         - lang: Node.js
@@ -3754,7 +3764,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/memberships/%7Bid%7D/enrollments?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&status=SOME_STRING_VALUE&student=1%2C2%2C3' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3831,7 +3841,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -3928,7 +3938,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/quiz-questions \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","order":1,"parent_id":234,"points":10,"video_embed":"https://www.youtube.com/watch?v=videoid","featured_media":205,"question_type":"choice","choices":[{"marker":"A","choice":"Red","correct":false},{"marker":"B","choice":"Green","correct":true}],"multi_choices":false,"title":"What is your favorite color?","content":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>","answer_clarification":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"}'
         - lang: Node.js
@@ -4008,7 +4018,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4079,7 +4089,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","order":1,"parent_id":234,"points":10,"video_embed":"https://www.youtube.com/watch?v=videoid","featured_media":205,"question_type":"choice","choices":[{"marker":"A","choice":"Red","correct":false},{"marker":"B","choice":"Green","correct":true}],"multi_choices":false,"title":"What is your favorite color?","content":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>","answer_clarification":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"}'
         - lang: Node.js
@@ -4143,7 +4153,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/quiz-questions/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4235,7 +4245,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4284,7 +4294,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/quizzes \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","slug":"final-exam","status":"draft","attempt_limiting":true,"attempts_allowed":1,"time_limiting":true,"time_limit":90,"passing_percentage":65,"show_correct_answer":false,"randomize_questions":false,"parent_id":789,"title":"Final Exam","content":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"}'
         - lang: Node.js
@@ -4354,7 +4364,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4401,7 +4411,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","slug":"final-exam","status":"draft","attempt_limiting":true,"attempts_allowed":1,"time_limiting":true,"time_limit":90,"passing_percentage":65,"show_correct_answer":false,"randomize_questions":false,"parent_id":789,"title":"Final Exam","content":"<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>"}'
         - lang: Node.js
@@ -4455,7 +4465,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/quizzes/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4535,7 +4545,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/sections?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=1234' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4580,7 +4590,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/sections \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","order":1,"parent_id":1234}'
         - lang: Node.js
@@ -4641,7 +4651,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/sections/%7Bid%7D?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4688,7 +4698,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/sections/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"title":"Getting Started with LifterLMS","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","order":1,"parent_id":1234}'
         - lang: Node.js
@@ -4733,7 +4743,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/sections/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4819,7 +4829,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/sections/%7Bid%7D/content?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&parent=987' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4936,7 +4946,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/students?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=jamie%40lifterlms.com&search_columns=email%2Cusername&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&enrolled_in=1%2C2%2C3&enrolled_not_in=4%2C5%2C6&roles=student%2Ccustomer' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -4984,7 +4994,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/students \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"email":"jamie@lifterlms.com","username":"jamie2019","password":"my_l337-p@$5w0rd!","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","registered_date":"2019-05-03 19:25:01","url":"https://myawesomewebsite.tld","first_name":"Jamie","last_name":"Cook","nickname":"JamieC","name":"Jamie Cook","billing_address_1":"1234 Somewhere Place","billing_address_2":"Suite ABC","billing_city":"Anywhere","billing_state":"CA","billing_postcode":"12345-678","billing_country":"US","roles":["student"]}'
         - lang: Node.js
@@ -5060,7 +5070,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/students/123?context=edit' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5107,7 +5117,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/students/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"email":"jamie@lifterlms.com","username":"jamie2019","password":"my_l337-p@$5w0rd!","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","registered_date":"2019-05-03 19:25:01","url":"https://myawesomewebsite.tld","first_name":"Jamie","last_name":"Cook","nickname":"JamieC","name":"Jamie Cook","billing_address_1":"1234 Somewhere Place","billing_address_2":"Suite ABC","billing_city":"Anywhere","billing_state":"CA","billing_postcode":"12345-678","billing_country":"US","roles":["student"]}'
         - lang: Node.js
@@ -5185,7 +5195,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/students/123 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"reassign":456}'
         - lang: Node.js
@@ -5281,7 +5291,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&status=SOME_STRING_VALUE&post=1%2C2%2C3' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5338,7 +5348,7 @@ paths:
           source: |-
             curl --request GET \
               --url https://example.tld/wp-json/llms/v1/students/123/enrollments/456 \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5381,7 +5391,7 @@ paths:
           source: |-
             curl --request POST \
               --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5430,7 +5440,7 @@ paths:
           source: |-
             curl --request PATCH \
               --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-21 14:22:05","status":"enrolled"}'
         - lang: Node.js
@@ -5474,7 +5484,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url 'https://example.tld/wp-json/llms/v1/students/123/enrollments/456?trigger=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5531,7 +5541,7 @@ paths:
           source: |-
             curl --request GET \
               --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5578,7 +5588,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"date_created":"2019-05-21T14:22:05","status":"incomplete"}'
         - lang: Node.js
@@ -5620,7 +5630,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/students/123/progress/456 \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5698,7 +5708,7 @@ paths:
           source: |-
             curl --request GET \
               --url 'https://example.tld/wp-json/llms/v1/webhooks?page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=SOME_STRING_VALUE' \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5747,7 +5757,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/webhooks \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"name":"A Student Enrolled in a Course","status":"disabled","topic":"student.created","delivery_url":"https://example.tld/webhook-receipt/endpoint","secret":"$P3CI41-$3CR37!"}'
         - lang: Node.js
@@ -5806,7 +5816,7 @@ paths:
           source: |-
             curl --request GET \
               --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -5853,7 +5863,7 @@ paths:
           source: |-
             curl --request POST \
               --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX \
+              --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
               --data '{"name":"A Student Enrolled in a Course","status":"disabled","topic":"student.created","delivery_url":"https://example.tld/webhook-receipt/endpoint","secret":"$P3CI41-$3CR37!"}'
         - lang: Node.js
@@ -5898,7 +5908,7 @@ paths:
           source: |-
             curl --request DELETE \
               --url https://example.tld/wp-json/llms/v1/webhooks/%7Bid%7D \
-              --user ck_XXXXXX:sk_XXXXXX
+              --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
