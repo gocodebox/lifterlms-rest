@@ -6,6 +6,7 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
+ * @version [version]
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -134,8 +135,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Utility to perform pagination test
 	 *
 	 * @since 1.0.0-beta.7
- 	 * @since 1.0.0-beta.11 Post revisions are now taken into account when comparing list of resource ids.
- 	 *
+	 * @since 1.0.0-beta.11 Post revisions are now taken into account when comparing list of resource ids.
+	 * @since [version] Better accounting of the automatic creation of post revisions.
+	 *
 	 * @param string   $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
 	 * @param int      $start_id Optional. The id of the first item. Default `1`.
 	 * @param int      $per_page Optional. The number of items per page. Default `10`.
@@ -150,7 +152,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		$total_pages = (int) ceil( $total / $per_page );
 		$initial_id  = $start_id;
 		if ( is_null( $ids_step ) ) {
-			$ids_step = isset( $this->post_type ) && post_type_supports( $this->post_type, 'revisions' ) ? 2 : 1;
+			$ids_step = isset( $this->post_type ) && post_type_supports( $this->post_type, 'revisions' ) && ! empty( $this->generates_revision_on_creation ) ? 2 : 1;
 		}
 
 		for ( $i = 1; $i <= $total_pages; $i++ ) {
