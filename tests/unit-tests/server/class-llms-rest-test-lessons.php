@@ -352,7 +352,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 25, 'quiz' => 0 ) );
 		$start_lesson_id = $course->get_lessons( 'ids' )[0];
 
-		// When crea
 		$this->pagination_test( $this->route, $start_lesson_id );
 
 	}
