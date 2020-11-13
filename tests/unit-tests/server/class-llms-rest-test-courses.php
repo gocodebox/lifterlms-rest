@@ -19,7 +19,7 @@
  *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
  *                     Added `@return` to doc.
  *                     Use the far less predictable `wp_wp_rand()` in place of `wp_rand()`.
- * @version 1.0.0-beta.8
+ * @version [version]
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.
@@ -51,6 +51,14 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		'course_tag',
 		'course_track',
 	);
+
+	/**
+	 * This is an internal flag we use to determine whether or not
+	 * we need to use a step of 2 ids when testing the pagination.
+	 *
+	 * @var array
+	 */
+	protected $generates_revision_on_creation = true;
 
 	/**
 	 *

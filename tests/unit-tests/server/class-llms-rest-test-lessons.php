@@ -348,8 +348,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create sections
-		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 25 ) );
+		// Create lessons.
+		$course = $this->factory->course->create_and_get( array( 'sections' => 1, 'lessons' => 25, 'quiz' => 0 ) );
 		$start_lesson_id = $course->get_lessons( 'ids' )[0];
 
 		$this->pagination_test( $this->route, $start_lesson_id );
@@ -367,7 +367,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create a parent course, a prerequisite and a quiz.
+		// Create a parent course, a prerequisite and a quiz.
 		$course_id           = $this->factory->course->create(
 			array(
 				'sections' => 1,
