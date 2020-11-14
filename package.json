@@ -22,7 +22,7 @@
     "build": "npm run build:docs && llms-dev pot",
     "build:docs": "npm run build:spec && npm run build:snippets && npm run build:spec",
     "build:snippets": "./.bin/snippets",
-    "build:spec": "swagger-repo build -o web_deploy",
+    "build:spec": "swagger-repo build -o web_deploy && ./.bin/cache-bust",
     "test": "swagger-repo validate",
     "gh-pages": "swagger-repo gh-pages"
   }
