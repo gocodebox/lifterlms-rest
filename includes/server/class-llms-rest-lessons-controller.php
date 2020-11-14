@@ -337,7 +337,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
 				),
-				'readonly'   => true,
+				'readonly'    => true,
 			),
 			'order'        => array(
 				'description' => __( 'Order of the lesson within its immediate parent.', 'lifterlms' ),
