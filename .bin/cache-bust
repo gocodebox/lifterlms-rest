@@ -17,4 +17,4 @@ const
 	file = `${ process.cwd() }/web_deploy/index.html`,
 	html = fs.readFileSync( `${ process.cwd() }/web_deploy/index.html` ).toString();
 
-fs.writeFileSync( file, html.replace( `'./openapi.json',`, `'./openapi.json?v=${ pkg.version }'` ) );
+fs.writeFileSync( file, html.replace( `'./openapi.json'`, `'./openapi.json?v=${ pkg.version }'` ) );
