@@ -100,11 +100,11 @@ allOf:
             example: [
               {
                 "taxonomy": "membership_cat",
-                "href": "/wp-json/wp-v2/membership_cat?post=123"
+                "href": "/wp-json/wp/v2/membership_cat?post=1234"
               },
               {
                 "taxonomy": "membership_tag",
-                "href": "/wp-json/wp-v2/membership_tag?post=123"
+                "href": "/wp-json/wp/v2/membership_tag?post=1234"
               }
             ]
             items:
