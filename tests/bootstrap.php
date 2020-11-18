@@ -3,8 +3,9 @@
  * Testing Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
+ *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version]
  */
 
 require_once './vendor/lifterlms/lifterlms-tests/bootstrap.php';
@@ -67,4 +68,6 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 
 }
 
-return new LLMS_REST_Tests_Bootstrap();
+global $llms_tests_bootstrap;
+$llms_tests_bootstrap = new LLMS_REST_Tests_Bootstrap();
+return $llms_tests_bootstrap;
