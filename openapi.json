@@ -6837,19 +6837,19 @@
                     "example": [
                       {
                         "taxonomy": "course_cat",
-                        "href": "/wp-json/wp/v2/course_cat?post=1234"
+                        "href": "/wp-json/wp-v2/course_cat?post=123"
                       },
                       {
                         "taxonomy": "course_tag",
-                        "href": "/wp-json/wp/v2/course_tag?post=1234"
+                        "href": "/wp-json/wp-v2/course_tag?post=123"
                       },
                       {
                         "taxonomy": "course_difficulty",
-                        "href": "/wp-json/wp/v2/course_difficulty?post=1234"
+                        "href": "/wp-json/wp-v2/course_difficulty?post=123"
                       },
                       {
                         "taxonomy": "course_track",
-                        "href": "/wp-json/wp/v2/course_track?post=1234"
+                        "href": "/wp-json/wp-v2/course_track?post=123"
                       }
                     ],
                     "items": {
@@ -8295,11 +8295,11 @@
                     "example": [
                       {
                         "taxonomy": "membership_cat",
-                        "href": "/wp-json/wp/v2/membership_cat?post=1234"
+                        "href": "/wp-json/wp-v2/membership_cat?post=123"
                       },
                       {
                         "taxonomy": "membership_tag",
-                        "href": "/wp-json/wp/v2/membership_tag?post=1234"
+                        "href": "/wp-json/wp-v2/membership_tag?post=123"
                       }
                     ],
                     "items": {
