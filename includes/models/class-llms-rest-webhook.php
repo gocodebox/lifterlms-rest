@@ -499,7 +499,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		 * @param array             $args  Numeric array of arguments from the originating hook.
 		 * @param LLMS_REST_Webhook $this  Webhook object.
 		 */
-		$delay = apply_filters( 'llms_rest_webhook_repeat_delay', 3, $args, $this );
+		$delay = apply_filters( 'llms_rest_webhook_repeat_delay', 300, $args, $this );
 
 		if ( ! $next || $next >= ( $delay + gmdate( 'U' ) ) ) {
 
