@@ -10,6 +10,7 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 `test_is_valid_resource()` updated to take into account the new way to discriminate between course creation/update.
+ * @since [version] Updated tests on `LLMS_REST_Webhook::should_deliver()`.
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -104,7 +105,14 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
-
+	/**
+	 * Test delivery success
+	 *
+	 * @since Unknown
+	 * @since [version] Remove checks on `pending_delivery` unused property.
+	 *
+	 * @return void
+	 */
 	public function test_delivery_success() {
 
 		$course = $this->factory->course->create( array( 'sections' => 0 ) );
@@ -116,14 +124,12 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 			'user_id' => $this->factory->user->create( array( 'role' => 'administrator' ) ),
 		) );
 
-		$webhook->set( 'pending_delivery', 1 );
 		$webhook->set( 'failure_count', 3 );
 
 		add_filter( 'pre_http_request', array( $this, 'mock_request' ), 10, 3 );
 
 		$webhook->deliver( array( $course ) );
 
-		$this->assertEquals( 0, $webhook->get( 'pending_delivery' ) );
 		$this->assertEquals( 0, $webhook->get( 'failure_count' ) );
 
 	}
@@ -660,6 +666,13 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	/**
+	 * Test is_valid_user_action() method
+	 *
+	 * @since Unknown
+	 *
+	 * @return void
+	 */
 	public function test_is_valid_user_action() {
 
 		$student    = $this->factory->student->create();
@@ -714,6 +727,13 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	/**
+	 * Test scheduling student.created
+	 *
+	 * @since Unknown
+	 *
+	 * @return void
+	 */
 	public function test_scheduling_student_created() {
 
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
@@ -733,6 +753,13 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	/**
+	 * Test scheduling enrollment.created
+	 *
+	 * @since Unknown
+	 *
+	 * @return void
+	 */
 	public function test_scheduling_enrollment_created() {
 
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
@@ -876,13 +903,13 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * Test the status condition of the should_deliver() method.
+	 * Test should_deliver() method with already processed hooks().
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @return void
 	 */
-	public function test_should_deliver_pending_delivery() {
+	public function test_should_deliver_already_processed() {
 
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
 			'delivery_url' => 'https://mock.tld',
@@ -890,13 +917,16 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 			'status' => 'active',
 		) );
 
-		// Not Pending.
-		$this->assertTrue( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $this->factory->student->create() ) ) ) );
+		$student_id = $this->factory->student->create();
 
-		// Pending.
-		$webhook->set( 'pending_delivery', 1 )->save();
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $this->factory->student->create() ) ) ) );
+		// Not processed.
+		$this->assertTrue( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $student_id ) ) ) );
 
+		// Process the hook.
+		$webhook->process_hook( $student_id );
+
+		// Processed.
+		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $student_id ) ) ) );
 
 	}
 
