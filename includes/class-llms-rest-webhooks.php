@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.16
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -66,6 +66,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Create a new API Key
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
 	 *
 	 * @param array $data Associative array of data to set to a key's properties.
 	 * @return WP_Error|LLMS_REST_Webhook
@@ -76,9 +77,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
-
-		// Can't set these properties during creation.
-		unset( $data['pending_delivery'], $data['failure_count'] );
 
 		return $this->save( new $this->model(), $data );
 
@@ -109,7 +107,8 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix formatting error.
-	 *
+ 	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
+ 	 *
 	 * @return array
 	 */
 	public function get_default_column_values() {
@@ -118,7 +117,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 			'secret'           => wp_generate_password( 50, true, true ),
 			'status'           => 'disabled',
 			'failure_count'    => 0,
-			'pending_delivery' => 0,
 			'user_id'          => get_current_user_id(),
 			'name'             => sprintf(
 				// Translators: %s = created date.
@@ -542,6 +540,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Prepare data for an update.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
 	 *
 	 * @param array $data Associative array of data to set to a resources properties.
 	 * @return LLMS_REST_Webhook|WP_Error
@@ -552,7 +551,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 		// Merge in (some) default values.
 		$defaults = $this->get_default_column_values();
-		unset( $defaults['pending_delivery'], $defaults['failure_count'] );
 		$data = wp_parse_args( array_filter( $data ), $defaults );
 
 		// URL was supplied but empty so add it back in to get caught by validation.

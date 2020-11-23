@@ -563,27 +563,6 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * Test is pending checker method.
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @return void
-	 */
-	public function test_is_pending() {
-
-		$webhook = LLMS_REST_API()->webhooks()->create( array(
-			'delivery_url' => 'https://fake.tld',
-			'topic' => 'course.created',
-		) );
-
-		$this->assertFalse( $webhook->is_pending() );
-
-		$webhook->set( 'pending_delivery', 1 );
-
-		$this->assertTrue( $webhook->is_pending() );
-	}
-
-	/**
 	 * Test validity of post actions.
 	 *
 	 * @since 1.0.0-beta.1

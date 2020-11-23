@@ -111,7 +111,6 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 
 		$this->assertEquals( 'disabled', $ret->get( 'status' ) );
 		$this->assertEquals( 0, $ret->get( 'failure_count' ) );
-		$this->assertEquals( 0, $ret->get( 'pending_delivery' ) );
 		$this->assertEquals( $user_id, $ret->get( 'user_id' ) );
 
 		$this->assertEquals( 50, strlen( $ret->get( 'secret' ) ) );
@@ -343,7 +342,6 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 		$this->assertEquals( 50, strlen( $vals['secret'] ) );
 		$this->assertEquals( 'disabled', $vals['status'] );
 		$this->assertEquals( 0, $vals['failure_count'] );
-		$this->assertEquals( 0, $vals['pending_delivery'] );
 
 	}
 
@@ -454,7 +452,6 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 			'id' => $hook->get( 'id' ),
 			'topic' => 'action.mock',
 			'delivery_url' => 'http://mock.com',
-			'pending_delivery' => 1,
 			'failure_count' => 5,
 			'name' => 'Changed it',
 			'secret' => 'new secret',

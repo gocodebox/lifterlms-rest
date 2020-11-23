@@ -188,19 +188,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Determine if the webhook is currently pending delivery
-	 *
-	 * @since 1.0.0-beta.1
-	 *
-	 * @return bool
-	 */
-	public function is_pending() {
-
-		return llms_parse_bool( $this->get( 'pending_delivery' ) );
-
-	}
-
-	/**
 	 * Checks if the specified resource has already been queued for delivery within the current request
 	 *
 	 * Helps avoid duplication of data being sent for topics that have more than one hook defined.
