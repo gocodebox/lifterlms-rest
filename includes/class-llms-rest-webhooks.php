@@ -78,6 +78,9 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 			return $data;
 		}
 
+		// Can't set this property during creation.
+		unset( $data['failure_count'] );
+
 		return $this->save( new $this->model(), $data );
 
 	}
@@ -551,6 +554,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 		// Merge in (some) default values.
 		$defaults = $this->get_default_column_values();
+		unset( $defaults['failure_count'] );
 		$data = wp_parse_args( array_filter( $data ), $defaults );
 
 		// URL was supplied but empty so add it back in to get caught by validation.
