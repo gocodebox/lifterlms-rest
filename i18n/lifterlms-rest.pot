@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.16\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.17\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-11-05T11:06:12-07:00\n"
+"POT-Creation-Date: 2020-11-24T13:34:01-07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -566,7 +566,7 @@ msgid "Topic"
 msgstr ""
 
 #: includes/admin/class-llms-rest-admin-settings-webhooks.php:92
-#: includes/class-llms-rest-webhooks.php:230
+#: includes/class-llms-rest-webhooks.php:231
 msgid "Action"
 msgstr ""
 
@@ -640,192 +640,192 @@ msgid "\"%s\" is not a valid permission."
 msgstr ""
 
 #. Translators: %s = created date.
-#: includes/class-llms-rest-webhooks.php:125
+#: includes/class-llms-rest-webhooks.php:126
 msgid "Webhook created on %s"
 msgstr ""
 
 #. Translators: Date format.
-#: includes/class-llms-rest-webhooks.php:127
+#: includes/class-llms-rest-webhooks.php:128
 msgctxt "Webhook created on date parsed by strftime"
 msgid "%b %d, %Y @ %I:%M %p"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:143
+#: includes/class-llms-rest-webhooks.php:144
 msgid "Webhook"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:165
+#: includes/class-llms-rest-webhooks.php:166
 msgid "Active"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:166
+#: includes/class-llms-rest-webhooks.php:167
 msgid "Paused"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:167
+#: includes/class-llms-rest-webhooks.php:168
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:193
+#: includes/class-llms-rest-webhooks.php:194
 msgid "Course created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:194
+#: includes/class-llms-rest-webhooks.php:195
 msgid "Course updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:195
+#: includes/class-llms-rest-webhooks.php:196
 msgid "Course deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:196
+#: includes/class-llms-rest-webhooks.php:197
 msgid "Course restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:197
+#: includes/class-llms-rest-webhooks.php:198
 msgid "Section created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:198
+#: includes/class-llms-rest-webhooks.php:199
 msgid "Section updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:199
+#: includes/class-llms-rest-webhooks.php:200
 msgid "Section deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:200
+#: includes/class-llms-rest-webhooks.php:201
 msgid "Lesson created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:201
+#: includes/class-llms-rest-webhooks.php:202
 msgid "Lesson updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:202
+#: includes/class-llms-rest-webhooks.php:203
 msgid "Lesson deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:203
+#: includes/class-llms-rest-webhooks.php:204
 msgid "Lesson restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:204
+#: includes/class-llms-rest-webhooks.php:205
 msgid "Membership created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:205
+#: includes/class-llms-rest-webhooks.php:206
 msgid "Membership updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:206
+#: includes/class-llms-rest-webhooks.php:207
 msgid "Membership deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:207
+#: includes/class-llms-rest-webhooks.php:208
 msgid "Membership restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:208
+#: includes/class-llms-rest-webhooks.php:209
 msgid "Access Plan created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:209
+#: includes/class-llms-rest-webhooks.php:210
 msgid "Access Plan updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:210
+#: includes/class-llms-rest-webhooks.php:211
 msgid "Access Plan deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:211
+#: includes/class-llms-rest-webhooks.php:212
 msgid "Access Plan restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:212
+#: includes/class-llms-rest-webhooks.php:213
 msgid "Order created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:213
+#: includes/class-llms-rest-webhooks.php:214
 msgid "Order updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:214
+#: includes/class-llms-rest-webhooks.php:215
 msgid "Order deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:215
+#: includes/class-llms-rest-webhooks.php:216
 msgid "Order restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:216
+#: includes/class-llms-rest-webhooks.php:217
 msgid "Transaction created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:217
+#: includes/class-llms-rest-webhooks.php:218
 msgid "Transaction updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:218
+#: includes/class-llms-rest-webhooks.php:219
 msgid "Transaction deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:219
+#: includes/class-llms-rest-webhooks.php:220
 msgid "Student created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:220
+#: includes/class-llms-rest-webhooks.php:221
 msgid "Student updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:221
+#: includes/class-llms-rest-webhooks.php:222
 msgid "Student deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:222
+#: includes/class-llms-rest-webhooks.php:223
 msgid "Enrollment created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:223
+#: includes/class-llms-rest-webhooks.php:224
 msgid "Enrollment updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:224
+#: includes/class-llms-rest-webhooks.php:225
 msgid "Enrollment deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:225
+#: includes/class-llms-rest-webhooks.php:226
 msgid "Progress updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:226
+#: includes/class-llms-rest-webhooks.php:227
 msgid "Progress deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:227
+#: includes/class-llms-rest-webhooks.php:228
 msgid "Instructor created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:228
+#: includes/class-llms-rest-webhooks.php:229
 msgid "Instructor updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:229
+#: includes/class-llms-rest-webhooks.php:230
 msgid "Instructor deleted"
 msgstr ""
 
 #. Translators: %s = Invalid permission string.
-#: includes/class-llms-rest-webhooks.php:434
+#: includes/class-llms-rest-webhooks.php:435
 msgid "\"%s\" is not a valid status."
 msgstr ""
 
 #. Translators: %s = Invalid permission string.
-#: includes/class-llms-rest-webhooks.php:440
+#: includes/class-llms-rest-webhooks.php:441
 msgid "\"%s\" is not a valid topic."
 msgstr ""
 
 #. Translators: %s = field name.
-#: includes/class-llms-rest-webhooks.php:447
+#: includes/class-llms-rest-webhooks.php:448
 msgid "\"%s\" is required."
 msgstr ""
 
@@ -838,17 +838,17 @@ msgstr ""
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: includes/models/class-llms-rest-webhook.php:126
+#: includes/models/class-llms-rest-webhook.php:136
 msgid "M j, Y @ H:i"
 msgstr ""
 
 #. Translators: %s = Error message.
-#: includes/models/class-llms-rest-webhook.php:398
+#: includes/models/class-llms-rest-webhook.php:409
 msgid "Could not reach the delivery url: \"%s\"."
 msgstr ""
 
 #. Translators: %d = Response code.
-#: includes/models/class-llms-rest-webhook.php:403
+#: includes/models/class-llms-rest-webhook.php:414
 msgid "The delivery url returned the response code \"%d\"."
 msgstr ""
 

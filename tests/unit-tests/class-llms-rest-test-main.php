@@ -28,7 +28,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Copies the tests MO file to a directory so it can be loaded by `load_textdomain()`.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.17
 	 *
 	 * @param string $dest Directory to copy the MO file to.
 	 * @return string Full path to the created file.
@@ -60,7 +60,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Delete an MO file created by `copy_mo()`.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.17
 	 *
 	 * @param string $file Full path to the MO file to be deleted.
 	 * @return void
@@ -76,7 +76,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * [test_constructor description]
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.17
 	 *
 	 * @see [Reference]
 	 * @link [URL]
@@ -107,7 +107,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test load_textdomain()
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.17
 	 *
 	 * @return void
 	 */

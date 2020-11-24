@@ -19,7 +19,7 @@
  *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
  *                     Added `@return` to doc.
  *                     Use the far less predictable `wp_wp_rand()` in place of `wp_rand()`.
- * @version [version]
+ * @version 1.0.0-beta.17
  *
  * @todo update tests to check links.
  * @todo do more tests on the courses update/delete.

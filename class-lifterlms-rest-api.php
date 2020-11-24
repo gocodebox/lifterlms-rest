@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,14 +26,14 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.16';
+	public $version = '1.0.0-beta.17';
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
-	 * @since [version] Only localize when loaded as an independent plugin.
+	 * @since 1.0.0-beta.17 Only localize when loaded as an independent plugin.
 	 *
 	 * @return void
 	 */
@@ -227,7 +227,7 @@ final class LifterLMS_REST_API {
 	 * file for each codebase.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed the name of the MO loaded from the safe directory: `lifterlms-{$locale}.mo` to `lifterlms-rest-{$locale}.mo`.
+	 * @since 1.0.0-beta.17 Fixed the name of the MO loaded from the safe directory: `lifterlms-{$locale}.mo` to `lifterlms-rest-{$locale}.mo`.
 	 *                      Fixed double slash typo in plugin textdomain path argument.
 	 *                      Fixed issue causing language files to not load properly.
 	 *

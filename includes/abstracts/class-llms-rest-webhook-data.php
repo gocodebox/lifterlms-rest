@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.6 Retrieve proper payload for enrollment and progress resources.
- * @since [version] Remove unused 'pending_delivery' column.
+ * @since 1.0.0-beta.17 Remove unused 'pending_delivery' column.
  */
 abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
