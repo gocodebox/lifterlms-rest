@@ -7,6 +7,7 @@
  * @since 1.0.0-beta.1
  * @version [version]
  */
+
 defined( 'ABSPATH' ) || exit;
 
 /**

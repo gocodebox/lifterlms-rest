@@ -110,18 +110,18 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix formatting error.
- 	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
- 	 *
+	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
+	 *
 	 * @return array
 	 */
 	public function get_default_column_values() {
 
 		$this->default_column_values = array(
-			'secret'           => wp_generate_password( 50, true, true ),
-			'status'           => 'disabled',
-			'failure_count'    => 0,
-			'user_id'          => get_current_user_id(),
-			'name'             => sprintf(
+			'secret'        => wp_generate_password( 50, true, true ),
+			'status'        => 'disabled',
+			'failure_count' => 0,
+			'user_id'       => get_current_user_id(),
+			'name'          => sprintf(
 				// Translators: %s = created date.
 				__( 'Webhook created on %s', 'lifterlms' ),
 				// Translators: Date format.
