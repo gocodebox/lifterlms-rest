@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -66,7 +66,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Create a new API Key
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
+	 * @since 1.0.0-beta.17 Remove reference to 'pending_delivery' (unused) column.
 	 *
 	 * @param array $data Associative array of data to set to a key's properties.
 	 * @return WP_Error|LLMS_REST_Webhook
@@ -110,7 +110,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix formatting error.
-	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
+	 * @since 1.0.0-beta.17 Remove reference to 'pending_delivery' (unused) column.
 	 *
 	 * @return array
 	 */
@@ -543,7 +543,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Prepare data for an update.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Remove reference to 'pending_delivery' (unused) column.
+	 * @since 1.0.0-beta.17 Remove reference to 'pending_delivery' (unused) column.
 	 *
 	 * @param array $data Associative array of data to set to a resources properties.
 	 * @return LLMS_REST_Webhook|WP_Error

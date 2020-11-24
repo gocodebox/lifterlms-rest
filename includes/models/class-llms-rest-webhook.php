@@ -105,7 +105,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Logs data when loggind enabled and updates state data.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Stop setting the webhook's property `pending_delivery` to 0.
+	 * @since 1.0.0-beta.17 Stop setting the webhook's property `pending_delivery` to 0.
 	 *                      We now rely on the method `is_already_processed()` to determine whether the webhook delivering should be avoided.
 	 *
 	 * @param string $delivery_id Webhook delivery id (for logging).
@@ -346,7 +346,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Determines if the webhook should be delivered and whether or not it should be scheduled or delivered immediately.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
+	 * @since 1.0.0-beta.17 Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
 	 *                      And don't rely anymore on the webhook's `pending_delivery` property to achieve the same goal.
 	 *
 	 * @param mixed ...$args Arguments from the hook.
@@ -449,7 +449,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Schedule the webhook for async delivery
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Stop setting the webhook's property `pending_delivery` to 1 when scheduling the delivery.
+	 * @since 1.0.0-beta.17 Stop setting the webhook's property `pending_delivery` to 1 when scheduling the delivery.
 	 *                      We now rely on the method `is_already_processed()` to determine whether the webhook scheduling should be avoided.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.

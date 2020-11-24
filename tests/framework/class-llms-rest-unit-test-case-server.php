@@ -6,7 +6,7 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
- * @version [version]
+ * @version 1.0.0-beta.17
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -136,7 +136,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.11 Post revisions are now taken into account when comparing list of resource ids.
-	 * @since [version] Better accounting of the automatic creation of post revisions.
+	 * @since 1.0.0-beta.17 Better accounting of the automatic creation of post revisions.
 	 *
 	 * @param string   $route    Optional. Request route, eg: '/llms/v1/courses'. Default empty string, will fall back on this->route.
 	 * @param int      $start_id Optional. The id of the first item. Default `1`.

@@ -10,7 +10,7 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 `test_is_valid_resource()` updated to take into account the new way to discriminate between course creation/update.
- * @since [version] Updated tests on `LLMS_REST_Webhook::should_deliver()`.
+ * @since 1.0.0-beta.17 Updated tests on `LLMS_REST_Webhook::should_deliver()`.
  */
 class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -109,7 +109,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test delivery success
 	 *
 	 * @since Unknown
-	 * @since [version] Remove checks on `pending_delivery` unused property.
+	 * @since 1.0.0-beta.17 Remove checks on `pending_delivery` unused property.
 	 *
 	 * @return void
 	 */
@@ -884,7 +884,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test should_deliver() method with already processed hooks().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.17
 	 *
 	 * @return void
 	 */

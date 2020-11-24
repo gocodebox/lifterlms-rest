@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -48,7 +48,7 @@ class LLMS_REST_Install {
 	 * Adds REST API Keys table to the LifterLMS DB Table Schema
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Remove unused 'pending_delivery' column.
+	 * @since 1.0.0-beta.17 Remove unused 'pending_delivery' column.
 	 *
 	 * @see LLMS_Install::get_schema()
 	 *

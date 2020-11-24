@@ -1,6 +1,18 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.17 - 2020-11-24
+---------------------------
+
++ Bugfix: Fixed an issue with webhooks causing a failed webhook to cause other webhooks to stop triggering.
++ Update: Added improved localization methods when running as a standalone plugin.
+
+##### Breaking Change
+
++ Method `LLMS_REST_Webhook::is_pending()` has been removed.
++ Database column `pending_delivery` on the `lifterlms_rest_webhooks` table (and related model properties) have been deprecated and scheduled for removal.
+
+
 v1.0.0-beta.16 - 2020-11-05
 ---------------------------
 
