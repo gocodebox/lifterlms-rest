@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.9
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,10 +16,6 @@ require_once LLMS_REST_API_PLUGIN_DIR . 'includes/traits/class-llms-rest-trait-s
  * LifterLMS_REST_API class.
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.4 Load authentication early.
- * @since 1.0.0-beta.6 Load webhook actions early.
- * @since 1.0.0-beta.8 Load webhook actions a little bit later, to avoid PHP warnings on first plugin activation.
- * @since 1.0.0-beta.9 Added memberships controller.
  */
 final class LifterLMS_REST_API {
 
@@ -30,13 +26,14 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.16';
+	public $version = '1.0.0-beta.17';
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Load authentication early.
+	 * @since 1.0.0-beta.17 Only localize when loaded as an independent plugin.
 	 *
 	 * @return void
 	 */
@@ -46,8 +43,14 @@ final class LifterLMS_REST_API {
 			define( 'LLMS_REST_API_VERSION', $this->version );
 		}
 
-		// i18n.
-		add_action( 'init', array( $this, 'load_textdomain' ), 0 );
+		/**
+		 * When loaded as a library included by the LifterLMS core localization is handled by the LifterLMS core.
+		 *
+		 * When the plugin is loaded by itself as a plugin, we must localize it independently.
+		 */
+		if ( ! defined( 'LLMS_REST_API_LIB' ) || ! LLMS_REST_API_LIB ) {
+			add_action( 'init', array( $this, 'load_textdomain' ), 0 );
+		}
 
 		// Authentication needs to run early to handle basic auth.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/class-llms-rest-authentication.php';
@@ -208,13 +211,25 @@ final class LifterLMS_REST_API {
 
 	/**
 	 * Load l10n files.
-	 * The first loaded file takes priority.
 	 *
-	 * Files can be found in the following order:
-	 *      WP_LANG_DIR/lifterlms/lifterlms-LOCALE.mo
-	 *      WP_LANG_DIR/plugins/lifterlms-LOCALE.mo
+	 * This method is only used when the plugin is loaded as a standalone plugin (for development purposes),
+	 * otherwise (when loaded as a library from within the LifterLMS core plugin) the localization
+	 * strings are included into the LifterLMS Core plugin's po/mo files and are localized by the LifterLMS
+	 * core plugin.
+	 *
+	 * Files can be found in the following order (The first loaded file takes priority):
+	 *   1. WP_LANG_DIR/lifterlms/lifterlms-rest-LOCALE.mo
+	 *   2. WP_LANG_DIR/plugins/lifterlms-rest-LOCALE.mo
+	 *   3. WP_CONTENT_DIR/plugins/lifterlms-rest/i18n/lifterlms-rest-LOCALE.mo
+	 *
+	 * Note: The function `load_plugin_textdomain()` is not used because the same textdomain as the LifterLMS core
+	 * is used for this plugin but the file is named `lifterlms-rest` in order to allow using a separate language
+	 * file for each codebase.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.17 Fixed the name of the MO loaded from the safe directory: `lifterlms-{$locale}.mo` to `lifterlms-rest-{$locale}.mo`.
+	 *                      Fixed double slash typo in plugin textdomain path argument.
+	 *                      Fixed issue causing language files to not load properly.
 	 *
 	 * @return void
 	 */
@@ -223,11 +238,14 @@ final class LifterLMS_REST_API {
 		// load locale.
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'lifterlms' );
 
-		// load a lifterlms specific locale file if one exists.
-		load_textdomain( 'lifterlms', WP_LANG_DIR . '/lifterlms/lifterlms-' . $locale . '.mo' );
+		// Load from the LifterLMS "safe" directory if it exists.
+		load_textdomain( 'lifterlms', WP_LANG_DIR . '/lifterlms/lifterlms-rest-' . $locale . '.mo' );
 
-		// load localization files.
-		load_plugin_textdomain( 'lifterlms', false, dirname( plugin_basename( __FILE__ ) ) . '//i18n' );
+		// Load from the default plugins language file directory.
+		load_textdomain( 'lifterlms', WP_LANG_DIR . '/plugins/lifterlms-rest-' . $locale . '.mo' );
+
+		// Load from the plugin's language file directory.
+		load_textdomain( 'lifterlms', LLMS_REST_API_PLUGIN_DIR . '/i18n/lifterlms-rest-' . $locale . '.mo' );
 
 	}
 

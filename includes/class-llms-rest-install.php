@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version 1.0.0-beta.17
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -34,7 +34,7 @@ class LLMS_REST_Install {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return   void
+	 * @return void
 	 */
 	public static function check_version() {
 		if ( ! defined( 'IFRAME_REQUEST' ) && get_option( 'llms_rest_version' ) !== LLMS_REST_API()->version ) {
@@ -48,6 +48,7 @@ class LLMS_REST_Install {
 	 * Adds REST API Keys table to the LifterLMS DB Table Schema
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.17 Remove unused 'pending_delivery' column.
 	 *
 	 * @see LLMS_Install::get_schema()
 	 *
@@ -84,7 +85,6 @@ CREATE TABLE `{$wpdb->prefix}lifterlms_webhooks` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `failure_count` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `pending_delivery` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) $collate;
