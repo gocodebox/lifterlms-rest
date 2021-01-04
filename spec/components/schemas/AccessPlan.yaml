@@ -56,7 +56,7 @@ allOf:
         type: number
         format: float
         minimum: 0
-        example: 1.00
+        example: 99.97
       sale_date_start:
         description: >-
           Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.<br>
@@ -96,6 +96,7 @@ allOf:
           Only applicable when `access_expiration` is `limited-date`.
           Format: `Y-m-d H:i:s`.
         type: string
+        example: '2019-03-23 23:59:59'
       access_length:
         description: >-
           Determine the length of access from time of purchase.<br>

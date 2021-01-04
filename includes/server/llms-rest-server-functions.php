@@ -171,7 +171,7 @@ function llms_rest_validate_positive_float_w_zero( $number ) {
  * @return boolean
  */
 function llms_rest_validate_positive_float( $number, $include_zero = true ) {
-	// min_range and max_range options for FILTER_VALIDATE_FLOAT are only available since PHP 7.4.
+	// @TODO min_range and max_range options for FILTER_VALIDATE_FLOAT are only available since PHP 7.4.
 	$is_float = false !== filter_var( (float) $number, FILTER_VALIDATE_FLOAT );
 	return $is_float && ( $include_zero ? $number >= 0 : $number > 0 );
 }
@@ -192,7 +192,7 @@ function llms_rest_validate_memberships( $memberships ) {
 	if ( ! empty( $memberships ) ) {
 		$real_memberships = array_map(
 			function( $membership ) {
-				return is_a( llms_get_post( $membership ), 'LLMS_Membership' );
+				return ( 'llms_membership' === get_post_type( $membership ) );
 			},
 			$memberships
 		);
