@@ -44,13 +44,14 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Post properties to unset.
 		$properties_to_unset = array(
-			'excerpt',
 			'comment_status',
-			'ping_status',
+			'excerpt',
 			'featured_media',
-			'slug',
-			'post_type',
+			'password',
 			'permalink',
+			'ping_status',
+			'post_type',
+			'slug',
 		);
 
 		foreach ( $properties_to_unset as $to_unset ) {
@@ -387,6 +388,29 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
+	 * Retrieves the query params for the objects collection
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+
+		$query_params = parent::get_collection_params();
+
+		$query_params[''] = array(
+			'description'       => __( 'Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids.', 'lifterlms' ),
+			'type'              => 'array',
+			'items'             => array(
+				'type' => 'integer',
+			),
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $query_params;
+	}
+
+	/**
 	 * Retrieves an array of arguments for the delete endpoint
 	 *
 	 * @since [version]
@@ -680,6 +704,40 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$data = apply_filters( 'llms_rest_prepare_access_plan_object_response', $data, $access_plan, $request );
 
 		return $data;
+	}
+
+	/**
+	 * Format query arguments to retrieve a collection of objects
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array|WP_Error
+	 */
+	protected function prepare_collection_query_args( $request ) {
+
+		$query_args = parent::prepare_collection_query_args( $request );
+		if ( is_wp_error( $query_args ) ) {
+			return $query_args;
+		}
+
+		// Filter by post ID.
+		if ( ! empty( $request['post_id'] ) ) {
+			$query_args = array_merge(
+				$query_args,
+				array(
+					'meta_query' => array(
+						array(
+							'key'     => '_llms_product_id',
+							'value'   => explode( ',', $request['post_id'] ),
+							'compare' => 'IN',
+						),
+					),
+				)
+			);
+		}
+
+		return $query_args;
 	}
 
 	/**

@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -786,6 +786,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Updated to reflect changes in the parent class.
+	 * @since [version] Correctly return errors.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -794,7 +795,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$prepared = parent::prepare_collection_query_args( $request );
 		if ( is_wp_error( $prepared ) ) {
-			return $wp_error;
+			return $prepared;
 		}
 
 		$prepared['id']   = $request['id'];

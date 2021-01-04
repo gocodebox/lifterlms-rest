@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -354,6 +354,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Moved parameters to query args mapping into a different method.
+	 * @since [version] Correctly return errors.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -362,7 +363,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$prepared = parent::prepare_collection_query_args( $request );
 		if ( is_wp_error( $prepared ) ) {
-			return $wp_error;
+			return $prepared;
 		}
 
 		// Force the post_type argument, since it's not a user input variable.

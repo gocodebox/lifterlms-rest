@@ -82,7 +82,7 @@ allOf:
         description: >-
           Access expiration type.<br>
           `lifetime` provides access until cancelled or until a recurring payment fails.<br>
-          `limited-period` provides access for a limited period as specified by `access_length` and `access_period`
+          `limited-period` provides access for a limited period as specified by `access_length` and `access_period`<br>
           `limited-date` provides access until the date specified by `access_expires_date`
         type: string
         enum:
