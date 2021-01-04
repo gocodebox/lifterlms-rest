@@ -1,17 +1,17 @@
 <?php
 /**
- * REST Courses Controller.
+ * REST Courses Controller
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Courses_Controller class.
+ * LLMS_REST_Courses_Controller class
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
@@ -1103,6 +1103,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Added `llms_rest_course_links` filter hook.
 	 * @since 1.0.0-beta.14 Added $request parameter.
+	 * @since [version] Fixed access plans link.
 	 *
 	 * @param LLMS_Course     $course  LLMS Course.
 	 * @param WP_REST_Request $request Request object.
@@ -1118,7 +1119,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		// Access plans.
 		$course_links['access_plans'] = array(
 			'href' => add_query_arg(
-				'post',
+				'post_id',
 				$course_id,
 				rest_url( sprintf( '%s/%s', 'llms/v1', 'access-plans' ) )
 			),

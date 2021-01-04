@@ -1488,6 +1488,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Updates the post's terms from a REST request.
+	 *
 	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
 	 *
 	 * @since 1.0.0-beta.1
@@ -1519,6 +1520,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Checks whether current user can assign all terms sent with the current request.
+	 *
 	 * Heavily based on WP_REST_Posts_Controller::check_assign_terms_permission().
 	 *
 	 * @since 1.0.0-beta.1

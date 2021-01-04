@@ -411,10 +411,9 @@ x-tagGroups:
       - Sections
       - Lessons
 
-  # @todo: Implement
-  # - name: E-Commerce
-  #   tags:
-  #     - Access Plans
+  - name: E-Commerce
+    tags:
+      - Access Plans
 
   - name: Instructors
     tags:
@@ -424,7 +423,7 @@ x-tagGroups:
     tags:
       - Memberships
 
-  # @todo: Implment.
+  # @todo: Implement.
   # - name: Quizzes
   #   tags:
   #     - Quizzes
