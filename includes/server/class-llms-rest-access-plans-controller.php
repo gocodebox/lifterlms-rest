@@ -461,8 +461,13 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$post_type_object = get_post_type_object( get_post_type( $request['post_id'] ) );
 
 			if ( ! current_user_can( $post_type_object->cap->edit_post, $request['post_id'] ) ) {
-				// Translators: The post type singular name.
-				return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_object->labels->singular_name ) );
+				return llms_rest_authorization_required_error(
+					sprintf(
+						// Translators: The post type singular name.
+						__( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ),
+						$post_type_object->labels->singular_name
+					)
+				);
 			}
 
 			$can_create = true;
@@ -493,11 +498,15 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 			$product_id               = $access_plan->get( 'product_id' );
 			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
-			$post_type_object         = get_post_type_object( get_post_type( $access_plan ) );
 
 			if ( ! current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
-				// Translators: The post type singular name.
-				return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to update a %s as this user.', 'lifterlms' ), $post_type_object->labels->singular_name ) );
+				return llms_rest_authorization_required_error(
+					sprintf(
+						// Translators: The post type singular name.
+						__( 'Sorry, you are not allowed to update a %s as this user.', 'lifterlms' ),
+						$access_plan->get_post_type_label()
+					)
+				);
 			}
 
 			$can_update = true;
@@ -528,11 +537,15 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 			$product_id               = $access_plan->get( 'product_id' );
 			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
-			$post_type_object         = get_post_type_object( get_post_type( $access_plan ) );
 
 			if ( ! current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
-				// Translators: The post type singular name.
-				return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to delete a %s as this user.', 'lifterlms' ), $post_type_object->labels->singular_name ) );
+				return llms_rest_authorization_required_error(
+					sprintf(
+						// Translators: The post type singular name.
+						__( 'Sorry, you are not allowed to delete a %s as this user.', 'lifterlms' ),
+						$access_plan->get_post_type_label()
+					)
+				);
 			}
 
 			$can_delete = true;
