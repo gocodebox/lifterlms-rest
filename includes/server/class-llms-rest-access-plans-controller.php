@@ -68,7 +68,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 					'Access plan price.',
 					'lifterlms'
 				),
-				'type'        => 'float',
+				'type'        => 'number',
 				'required'    => true,
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
@@ -80,7 +80,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 					'Access expiration type.
 					`lifetime` provides access until cancelled or until a recurring payment fails.
 					`limited-period` provides access for a limited period as specified by `access_length`
-					and `access_period` `limited-date` provides access until the date specified by access_expires_date`',
+					and `access_period` `limited-date` provides access until the date specified by access_expires_date`.',
 					'lifterlms'
 				),
 				'type'        => 'string',
@@ -293,7 +293,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 					Only applies when `sale_enabled` is `true`.',
 					'lifterlms'
 				),
-				'type'        => 'float',
+				'type'        => 'number',
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'validate_callback' => 'llms_rest_validate_positive_float_w_zero',
@@ -352,7 +352,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 					Only applies when `trial_enabled` is `true`.',
 					'lifterlms'
 				),
-				'type'        => 'float',
+				'type'        => 'number',
 				'default'     => 0,
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
@@ -629,7 +629,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$context = $request->get_param( 'context' );
 
 		// Price.
-		$data['price'] = $access_plan->is_free() ? 0 : $access_plan->get_price( 'price', array(), 'float' );
+		$data['price'] = $access_plan->is_free() ? 0 : $access_plan->get_price( 'price', array(), 'number' );
 
 		// Access expiration.
 		$data['access_expiration'] = $access_plan->get( 'access_expiration' );
@@ -688,7 +688,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( $data['sale_enabled'] || 'edit' === $context ) {
 			$data['sale_start'] = $access_plan->get_date( 'sale_start' );
 			$data['sale_end']   = $access_plan->get_date( 'sale_end' );
-			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'float' );
+			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'number' );
 		}
 
 		// SKU.
@@ -700,7 +700,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( $data['trial_enabled'] || 'edit' === $context ) {
 			$data['trial_length'] = $access_plan->get( 'trial_length' );
 			$data['trial_period'] = $access_plan->get( 'trial_period' );
-			$data['trial_price']  = $access_plan->get_price( 'trial_price', array(), 'float' );
+			$data['trial_price']  = $access_plan->get_price( 'trial_price', array(), 'number' );
 		}
 
 		// Visibility.
