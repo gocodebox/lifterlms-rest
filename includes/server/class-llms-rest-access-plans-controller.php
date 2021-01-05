@@ -399,7 +399,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$query_params = parent::get_collection_params();
 
-		$query_params[''] = array(
+		$query_params['post_id'] = array(
 			'description'       => __( 'Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids.', 'lifterlms' ),
 			'type'              => 'array',
 			'items'             => array(
@@ -743,7 +743,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 					'meta_query' => array(
 						array(
 							'key'     => '_llms_product_id',
-							'value'   => explode( ',', $request['post_id'] ),
+							'value'   => $request['post_id'],
 							'compare' => 'IN',
 						),
 					),
