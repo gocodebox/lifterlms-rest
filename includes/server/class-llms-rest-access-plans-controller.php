@@ -52,6 +52,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'ping_status',
 			'post_type',
 			'slug',
+			'status',
 		);
 
 		foreach ( $properties_to_unset as $to_unset ) {
