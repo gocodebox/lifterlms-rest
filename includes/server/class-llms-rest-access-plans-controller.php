@@ -629,7 +629,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$context = $request->get_param( 'context' );
 
 		// Price.
-		$data['price'] = $access_plan->is_free() ? 0 : $access_plan->get_price( 'price', array(), 'number' );
+		$data['price'] = $access_plan->is_free() ? 0 : $access_plan->get_price( 'price', array(), 'float' );
 
 		// Access expiration.
 		$data['access_expiration'] = $access_plan->get( 'access_expiration' );
@@ -688,7 +688,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( $data['sale_enabled'] || 'edit' === $context ) {
 			$data['sale_start'] = $access_plan->get_date( 'sale_start' );
 			$data['sale_end']   = $access_plan->get_date( 'sale_end' );
-			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'number' );
+			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'float' );
 		}
 
 		// SKU.
@@ -700,7 +700,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( $data['trial_enabled'] || 'edit' === $context ) {
 			$data['trial_length'] = $access_plan->get( 'trial_length' );
 			$data['trial_period'] = $access_plan->get( 'trial_period' );
-			$data['trial_price']  = $access_plan->get_price( 'trial_price', array(), 'number' );
+			$data['trial_price']  = $access_plan->get_price( 'trial_price', array(), 'float' );
 		}
 
 		// Visibility.
