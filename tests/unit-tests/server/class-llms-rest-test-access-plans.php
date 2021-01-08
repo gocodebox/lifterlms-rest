@@ -149,6 +149,117 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test access plan alteration is allowed to who can edit parent post
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_altering_access_plan_allowed_to_who_can_edit_parent_post() {
+
+		$instructor = $this->factory->user->create(
+			array( 'role' => 'instructor' )
+		);
+		$assistant = $this->factory->user->create(
+			array( 'role' => 'instructors_assistant' )
+		);
+		$course     = $this->factory->course->create_and_get();
+
+		// Assign the instructors to the course.
+		$course->set_instructors(
+			array(
+				array(
+					'id' => $instructor
+				),
+				array(
+					'id' => $assistant
+				),
+			)
+		);
+
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		// Instructors of the Course with post_id can manipulate.
+		wp_set_current_user( $instructor );
+
+		// Creation is allowed.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$this->assertResponseStatusEquals( 201, $response );
+		$new_plan_id = $response->get_data()['id'];
+
+		// Update is allowed.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $new_plan_id,
+			array(
+				'title' => 'Title can change',
+			)
+		);
+
+		// Update is allowed.
+		$this->assertResponseStatusEquals( 200, $response );
+
+		// Deletion is allowed.
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $new_plan_id
+		);
+		$this->assertResponseStatusEquals( 204, $response );
+
+		// Check the same happens with intructors assistants
+
+		// Instructor's Assistant of the Course with post_id can manipulate.
+		wp_set_current_user( $assistant );
+
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		// Creation is allowed.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$this->assertResponseStatusEquals( 201, $response );
+		$new_plan_id = $response->get_data()['id'];
+
+		// Update is allowed.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $new_plan_id,
+			array(
+				'title' => 'Title can change',
+			)
+		);
+
+		// Update is allowed.
+		$this->assertResponseStatusEquals( 200, $response );
+
+		// Deletion is allowed.
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/' . $new_plan_id
+		);
+		$this->assertResponseStatusEquals( 204, $response );
+
+	}
+
+	/**
 	 * Test forbidden single access plan creation
 	 *
 	 * @since [version]
@@ -172,9 +283,9 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		);
 
 		// Forbidden.
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseStatusEquals( 403, $response );
 
-		// Check that a generic instructor can'te create an access plan.
+		// Check that a generic instructor can't create an access plan.
 		wp_set_current_user( $this->factory->user->create( array( 'role' => 'instructor' ) ) );
 
 		$response = $this->perform_mock_request(
@@ -210,11 +321,12 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		);
 
 		// Unauthorized.
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertResponseStatusEquals( 401, $response );
+
 	}
 
 	/**
-	 * Test links.
+	 * Test links
 	 *
 	 * @since [version]
 	 *
