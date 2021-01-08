@@ -214,6 +214,26 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	}
 
 	/**
+	 * Retrieves the current user.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function get_current_item( $request ) {
+
+		$uid = get_current_user_id();
+		if ( empty( $uid ) ) {
+			return llms_rest_authorization_required_error( __( 'You are not logged in.', 'lifterlms' ) );
+		}
+
+		$request['id'] = $uid;
+		return $this->get_item( $request );
+
+	}
+
+	/**
 	 * Retrieve arguments for deleting a resource
 	 *
 	 * @since 1.0.0-beta.1
@@ -609,6 +629,44 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		}
 
 		return $prepared;
+
+	}
+
+	/**
+	 * Register routes.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @return void
+	 */
+	public function register_routes() {
+
+		parent::register_routes();
+
+		// register_rest_route(
+		// 	$this->namespace,
+		// 	'/' . $this->rest_base . '/me',
+		// 	array(
+		// 		array(
+		// 			'methods'             => WP_REST_Server::READABLE,
+		// 			'callback'            => array( $this, 'get_current_item' ),
+		// 			'args'                => $this->get_get_item_params(),
+		// 		),
+		// 		// array(
+		// 		// 	'methods'             => WP_REST_Server::EDITABLE,
+		// 		// 	'callback'            => array( $this, 'update_current_item' ),
+		// 		// 	'permission_callback' => array( $this, 'update_current_item_permissions_check' ),
+		// 		// 	'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ), // see class-wp-rest-controller.php.
+		// 		// ),
+		// 		// array(
+		// 		// 	'methods'             => WP_REST_Server::DELETABLE,
+		// 		// 	'callback'            => array( $this, 'delete_current_item' ),
+		// 		// 	'permission_callback' => array( $this, 'delete_current_item_permissions_check' ),
+		// 		// 	'args'                => $this->get_delete_item_args(),
+		// 		// ),
+		// 		'schema' => array( $this, 'get_public_item_schema' ),
+		// 	)
+		// );
 
 	}
 

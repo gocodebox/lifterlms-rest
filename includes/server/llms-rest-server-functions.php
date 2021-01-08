@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -64,6 +64,46 @@ function llms_rest_bad_request_error( $message = '' ) {
 function llms_rest_not_found_error( $message = '' ) {
 	$message = ! $message ? __( 'The requested resource could not be found.', 'lifterlms' ) : $message;
 	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => 404 ) );
+}
+
+/**
+ * Wrapper for `llms_page_restricted()` which can be used during REST requests
+ *
+ * Since the `$post` and `$wp_query` globals aren't set during REST requests the
+ * `llms_page_restricted()` method doesn't work as expected since it relies on WP core
+ * template tags (like `is_singular()`) which do not work during REST requests.
+ *
+ * This is probably a hacky workaround that will be removed in the future. A better
+ * solution would be to refactor `llms_page_restricted()` to not rely on conditional
+ * tags.
+ *
+ * @since [version]
+ *
+ * @param int $post_id WP_Post ID.
+ * @param int $user_id WP_User ID.
+ * @return array Hash of restriction data from `llms_page_restricted()`.
+ */
+function llms_rest_page_restricted( $post_id, $user_id ) {
+
+	global $post, $wp_query;
+
+	// Store preexisting global values.
+	$temp_post        = $post;
+	$temp_is_singular = $wp_query->is_singular;
+
+	// Override them.
+	$post                  = get_post( $post_id );
+	$wp_query->is_singular = true;
+
+	// Call core page restricted.
+	$restricted = llms_page_restricted( $post_id, $user_id );
+
+	// Restore originals.
+	$post                  = $temp_post;
+	$wp_query->is_singular = $temp_is_singular;
+
+	return $restricted;
+
 }
 
 /**
