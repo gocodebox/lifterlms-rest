@@ -3291,6 +3291,18 @@ paths:
                   type: boolean
                   default: false
       responses:
+        '200':
+          description: Successfully moved the lesson to the trash.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/LessonResponse'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        default: trash
         '204':
           description: Successfully deleted the lesson.
         '400':
@@ -3654,6 +3666,18 @@ paths:
                   type: boolean
                   default: false
       responses:
+        '200':
+          description: Successfully moved the membership to the trash.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/MembershipResponse'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        default: trash
         '204':
           description: Successfully deleted the membership.
         '400':
