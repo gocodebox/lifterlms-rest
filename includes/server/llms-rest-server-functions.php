@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.12
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.12 Added a second paramater to avoid checking if the user is logged in.
+ * @since [version] Use WP_Http constants for the error status.
  *
  * @param string  $message             Optional. The custom error message. Default empty string.
  *                                     When no custom message is provided a predefined message will be used.
@@ -26,12 +27,12 @@ function llms_rest_authorization_required_error( $message = '', $check_authentic
 		// 403.
 		$error_code = 'llms_rest_forbidden_request';
 		$_message   = __( 'You are not authorized to perform this request.', 'lifterlms' );
-		$status     = '403';
+		$status     = WP_Http::FORBIDDEN;
 	} else {
 		// 401.
 		$error_code = 'llms_rest_unauthorized_request';
 		$_message   = __( 'The API credentials were invalid.', 'lifterlms' );
-		$status     = '401';
+		$status     = WP_Http::UNAUTHORIZED;
 	}
 
 	$message = ! $message ? $_message : $message;
@@ -42,6 +43,7 @@ function llms_rest_authorization_required_error( $message = '', $check_authentic
  * Return a WP_Error with proper code, message and status for invalid or malformed request syntax.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Use WP_Http constant for the error status.
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -49,13 +51,14 @@ function llms_rest_authorization_required_error( $message = '', $check_authentic
  */
 function llms_rest_bad_request_error( $message = '' ) {
 	$message = ! $message ? __( 'Invalid or malformed request syntax.', 'lifterlms' ) : $message;
-	return new WP_Error( 'llms_rest_bad_request', $message, array( 'status' => 400 ) );
+	return new WP_Error( 'llms_rest_bad_request', $message, array( 'status' => WP_Http::BAD_REQUEST ) ); // 400.
 }
 
 /**
  * Return a WP_Error with proper code, message and status for not found resources.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Use WP_Http constant for the error status.
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -63,20 +66,105 @@ function llms_rest_bad_request_error( $message = '' ) {
  */
 function llms_rest_not_found_error( $message = '' ) {
 	$message = ! $message ? __( 'The requested resource could not be found.', 'lifterlms' ) : $message;
-	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => 404 ) );
+	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => WP_Http::NOT_FOUND ) ); // 404
 }
 
 /**
  * Return a WP_Error for a 500 Internal Server Error.
  *
  * @since 1.0.0-beta.1
+ * @since [version] Use WP_Http constant for the error status.
  *
  * @param string $message Optional. Custom error message. When none provided a predefined message is used.
  * @return WP_Error
  */
 function llms_rest_server_error( $message = '' ) {
 	$message = ! $message ? __( 'Internal Server Error.', 'lifterlms' ) : $message;
-	return new WP_Error( 'llms_rest_server_error', $message, array( 'status' => 500 ) );
+	return new WP_Error( 'llms_rest_server_error', $message, array( 'status' => WP_Http::INTERNAL_SERVER_ERROR ) ); // 500.
+}
+
+/**
+ * Checks whether or not the passed object is an error of missing required authorization
+ *
+ * @since [version]
+ *
+ * @param WP_Error $wp_error The WP_Error object to check.
+ * @return boolean
+ */
+function llms_rest_is_authorization_required_error( $wp_error ) {
+	return ! empty( array_intersect( llms_rest_get_all_error_statuses( $wp_error ), array( WP_Http::FORBIDDEN, WP_Http::UNAUTHORIZED ) ) );
+}
+
+/**
+ * Checks whether or not the passed object is a bad request error
+ *
+ * @since [version]
+ *
+ * @param WP_Error $wp_error The WP_Error object to check.
+ * @return boolean
+ */
+function llms_rest_is_bad_request_error( $wp_error ) {
+	return in_array( WP_Http::BAD_REQUEST, llms_rest_get_all_error_statuses( $wp_error ), true );
+}
+
+/**
+ * Checks whether or not the passed object is a not found error
+ *
+ * @since [version]
+ *
+ * @param WP_Error $wp_error The WP_Error object to check.
+ * @return boolean
+ */
+function llms_rest_is_not_found_error( $wp_error ) {
+	return in_array( WP_Http::NOT_FOUND, llms_rest_get_all_error_statuses( $wp_error ), true );
+}
+
+/**
+ * Checks whether or not the passed object is an internal server error
+ *
+ * @since [version]
+ *
+ * @param WP_Error $wp_error The WP_Error object to check.
+ * @return boolean
+ */
+function llms_rest_is_server_error( $wp_error ) {
+	return in_array( WP_Http::INTERNAL_SERVER_ERROR, llms_rest_get_all_error_statuses( $wp_error ), true );
+}
+
+/**
+ * Returns all the error statuses of a WP_Error
+ *
+ * @since [version]
+ *
+ * @param WP_Error $wp_error The WP_Error object.
+ * @return array
+ */
+function llms_rest_get_all_error_statuses( $wp_error ) {
+	$statuses = array();
+
+	if ( is_wp_error( $wp_error ) && ! empty( $wp_error->has_errors() ) ) {
+		/**
+		 * The method `get_all_error_data()` has been introduced in wp 5.6.0.
+		 * TODO: remove bw compatibility when min wp version will be raised above 5.6.0.
+		 */
+		global $wp_version;
+		$func = ( version_compare( $wp_version, 5.6, '>=' ) ) ? 'get_all_error_data' : 'get_error_data';
+
+		foreach ( $wp_error->get_error_codes() as $code ) {
+			$status = $wp_error->{$func}( $code );
+			$status = 'get_error_data' === $func ? array( $status ) : $status;
+			/**
+			 * Use native `array_column()` in place of `wp_list_pluck()` as:
+			 * 1) `$status` is fors ure an array (and not possibly an object);
+			 * 2) `wp_list_pluck()` raises an error if the key ('status' in this case) is not found.
+			 */
+			$statuses = array_merge( $statuses, array_column( $status, 'status' ) );
+		}
+		$statuses = array_filter( array_unique( $statuses ) );
+	}
+
+	return $statuses;
+
 }
 
 /**

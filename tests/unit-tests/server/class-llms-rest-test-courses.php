@@ -472,7 +472,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test getting single course that doesn't exist.
+	 * Test getting single course that doesn't exist
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
@@ -491,7 +491,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->route . '/' . $course_id . '4'
 		);
 
-		// the course doesn't exists.
+		// The Course doesn't exist.
 		$this->assertResponseStatusEquals( 404, $response );
 
 	}

@@ -206,7 +206,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test create membership with raw properties.
+	 * Test create membership with raw properties
+	 *
 	 * Check textual properties are still set when supplying them as 'raw'.
 	 *
 	 * @since 1.0.0-beta.9

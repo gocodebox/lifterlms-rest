@@ -27,7 +27,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $route = '/llms/v1/access-plans';
 
 	/**
-	 * Arguments to membership API calls.
+	 * Arguments to access plan API calls.
 	 *
 	 * @var array
 	 */
@@ -149,6 +149,135 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test getting single access plan that doesn't exist.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_nonexistent_access_plan() {
+
+		wp_set_current_user( 0 );
+
+		// Setup access plan
+		$access_plan_id = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $access_plan_id . '2'
+		);
+
+		// The access plan doesn't exist.
+		$this->assertResponseStatusEquals( 404, $response );
+
+	}
+
+	/**
+	 * Test creating a single access plan
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_access_plan() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 201, $response );
+
+	}
+
+	/**
+	 * Test producing bad request error when creating a single access-plans
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_access_plan_bad_request() {
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		// Creating an access plan passing an id produces a bad request.
+		$sample_args['id'] = '123';
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Bad request.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'Cannot create existing Access Plan.', $response );
+
+		unset( $sample_args['id'] );
+
+		// Create an access plan without title.
+		unset( $sample_args['title'] );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Bad request.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'Missing parameter(s): title', $response );
+
+		$sample_args['title'] = $this->sample_access_plan_args['title'];
+
+		// Create an access plan without price.
+		unset( $sample_args['price'] );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Bad request.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'Missing parameter(s): price', $response );
+
+
+		// Create an access plan without post_id.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$this->sample_access_plan_args
+		);
+
+		// Bad request.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'Missing parameter(s): post_id', $response );
+
+	}
+
+	/**
 	 * Test access plan alteration is allowed to who can edit parent post
 	 *
 	 * @since [version]
@@ -160,7 +289,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		$instructor = $this->factory->user->create(
 			array( 'role' => 'instructor' )
 		);
-		$assistant = $this->factory->user->create(
+		$assistant  = $this->factory->user->create(
 			array( 'role' => 'instructors_assistant' )
 		);
 		$course     = $this->factory->course->create_and_get();

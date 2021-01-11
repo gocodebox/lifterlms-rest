@@ -457,8 +457,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$can_create = parent::create_item_permissions_check( $request );
 
-		// Check if the current user can edit the "parent" course/membership.
-		if ( is_wp_error( $can_create ) ) {
+		// If current user cannot create the item because of authorization, check if the current user can edit the "parent" course/membership.
+		if ( llms_rest_is_authorization_required_error( $can_create ) ) {
+
 			$post_type_object = get_post_type_object( get_post_type( $request['post_id'] ) );
 
 			if ( ! current_user_can( $post_type_object->cap->edit_post, $request['post_id'] ) ) {
@@ -489,8 +490,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$can_update = parent::update_item_permissions_check( $request );
 
-		// Check if the current user can edit the "parent" course/membership.
-		if ( is_wp_error( $can_update ) ) {
+		// If current user cannot edit the item because of authorization, check if the current user can edit the "parent" course/membership.
+		if ( llms_rest_is_authorization_required_error( $can_update ) ) {
+
 			$access_plan = $this->get_object( (int) $request['id'] );
 
 			if ( is_wp_error( $access_plan ) ) {
@@ -528,8 +530,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$can_delete = parent::delete_item_permissions_check( $request );
 
-		// Check if the current user can edit the "parent" course/membership.
-		if ( is_wp_error( $can_delete ) ) {
+		// If current user cannot delete the item because of authorization, check if the current user can edit the "parent" course/membership.
+		if ( llms_rest_is_authorization_required_error( $can_delete ) ) {
+
 			$access_plan = $this->get_object( (int) $request['id'] );
 
 			if ( is_wp_error( $access_plan ) ) {
@@ -765,7 +768,11 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	protected function prepare_item_for_database( $request ) {
 
 		$prepared_item = parent::prepare_item_for_database( $request );
-		$schema        = $this->get_item_schema();
+		if ( is_wp_error( $prepared_item ) ) {
+			return $prepared_item;
+		}
+
+		$schema = $this->get_item_schema();
 
 		// Access expiration.
 		if ( ! empty( $schema['properties']['access_expiration'] ) && isset( $request['access_expiration'] ) ) {
