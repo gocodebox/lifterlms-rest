@@ -27,12 +27,12 @@ function llms_rest_authorization_required_error( $message = '', $check_authentic
 		// 403.
 		$error_code = 'llms_rest_forbidden_request';
 		$_message   = __( 'You are not authorized to perform this request.', 'lifterlms' );
-		$status     = WP_Http::FORBIDDEN;
+		$status     = WP_Http::FORBIDDEN; // 403.
 	} else {
 		// 401.
 		$error_code = 'llms_rest_unauthorized_request';
 		$_message   = __( 'The API credentials were invalid.', 'lifterlms' );
-		$status     = WP_Http::UNAUTHORIZED;
+		$status     = WP_Http::UNAUTHORIZED; // 401.
 	}
 
 	$message = ! $message ? $_message : $message;
@@ -66,7 +66,7 @@ function llms_rest_bad_request_error( $message = '' ) {
  */
 function llms_rest_not_found_error( $message = '' ) {
 	$message = ! $message ? __( 'The requested resource could not be found.', 'lifterlms' ) : $message;
-	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => WP_Http::NOT_FOUND ) ); // 404
+	return new WP_Error( 'llms_rest_not_found', $message, array( 'status' => WP_Http::NOT_FOUND ) ); // 404.
 }
 
 /**
@@ -137,7 +137,7 @@ function llms_rest_is_server_error( $wp_error ) {
  * @since [version]
  *
  * @param WP_Error $wp_error The WP_Error object.
- * @return array
+ * @return int[]
  */
 function llms_rest_get_all_error_statuses( $wp_error ) {
 	$statuses = array();
