@@ -12,6 +12,8 @@
  * @since 1.0.0-beta.10 Added test on the trigger property/param.
  * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
  * @since 1.0.0-beta.16 Compare dates using timestamps instead of date strings using a 60 second delta.
+ * @since [version] Added test on enrollment trigger retrieval.
+ * @version [version]
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -84,7 +86,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create user.
+		// Create user.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		// Create new courses.
@@ -108,7 +110,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$i = 0;
 		foreach ( $res_data as $enrollment ) {
 			$this->assertEquals( $course_ids[$i], $res_data[$i]['post_id'] );
-			// make sure post_id and student_id are integers.
+			// Make sure post_id and student_id are integers.
 			$this->assertInternalType( "int", $res_data[$i]['post_id'] );
 			$this->assertInternalType( "int", $res_data[$i]['student_id'] );
 			$i++;
@@ -126,7 +128,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create enrollments.
+		// Create enrollments.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		// Create new courses.
@@ -152,7 +154,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create enrollments.
+		// Create enrollments.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		// Create new courses.
@@ -192,7 +194,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 */
 	public function test_get_current_user_enrollments_permissions() {
 
-		// create an user.
+		// Create an user.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		// Setup course.
 		$course_id = $this->factory->course->create();
@@ -201,7 +203,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $user_id );
 
-		// check we can list our own enrollments.
+		// Check we can list our own enrollments.
 		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) );
 
 		// Check we have permissions to make this request.
@@ -269,7 +271,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create enrollment.
+		// Create enrollment.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
 		// Create new courses.
@@ -307,7 +309,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create enrollment.
+		// Create enrollment.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		// Create new courses.
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
@@ -334,7 +336,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_forbidden );
 
-		// create enrollment.
+		// Create enrollment.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		// Create new courses.
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
@@ -402,7 +404,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		$this->assertResponseStatusEquals( 400, $response );
 
-		// invalid date.
+		// Invalid date.
 		llms_enroll_student( $user_id, $course_id );
 		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'date_created' => 'some_invalid_date' ) );
 		$this->assertResponseStatusEquals( 400, $response );
@@ -440,18 +442,18 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$student = new LLMS_Student( $user_id );
 		$this->assertEquals( $res_data['status'], $student->get_enrollment_status( $course_id, false ) );
 
-		// enroll and check the trigger is admin_{$this->user_allowed}.
-		// clean:
+		// Enroll and check the trigger is admin_{$this->user_allowed}.
+		// Clean:
 		$student->delete_enrollment( $course_id );
-		// insert an enrollment with a "different" trigger.
+		// Insert an enrollment with a "different" trigger.
 		$student->enroll( $course_id, 'whatever_trigger' );
-		// unenroll.
+		// Unenroll.
 		$student->unenroll( $course_id );
 		$this->assertEquals( 'expired', $student->get_enrollment_status( $course_id ) );
 		$this->assertEquals( 'whatever_trigger', $student->get_enrollment_trigger( $course_id, false ) );
 
-		// enroll via api.
-		sleep(1); //<- to be sure the new status is subsequent the one previously set.
+		// Wnroll via api.
+		sleep(1); //<- To be sure the new status is subsequent the one previously set.
 		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'status' => 'enrolled' ) );
 
 		// Success.
@@ -464,7 +466,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Check update passing a trigger.
 		$status   = 'expired';
 		$trigger  = ( new LLMS_Student( $user_id ) )->get_enrollment_trigger( $course_id );
-		sleep(1); //<- to be sure the new status is subsequent the one previously set.
+		sleep(1); //<- To be sure the new status is subsequent the one previously set.
 
 		$response = $this->perform_mock_request(
 			'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id,
@@ -554,8 +556,8 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$user_id   = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
-		/* create */
-		// user not enrolled.
+		/* Create */
+		// User not enrolled.
 		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) );
 		$this->assertResponseStatusEquals( 404, $response );
 
@@ -594,6 +596,45 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test retrieving enrollment trigger.
+	 *
+	 * @since [version]
+	 */
+	public function test_enrollment_trigger() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Create an enrollment, we need a student and a course/membership.
+		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		$student = new LLMS_Student( $user_id );
+		// Create new course.
+		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
+
+		// Enroll Student in newly created course/membership.
+		llms_enroll_student( $user_id, $course_id, 'test_enroll' );
+
+		// Unenroll the student.
+		sleep(1); //<- To be sure the new status is subsequent the one previously set.
+		llms_unenroll_student( $user_id, $course_id, 'expired', 'test_enroll' );
+		$this->assertEquals( 'expired', $student->get_enrollment_status( $course_id, false ) );
+
+		// Enroll the student again.
+		sleep(1); //<- To be sure the new status is subsequent the one previously set.
+		llms_enroll_student( $user_id, $course_id, 'test_enroll_again' );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->parse_route( $user_id )  . '/' . $course_id
+		);
+
+		$this->assertEquals(
+			$student->get_enrollment_trigger( $course_id, false ),
+			$response->get_data()['trigger']
+		);
+
+	}
+
+	/**
 	 * Test deleting a single enrollment.
 	 *
 	 * @since 1.0.0-beta.1
@@ -603,7 +644,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// create an enrollment, we need a student and a course/membership.
+		// Create an enrollment, we need a student and a course/membership.
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		// Create new course.
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
@@ -661,37 +702,37 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$error_code = 'llms_rest_not_found';
 
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( 789, 879 ) );
-		// enrollment doesn't exist because both student and course/membership do not exist.
+		// Enrollment doesn't exist because both student and course/membership do not exist.
 		$this->assertWPError( $result );
 
 		$student_id = $this->factory->user->create( array( 'role' => 'student' ) );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, 879 ) );
-		// enrollment doesn't exist because course/membership do not exist.
+		// Enrollment doesn't exist because course/membership do not exist.
 		$this->assertWPError( $result );
 
 		// Create new course.
 		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
-		// enrollment doesn't exist because the $student has not been enrolled yet.
+		// Enrollment doesn't exist because the $student has not been enrolled yet.
 		$this->assertWPError( $result );
 		$this->assertWPErrorCodeEquals( $error_code, $result );
 
 		// Enroll Student.
 		llms_enroll_student( $student_id, $course_id, 'test_exists' );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
-		// enrollment exists because the $student has been enrolled yet.
+		// Enrollment exists because the $student has been enrolled yet.
 		$this->assertTrue( $result );
 
-		// Unenroll Student.
+		// Enenroll Student.
 		llms_unenroll_student( $student_id, $course_id );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
-		// enrollment still exists because the $student has been unenrolled but not deleted.
+		// Enrollment still exists because the $student has been unenrolled but not deleted.
 		$this->assertTrue( $result );
 
 		// Delete student's enrollment
 		llms_delete_student_enrollment( $student_id, $course_id );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
-		// enrollment still exists because the $student has been unenrolled but not deleted.
+		// Enrollment still exists because the $student has been unenrolled but not deleted.
 		$this->assertWPError( $result );
 		$this->assertWPErrorCodeEquals( $error_code, $result );
 	}
