@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 	/**
-	 * Post type.
+	 * Post type
 	 *
 	 * @var string
 	 */
 	protected $post_type = 'llms_access_plan';
 
 	/**
-	 * Route base.
+	 * Route base
 	 *
 	 * @var string
 	 */
@@ -192,7 +192,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 				'enum'        => array_keys( llms_get_access_plan_period_options() ),
 				'context'     => array( 'view', 'edit' ),
 			),
-			'post_id'                    => array(
+			'post_id'                   => array(
 				'description' => __(
 					'Determines the course or membership which can be accessed through the plan.',
 					'lifterlms'
@@ -774,54 +774,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$schema = $this->get_item_schema();
 
-		// Access expiration.
-		if ( ! empty( $schema['properties']['access_expiration'] ) && isset( $request['access_expiration'] ) ) {
-			$prepared_item['access_expiration'] = $request['access_expiration'];
-		}
-
-		// Access expires.
-		// Doesn't make sense if supplied access_expiration is set to something different than 'limited-date'.
-		if ( ! isset( $prepared_item['access_expiration'] ) || 'limited-date' === $prepared_item['access_expiration'] ) {
-			if ( ! empty( $schema['properties']['access_expires'] ) && isset( $request['access_expires'] ) ) {
-				$access_expires                  = rest_parse_date( $request['access_expires'] );
-				$prepared_item['access_expires'] = empty( $access_expires ) ? '' : date_i18n( 'Y-m-d H:i:s', $access_expires );
-			}
-		}
-
-		// Do not make sense if supplied access_expiration is set to something different than 'limited-period'.
-		if ( ! isset( $prepared_item['access_expiration'] ) || 'limited-period' === $prepared_item['access_expiration'] ) {
-
-			// Access length.
-			if ( ! empty( $schema['properties']['access_length'] ) && isset( $request['access_length'] ) ) {
-				$prepared_item['access_length'] = $request['access_length'];
-			}
-
-			// Access period.
-			if ( ! empty( $schema['properties']['access_period'] ) && isset( $request['access_period'] ) ) {
-				$prepared_item['access_period'] = $request['access_period'];
-			}
-		}
-
 		// Enroll text.
 		if ( ! empty( $schema['properties']['enroll_text'] ) && isset( $request['enroll_text'] ) ) {
 			$prepared_item['enroll_text'] = $request['enroll_text'];
-		}
-
-		// Frequency.
-		if ( ! empty( $schema['properties']['frequency'] ) && isset( $request['frequency'] ) ) {
-			$prepared_item['frequency'] = $request['frequency'];
-		}
-
-		// Length and Period do not make sense if supplied frequency is set to 0 (non recurring).
-		if ( ! isset( $prepared_item['frequency'] ) || $prepared_item['frequency'] > 0 ) {
-			// Length.
-			if ( ! empty( $schema['properties']['length'] ) && isset( $request['length'] ) ) {
-				$prepared_item['length'] = $request['length'];
-			}
-			// Period.
-			if ( ! empty( $schema['properties']['period'] ) && isset( $request['period'] ) ) {
-				$prepared_item['period'] = $request['period'];
-			}
 		}
 
 		// Post id.
@@ -829,73 +784,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$prepared_item['product_id'] = $request['post_id'];
 		}
 
-		// Redirect.
-		if ( ! empty( $schema['properties']['redirect_type'] ) && isset( $request['redirect_type'] ) ) {
-			$prepared_item['checkout_redirect_type'] = $request['redirect_type'];
-		}
-
-		// Do not make sense if supplied redirect_type is set to something different than 'page'.
-		if ( ! isset( $prepared_item['checkout_redirect_type'] ) || 'page' === $prepared_item['checkout_redirect_type'] ) {
-			if ( ! empty( $schema['properties']['redirect_page'] ) && isset( $request['redirect_page'] ) ) {
-				$redirect_page = get_post( $request['redirect_page'] );
-				if ( $redirect_page && is_a( $redirect_page, 'WP_Post' ) ) {
-					$prepared_item['checkout_redirect_page'] = $request['redirect_page']; // maybe allow only published pages?
-				}
-			}
-		}
-
-		// Do not make sense if supplied redirect_type is set to something different than 'url'.
-		if ( ! isset( $prepared_item['checkout_redirect_type'] ) || 'url' === $prepared_item['checkout_redirect_type'] ) {
-			if ( ! empty( $schema['properties']['redirect_url'] ) && isset( $request['redirect_url'] ) ) {
-				$prepared_item['checkout_redirect_url'] = $request['redirect_url'];
-			}
-		}
-
-		// Sale enabled.
-		if ( ! empty( $schema['properties']['sale_enabled'] ) && isset( $request['sale_enabled'] ) ) {
-			$prepared_item['on_sale'] = $request['sale_enabled'] ? 'yes' : 'no';
-		}
-
-		if ( ! isset( $prepared_item['on_sale'] ) || 'yes' === $prepared_item['on_sale'] ) {
-			// Sale dates.
-			if ( ! empty( $schema['properties']['sale_date_start'] ) && isset( $request['sale_date_start'] ) ) {
-				$sale_date_start             = rest_parse_date( $request['sale_date_start'] );
-				$prepared_item['sale_start'] = empty( $sale_date_start ) ? '' : date_i18n( 'Y-m-d H:i:s', $sale_date_start );
-			}
-
-			if ( ! empty( $schema['properties']['sale_date_end'] ) && isset( $request['sale_date_end'] ) ) {
-				$sale_date_end             = rest_parse_date( $request['sale_date_end'] );
-				$prepared_item['sale_end'] = empty( $sale_date_end ) ? '' : date_i18n( 'Y-m-d H:i:s', $sale_date_end );
-			}
-			// Sale price.
-			if ( ! empty( $schema['properties']['sale_price'] ) && isset( $request['sale_price'] ) ) {
-				$prepared_item['sale_price'] = $request['sale_price'];
-			}
-		}
-
 		// SKU.
 		if ( ! empty( $schema['properties']['sku'] ) && isset( $request['sku'] ) ) {
 			$prepared_item['sku'] = $request['sku'];
-		}
-
-		// Trial enabled.
-		if ( ! empty( $schema['properties']['trial_enabled'] ) && isset( $request['trial_enabled'] ) ) {
-			$prepared_item['trial_offer'] = $request['trial_enable'] ? 'yes' : 'no';
-		}
-
-		if ( ! isset( $prepared_item['trial_offer'] ) || 'yes' === $prepared_item['trial_offer'] ) {
-			// Trial Length.
-			if ( ! empty( $schema['properties']['trial_length'] ) && isset( $request['trial_length'] ) ) {
-				$prepared_item['trial_length'] = $request['trial_length'];
-			}
-			// Trial Period.
-			if ( ! empty( $schema['properties']['trial_period'] ) && isset( $request['trial_period'] ) ) {
-				$prepared_item['trial_period'] = $request['trial_period'];
-			}
-			// Trial price.
-			if ( ! empty( $schema['properties']['trial_price'] ) && isset( $request['trial_price'] ) ) {
-				$prepared_item['trial_price'] = $request['trial_price'];
-			}
 		}
 
 		/**
@@ -930,17 +821,89 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		$error = new WP_Error();
 
+		// Will contain the properties to set.
 		$to_set = array();
+
+		// Access expiration.
+		if ( ! empty( $schema['properties']['access_expiration'] ) && isset( $request['access_expiration'] ) ) {
+			$to_set['access_expiration'] = $request['access_expiration'];
+		}
+
+		// Access expires.
+		if ( ! empty( $schema['properties']['access_expires'] ) && isset( $request['access_expires'] ) ) {
+			$access_expires           = rest_parse_date( $request['access_expires'] );
+			$to_set['access_expires'] = empty( $access_expires ) ? '' : date_i18n( 'Y-m-d H:i:s', $access_expires );
+		}
+
+		// Access length.
+		if ( ! empty( $schema['properties']['access_length'] ) && isset( $request['access_length'] ) ) {
+			$to_set['access_length'] = $request['access_length'];
+		}
+
+		// Access period.
+		if ( ! empty( $schema['properties']['access_period'] ) && isset( $request['access_period'] ) ) {
+			$to_set['access_period'] = $request['access_period'];
+		}
+
+		// Redirect.
+		if ( ! empty( $schema['properties']['redirect_type'] ) && isset( $request['redirect_type'] ) ) {
+			$to_set['checkout_redirect_type'] = $request['redirect_type'];
+		}
+
+		// Redirect page.
+		if ( ! empty( $schema['properties']['redirect_page'] ) && isset( $request['redirect_page'] ) ) {
+			$redirect_page = get_post( $request['redirect_page'] );
+			if ( $redirect_page && is_a( $redirect_page, 'WP_Post' ) ) {
+				$to_set['checkout_redirect_page'] = $request['redirect_page']; // maybe allow only published pages?
+			}
+		}
+
+		// Redirect url.
+		if ( ! empty( $schema['properties']['redirect_url'] ) && isset( $request['redirect_url'] ) ) {
+			$to_set['checkout_redirect_url'] = $request['redirect_url'];
+		}
 
 		// Price.
 		if ( ! empty( $schema['properties']['price'] ) && isset( $request['price'] ) ) {
 			$to_set['price'] = $request['price'];
 		}
-		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-		if ( empty( $to_set['price'] ) ) {
-			$to_set['is_free'] = 'yes';
-		} else {
-			$to_set['is_free'] = 'no';
+
+		// Sale enabled.
+		if ( ! empty( $schema['properties']['sale_enabled'] ) && isset( $request['sale_enabled'] ) ) {
+			$to_set['on_sale'] = $request['sale_enabled'] ? 'yes' : 'no';
+		}
+
+		// Sale dates.
+		if ( ! empty( $schema['properties']['sale_date_start'] ) && isset( $request['sale_date_start'] ) ) {
+			$sale_date_start      = rest_parse_date( $request['sale_date_start'] );
+			$to_set['sale_start'] = empty( $sale_date_start ) ? '' : date_i18n( 'Y-m-d H:i:s', $sale_date_start );
+		}
+
+		if ( ! empty( $schema['properties']['sale_date_end'] ) && isset( $request['sale_date_end'] ) ) {
+			$sale_date_end      = rest_parse_date( $request['sale_date_end'] );
+			$to_set['sale_end'] = empty( $sale_date_end ) ? '' : date_i18n( 'Y-m-d H:i:s', $sale_date_end );
+		}
+		// Sale price.
+		if ( ! empty( $schema['properties']['sale_price'] ) && isset( $request['sale_price'] ) ) {
+			$to_set['sale_price'] = $request['sale_price'];
+		}
+
+		// Trial enabled.
+		if ( ! empty( $schema['properties']['trial_enabled'] ) && isset( $request['trial_enabled'] ) ) {
+			$to_set['trial_offer'] = $request['trial_enable'] ? 'yes' : 'no';
+		}
+
+		// Trial Length.
+		if ( ! empty( $schema['properties']['trial_length'] ) && isset( $request['trial_length'] ) ) {
+			$to_set['trial_length'] = $request['trial_length'];
+		}
+		// Trial Period.
+		if ( ! empty( $schema['properties']['trial_period'] ) && isset( $request['trial_period'] ) ) {
+			$to_set['trial_period'] = $request['trial_period'];
+		}
+		// Trial price.
+		if ( ! empty( $schema['properties']['trial_price'] ) && isset( $request['trial_price'] ) ) {
+			$to_set['trial_price'] = $request['trial_price'];
 		}
 
 		// Availability restrictions.
@@ -948,44 +911,33 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$to_set['availability_restrictions'] = $request['availability_restrictions'];
 		}
 
-		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-		if ( ! empty( $to_set['availability_restrictions'] ) ) {
-			$to_set['availability'] = 'yes';
-		} else {
-			$to_set['availability'] = 'no';
-		}
-
 		// Redirect forced.
-		// Doesn't make sense if supplied availability_restrictions is not empty.
-		if ( ! isset( $to_set['availability_restrictions'] ) || ! empty( $to_set['availability_restrictions'] ) ) {
-			if ( ! empty( $schema['properties']['redirect_forced'] ) && isset( $request['redirect_forced'] ) ) {
-				$to_set['checkout_redirect_forced'] = $request['redirect_forced'];
-			}
+		if ( ! empty( $schema['properties']['redirect_forced'] ) && isset( $request['redirect_forced'] ) ) {
+			$to_set['checkout_redirect_forced'] = $request['redirect_forced'];
 		}
 
-		if ( ! $creating ) { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-			$_props = array(
-				'availability',
-				'is_free',
-			);
-
-			foreach ( $_props as $_prop ) {
-				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $access_plan->get( $_prop ) ) {
-					unset( $to_set[ $_prop ] );
-				}
-			}
+		// Frequency.
+		if ( ! empty( $schema['properties']['frequency'] ) && isset( $request['frequency'] ) ) {
+			$to_set['frequency'] = $request['frequency'];
 		}
+
+		// Length.
+		if ( ! empty( $schema['properties']['length'] ) && isset( $request['length'] ) ) {
+			$to_set['length'] = $request['length'];
+		}
+		// Period.
+		if ( ! empty( $schema['properties']['period'] ) && isset( $request['period'] ) ) {
+			$to_set['period'] = $request['period'];
+		}
+
+		$this->handle_props_interdependency( $to_set, $access_plan, $creating );
 
 		// Visibility.
 		if ( ! empty( $schema['properties']['visibiliy'] ) && isset( $request['visibility'] ) ) {
 			$visibility = $access_plan->set_visibility( $request['visibility'] );
 			if ( is_wp_error( $visibility ) ) {
-				$error = $visibility;
+				return $visibility;
 			}
-		}
-
-		if ( $error->errors ) {
-			return $error;
 		}
 
 		// Set bulk.
@@ -1001,6 +953,126 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return ! empty( $to_set ) || ! empty( $visibility );
+	}
+
+	/**
+	 * Handle properties interdependency
+	 *
+	 * @since [version]
+	 *
+	 * @param array            $to_set      Array of properties to be set.
+	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
+	 * @param bool             $creating    Whether we're in creation or update phase.
+	 * @return void
+	 */
+	private function handle_props_interdependency( &$to_set, $access_plan, $creating ) {
+
+		// Access Plan properties as saved in the db.
+		$saved_props = $access_plan->toArray();
+
+		$this->add_subordinate_props( $to_set, $saved_props, $creating );
+
+		$this->unset_subordinate_props( $to_set, $saved_props );
+
+	}
+
+	/**
+	 * Add all the properties which need to be set as consequence of another setting
+	 *
+	 * These properties must be compared to the saved value before updating, because if equal they will produce an error(see update_post_meta()).
+	 *
+	 * @since [version]
+	 *
+	 * @param array $to_set      Array of properties to be set.
+	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
+	 * @param bool  $creating    Whether we're in creation or update phase.
+	 * @return void
+	 */
+	private function add_subordinate_props( &$to_set, $saved_props, $creating ) {
+
+		$subordinate_props = array();
+
+		// Merge new properties to set and saved props.
+		$props = wp_parse_args( $to_set, $saved_props );
+
+		// Paid plan.
+		if ( $props['price'] > 0 ) {
+
+			$subordinate_props['is_free'] = 'no';
+
+			// One-time (no trial).
+			if ( 0 === $props['frequency'] ) {
+				$subordinate_props['trial_offer'] = 'no';
+			}
+		} else {
+
+			$subordinate_props['is_free']     = 'yes';
+			$subordinate_props['price']       = 0;
+			$subordinate_props['frequency']   = 0;
+			$subordinate_props['on_sale']     = 'no';
+			$subordinate_props['trial_offer'] = 'no';
+
+		}
+
+		if ( ! $creating ) { // Remove already set properties.
+
+			foreach ( $subordinate_props as $_prop => $value ) {
+				if ( isset( $saved_props[ $_prop ] ) && $saved_props[ $_prop ] === $value ) {
+					unset( $subordinate_props[ $_prop ] );
+				}
+			}
+		}
+
+		$to_set = array_merge( $to_set, $subordinate_props );
+
+	}
+
+	/**
+	 * Remove all the properties that do not need to be set, based on other properties
+	 *
+	 * @since [version]
+	 *
+	 * @param array $to_set      Array of properties to be set.
+	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
+	 * @return void
+	 */
+	private function unset_subordinate_props( &$to_set, $saved_props ) {
+
+		// Merge new properties to set and saved props.
+		$props = wp_parse_args( $to_set, $saved_props );
+
+		// No need to create/update recurring props when it's a 1-time payment.
+		if ( 0 === $props['frequency'] ) {
+			unset( $to_set['length'], $to_set['period'] );
+		}
+
+		// No need to create/update trial props when no trial enabled.
+		if ( ! llms_parse_bool( $props['trial_offer'] ) ) {
+			unset( $to_set['trial_price'], $to_set['trial_length'], $to_set['trial_period'] );
+		}
+
+		// No need to create/update sale props when not on sale.
+		if ( ! llms_parse_bool( $props['on_sale'] ) ) {
+			unset( $to_set['sale_price'], $to_set['sale_end'], $to_set['sale_start'] );
+		}
+
+		// Unset redirect props based on redirect settings.
+		if ( 'url' === $props['checkout_redirect_type'] ) {
+			unset( $to_set['checkout_redirect_page'] );
+		} elseif ( 'page' === $props['checkout_redirect_type'] ) {
+			unset( $to_set['checkout_redirect_url'] );
+		} else {
+			unset( $to_set['checkout_redirect_url'], $to_set['checkout_redirect_page'] );
+		}
+
+		// Unset expiration props based on expiration settings.
+		if ( 'lifetime' === $props['access_expiration'] ) {
+			unset( $to_set['access_expires'], $to_set['access_length'], $to_set['access_period'] );
+		} elseif ( 'limited-date' === $props['access_expiration'] ) {
+			unset( $to_set['access_length'], $to_set['access_period'] );
+		} elseif ( 'limited-period' === $props['access_expiration'] ) {
+			unset( $to_set['access_expires'] );
+		}
 	}
 
 }
