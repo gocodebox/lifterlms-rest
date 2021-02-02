@@ -452,7 +452,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( 'expired', $student->get_enrollment_status( $course_id ) );
 		$this->assertEquals( 'whatever_trigger', $student->get_enrollment_trigger( $course_id, false ) );
 
-		// Wnroll via api.
+		// Enroll via api.
 		sleep(1); //<- To be sure the new status is subsequent the one previously set.
 		$response = $this->perform_mock_request( 'PATCH',  $this->parse_route( $user_id ) . '/' . $course_id, array( 'status' => 'enrolled' ) );
 
