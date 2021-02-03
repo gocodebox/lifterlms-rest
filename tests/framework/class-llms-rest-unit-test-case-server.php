@@ -6,7 +6,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
- * @version 1.0.0-beta.17
+ * @since [version] Added utility to retrieve schema defaults.
+ * @version [version]
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -42,6 +43,14 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @var int
 	 */
 	protected $user_forbidden;
+
+
+	/**
+	 * Default schema properties
+	 *
+	 * @return void
+	 */
+	protected $defaults;
 
 	/**
 	 * Setup our test server.
@@ -235,6 +244,40 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 			$request->set_query_params( $query );
 		}
 		return $this->server->dispatch( $request );
+
+	}
+
+	/**
+	 * Retrieve default properties from the endpoint schema
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_defaults() {
+
+		$props    = $this->endpoint->get_item_schema()['properties'];
+		$defaults = array();
+
+		foreach ( $props as $prop => $options ) {
+			if ( isset( $options['default'] ) ) {
+				$defaults[ $prop ] = $options['default'];
+			}
+		}
+
+		return $defaults;
+	}
+
+	/**
+	 * Set default properties from the endpoint schema
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function set_defaults() {
+
+		$this->defaults = $this->get_defaults();
 
 	}
 

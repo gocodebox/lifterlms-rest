@@ -109,6 +109,8 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->endpoint       = new LLMS_REST_Access_Plans_Controller();
 		$this->user_allowed   = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+
+		$this->set_defaults();
 	}
 
 	/**
@@ -451,6 +453,174 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Unauthorized.
 		$this->assertResponseStatusEquals( 401, $response );
+
+	}
+
+	/**
+	 * Test create free access plan
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_free_access_plan() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+				'price'   => 0,
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Check that the access plan has the following properties values:
+		$free_props = array(
+			'is_free'     => 'yes',
+			'price'       => 0,
+			'frequency'   => 0,
+			'on_sale'     => 'no',
+			'trial_offer' => 'no',
+		);
+
+		$ap = new LLMS_Access_Plan( $response->get_data()['id'] );
+		foreach ( $free_props as $prop => $value ) {
+			$this->assertEquals( $value, $ap->get( $prop ), $prop );
+		}
+
+		// Check again, that even the passed properties are "reset".
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id'       => $course->get( 'id' ),
+				'price'         => 0,
+				'frequency'     => 6,
+				'sale_enabled'  => true,
+				'trial_enabled' => true,
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$ap = new LLMS_Access_Plan( $response->get_data()['id'] );
+		foreach ( $free_props as $prop => $value ) {
+			$this->assertEquals( $value, $ap->get( $prop ), $prop );
+		}
+
+	}
+
+	/**
+	 * Test create free paid access plan
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_paid_access_plan() {
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+				'price'   => 10,
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Check that the access plan has the following properties values:
+		$paid_props = array(
+			'is_free'     => 'no',
+		);
+
+		$ap = new LLMS_Access_Plan( $response->get_data()['id'] );
+		foreach ( $paid_props as $prop => $value ) {
+			$this->assertEquals( $value, $ap->get( $prop ), $prop );
+		}
+
+		// Now test that if the frequency is 0 (default) and we enable the trial, the trial is still disabled.
+		$sample_args['trial_enabled'] = true;
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Check that the access plan has the following properties values:
+		$paid_props = array(
+			'is_free'     => 'no',
+			'trial_offer' => 'no',
+			'frequency'    => 0,
+		);
+
+		$ap = new LLMS_Access_Plan( $response->get_data()['id'] );
+		foreach ( $paid_props as $prop => $value ) {
+			$this->assertEquals( $value, $ap->get( $prop ), $prop );
+		}
+
+		// Test that a frequency > 0 unlocks trials.
+		$sample_args['frequency'] = 1;
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+		$this->assertTrue(
+			llms_parse_bool(
+				( new LLMS_Access_Plan( $response->get_data()['id'] ) )->get ('trial_offer' )
+			)
+		);
+	}
+
+	/**
+	 * Test frequency validation
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_frequency_validation_error() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id'   => $course->get( 'id' ),
+				'price'     => 1,
+				'frequency' => 7 // Not valid.
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		// Invalid.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Must be an integer in the range 0-6', $response->get_data()['data']['params']['frequency'] );
 
 	}
 

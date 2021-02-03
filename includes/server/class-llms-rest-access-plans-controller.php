@@ -152,7 +152,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			),
 			'frequency'                 => array(
 				'description' => __(
-					'Billing frequency.
+					'Billing frequency [0-6].
 					`0` denotes a one-time payment.
 					`>= 1` denotes a recurring plan.',
 					'lifterlms'
@@ -162,7 +162,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 				'context'     => array( 'view', 'edit' ),
 				'arg_options' => array(
 					'validate_callback' => static function ( $val ) {
-						return in_array( $val, range( 0, 6 ), true );
+						return in_array( $val, range( 0, 6 ), true ) ? true : new WP_Error(
+							'rest_invalid_param',
+							__( 'Must be an integer in the range 0-6', 'lifterlms' )
+						);
 					},
 					'sanitize_callback' => 'absint',
 				),
@@ -890,7 +893,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Trial enabled.
 		if ( ! empty( $schema['properties']['trial_enabled'] ) && isset( $request['trial_enabled'] ) ) {
-			$to_set['trial_offer'] = $request['trial_enable'] ? 'yes' : 'no';
+			$to_set['trial_offer'] = $request['trial_enabled'] ? 'yes' : 'no';
 		}
 
 		// Trial Length.
