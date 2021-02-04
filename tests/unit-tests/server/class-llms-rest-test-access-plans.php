@@ -702,7 +702,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		// Success.
 		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
-		$this->assertEquals( array_fill( 0, 2, $course_one, ), array_column( $res_data, 'post_id' ) );
+		$this->assertEquals( array_fill( 0, 2, $course_one ), array_column( $res_data, 'post_id' ) );
 
 		// Filter by second course.
 		$response = $this->perform_mock_request(
@@ -717,7 +717,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		// Success.
 		$this->assertResponseStatusEquals( 200, $response );
 		$res_data = $response->get_data();
-		$this->assertEquals( array_fill( 0, 3, $course_two, ), array_column( $res_data, 'post_id' ) );
+		$this->assertEquals( array_fill( 0, 3, $course_two ), array_column( $res_data, 'post_id' ) );
 
 		// Filter by both.
 		$response = $this->perform_mock_request(
