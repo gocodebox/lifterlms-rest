@@ -427,7 +427,6 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
 	}
 
-
 	/**
 	 * Test creating single access plan without permissions
 	 *
@@ -621,6 +620,169 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		// Invalid.
 		$this->assertResponseStatusEquals( 400, $response );
 		$this->assertEquals( 'Must be an integer in the range 0-6', $response->get_data()['data']['params']['frequency'] );
+
+	}
+
+	/**
+	 * Test creation defaults respected
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_creation_defaults_respected() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		/**
+		 * see LLMS_REST_Access_Plans_Controller::unset_subordinate_props()
+		 */
+		$deps = array(
+			'access_length'  => 0, // This is not set if 'access_expiration' is not 'limited-period' (default is 'lifetime').
+			'access_period'  => '', // This is not set if 'access_expiration' is not 'limited-period' (default is 'lifetime').
+			'access_expires' => '', // This is not set if 'access_expiration' is not 'limited-period' (default is 'lifetime').
+
+			'period' => '' , // This is not set if 'frequency' is 0 (default).
+
+			'trial_length' => 0, // This is not set if 'trial_offer' is 'no' (default).
+			'trial_period' => '', // This is not set if 'trial_offer' is 'no' (default).
+		);
+
+		foreach ( array_merge( $this->defaults, $deps ) as $prop => $val ) {
+			$this->assertEquals( $val, $response->get_data()[$prop], $prop );
+		}
+
+	}
+
+	/**
+	 * Test filter collection by post_id
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_collection_filtering() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$access_plan_ids = $this->factory->post->create_many( 5, array( 'post_type' => $this->post_type ) );
+
+		// Link the plans to two different courses.
+		$course_one = $this->factory->course->create();
+		$course_two = $this->factory->course->create();
+		$i = 0;
+		foreach ( $access_plan_ids as $access_plan_id ) {
+			update_post_meta( $access_plan_id, '_llms_product_id', ${ 0 === ( ++$i % 2 ) ? 'course_one' : 'course_two' } );
+		}
+
+		// Filter by first course.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'post_id' => $course_one,
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+		$res_data = $response->get_data();
+		$this->assertEquals( array_fill( 0, 2, $course_one, ), array_column( $res_data, 'post_id' ) );
+
+		// Filter by second course.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'post_id' => $course_two,
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+		$res_data = $response->get_data();
+		$this->assertEquals( array_fill( 0, 3, $course_two, ), array_column( $res_data, 'post_id' ) );
+
+		// Filter by both.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'post_id' => array(
+					$course_two,
+					$course_one
+				)
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+		$res_data = $response->get_data();
+		$array_of_five = array_fill( 0, 5, null );
+		$this->assertEquals(
+			array_map(
+				function( $val, $i ) use ( $course_one, $course_two ){
+					return ${ 0 === ( ++$i % 2 ) ? 'course_one' : 'course_two' };
+				},
+				$array_of_five,
+				array_keys( $array_of_five )
+			),
+			array_column(
+				$res_data, 'post_id'
+			)
+		);
+
+		// Add another course.
+		$access_plan_id = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+		$course_three = $this->factory->course->create();
+		update_post_meta( $access_plan_id, '_llms_product_id', $course_three );
+
+		// Check again filtering by one and two.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'post_id' => array(
+					$course_two,
+					$course_one
+				)
+			)
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response );
+		$res_data = $response->get_data();
+		$array_of_five = array_fill( 0, 5, null );
+		$this->assertEquals(
+			array_map(
+				function( $val, $i ) use ( $course_one, $course_two ){
+					return ${ 0 === ( ++$i % 2 ) ? 'course_one' : 'course_two' };
+				},
+				$array_of_five,
+				array_keys( $array_of_five )
+			),
+			array_column(
+				$res_data, 'post_id'
+			)
+		);
 
 	}
 
