@@ -461,24 +461,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_create = parent::create_item_permissions_check( $request );
 
 		// If current user cannot create the item because of authorization, check if the current user can edit the "parent" course/membership.
-		if ( llms_rest_is_authorization_required_error( $can_create ) ) {
+		return $this->related_product_permissions_check( $can_create, $request );
 
-			$post_type_object = get_post_type_object( get_post_type( $request['post_id'] ) );
-
-			if ( ! current_user_can( $post_type_object->cap->edit_post, $request['post_id'] ) ) {
-				return llms_rest_authorization_required_error(
-					sprintf(
-						// Translators: %s = The post type name.
-						__( 'Sorry, you are not allowed to create %s as this user.', 'lifterlms' ),
-						$post_type_object->labels->name
-					)
-				);
-			}
-
-			$can_create = true;
-		}
-
-		return $can_create;
 	}
 
 	/**
@@ -494,31 +478,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_update = parent::update_item_permissions_check( $request );
 
 		// If current user cannot edit the item because of authorization, check if the current user can edit the "parent" course/membership.
-		if ( llms_rest_is_authorization_required_error( $can_update ) ) {
-
-			$access_plan = $this->get_object( (int) $request['id'] );
-
-			if ( is_wp_error( $access_plan ) ) {
-				return $can_update;
-			}
-
-			$product_id               = $access_plan->get( 'product_id' );
-			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
-
-			if ( ! current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
-				return llms_rest_authorization_required_error(
-					sprintf(
-						// Translators: %s = The post type name.
-						__( 'Sorry, you are not allowed to update %s as this user.', 'lifterlms' ),
-						$access_plan->get_post_type_label( 'name' )
-					)
-				);
-			}
-
-			$can_update = true;
-		}
-
-		return $can_update;
+		return $this->related_product_permissions_check( $can_update, $request );
 	}
 
 	/**
@@ -534,31 +494,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_delete = parent::delete_item_permissions_check( $request );
 
 		// If current user cannot delete the item because of authorization, check if the current user can edit the "parent" course/membership.
-		if ( llms_rest_is_authorization_required_error( $can_delete ) ) {
+		return $this->related_product_permissions_check( $can_delete, $request );
 
-			$access_plan = $this->get_object( (int) $request['id'] );
-
-			if ( is_wp_error( $access_plan ) ) {
-				return $can_delete;
-			}
-
-			$product_id               = $access_plan->get( 'product_id' );
-			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
-
-			if ( ! current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
-				return llms_rest_authorization_required_error(
-					sprintf(
-						// Translators: %s = The post type name.
-						__( 'Sorry, you are not allowed to delete %s as this user.', 'lifterlms' ),
-						$access_plan->get_post_type_label( 'name' )
-					)
-				);
-			}
-
-			$can_delete = true;
-		}
-
-		return $can_delete;
 	}
 
 	/**
@@ -1076,6 +1013,29 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		} elseif ( 'limited-period' === $props['access_expiration'] ) {
 			unset( $to_set['access_expires'] );
 		}
+	}
+
+	/**
+	 * Check if the current user, who has no permissions to manipulate the access plan post, can edit its related product.
+	 *
+	 * @since [version]
+	 *
+	 * @param boolean|WP_Error $has_permissions Whether or not the current user has the permission to manipulate the resource.
+	 * @param WP_REST_Request  $request         Full details about the request.
+	 * @return boolean|WP_Error
+	 */
+	private function related_product_permissions_check( $has_permissions, $request ) {
+
+		if ( llms_rest_is_authorization_required_error( $has_permissions ) ) {
+			$product_id               = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
+			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
+
+			if ( current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
+				$has_permissions = true;
+			}
+		}
+
+		return $has_permissions;
 	}
 
 }

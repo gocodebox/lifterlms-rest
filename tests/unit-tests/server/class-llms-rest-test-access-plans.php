@@ -233,7 +233,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
 		// Bad request.
 		$this->assertResponseStatusEquals( 400, $response );
-		$this->assertResponseMessageEquals( 'Cannot create existing Access Plan.', $response );
+		$this->assertResponseMessageEquals( 'Cannot create existing Access Plans.', $response );
 
 		unset( $sample_args['id'] );
 
@@ -387,6 +387,49 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->route . '/' . $new_plan_id
 		);
 		$this->assertResponseStatusEquals( 204, $response );
+
+	}
+
+	/**
+	 * Test deleting a non existent access plan
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_delete_non_existent_access_plan() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$response = $this->perform_mock_request(
+			'DELETE',
+			$this->route . '/12569',
+		);
+
+		$this->assertResponseStatusEquals( 204, $response );
+		$this->assertEquals( '', $response->get_data() );
+
+	}
+
+	/**
+	 * Test updating a non existent access plan
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_update_non_existent_access_plan() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/12569',
+			$this->sample_access_plan_args
+		);
+
+		// Not found.
+		$this->assertResponseStatusEquals( 404, $response );
 
 	}
 
