@@ -516,20 +516,16 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$product_id = $access_plan->get( 'product_id' );
 		$post       = llms_get_post( $product_id );
 
-		// Post: the check below should be redundant but at the moment we don't delete
-		// access plans when deleting "related" courses/memberships.
-		if ( $post instanceof LLMS_Course || $post instanceof LLMS_Membership ) {
-			$links['post'] = array(
-				'href' => rest_url(
-					sprintf(
-						'%s/%s/%s',
-						'llms/v1',
-						$access_plan->get_product_type(),
-						$product_id
-					)
-				),
-			);
-		}
+		$links['post'] = array(
+			'href' => rest_url(
+				sprintf(
+					'%s/%s/%s',
+					'llms/v1',
+					$access_plan->get_product_type(),
+					$product_id
+				)
+			),
+		);
 
 		// Membership restrictions.
 		if ( $access_plan->has_availability_restrictions() ) {
