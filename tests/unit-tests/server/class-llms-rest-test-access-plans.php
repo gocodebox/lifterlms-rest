@@ -403,7 +403,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$response = $this->perform_mock_request(
 			'DELETE',
-			$this->route . '/12569',
+			$this->route . '/12569'
 		);
 
 		$this->assertResponseStatusEquals( 204, $response );
