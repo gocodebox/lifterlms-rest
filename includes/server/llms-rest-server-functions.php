@@ -84,7 +84,7 @@ function llms_rest_server_error( $message = '' ) {
 }
 
 /**
- * Checks whether or not the passed object is an error of missing required authorization
+ * Checks whether or not the passed object is a 401 (permission) or 403 (authorization) error
  *
  * @since [version]
  *
@@ -92,11 +92,11 @@ function llms_rest_server_error( $message = '' ) {
  * @return boolean
  */
 function llms_rest_is_authorization_required_error( $wp_error ) {
-	return ! empty( array_intersect( llms_rest_get_all_error_statuses( $wp_error ), array( WP_Http::FORBIDDEN, WP_Http::UNAUTHORIZED ) ) );
+	return ! empty( array_intersect( llms_rest_get_all_error_statuses( $wp_error ), array( WP_Http::FORBIDDEN, WP_Http::UNAUTHORIZED ) ) ); // 403, 401.
 }
 
 /**
- * Checks whether or not the passed object is a bad request error
+ * Checks whether or not the passed object is a 400 bad request error
  *
  * @since [version]
  *
@@ -104,11 +104,11 @@ function llms_rest_is_authorization_required_error( $wp_error ) {
  * @return boolean
  */
 function llms_rest_is_bad_request_error( $wp_error ) {
-	return in_array( WP_Http::BAD_REQUEST, llms_rest_get_all_error_statuses( $wp_error ), true );
+	return in_array( WP_Http::BAD_REQUEST, llms_rest_get_all_error_statuses( $wp_error ), true ); // 400.
 }
 
 /**
- * Checks whether or not the passed object is a not found error
+ * Checks whether or not the passed object is a 404 not found error
  *
  * @since [version]
  *
@@ -116,11 +116,11 @@ function llms_rest_is_bad_request_error( $wp_error ) {
  * @return boolean
  */
 function llms_rest_is_not_found_error( $wp_error ) {
-	return in_array( WP_Http::NOT_FOUND, llms_rest_get_all_error_statuses( $wp_error ), true );
+	return in_array( WP_Http::NOT_FOUND, llms_rest_get_all_error_statuses( $wp_error ), true ); // 404.
 }
 
 /**
- * Checks whether or not the passed object is an internal server error
+ * Checks whether or not the passed object is a 500 internal server error
  *
  * @since [version]
  *
@@ -128,7 +128,7 @@ function llms_rest_is_not_found_error( $wp_error ) {
  * @return boolean
  */
 function llms_rest_is_server_error( $wp_error ) {
-	return in_array( WP_Http::INTERNAL_SERVER_ERROR, llms_rest_get_all_error_statuses( $wp_error ), true );
+	return in_array( WP_Http::INTERNAL_SERVER_ERROR, llms_rest_get_all_error_statuses( $wp_error ), true ); // 500.
 }
 
 /**
@@ -209,7 +209,7 @@ function llms_rest_validate_positive_int_w_zero( $number ) {
  *
  * @since [version]
  *
- * @param integer $number Integer number to validate.
+ * @param integer $number       Integer number to validate.
  * @param boolean $include_zero Optional. Whether or not 0 is included. Default is `true`.
  * @return boolean
  */
@@ -254,7 +254,7 @@ function llms_rest_validate_positive_float_w_zero( $number ) {
  *
  * @since [versoin]
  *
- * @param integer $number Float number to validate.
+ * @param integer $number       Float number to validate.
  * @param boolean $include_zero Optional. Whether or not 0 is included. Default is `true`.
  * @return boolean
  */
