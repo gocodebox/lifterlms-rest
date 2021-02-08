@@ -360,6 +360,9 @@ x-tagGroups:
       - Courses
       - Sections
       - Lessons
+  - name: E-Commerce
+    tags:
+      - Access Plans
   - name: Instructors
     tags:
       - Instructors
@@ -409,7 +412,7 @@ paths:
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
         - name: post_id
-          description: Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separted list of course/membership ids.
+          description: Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids.
           in: query
           schema:
             type: string
@@ -496,7 +499,7 @@ paths:
               --url https://example.tld/wp-json/llms/v1/access-plans \
               --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
-              --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":1,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"string","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
+              --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":99.97,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"2019-03-23 23:59:59","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -514,7 +517,7 @@ paths:
               "period": "year",
               "enroll_text": "Buy Now",
               "sale_enabled": false,
-              "sale_price": 1,
+              "sale_price": 99.97,
               "sale_date_start": "2019-01-23 00:00:00",
               "sale_date_end": "2019-03-23 23:59:59",
               "availability_restrictions": [
@@ -523,7 +526,7 @@ paths:
                 789
               ],
               "access_expiration": "lifetime",
-              "access_expires": "string",
+              "access_expires": "2019-03-23 23:59:59",
               "access_length": 1,
               "access_period": "year",
               "trial_enabled": false,
@@ -564,7 +567,6 @@ paths:
         - Access Plans
       parameters:
         - $ref: '#/components/parameters/Context'
-        - $ref: '#/components/parameters/PostPassword'
       responses:
         '200':
           description: Successfully retrieved the access plan.
@@ -584,7 +586,7 @@ paths:
         - lang: cURL
           source: |-
             curl --request GET \
-              --url 'https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D?context=edit&password=p4%24sW0rd' \
+              --url 'https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D?context=edit' \
               --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
@@ -595,7 +597,7 @@ paths:
               "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             } );
 
-            llms.get( '/access-plans/%7Bid%7D?context=edit&password=p4%24sW0rd', function( err, data, res ) {
+            llms.get( '/access-plans/%7Bid%7D?context=edit', function( err, data, res ) {
               if ( err ) {
                 throw new Error( 'Error!' );
               }
@@ -634,7 +636,7 @@ paths:
               --url https://example.tld/wp-json/llms/v1/access-plans/%7Bid%7D \
               --user ck_XXXXXX:cs_XXXXXX \
               --header 'content-type: application/json' \
-              --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":1,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"string","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
+              --data '{"price":199.97,"sku":"LIFETIME-999-001","frequency":0,"length":0,"period":"year","enroll_text":"Buy Now","sale_enabled":false,"sale_price":99.97,"sale_date_start":"2019-01-23 00:00:00","sale_date_end":"2019-03-23 23:59:59","availability_restrictions":[123,456,789],"access_expiration":"lifetime","access_expires":"2019-03-23 23:59:59","access_length":1,"access_period":"year","trial_enabled":false,"trial_length":1,"trial_period":"week","trial_price":1.99,"post_id":789,"redirect_type":"self","redirect_page":1,"redirect_url":"https://example.tld/my/redirect","redirect_forced":false,"visibility":"visible","date_created":"2019-05-20 17:22:05","date_created_gmt":"2019-05-20 13:22:05","menu_order":0,"title":"Liftetime Access","content":"\\n<ul><li>Expectoque quid ad id</li><li>quod quaerebam, respondeas</li></ul>\\n"}'
         - lang: Node.js
           source: |-
             const llmsAPI = require( "llms-api-node" );
@@ -652,7 +654,7 @@ paths:
               "period": "year",
               "enroll_text": "Buy Now",
               "sale_enabled": false,
-              "sale_price": 1,
+              "sale_price": 99.97,
               "sale_date_start": "2019-01-23 00:00:00",
               "sale_date_end": "2019-03-23 23:59:59",
               "availability_restrictions": [
@@ -661,7 +663,7 @@ paths:
                 789
               ],
               "access_expiration": "lifetime",
-              "access_expires": "string",
+              "access_expires": "2019-03-23 23:59:59",
               "access_length": 1,
               "access_period": "year",
               "trial_enabled": false,
@@ -2909,13 +2911,13 @@ paths:
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
         - name: post
-          description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separated list of post `id`s.
           in: query
           schema:
             type: string
             example: '123,456'
         - name: post_exclude
-          description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+          description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separated list of post `id`s.
           in: query
           schema:
             type: string
@@ -5996,17 +5998,17 @@ components:
               type: boolean
               default: false
             sale_price:
-              description: Sale price.
+              description: Sale price.<br> Only applies when `sale_enabled` is `true`.
               type: number
               format: float
               minimum: 0
-              example: 1
+              example: 99.97
             sale_date_start:
-              description: 'Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.<br> Only appies when `sale_pricing` is `true`. Format: `Y-m-d H:i:s`.'
+              description: 'Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.<br> Only applies when `sale_enabled` is `true`. Format: `Y-m-d H:i:s`.'
               type: string
               example: '2019-01-23 00:00:00'
             sale_date_end:
-              description: 'Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely.<br> Only appies when `sale_pricing` is `true`. Format: `Y-m-d H:i:s`.'
+              description: 'Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely.<br> Only applies when `sale_enabled` is `true`. Format: `Y-m-d H:i:s`.'
               type: string
               example: '2019-03-23 23:59:59'
             availability_restrictions:
@@ -6020,7 +6022,7 @@ components:
               items:
                 type: integer
             access_expiration:
-              description: Access expiration type.<br> `lifetime` provides access until cancelled or until a recurring payment fails.<br> `limited-period` provides access for a limited period as specified by `access_length` and `access_period` `limited-date` provides access until the date specified by `access_expires_date`
+              description: Access expiration type.<br> `lifetime` provides access until cancelled or until a recurring payment fails.<br> `limited-period` provides access for a limited period as specified by `access_length` and `access_period`<br> `limited-date` provides access until the date specified by `access_expires_date`
               type: string
               enum:
                 - lifetime
@@ -6028,8 +6030,9 @@ components:
                 - limited-date
               default: lifetime
             access_expires:
-              description: 'Date when access expires.<br> Only applicable when $access_expiration is `limited-date`. Format: `Y-m-d H:i:s`.'
+              description: 'Date when access expires.<br> Only applicable when `access_expiration` is `limited-date`. Format: `Y-m-d H:i:s`.'
               type: string
+              example: '2019-03-23 23:59:59'
             access_length:
               description: Determine the length of access from time of purchase.<br> Only applicable when `access_expiration` is `limited-period`.
               type: integer
@@ -6049,12 +6052,12 @@ components:
               type: boolean
               default: false
             trial_length:
-              description: Determines the length of trial access.<br> Only applicaable when `trial_enabled` is `true`.
+              description: Determines the length of trial access.<br> Only applicable when `trial_enabled` is `true`.
               type: integer
               minimum: 1
               default: 1
             trial_period:
-              description: Determines the length of trial access.<br> Only applicaable when `trial_enabled` is `true`.
+              description: Determines the length of trial access.<br> Only applicable when `trial_enabled` is `true`.
               type: string
               enum:
                 - year
@@ -6063,7 +6066,7 @@ components:
                 - day
               default: week
             trial_price:
-              description: Determines the price of the trial period.<br> Only applicaable when `trial_enabled` is `true`.
+              description: Determines the price of the trial period.<br> Only applicable when `trial_enabled` is `true`.
               type: number
               format: float
               minimum: 0
@@ -6074,6 +6077,10 @@ components:
               type: integer
               minimum: 1
               example: 789
+            post_type:
+              $ref: '#/components/schemas/PostType'
+              default: llms_access_plan
+              type: string
             redirect_type:
               description: 'Determines the redirection behavior of the user''s browser upon successful checkout or registration through the plan.<br> `self`: Redirect to the permalink of the specified `post_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`.'
               type: string
