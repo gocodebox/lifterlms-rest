@@ -13,7 +13,7 @@ allOf:
         example: https://example.com/post/getting-started-with-lifterlms
         readOnly: true
       post_type:
-          $ref: '#/components/schemas/PostType'
+        $ref: '#/components/schemas/PostType'
       status:
         $ref: '#/components/schemas/PostStatus'
       password:
