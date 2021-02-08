@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.15
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -609,6 +609,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Updated to reflect changes in the parent class.
+	 * @since [version] Correctly return errors.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -617,7 +618,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		$query_args = parent::prepare_collection_query_args( $request );
 		if ( is_wp_error( $query_args ) ) {
-			return $wp_error;
+			return $query_args;
 		}
 
 		// Orderby 'order' requires a meta query.

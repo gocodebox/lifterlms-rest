@@ -14,7 +14,7 @@
  *                     respectively to `sales_page_type` and `sales_page_url` according to the specs.
  *                     Added missing quotes in enrollment/access default messages shortcodes.
  *                     Added `rest_taxonomies` property.
- * @since [verison] Added checks on `sales_page_page_id` and
+ * @since 1.0.0-beta.9 Added checks on `sales_page_page_id` and
  *                     `sales_page_page_url` always returned in `edit` context.
  *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
  *                     Added `@return` to doc.
@@ -421,7 +421,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 * @since 1.0.0-beta.8 Added check on `sales_page_*` defaults.
 	 *                     Also renamed `sales_page_page_type` and `sales_page_page_url` properties,
 	 *                     respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 * @since [verison] Added checks on `sales_page_page_id` and
+	 * @since 1.0.0-beta.9 Added checks on `sales_page_page_id` and
 	 *                     `sales_page_page_url` always returned in `edit` context.
 	 *                     Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
 	 *
@@ -472,7 +472,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test getting single course that doesn't exist.
+	 * Test getting single course that doesn't exist
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Use `$this->perform_mock_request()` and `$this->assertResponseStatusEquals()` utils.
@@ -491,7 +491,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->route . '/' . $course_id . '4'
 		);
 
-		// the course doesn't exists.
+		// The Course doesn't exist.
 		$this->assertResponseStatusEquals( 404, $response );
 
 	}

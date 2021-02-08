@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -175,6 +175,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to create an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use plural post type name.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -182,16 +183,16 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->singular_name;
+		$post_type_name   = $post_type_object->labels->name;
 
 		if ( ! empty( $request['id'] ) ) {
-			// translators: The post type singular name.
+			// Translators: %s = The post type name.
 			return llms_rest_bad_request_error( sprintf( __( 'Cannot create existing %s.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_create_permission() ) {
-			// translators: The post type singular name.
-			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a %s as this user.', 'lifterlms' ), $post_type_name ) );
+			// Translators: %s = The post type name.
+			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_assign_terms_permission( $request ) ) {
@@ -354,6 +355,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Moved parameters to query args mapping into a different method.
+	 * @since [version] Correctly return errors.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -362,7 +364,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$prepared = parent::prepare_collection_query_args( $request );
 		if ( is_wp_error( $prepared ) ) {
-			return $wp_error;
+			return $prepared;
 		}
 
 		// Force the post_type argument, since it's not a user input variable.
@@ -425,6 +427,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use plural post type name.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -437,11 +440,11 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->singular_name;
+		$post_type_name   = $post_type_object->labels->name;
 
 		if ( ! $this->check_update_permission( $object ) ) {
-			// translators: The post type singular name.
-			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to update a %s as this user.', 'lifterlms' ), $post_type_name ) );
+			// Translators: %s = The post type name.
+			return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to update %s as this user.', 'lifterlms' ), $post_type_name ) );
 		}
 
 		if ( ! $this->check_assign_terms_permission( $request ) ) {
@@ -570,6 +573,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Provide a more significant error message when trying to delete an item without permissions.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -578,7 +582,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$object = $this->get_object( (int) $request['id'] );
 		if ( is_wp_error( $object ) ) {
-			// Course not found, we don't return a 404.
+			// LLMS_Post not found, we don't return a 404.
 			if ( in_array( 'llms_rest_not_found', $object->get_error_codes(), true ) ) {
 				return true;
 			}
@@ -587,7 +591,13 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		if ( ! $this->check_delete_permission( $object ) ) {
-			return llms_rest_authorization_required_error();
+			return llms_rest_authorization_required_error(
+				sprintf(
+					// Translators: %s = The post type name.
+					__( 'Sorry, you are not allowed to delete %s as this user.', 'lifterlms' ),
+					get_post_type_object( $this->post_type )->labels->name
+				)
+			);
 		}
 
 		return true;
@@ -1424,6 +1434,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::handle_status_param().
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Use plural post type name.
 	 *
 	 * @param string $status Status.
 	 * @return string|WP_Error Status or WP_Error if lacking the proper permission.
@@ -1431,7 +1442,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	protected function handle_status_param( $status ) {
 
 		$post_type_object = get_post_type_object( $this->post_type );
-		$post_type_name   = $post_type_object->labels->singular_name;
+		$post_type_name   = $post_type_object->labels->name;
 
 		switch ( $status ) {
 			case 'draft':
@@ -1439,15 +1450,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				break;
 			case 'private':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type singular name.
-					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create a private %s.', 'lifterlms' ), $post_type_name ) );
+					// Translators: %s = The post type name.
+					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to create private %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;
 			case 'publish':
 			case 'future':
 				if ( ! current_user_can( $post_type_object->cap->publish_posts ) ) {
-					// translators: The post type singular name.
-					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to publish a %s.', 'lifterlms' ), $post_type_name ) );
+					// Translators: $s = The post type name.
+					return llms_rest_authorization_required_error( sprintf( __( 'Sorry, you are not allowed to publish %s.', 'lifterlms' ), $post_type_name ) );
 				}
 				break;
 			default:
@@ -1461,10 +1472,12 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Determines the featured media based on a request param.
+	 * Determines the featured media based on a request param
+	 *
 	 * Heavily based on WP_REST_Posts_Controller::handle_featured_media().
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed call to undefined function `llms_bad_request_error()`, must be `llms_rest_bad_request_error()`.
 	 *
 	 * @param int $featured_media Featured Media ID.
 	 * @param int $object_id      LLMS object ID.
@@ -1478,7 +1491,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			if ( $result ) {
 				return true;
 			} else {
-				return llms_bad_request_error( __( 'Invalid featured media ID.', 'lifterlms' ) );
+				return llms_rest_bad_request_error( __( 'Invalid featured media ID.', 'lifterlms' ) );
 			}
 		} else {
 			return delete_post_thumbnail( $object_id );
@@ -1488,6 +1501,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Updates the post's terms from a REST request.
+	 *
 	 * Heavily based on WP_REST_Posts_Controller::handle_terms().
 	 *
 	 * @since 1.0.0-beta.1
@@ -1519,6 +1533,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 	/**
 	 * Checks whether current user can assign all terms sent with the current request.
+	 *
 	 * Heavily based on WP_REST_Posts_Controller::check_assign_terms_permission().
 	 *
 	 * @since 1.0.0-beta.1

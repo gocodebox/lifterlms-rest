@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.17
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -119,6 +119,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Include memberships controller class file.
+	 * @since [version] Include access plans controller class file.
 	 *
 	 * @return void
 	 */
@@ -146,6 +147,7 @@ final class LifterLMS_REST_API {
 			'server/class-llms-rest-students-controller',
 			'server/class-llms-rest-students-progress-controller',
 			'server/class-llms-rest-webhooks-controller',
+			'server/class-llms-rest-access-plans-controller',
 
 		);
 
@@ -159,6 +161,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Init memberships controller.
+	 * @since [version] Init access plans controller.
 	 *
 	 * @return void
 	 */
@@ -175,6 +178,7 @@ final class LifterLMS_REST_API {
 			'LLMS_REST_Students_Progress_Controller',
 			'LLMS_REST_Enrollments_Controller',
 			'LLMS_REST_Webhooks_Controller',
+			'LLMS_REST_Access_Plans_Controller',
 		);
 
 		foreach ( $controllers as $controller ) {

@@ -51,22 +51,23 @@ allOf:
         type: boolean
         default: false
       sale_price:
-        description: Sale price.
+        description: Sale price.<br>
+          Only applies when `sale_enabled` is `true`.
         type: number
         format: float
         minimum: 0
-        example: 1.00
+        example: 99.97
       sale_date_start:
         description: >-
           Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.<br>
-          Only appies when `sale_pricing` is `true`.
+          Only applies when `sale_enabled` is `true`.
           Format: `Y-m-d H:i:s`.
         type: string
         example: '2019-01-23 00:00:00'
       sale_date_end:
         description: >-
           Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely.<br>
-          Only appies when `sale_pricing` is `true`.
+          Only applies when `sale_enabled` is `true`.
           Format: `Y-m-d H:i:s`.
         type: string
         example: '2019-03-23 23:59:59'
@@ -81,7 +82,7 @@ allOf:
         description: >-
           Access expiration type.<br>
           `lifetime` provides access until cancelled or until a recurring payment fails.<br>
-          `limited-period` provides access for a limited period as specified by `access_length` and `access_period`
+          `limited-period` provides access for a limited period as specified by `access_length` and `access_period`<br>
           `limited-date` provides access until the date specified by `access_expires_date`
         type: string
         enum:
@@ -92,9 +93,10 @@ allOf:
       access_expires:
         description: >-
           Date when access expires.<br>
-          Only applicable when $access_expiration is `limited-date`.
+          Only applicable when `access_expiration` is `limited-date`.
           Format: `Y-m-d H:i:s`.
         type: string
+        example: '2019-03-23 23:59:59'
       access_length:
         description: >-
           Determine the length of access from time of purchase.<br>
@@ -120,14 +122,14 @@ allOf:
       trial_length:
         description: >-
           Determines the length of trial access.<br>
-          Only applicaable when `trial_enabled` is `true`.
+          Only applicable when `trial_enabled` is `true`.
         type: integer
         minimum: 1
         default: 1
       trial_period:
         description: >-
           Determines the length of trial access.<br>
-          Only applicaable when `trial_enabled` is `true`.
+          Only applicable when `trial_enabled` is `true`.
         type: string
         enum:
           - year
@@ -138,7 +140,7 @@ allOf:
       trial_price:
         description: >-
           Determines the price of the trial period.<br>
-          Only applicaable when `trial_enabled` is `true`.
+          Only applicable when `trial_enabled` is `true`.
         type: number
         format: float
         minimum: 0

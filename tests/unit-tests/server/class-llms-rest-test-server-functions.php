@@ -2,14 +2,15 @@
 /**
  * Test REST Server functions
  *
- * @package  LifterLMS_REST/Tests
+ * @package LifterLMS_REST/Tests
  *
  * @group rest_server
  * @group rest_functions
  *
  * @since 1.0.0-beta.1
- * @since [versuib] Test the llms_rest_authorization_required_error() function `$check_authenticated` parameter.
- * @version 1.0.0-beta.12
+ * @since 1.0.0-beta.12 Test the `llms_rest_authorization_required_error()` function `$check_authenticated` parameter.
+ * @since [version] Added tests on `llms_rest_is_*_error()` and `llms_rest_get_all_error_statuses()` functions.
+ * @version [version]
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -182,4 +183,193 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
 	}
 
+	/**
+	 * Test the llms_rest_is_authorization_required_error() function
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_is_authorization_required_error() {
+		// Log out to check 401.
+		wp_set_current_user( 0 );
+
+		// True.
+		$err = llms_rest_authorization_required_error();
+		$this->assertTrue( llms_rest_is_authorization_required_error( $err ) );
+		$this->assertWPErrorDataEquals( array( 'status' => 401 ), $err );
+
+		// False.
+		$err = llms_rest_server_error();
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+		// Passing something different than a WP_Error: False.
+		$err = 3;
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+		// Passing a WP_Error with no errors.
+		$err = new WP_Error();
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+		// Log in to check 403.
+		wp_set_current_user( $this->factory->user->create() );
+
+		// True.
+		$err = llms_rest_authorization_required_error();
+		$this->assertTrue( llms_rest_is_authorization_required_error( $err ) );
+		$this->assertWPErrorDataEquals( array( 'status' => 403 ), $err );
+
+		// False.
+		$err = llms_rest_server_error();
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+		// Passing something different than a WP_Error: False.
+		$err = 3;
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+		// Passing a WP_Error with no errors.
+		$err = new WP_Error();
+		$this->assertFalse( llms_rest_is_authorization_required_error( $err ) );
+
+	}
+
+	/**
+	 * Test the llms_rest_is_bad_request_error() function
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_is_bad_request_error() {
+
+		// True.
+		$err = llms_rest_bad_request_error();
+		$this->assertTrue( llms_rest_is_bad_request_error( $err ) );
+
+		// False.
+		$err = llms_rest_server_error();
+		$this->assertFalse( llms_rest_is_bad_request_error( $err ) );
+
+		// Passing something different than a WP_Error: False.
+		$err = 3;
+		$this->assertFalse( llms_rest_is_bad_request_error( $err ) );
+
+		// Passing a WP_Error with no errors.
+		$err = new WP_Error();
+		$this->assertFalse( llms_rest_is_bad_request_error( $err ) );
+	}
+
+	/**
+	 * Test the llms_rest_is_not_found_error() function
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_is_not_found_error() {
+
+		// True.
+		$err = llms_rest_not_found_error();
+		$this->assertTrue( llms_rest_is_not_found_error( $err ) );
+
+		// False.
+		$err = llms_rest_server_error();
+		$this->assertFalse( llms_rest_is_not_found_error( $err ) );
+
+		// Passing something different than a WP_Error: False.
+		$err = 3;
+		$this->assertFalse( llms_rest_is_not_found_error( $err ) );
+
+		// Passing a WP_Error with no errors.
+		$err = new WP_Error();
+		$this->assertFalse( llms_rest_is_not_found_error( $err ) );
+	}
+
+	/**
+	 * Test the llms_is_rest_server_error() function
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_is_server_error() {
+
+		// True.
+		$err = llms_rest_server_error();
+		$this->assertTrue( llms_rest_is_server_error( $err ) );
+
+		// False.
+		$err = llms_rest_not_found_error();
+		$this->assertFalse( llms_rest_is_server_error( $err ) );
+
+		// Passing something different than a WP_Error: False.
+		$err = 3;
+		$this->assertFalse( llms_rest_is_server_error( $err ) );
+
+		// Passing a WP_Error with no errors.
+		$err = new WP_Error();
+		$this->assertFalse( llms_rest_is_server_error( $err ) );
+
+	}
+
+	/**
+	 * Test llms_rest_get_all_error_statuses() function
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_all_error_status() {
+		$err = llms_rest_server_error();
+		// Additional data for the same error code (only makes sense with wp 5.6+).
+		$err->add_data(
+			array(
+				'status' => 2000
+			)
+		);
+
+		$err->add(
+			'code',
+			'meassage',
+			array(
+				'status' => 800
+			)
+		);
+		$err->add(
+			'code_2',
+			'message',
+			array(
+				200
+			)
+		);
+		$err->add_data(
+			array(
+				'status' => 500 // Check duplicates.
+			)
+		);
+
+		$expected = array(
+			500,
+			800,
+		);
+
+		/**
+		 * since WordPress 5.6.0 Errors can now contain more than one item of error data. {@see WP_Error::$additional_data}.
+		 */
+		global $wp_version;
+		if ( version_compare( $wp_version, 5.6, '>=' ) ) {
+			$expected[] = 2000;
+		}
+
+		$this->assertEqualSets( $expected, llms_rest_get_all_error_statuses( $err ) );
+
+		// Check empty error results in empty array returned by the function.
+		$err = new WP_Error();
+		$this->assertEquals( array(), llms_rest_get_all_error_statuses( $err ) );
+
+		// Check non WP_Error results in empty array returned by the function.
+		$err = new stdClass();
+		$this->assertEquals( array(), llms_rest_get_all_error_statuses( $err ) );
+
+	}
 }

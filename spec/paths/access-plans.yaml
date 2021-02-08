@@ -24,7 +24,7 @@ get:
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
     - name: post_id
-      description: Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separted list of course/membership ids.
+      description: Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids.
       in: query
       schema:
         type: string
