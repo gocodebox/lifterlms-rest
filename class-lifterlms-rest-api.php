@@ -138,6 +138,7 @@ final class LifterLMS_REST_API {
 
 			// Controllers.
 			'server/class-llms-rest-api-keys-controller',
+			'server/class-llms-rest-access-plans-controller',
 			'server/class-llms-rest-courses-controller',
 			'server/class-llms-rest-sections-controller',
 			'server/class-llms-rest-lessons-controller',
@@ -147,7 +148,6 @@ final class LifterLMS_REST_API {
 			'server/class-llms-rest-students-controller',
 			'server/class-llms-rest-students-progress-controller',
 			'server/class-llms-rest-webhooks-controller',
-			'server/class-llms-rest-access-plans-controller',
 
 		);
 
