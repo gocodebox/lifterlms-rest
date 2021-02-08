@@ -67,6 +67,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		'period',
 		'price',
 		'post_id',
+		'post_type',
 		'redirect_forced',
 		'redirect_page',
 		'redirect_type',

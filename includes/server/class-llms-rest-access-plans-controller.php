@@ -50,7 +50,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'password',
 			'permalink',
 			'ping_status',
-			'post_type',
 			'slug',
 			'status',
 		);
