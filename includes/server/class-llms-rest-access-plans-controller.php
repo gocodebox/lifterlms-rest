@@ -544,9 +544,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		 * @param array            $links       Links for the given access plan.
 		 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 		 */
-		$links = apply_filters( 'llms_rest_access_plan_links', $links, $access_plan );
+		return apply_filters( 'llms_rest_access_plan_links', $links, $access_plan );
 
-		return $links;
 	}
 
 	/**
