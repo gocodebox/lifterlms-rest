@@ -151,6 +151,10 @@ allOf:
         type: integer
         minimum: 1
         example: 789
+      post_type:
+        $ref: '#/components/schemas/PostType'
+        default: llms_access_plan
+        type: string
       redirect_type:
         description: >-
           Determines the redirection behavior of the user's browser upon successful checkout or registration through the plan.<br>
