@@ -856,12 +856,43 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
 
+		// Expect the related resource is the course.
+		$this->assertStringEndsWith(
+			sprintf(
+				'rest_route=/%s/%s/%s',
+				'llms/v1',
+				'courses',
+				$course
+			),
+			$response->get_links()['post'][0]['href']
+		);
+
 		// Remove availability restrictions.
 		update_post_meta( $access_plan_id, '_llms_availability', '' );
 		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $access_plan_id );
 		unset( $expected_link_rels[ array_search( 'restrictions', $expected_link_rels, true ) ] );
 
 		$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
+
+		// Link the plan to a membership.
+		$membership = $this->factory->post->create( array( 'post_type' => 'llms_membership' ) );
+		update_post_meta( $access_plan_id, '_llms_product_id', $membership );
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $access_plan_id );
+
+		$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
+
+		// Expect the related resource is the membership.
+		$this->assertStringEndsWith(
+			sprintf(
+				'rest_route=/%s/%s/%s',
+				'llms/v1',
+				'memberships',
+				$membership
+			),
+			$response->get_links()['post'][0]['href']
+		);
+
 
 	}
 

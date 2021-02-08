@@ -512,17 +512,13 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$links = parent::prepare_links( $access_plan, $request );
 		unset( $links['content'] );
 
-		$id         = $access_plan->get( 'id' );
-		$product_id = $access_plan->get( 'product_id' );
-		$post       = llms_get_post( $product_id );
-
 		$links['post'] = array(
 			'href' => rest_url(
 				sprintf(
 					'%s/%s/%s',
 					'llms/v1',
-					$access_plan->get_product_type(),
-					$product_id
+					'course' === $access_plan->get_product_type() ? 'courses' : 'memberships',
+					$access_plan->get( 'product_id' )
 				)
 			),
 		);
