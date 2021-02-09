@@ -10,6 +10,7 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.12 Test the `llms_rest_authorization_required_error()` function `$check_authenticated` parameter.
  * @since [version] Added tests on `llms_rest_is_*_error()` and `llms_rest_get_all_error_statuses()` functions.
+ *                  Added tests on post types validation functions.
  * @version [version]
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
@@ -370,6 +371,79 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 		// Check non WP_Error results in empty array returned by the function.
 		$err = new stdClass();
 		$this->assertEquals( array(), llms_rest_get_all_error_statuses( $err ) );
+
+	}
+
+	/**
+	 * Test llms_rest_validate_memberships()
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_validate_memberships() {
+		$this->test_validate_post_types( 'llms_rest_validate_memberships', 'llms_membership' );
+	}
+
+	/**
+	 * Test llms_rest_validate_courses()
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_validate_courses() {
+		$this->test_validate_post_types( 'llms_rest_validate_courses', 'course' );
+	}
+
+	/**
+	 * Test llms_rest_validate_products()
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_llms_rest_validate_products() {
+		$course     = $this->factory->post->create( array( 'post_type' => 'course' ) );
+		$membership = $this->factory->post->create( array( 'post_type' => 'llms_membership' ) );
+
+		$this->test_validate_post_types( 'llms_rest_validate_products', '', array( $course, $membership ) );
+
+		// Test mixed with a standard post.
+		$this->assertFalse( llms_rest_validate_products( array( $course, $membership, $this->factory->post->create() ) ) );
+	}
+
+	/**
+	 * Test validate llms_rest_validate_post_types
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	private function test_validate_post_types( $func, $post_type = '', $posts = array() ) {
+
+		// Test an empty array.
+		$this->assertTrue( $func( array(), true ), $func ); // Allowed.
+
+		$this->assertFalse( $func( array() ), $func );
+
+		// Create 2 pt.
+		$pts = empty( $posts ) ? $this->factory->post->create_many( 2, array( 'post_type' => $post_type ) ) : $posts;
+
+		// Test a not existing pt.
+		$this->assertFalse( $func( end( $pts ) + 1 ), $func );
+
+		// Test an array of non existing pt.
+		$this->assertFalse( $func( array( end( $pts ) + 1, end( $pts ) + 2 ) ), $func );
+
+		// Test an array of an existing and non existing pt.
+		$this->assertFalse( $func( array( end( $pts ), end( $pts ) + 2 ) ), $func );
+
+		// Test an array of existting post types.
+		$this->assertTrue( $func( $pts ) );
+
+		// Test an existing post type.
+		$this->assertTrue( $func( end( $pts ) ) );
 
 	}
 }

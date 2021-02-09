@@ -40,7 +40,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_item_schema() {
 
-		$schema = parent::get_item_schema();
+		$schema = (array) parent::get_item_schema();
 
 		// Post properties to unset.
 		$properties_to_unset = array(
@@ -48,12 +48,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'excerpt',
 			'featured_media',
 			'password',
-			'permalink',
 			'ping_status',
 			'slug',
 			'status',
 		);
-
 		foreach ( $properties_to_unset as $to_unset ) {
 			unset( $schema['properties'][ $to_unset ] );
 		}
@@ -61,320 +59,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		// The content is not required.
 		unset( $schema['properties']['content']['required'] );
 
-		$access_plan_properties = array(
-			'price'                     => array(
-				'description' => __(
-					'Access plan price.',
-					'lifterlms'
-				),
-				'type'        => 'number',
-				'required'    => true,
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_positive_float_w_zero',
-				),
-			),
-			'access_expiration'         => array(
-				'description' => __(
-					'Access expiration type.
-					`lifetime` provides access until cancelled or until a recurring payment fails.
-					`limited-period` provides access for a limited period as specified by `access_length`
-					and `access_period` `limited-date` provides access until the date specified by access_expires_date`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'lifetime',
-				'enum'        => array(
-					'lifetime',
-					'limited-period',
-					'limited-date',
-				),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'access_expires'            => array(
-				'description' => __(
-					'Date when access expires.
-					Only applicable when `access_expiration` is `limited-date`. `Format: Y-m-d H:i:s`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
-			),
-			'access_length'             => array(
-				'description' => __(
-					'Determine the length of access from time of purchase.
-					Only applicable when `access_expiration` is `limited-period`.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
-				'default'     => 1,
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_strictly_positive_int',
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'access_period'             => array(
-				'description' => __(
-					'Determine the length of access from time of purchase.
-					Only applicable when `access_expiration` is `limited-period`',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'year',
-				'enum'        => array_keys( llms_get_access_plan_period_options() ),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'availability_restrictions' => array(
-				'description' => __(
-					'Restrict usage of this access plan to students enrolled in at least one of the specified memberships.',
-					'lifterlms'
-				),
-				'type'        => 'array',
-				'items'       => array(
-					'type' => 'integer',
-				),
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_memberships',
-				),
-
-			),
-			'enroll_text'               => array(
-				'description' => __(
-					'Text of the "Purchase" button',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => __( 'Buy Now', 'lifterlms' ),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'frequency'                 => array(
-				'description' => __(
-					'Billing frequency [0-6].
-					`0` denotes a one-time payment.
-					`>= 1` denotes a recurring plan.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'default'     => 0,
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => static function ( $val ) {
-						return in_array( $val, range( 0, 6 ), true ) ? true : new WP_Error(
-							'rest_invalid_param',
-							__( 'Must be an integer in the range 0-6', 'lifterlms' )
-						);
-					},
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'length'                    => array(
-				'description' => __(
-					'For recurring plans only.
-					Determines the number of intervals a plan should run for.
-					`0` denotes the plan should run until cancelled.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'default'     => 0,
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'period'                    => array(
-				'description' => __(
-					'For recurring plans only.
-					Determines the interval of recurring payments.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'year',
-				'enum'        => array_keys( llms_get_access_plan_period_options() ),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'post_id'                   => array(
-				'description' => __(
-					'Determines the course or membership which can be accessed through the plan.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
-				'required'    => true,
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_strictly_positive_int',
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'redirect_forced'           => array(
-				'description' => __(
-					"Use this plans's redirect settings when purchasing a Membership this plan is restricted to.
-					Applicable only when `availability_restrictions` exist for the plan",
-					'lifterlms'
-				),
-				'type'        => 'boolean',
-				'default'     => false,
-				'context'     => array( 'view', 'edit' ),
-			),
-			'redirect_page'             => array(
-				'description' => __(
-					'WordPress page ID to use for checkout success redirection.
-					Applicable only when `redirect_type` is page.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_strictly_positive_int',
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'redirect_type'             => array(
-				'description' => __(
-					"Determines the redirection behavior of the user's browser upon successful checkout or registration through the plan.
-					`self`: Redirect to the permalink of the specified `post_id`.
-					`page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`.
-					`url`: Redirect to the URL specified by `redirect_url`.",
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'self',
-				'enum'        => array(
-					'self',
-					'page',
-					'url',
-				),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'redirect_url'              => array(
-				'description' => __(
-					'URL to use for checkout success redirection.
-					Applicable only when `redirect_type` is `url`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
-				'format'      => 'uri',
-				'arg_options' => array(
-					'sanitize_callback' => 'esc_url_raw',
-				),
-			),
-			'sale_date_end'             => array(
-				'description' => __(
-					'Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely.
-					Only applies when `sale_enabled` is `true`.
-					Format: `Y-m-d H:i:s`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
-			),
-			'sale_date_start'           => array(
-				'description' => __(
-					'Used to automatically start a scheduled sale. If empty, the plan is on sale immediately.
-					Only applies when `sale_enabled` is `true`.
-					Format: `Y-m-d H:i:s`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
-			),
-			'sale_enabled'              => array(
-				'description' => __(
-					'Mark the plan as "On Sale" allowing for temporary price adjustments.',
-					'lifterlms'
-				),
-				'type'        => 'boolean',
-				'default'     => false,
-				'context'     => array( 'view', 'edit' ),
-			),
-			'sale_price'                => array(
-				'description' => __(
-					'Sale price.
-					Only applies when `sale_enabled` is `true`.',
-					'lifterlms'
-				),
-				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_positive_float_w_zero',
-				),
-			),
-			'sku'                       => array(
-				'description' => __(
-					'External identifier',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
-			),
-			'trial_enabled'             => array(
-				'description' => __(
-					'Enable a trial period for a recurring access plan.',
-					'lifterlms'
-				),
-				'type'        => 'boolean',
-				'default'     => false,
-				'context'     => array( 'view', 'edit' ),
-			),
-			'trial_length'              => array(
-				'description' => __(
-					'Determines the length of trial access.
-					Only applies when `trial_enabled` is `true`.',
-					'lifterlms'
-				),
-				'type'        => 'integer',
-				'default'     => 1,
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_strictly_positive_int',
-					'sanitize_callback' => 'absint',
-				),
-			),
-			'trial_period'              => array(
-				'description' => __(
-					'Determines the length of trial access.
-					Only applies when `trial_enabled` is `true`.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'week',
-				'enum'        => array(
-					'year',
-					'month',
-					'week',
-					'day',
-				),
-				'context'     => array( 'view', 'edit' ),
-			),
-			'trial_price'               => array(
-				'description' => __(
-					'Determines the price of the trial period.
-					Only applies when `trial_enabled` is `true`.',
-					'lifterlms'
-				),
-				'type'        => 'number',
-				'default'     => 0,
-				'context'     => array( 'view', 'edit' ),
-				'arg_options' => array(
-					'validate_callback' => 'llms_rest_validate_positive_float_w_zero',
-				),
-			),
-			'visibility'                => array(
-				'description' => __(
-					'Access plan visibility.',
-					'lifterlms'
-				),
-				'type'        => 'string',
-				'default'     => 'visible',
-				'enum'        => array_keys( llms_get_access_plan_visibility_options() ),
-				'context'     => array( 'view', 'edit' ),
-			),
-		);
+		$access_plan_properties = require LLMS_REST_API_PLUGIN_DIR . 'includes/server/schemas/schema-access-plans.php';
 
 		$schema['properties'] = array_merge(
-			(array) $schema['properties'],
+			$schema['properties'],
 			$access_plan_properties
 		);
 
@@ -385,9 +73,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		$schema = apply_filters( 'llms_rest_access_plan_item_schema', $schema );
+		return apply_filters( 'llms_rest_access_plan_item_schema', $schema );
 
-		return $schema;
 	}
 
 	/**
@@ -460,8 +147,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_create = parent::create_item_permissions_check( $request );
 
 		// If current user cannot create the item because of authorization, check if the current user can edit the "parent" course/membership.
-		return $this->related_product_permissions_check( $can_create, $request );
+		$can_create = $this->related_product_permissions_check( $can_create, $request );
 
+		return is_wp_error( $can_create ) ? $can_create : $this->block_request_when_access_plan_limit_reached( $request );
 	}
 
 	/**
@@ -477,7 +165,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_update = parent::update_item_permissions_check( $request );
 
 		// If current user cannot edit the item because of authorization, check if the current user can edit the "parent" course/membership.
-		return $this->related_product_permissions_check( $can_update, $request );
+		$can_update = $this->related_product_permissions_check( $can_update, $request );
+
+		return is_wp_error( $can_update ) ? $can_update : $this->block_request_when_access_plan_limit_reached( $request );
+
 	}
 
 	/**
@@ -558,6 +249,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * @return array
 	 */
 	protected function prepare_object_for_response( $access_plan, $request ) {
+
 		$data    = parent::prepare_object_for_response( $access_plan, $request );
 		$context = $request->get_param( 'context' );
 
@@ -613,6 +305,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( 'url' === $data['redirect_type'] || 'edit' === $context ) {
 			$data['redirect_url'] = $access_plan->get( 'checkout_redirect_url' );
 		}
+
+		// Permalink.
+		$data['permalink'] = $access_plan->get_checkout_url( false );
 
 		// Sale enabled.
 		$data['sale_enabled'] = llms_parse_bool( $access_plan->get( 'on_sale' ) );
@@ -1017,7 +712,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	private function related_product_permissions_check( $has_permissions, $request ) {
 
 		if ( llms_rest_is_authorization_required_error( $has_permissions ) ) {
-			$product_id               = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
+			$product_id = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
+
 			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
 
 			if ( current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
@@ -1026,6 +722,35 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $has_permissions;
+	}
+
+	/**
+	 * Block request when the access plan limit per product is reached.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error
+	 */
+	private function block_request_when_access_plan_limit_reached( $request ) {
+
+		$product_id = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
+		$product    = new LLMS_Product( $product_id );
+		$limit      = $product->get_access_plan_limit();
+
+		if ( count( $product->get_access_plans( false, false ) ) >= $limit ) {
+
+			return llms_rest_bad_request_error(
+				sprintf(
+					// Translators: %1$d = access plans limit per product, %2$s access plan post type plural name, %3$s product post type singular name.
+					__( 'Only %1$d %2$s allowed per %3$s', 'lifterlms' ),
+					$limit,
+					strtolower( get_post_type_object( $this->post_type )->labels->name ),
+					strtolower( get_post_type_object( get_post_type( $product_id ) )->labels->singular_name )
+				)
+			);
+
+		}
+
+		return true;
 	}
 
 }

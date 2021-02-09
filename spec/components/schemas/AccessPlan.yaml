@@ -146,6 +146,11 @@ allOf:
         minimum: 0
         default: 0
         example: 1.99
+      permalink:
+        description: Access Plan URL.
+        type: string
+        example: https://example.com/checkout/?plan=123
+        readOnly: true
       post_id:
         description: Determines the course or membership which can be accessed through the plan.
         type: integer
