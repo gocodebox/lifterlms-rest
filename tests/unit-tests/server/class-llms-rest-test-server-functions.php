@@ -445,9 +445,5 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 		// Test an existing post type.
 		$this->assertTrue( $func( end( $pts ) ) );
 
-		// Clean up.
-		foreach ( $pts as $pt ) {
-			wp_delete_post( $pt );
-		}
 	}
 }
