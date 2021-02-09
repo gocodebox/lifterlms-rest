@@ -65,7 +65,9 @@ return array(
 		),
 		'context'     => array( 'view', 'edit' ),
 		'arg_options' => array(
-			'validate_callback' => 'llms_rest_validate_memberships',
+			'validate_callback' => static function ( $val ) {
+				return llms_rest_validate_memberships( $val, true ); // Allow empty to unset.
+			},
 		),
 
 	),

@@ -266,15 +266,16 @@ function llms_rest_validate_positive_float( $number, $include_zero = true ) {
 
 
 /**
- * Validate submitted array of integers is an array of real memberships id, or empty.
+ * Validate submitted integer, or array of integers is an array of real memberships id, or empty.
  *
  * @since [version]
  *
  * @param int|int[] $memberships Array of memberships id.
+ * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.
  * @return boolean
  */
-function llms_rest_validate_memberships( $memberships ) {
-	return llms_rest_validate_post_types( $memberships, 'llms_membership' );
+function llms_rest_validate_memberships( $memberships, $allow_empty = false ) {
+	return llms_rest_validate_post_types( $memberships, 'llms_membership', $allow_empty );
 }
 
 
@@ -283,11 +284,12 @@ function llms_rest_validate_memberships( $memberships ) {
  *
  * @since [version]
  *
- * @param int|int[] $courses Array of courses id.
+ * @param int|int[] $courses     Array of courses id.
+ * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.
  * @return boolean
  */
-function llms_rest_validate_courses( $courses ) {
-	return llms_rest_validate_post_types( $courses, 'course' );
+function llms_rest_validate_courses( $courses, $allow_empty = false ) {
+	return llms_rest_validate_post_types( $courses, 'course', $allow_empty );
 }
 
 /**
@@ -295,31 +297,39 @@ function llms_rest_validate_courses( $courses ) {
  *
  * @since [version]
  *
- * @param int|int[] $products Array of courses/memberships id.
+ * @param int|int[] $products    Array of courses/memberships id.
+ * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.
  * @return boolean
  */
-function llms_rest_validate_products( $products ) {
-	return llms_rest_validate_post_types( $products, array( 'course', 'llms_membership' ) );
+function llms_rest_validate_products( $products, $allow_empty = false ) {
+	return llms_rest_validate_post_types( $products, array( 'course', 'llms_membership' ), $allow_empty );
 }
 
 /**
  * Validate submitted array of integers is an array of real post types id, or empty.
  *
- * @param int|int[]       $ids        A single or a list of post IDs.
- * @param string|string[] $post_types A single or a list of post types to check against.
+ * @param int|int[]       $ids         A single or a list of post IDs.
+ * @param string|string[] $post_types  A single or a list of post types to check against.
+ * @param boolean         $allow_empty Optional. Whether or not allowing empty lists. Default false.
  * @return boolean
  */
-function llms_rest_validate_post_types( $ids, $post_types ) {
+function llms_rest_validate_post_types( $ids, $post_types, $allow_empty = false ) {
+
+	$ids = is_array( $ids ) ? $ids : array( $ids );
+	$ids = array_filter( $ids );
+
+	if ( empty( $ids ) ) {
+		return $allow_empty;
+	}
 
 	$valid      = true;
-	$ids        = is_array( $ids ) ? $ids : array( $ids );
 	$post_types = is_array( $post_types ) ? $post_types : array( $post_types );
 
 	if ( ! empty( $ids ) ) {
 		$real_post_types = array_filter(
 			$ids,
 			function( $id ) use ( $post_types ) {
-				return ( in_array( get_post_type( $id ), $post_types, true ) );
+				return ( is_numeric( $id ) && in_array( get_post_type( (int) $id ), $post_types, true ) );
 			}
 		);
 
