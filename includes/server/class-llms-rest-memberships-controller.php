@@ -375,7 +375,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.9
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
-	 * @since [version] Fixed access plans link.
+	 * @since 1.0.0-beta.18 Fixed access plans link.
 	 *
 	 * @param LLMS_Membership $membership LLMS Membership.
 	 * @param WP_REST_Request $request    Request object.

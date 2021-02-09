@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -1103,7 +1103,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Added `llms_rest_course_links` filter hook.
 	 * @since 1.0.0-beta.14 Added $request parameter.
-	 * @since [version] Fixed access plans link.
+	 * @since 1.0.0-beta.18 Fixed access plans link.
 	 *
 	 * @param LLMS_Course     $course  LLMS Course.
 	 * @param WP_REST_Request $request Request object.

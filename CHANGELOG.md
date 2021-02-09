@@ -1,6 +1,24 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.18 - 2021-02-09
+---------------------------
+
+##### Updates
+
++ Added Access Plan resource and endpoint.
++ Provide a more significant error message when trying to delete an item without permissions.
++ Use `WP_Http` constants in favor of integers when referencing HTTP status codes.
+
+##### Bug fixes
+
++ Fixes localization issues where a singular name was used in favor of the expected plural form.
++ Fixed issues where an error object was not properly returned when expected
++ Fixed call to undefined function `llms_bad_request_error()`, must be `llms_rest_bad_request_error()`.
++ Fixed access plans resource link.
++ Fixed wrong trigger retrieved when multiple trigger were present for the same user/post pair on Student Enrollment resources.
+
+
 v1.0.0-beta.17 - 2020-11-24
 ---------------------------
 

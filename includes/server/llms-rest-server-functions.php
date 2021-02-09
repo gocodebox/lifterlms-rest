@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Functions
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.12 Added a second paramater to avoid checking if the user is logged in.
- * @since [version] Use WP_Http constants for the error status.
+ * @since 1.0.0-beta.18 Use WP_Http constants for the error status.
  *
  * @param string  $message             Optional. The custom error message. Default empty string.
  *                                     When no custom message is provided a predefined message will be used.
@@ -43,7 +43,7 @@ function llms_rest_authorization_required_error( $message = '', $check_authentic
  * Return a WP_Error with proper code, message and status for invalid or malformed request syntax.
  *
  * @since 1.0.0-beta.1
- * @since [version] Use WP_Http constant for the error status.
+ * @since 1.0.0-beta.18 Use WP_Http constant for the error status.
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -58,7 +58,7 @@ function llms_rest_bad_request_error( $message = '' ) {
  * Return a WP_Error with proper code, message and status for not found resources.
  *
  * @since 1.0.0-beta.1
- * @since [version] Use WP_Http constant for the error status.
+ * @since 1.0.0-beta.18 Use WP_Http constant for the error status.
  *
  * @param string $message Optional. The custom error message. Default empty string.
  *                        When no custom message is provided a predefined message will be used.
@@ -73,7 +73,7 @@ function llms_rest_not_found_error( $message = '' ) {
  * Return a WP_Error for a 500 Internal Server Error.
  *
  * @since 1.0.0-beta.1
- * @since [version] Use WP_Http constant for the error status.
+ * @since 1.0.0-beta.18 Use WP_Http constant for the error status.
  *
  * @param string $message Optional. Custom error message. When none provided a predefined message is used.
  * @return WP_Error
@@ -86,7 +86,7 @@ function llms_rest_server_error( $message = '' ) {
 /**
  * Checks whether or not the passed object is a 401 (permission) or 403 (authorization) error
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param WP_Error $wp_error The WP_Error object to check.
  * @return boolean
@@ -98,7 +98,7 @@ function llms_rest_is_authorization_required_error( $wp_error ) {
 /**
  * Checks whether or not the passed object is a 400 bad request error
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param WP_Error $wp_error The WP_Error object to check.
  * @return boolean
@@ -110,7 +110,7 @@ function llms_rest_is_bad_request_error( $wp_error ) {
 /**
  * Checks whether or not the passed object is a 404 not found error
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param WP_Error $wp_error The WP_Error object to check.
  * @return boolean
@@ -122,7 +122,7 @@ function llms_rest_is_not_found_error( $wp_error ) {
 /**
  * Checks whether or not the passed object is a 500 internal server error
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param WP_Error $wp_error The WP_Error object to check.
  * @return boolean
@@ -134,7 +134,7 @@ function llms_rest_is_server_error( $wp_error ) {
 /**
  * Returns all the error statuses of a WP_Error
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param WP_Error $wp_error The WP_Error object.
  * @return int[]
@@ -182,7 +182,7 @@ function llms_validate_instructors( $instructors ) {
 /**
  * Validate strict positive integer number
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number Integer number to validate.
  * @return boolean
@@ -194,7 +194,7 @@ function llms_rest_validate_strictly_positive_int( $number ) {
 /**
  * Validate positive integer number including zero
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number Integer number to validate.
  * @return boolean
@@ -207,7 +207,7 @@ function llms_rest_validate_positive_int_w_zero( $number ) {
 /**
  * Validate positive integer number
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number       Integer number to validate.
  * @param boolean $include_zero Optional. Whether or not 0 is included. Default is `true`.
@@ -228,7 +228,7 @@ function llms_rest_validate_positive_int( $number, $include_zero = true ) {
 /**
  * Validate strict positive float number
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number Float number to validate.
  * @return boolean
@@ -240,7 +240,7 @@ function llms_rest_validate_strictly_positive_float( $number ) {
 /**
  * Validate strict positive float number including zero
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number Float number to validate.
  * @return boolean
@@ -268,7 +268,7 @@ function llms_rest_validate_positive_float( $number, $include_zero = true ) {
 /**
  * Validate submitted integer, or array of integers is an array of real memberships id, or empty.
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param int|int[] $memberships Array of memberships id.
  * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.
@@ -282,7 +282,7 @@ function llms_rest_validate_memberships( $memberships, $allow_empty = false ) {
 /**
  * Validate submitted array of integers is an array of real courses id, or empty.
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param int|int[] $courses     Array of courses id.
  * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.
@@ -295,7 +295,7 @@ function llms_rest_validate_courses( $courses, $allow_empty = false ) {
 /**
  * Validate submitted array of integers is an array of real courses/memberships id, or empty.
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  *
  * @param int|int[] $products    Array of courses/memberships id.
  * @param boolean   $allow_empty Optional. Whether or not allowing empty lists. Default false.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -176,7 +176,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.6 Fix translated access plans typo.
-	 * @since [version] Remove access_plan.restored topic - access plan post type doesn't support trashing.
+	 * @since 1.0.0-beta.18 Remove access_plan.restored topic - access plan post type doesn't support trashing.
 	 *
 	 * @return array
 	 */

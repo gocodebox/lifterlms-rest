@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -447,7 +447,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since The`trigger` param is now taken into account.
-	 * @since [version] Provide a more significant error message when trying to delete an item without permissions.
+	 * @since 1.0.0-beta.18 Provide a more significant error message when trying to delete an item without permissions.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -794,7 +794,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Updated to reflect changes in the parent class.
-	 * @since [version] Correctly return errors.
+	 * @since 1.0.0-beta.18 Correctly return errors.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -865,7 +865,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 * @since 1.0.0-beta.10 Added subquery to retrive the enrollments trigger.
-	 * @since [version] Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
+	 * @since 1.0.0-beta.18 Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.

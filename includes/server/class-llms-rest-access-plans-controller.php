@@ -4,8 +4,8 @@
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.18
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * LLMS_REST_Access_Plans_Controller class
  *
- * @since [version]
+ * @since 1.0.0-beta.18
  */
 class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
@@ -34,7 +34,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Access Plan's schema, conforming to JSON Schema
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return array
 	 */
@@ -69,7 +69,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filter item schema for the access-plan controller
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.18
 		 *
 		 * @param array $schema Item schema data.
 		 */
@@ -80,7 +80,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves the query params for the objects collection
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -103,7 +103,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Retrieves an array of arguments for the delete endpoint
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return array Delete endpoint arguments.
 	 */
@@ -114,7 +114,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Whether the delete should be forced
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return bool True if the delete should be forced, false otherwise.
@@ -126,7 +126,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Whether the trash is supported
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return bool True if the trash is supported, false otherwise.
 	 */
@@ -137,7 +137,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Check if a given request has access to create an item
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -155,7 +155,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Check if a given request has access to update an item
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -174,7 +174,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Check if a given request has access to delete an item
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -191,7 +191,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Request object.
@@ -230,7 +230,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the access plan's links.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.18
 		 *
 		 * @param array            $links       Links for the given access plan.
 		 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
@@ -242,7 +242,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Full details about the request.
@@ -337,7 +337,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the access plan data for a response.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.18
 		 *
 		 * @param array            $data        Array of lesson properties prepared for response.
 		 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
@@ -351,7 +351,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Format query arguments to retrieve a collection of objects
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -385,7 +385,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepares a single post for create or update
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of llms post args or WP_Error.
@@ -417,7 +417,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * Filters the access plan data before inserting in the db
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.18
 		 *
 		 * @param array           $prepared_item Array of access plan item properties prepared for database.
 		 * @param WP_REST_Request $request       Full details about the request.
@@ -433,7 +433,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * This method should be used for access plan properties that require the access plan id in order to be saved in the database.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -583,7 +583,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Handle properties interdependency
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param array            $to_set      Array of properties to be set.
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
@@ -606,7 +606,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * These properties must be compared to the saved value before updating, because if equal they will produce an error(see update_post_meta()).
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -655,7 +655,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Remove all the properties that do not need to be set, based on other properties
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -703,7 +703,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Check if the current user, who has no permissions to manipulate the access plan post, can edit its related product.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @param boolean|WP_Error $has_permissions Whether or not the current user has the permission to manipulate the resource.
 	 * @param WP_REST_Request  $request         Full details about the request.

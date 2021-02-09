@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -175,7 +175,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to create an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use plural post type name.
+	 * @since 1.0.0-beta.18 Use plural post type name.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -355,7 +355,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Moved parameters to query args mapping into a different method.
-	 * @since [version] Correctly return errors.
+	 * @since 1.0.0-beta.18 Correctly return errors.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -427,7 +427,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use plural post type name.
+	 * @since 1.0.0-beta.18 Use plural post type name.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -573,7 +573,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Provide a more significant error message when trying to delete an item without permissions.
+	 * @since 1.0.0-beta.18 Provide a more significant error message when trying to delete an item without permissions.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -1434,7 +1434,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::handle_status_param().
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Use plural post type name.
+	 * @since 1.0.0-beta.18 Use plural post type name.
 	 *
 	 * @param string $status Status.
 	 * @return string|WP_Error Status or WP_Error if lacking the proper permission.
@@ -1477,7 +1477,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Heavily based on WP_REST_Posts_Controller::handle_featured_media().
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed call to undefined function `llms_bad_request_error()`, must be `llms_rest_bad_request_error()`.
+	 * @since 1.0.0-beta.18 Fixed call to undefined function `llms_bad_request_error()`, must be `llms_rest_bad_request_error()`.
 	 *
 	 * @param int $featured_media Featured Media ID.
 	 * @param int $object_id      LLMS object ID.

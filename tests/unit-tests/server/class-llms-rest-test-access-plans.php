@@ -7,8 +7,8 @@
  * @group REST
  * @group rest_access_plans
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.18
+ * @version 1.0.0-beta.18
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -119,7 +119,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test the item schema
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test list access plans pagination success
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -156,7 +156,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test getting single access plan that doesn't exist.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -180,7 +180,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -210,7 +210,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test producing bad request error when creating a single access-plans
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -285,7 +285,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test access plan alteration is allowed to who can edit parent post
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -396,7 +396,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test deleting a non existent access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -417,7 +417,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating a non existent access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -439,7 +439,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test forbidden single access plan creation
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -476,7 +476,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating single access plan without permissions
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -504,7 +504,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test create free access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -569,7 +569,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test create free paid access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -639,7 +639,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test frequency validation
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -671,7 +671,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test post id validation
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -731,7 +731,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test access plan limit
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -823,7 +823,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creation defaults respected
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -868,7 +868,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test filter collection by post_id
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */
@@ -986,7 +986,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test links
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return void
 	 */

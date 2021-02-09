@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.17';
+	public $version = '1.0.0-beta.18';
 
 	/**
 	 * Constructor.
@@ -119,7 +119,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Include memberships controller class file.
-	 * @since [version] Include access plans controller class file.
+	 * @since 1.0.0-beta.18 Include access plans controller class file.
 	 *
 	 * @return void
 	 */
@@ -161,7 +161,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.9 Init memberships controller.
-	 * @since [version] Init access plans controller.
+	 * @since 1.0.0-beta.18 Init access plans controller.
 	 *
 	 * @return void
 	 */

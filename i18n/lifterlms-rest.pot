@@ -1,15 +1,15 @@
-# Copyright (C) 2019-2020 LifterLMS
+# Copyright (C) 2019-2021 LifterLMS
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.17\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.18\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-11-24T13:34:01-07:00\n"
+"POT-Creation-Date: 2021-02-09T13:12:36-07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -123,162 +123,167 @@ msgstr ""
 msgid "Post password. Required if the post is password protected."
 msgstr ""
 
-#. translators: The post type singular name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:189
+#. Translators: %s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:190
 msgid "Cannot create existing %s."
 msgstr ""
 
-#. translators: The post type singular name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:194
-msgid "Sorry, you are not allowed to create a %s as this user."
+#. Translators: %s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:195
+msgid "Sorry, you are not allowed to create %s as this user."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:198
-#: includes/abstracts/class-llms-rest-posts-controller.php:448
+#: includes/abstracts/class-llms-rest-posts-controller.php:199
+#: includes/abstracts/class-llms-rest-posts-controller.php:451
 msgid "Sorry, you are not allowed to assign the provided terms."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:336
+#: includes/abstracts/class-llms-rest-posts-controller.php:337
 msgid "Incorrect password."
 msgstr ""
 
-#. translators: The post type singular name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:444
-msgid "Sorry, you are not allowed to update a %s as this user."
+#. Translators: %s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:447
+msgid "Sorry, you are not allowed to update %s as this user."
+msgstr ""
+
+#. Translators: %s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:597
+msgid "Sorry, you are not allowed to delete %s as this user."
 msgstr ""
 
 #. translators: %1$s: post type name, %2$s: force=true
-#: includes/abstracts/class-llms-rest-posts-controller.php:638
+#: includes/abstracts/class-llms-rest-posts-controller.php:648
 msgid "The %1$s does not support trashing. Set '%2$s' to delete."
 msgstr ""
 
 #. translators: %s: post type name
-#: includes/abstracts/class-llms-rest-posts-controller.php:662
+#: includes/abstracts/class-llms-rest-posts-controller.php:672
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1042
+#: includes/abstracts/class-llms-rest-posts-controller.php:1052
 msgid "Unique Identifier. The WordPress Post ID."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1048
+#: includes/abstracts/class-llms-rest-posts-controller.php:1058
 #: includes/server/class-llms-rest-students-progress-controller.php:230
 #: includes/server/class-llms-rest-webhooks-controller.php:182
 msgid "Creation date. Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1053
-#: includes/abstracts/class-llms-rest-posts-controller.php:1070
+#: includes/abstracts/class-llms-rest-posts-controller.php:1063
+#: includes/abstracts/class-llms-rest-posts-controller.php:1080
 msgid "Creation date (in GMT). Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1058
+#: includes/abstracts/class-llms-rest-posts-controller.php:1068
 #: includes/server/class-llms-rest-students-progress-controller.php:239
 #: includes/server/class-llms-rest-webhooks-controller.php:189
 msgid "Date last modified. Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1064
+#: includes/abstracts/class-llms-rest-posts-controller.php:1074
 msgid "Date last modified (in GMT). Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1079
+#: includes/abstracts/class-llms-rest-posts-controller.php:1089
 msgid "Post title."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1089
+#: includes/abstracts/class-llms-rest-posts-controller.php:1099
 msgid "Raw title. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1094
+#: includes/abstracts/class-llms-rest-posts-controller.php:1104
 msgid "Rendered title."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1103
+#: includes/abstracts/class-llms-rest-posts-controller.php:1113
 msgid "The HTML content of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1112
+#: includes/abstracts/class-llms-rest-posts-controller.php:1122
 msgid "Rendered HTML content."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1118
+#: includes/abstracts/class-llms-rest-posts-controller.php:1128
 msgid "Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1123
+#: includes/abstracts/class-llms-rest-posts-controller.php:1133
 msgid "Whether the content is protected with a password."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1132
+#: includes/abstracts/class-llms-rest-posts-controller.php:1142
 msgid "The HTML excerpt of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1140
+#: includes/abstracts/class-llms-rest-posts-controller.php:1150
 msgid "Rendered HTML excerpt."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1146
+#: includes/abstracts/class-llms-rest-posts-controller.php:1156
 msgid "Raw HTML excerpt. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1151
+#: includes/abstracts/class-llms-rest-posts-controller.php:1161
 msgid "Whether the excerpt is protected with a password."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1159
+#: includes/abstracts/class-llms-rest-posts-controller.php:1169
 msgid "Post URL."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1166
+#: includes/abstracts/class-llms-rest-posts-controller.php:1176
 msgid "Post URL slug."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1174
+#: includes/abstracts/class-llms-rest-posts-controller.php:1184
 msgid "LifterLMS custom post type"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1180
+#: includes/abstracts/class-llms-rest-posts-controller.php:1190
 msgid "The publication status of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1187
+#: includes/abstracts/class-llms-rest-posts-controller.php:1197
 msgid "Password used to protect access to the content."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1192
+#: includes/abstracts/class-llms-rest-posts-controller.php:1202
 msgid "Featured image ID."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1197
+#: includes/abstracts/class-llms-rest-posts-controller.php:1207
 msgid "Post comment status. Default comment status dependent upon general WordPress post discussion settings."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1204
+#: includes/abstracts/class-llms-rest-posts-controller.php:1214
 msgid "Post ping status. Default ping status dependent upon general WordPress post discussion settings."
 msgstr ""
 
 #. translators: %s: post type
-#: includes/abstracts/class-llms-rest-posts-controller.php:1236
+#: includes/abstracts/class-llms-rest-posts-controller.php:1246
 msgid "The %s cannot be retrieved."
 msgstr ""
 
 #. translators: %s: post type
-#: includes/abstracts/class-llms-rest-posts-controller.php:1262
+#: includes/abstracts/class-llms-rest-posts-controller.php:1272
 msgid "The %s cannot be created."
 msgstr ""
 
-#. translators: The post type singular name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:1443
-msgid "Sorry, you are not allowed to create a private %s."
+#. Translators: %s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:1454
+msgid "Sorry, you are not allowed to create private %s."
 msgstr ""
 
-#. translators: The post type singular name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:1450
-msgid "Sorry, you are not allowed to publish a %s."
+#. Translators: $s = The post type name.
+#: includes/abstracts/class-llms-rest-posts-controller.php:1461
+msgid "Sorry, you are not allowed to publish %s."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1481
+#: includes/abstracts/class-llms-rest-posts-controller.php:1494
 msgid "Invalid featured media ID."
 msgstr ""
 
@@ -666,80 +671,76 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:194
+#: includes/class-llms-rest-webhooks.php:195
 msgid "Course created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:195
+#: includes/class-llms-rest-webhooks.php:196
 msgid "Course updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:196
+#: includes/class-llms-rest-webhooks.php:197
 msgid "Course deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:197
+#: includes/class-llms-rest-webhooks.php:198
 msgid "Course restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:198
+#: includes/class-llms-rest-webhooks.php:199
 msgid "Section created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:199
+#: includes/class-llms-rest-webhooks.php:200
 msgid "Section updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:200
+#: includes/class-llms-rest-webhooks.php:201
 msgid "Section deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:201
+#: includes/class-llms-rest-webhooks.php:202
 msgid "Lesson created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:202
+#: includes/class-llms-rest-webhooks.php:203
 msgid "Lesson updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:203
+#: includes/class-llms-rest-webhooks.php:204
 msgid "Lesson deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:204
+#: includes/class-llms-rest-webhooks.php:205
 msgid "Lesson restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:205
+#: includes/class-llms-rest-webhooks.php:206
 msgid "Membership created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:206
+#: includes/class-llms-rest-webhooks.php:207
 msgid "Membership updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:207
+#: includes/class-llms-rest-webhooks.php:208
 msgid "Membership deleted"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:208
+#: includes/class-llms-rest-webhooks.php:209
 msgid "Membership restored"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:209
+#: includes/class-llms-rest-webhooks.php:210
 msgid "Access Plan created"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:210
+#: includes/class-llms-rest-webhooks.php:211
 msgid "Access Plan updated"
 msgstr ""
 
-#: includes/class-llms-rest-webhooks.php:211
-msgid "Access Plan deleted"
-msgstr ""
-
 #: includes/class-llms-rest-webhooks.php:212
-msgid "Access Plan restored"
+msgid "Access Plan deleted"
 msgstr ""
 
 #: includes/class-llms-rest-webhooks.php:213
@@ -850,6 +851,15 @@ msgstr ""
 #. Translators: %d = Response code.
 #: includes/models/class-llms-rest-webhook.php:414
 msgid "The delivery url returned the response code \"%d\"."
+msgstr ""
+
+#: includes/server/class-llms-rest-access-plans-controller.php:92
+msgid "Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids."
+msgstr ""
+
+#. Translators: %1$d = access plans limit per product, %2$s access plan post type plural name, %3$s product post type singular name.
+#: includes/server/class-llms-rest-access-plans-controller.php:744
+msgid "Only %1$d %2$s allowed per %3$s"
 msgstr ""
 
 #: includes/server/class-llms-rest-api-keys-controller.php:86
@@ -1065,7 +1075,7 @@ msgstr ""
 msgid "When true the video_embed will be used on the course tiles (on the catalog, for example) instead of the featured image."
 msgstr ""
 
-#: includes/server/class-llms-rest-courses-controller.php:1194
+#: includes/server/class-llms-rest-courses-controller.php:1195
 #: includes/server/class-llms-rest-memberships-controller.php:64
 msgid "Limit results to a specific student or a list of students. Accepts a single student id or a comma separated list of student ids."
 msgstr ""
@@ -1102,42 +1112,47 @@ msgstr ""
 msgid "The enrollment creation date could not be updated"
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:503
+#. Translators: %s = The post type name.
+#: includes/server/class-llms-rest-enrollments-controller.php:471
+msgid "Sorry, you are not allowed to delete enrollments as this user."
+msgstr ""
+
+#: includes/server/class-llms-rest-enrollments-controller.php:511
 msgid "The enrollment cannot be deleted."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:635
+#: includes/server/class-llms-rest-enrollments-controller.php:643
 msgid "Filter results to records matching the specified status."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:642
+#: includes/server/class-llms-rest-enrollments-controller.php:650
 msgid "Limit results to a specific course or membership or a list of courses and/or memberships. Accepts a single post id or a comma separated list of post ids."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:667
+#: includes/server/class-llms-rest-enrollments-controller.php:675
 #: includes/server/class-llms-rest-students-progress-controller.php:224
 msgid "The ID of the course/membership."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:673
+#: includes/server/class-llms-rest-enrollments-controller.php:681
 #: includes/server/class-llms-rest-students-progress-controller.php:218
 msgid "The ID of the student."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:679
+#: includes/server/class-llms-rest-enrollments-controller.php:687
 msgid "Creation date. Format: `Y-m-d H:i:s`"
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:684
+#: includes/server/class-llms-rest-enrollments-controller.php:692
 msgid "Date last modified. Format: `Y-m-d H:i:s`"
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:690
+#: includes/server/class-llms-rest-enrollments-controller.php:698
 #: includes/server/class-llms-rest-students-progress-controller.php:246
 msgid "The status of the enrollment."
 msgstr ""
 
-#: includes/server/class-llms-rest-enrollments-controller.php:696
+#: includes/server/class-llms-rest-enrollments-controller.php:704
 msgid "The enrollment trigger. Default is `any`."
 msgstr ""
 
@@ -1303,7 +1318,7 @@ msgstr ""
 msgid "List of membership tags."
 msgstr ""
 
-#: includes/server/class-llms-rest-memberships-controller.php:548
+#: includes/server/class-llms-rest-memberships-controller.php:549
 msgid "Unique Membership Identifier. The WordPress Post ID"
 msgstr ""
 
@@ -1416,22 +1431,131 @@ msgstr ""
 msgid "List of WordPress action hook associated with the webhook."
 msgstr ""
 
-#: includes/server/llms-rest-server-functions.php:28
+#: includes/server/llms-rest-server-functions.php:29
 msgid "You are not authorized to perform this request."
 msgstr ""
 
-#: includes/server/llms-rest-server-functions.php:33
+#: includes/server/llms-rest-server-functions.php:34
 msgid "The API credentials were invalid."
 msgstr ""
 
-#: includes/server/llms-rest-server-functions.php:51
+#: includes/server/llms-rest-server-functions.php:53
 msgid "Invalid or malformed request syntax."
 msgstr ""
 
-#: includes/server/llms-rest-server-functions.php:65
+#: includes/server/llms-rest-server-functions.php:68
 msgid "The requested resource could not be found."
 msgstr ""
 
-#: includes/server/llms-rest-server-functions.php:78
+#: includes/server/llms-rest-server-functions.php:82
 msgid "Internal Server Error."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:19
+msgid "Access plan price."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:28
+msgid "Access expiration type. `lifetime` provides access until cancelled or until a recurring payment fails. `limited-period` provides access for a limited period as specified by `access_length` and `access_period` `limited-date` provides access until the date specified by access_expires_date`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:39
+msgid "Date when access expires. Only applicable when `access_expiration` is `limited-date`. `Format: Y-m-d H:i:s`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:44
+msgid "Determine the length of access from time of purchase. Only applicable when `access_expiration` is `limited-period`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:54
+msgid "Determine the length of access from time of purchase. Only applicable when `access_expiration` is `limited-period`"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:61
+msgid "Restrict usage of this access plan to students enrolled in at least one of the specified memberships."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:75
+msgid "Text of the \"Purchase\" button"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:77
+msgid "Buy Now"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:81
+msgid "Billing frequency [0-6]. `0` denotes a one-time payment. `>= 1` denotes a recurring plan."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:89
+msgid "Must be an integer in the range 0-6"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:96
+msgid "For recurring plans only. Determines the number of intervals a plan should run for. `0` denotes the plan should run until cancelled."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:105
+msgid "For recurring plans only. Determines the interval of recurring payments."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:112
+msgid "Determines the course or membership which can be accessed through the plan."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:120
+msgid "Must be a valid course or membership ID"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:127
+msgid "Use this plans's redirect settings when purchasing a Membership this plan is restricted to. Applicable only when `availability_restrictions` exist for the plan"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:133
+msgid "WordPress page ID to use for checkout success redirection. Applicable only when `redirect_type` is page."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:142
+msgid "Determines the redirection behavior of the user's browser upon successful checkout or registration through the plan. `self`: Redirect to the permalink of the specified `post_id`. `page`: Redirect to the permalink of the WordPress page specified by `redirect_page_id`. `url`: Redirect to the URL specified by `redirect_url`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:153
+msgid "URL to use for checkout success redirection. Applicable only when `redirect_type` is `url`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:162
+msgid "Used to automatically end a scheduled sale. If empty, the plan remains on sale indefinitely. Only applies when `sale_enabled` is `true`. Format: `Y-m-d H:i:s`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:167
+msgid "Used to automatically start a scheduled sale. If empty, the plan is on sale immediately. Only applies when `sale_enabled` is `true`. Format: `Y-m-d H:i:s`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:172
+msgid "Mark the plan as \"On Sale\" allowing for temporary price adjustments."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:178
+msgid "Sale price. Only applies when `sale_enabled` is `true`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:186
+msgid "External identifier"
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:191
+msgid "Enable a trial period for a recurring access plan."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:197
+#: includes/server/schemas/schema-access-plans.php:207
+msgid "Determines the length of trial access. Only applies when `trial_enabled` is `true`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:219
+msgid "Determines the price of the trial period. Only applies when `trial_enabled` is `true`."
+msgstr ""
+
+#: includes/server/schemas/schema-access-plans.php:228
+msgid "Access plan visibility."
 msgstr ""

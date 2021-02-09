@@ -12,8 +12,8 @@
  * @since 1.0.0-beta.10 Added test on the trigger property/param.
  * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
  * @since 1.0.0-beta.16 Compare dates using timestamps instead of date strings using a 60 second delta.
- * @since [version] Added test on enrollment trigger retrieval.
- * @version [version]
+ * @since 1.0.0-beta.18 Added test on enrollment trigger retrieval.
+ * @version 1.0.0-beta.18
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -598,7 +598,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test retrieving enrollment trigger.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 */
 	public function test_enrollment_trigger() {
 

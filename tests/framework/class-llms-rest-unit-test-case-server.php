@@ -6,8 +6,8 @@
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
- * @since [version] Added utility to retrieve schema defaults.
- * @version [version]
+ * @since 1.0.0-beta.18 Added utility to retrieve schema defaults.
+ * @version 1.0.0-beta.18
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -100,7 +100,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Assert a WP_REST_Response status code equals an expected status code.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added optional message on failure as third param.
+	 * @since 1.0.0-beta.18 Added optional message on failure as third param.
 	 *
 	 * @param int              $expected Expected response http status code.
 	 * @param WP_REST_Response $response Response object.
@@ -252,7 +252,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Retrieve default properties from the endpoint schema
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return array
 	 */
@@ -273,7 +273,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Set default properties from the endpoint schema
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.18
 	 *
 	 * @return array
 	 */

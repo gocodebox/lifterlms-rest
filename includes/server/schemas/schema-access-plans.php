@@ -6,8 +6,8 @@
  *
  * @package LifterLMS/Classes
  *
- * @since [version]
- * @version [version]
+ * @since 1.0.0-beta.18
+ * @version 1.0.0-beta.18
  *
  * @see LLMS_REST_Access_Plans_Controller::get_item_schema()
  */
