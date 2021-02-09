@@ -13,7 +13,6 @@ get:
     - Access Plans
   parameters:
     - $ref: '#/components/parameters/Context'
-    - $ref: '#/components/parameters/PostPassword'
   responses:
     200:
       description: Successfully retrieved the access plan.

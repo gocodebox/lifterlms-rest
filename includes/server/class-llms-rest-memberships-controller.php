@@ -375,6 +375,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.9
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
+	 * @since 1.0.0-beta.18 Fixed access plans link.
 	 *
 	 * @param LLMS_Membership $membership LLMS Membership.
 	 * @param WP_REST_Request $request    Request object.
@@ -389,7 +390,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		// Access plans.
 		$links['access_plans'] = array(
 			'href' => add_query_arg(
-				'post',
+				'post_id',
 				$id,
 				rest_url( sprintf( '%s/%s', $this->namespace, 'access-plans' ) )
 			),

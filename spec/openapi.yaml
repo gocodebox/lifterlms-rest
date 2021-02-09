@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0-beta.17
+  version: 1.0.0-beta.18
   title: LifterLMS REST API
   description: >-
     # Introduction
@@ -411,10 +411,9 @@ x-tagGroups:
       - Sections
       - Lessons
 
-  # @todo: Implement
-  # - name: E-Commerce
-  #   tags:
-  #     - Access Plans
+  - name: E-Commerce
+    tags:
+      - Access Plans
 
   - name: Instructors
     tags:
@@ -424,7 +423,7 @@ x-tagGroups:
     tags:
       - Memberships
 
-  # @todo: Implment.
+  # @todo: Implement.
   # - name: Quizzes
   #   tags:
   #     - Quizzes

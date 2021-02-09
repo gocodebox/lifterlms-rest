@@ -13,7 +13,7 @@ const postData = {
   "period": "year",
   "enroll_text": "Buy Now",
   "sale_enabled": false,
-  "sale_price": 1,
+  "sale_price": 99.97,
   "sale_date_start": "2019-01-23 00:00:00",
   "sale_date_end": "2019-03-23 23:59:59",
   "availability_restrictions": [
@@ -22,7 +22,7 @@ const postData = {
     789
   ],
   "access_expiration": "lifetime",
-  "access_expires": "string",
+  "access_expires": "2019-03-23 23:59:59",
   "access_length": 1,
   "access_period": "year",
   "trial_enabled": false,

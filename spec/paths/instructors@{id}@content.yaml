@@ -29,13 +29,13 @@ get:
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
     - name: post
-      description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+      description: Retrieve content for a specific list of one or more posts. Accepts a post `id` or comma separated list of post `id`s.
       in: query
       schema:
         type: string
         example: 123,456
     - name: post_exclude
-      description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separted list of post `id`s.
+      description: Exclude content for a specific list of one or more posts. Accepts a post `id` or comma separated list of post `id`s.
       in: query
       schema:
         type: string
