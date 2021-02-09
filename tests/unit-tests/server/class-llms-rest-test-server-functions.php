@@ -423,7 +423,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	private function test_validate_post_types( $func, $post_type = '', $posts = array() ) {
 
 		// Test an empty array.
-		$this->assertTrue( $func( array(), true ), $func ); // allowed
+		$this->assertTrue( $func( array(), true ), $func ); // Allowed.
 
 		$this->assertFalse( $func( array() ), $func );
 
