@@ -382,7 +382,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	 * @return void
 	 */
 	public function test_llms_rest_validate_memberships() {
-		$this->test_validate_post_types( 'llms_rest_validate_memberships', 'llms_membership' );
+		$this->validate_post_types_tests( 'llms_rest_validate_memberships', 'llms_membership' );
 	}
 
 	/**
@@ -393,7 +393,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	 * @return void
 	 */
 	public function test_llms_rest_validate_courses() {
-		$this->test_validate_post_types( 'llms_rest_validate_courses', 'course' );
+		$this->validate_post_types_tests( 'llms_rest_validate_courses', 'course' );
 	}
 
 	/**
@@ -407,7 +407,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 		$course     = $this->factory->post->create( array( 'post_type' => 'course' ) );
 		$membership = $this->factory->post->create( array( 'post_type' => 'llms_membership' ) );
 
-		$this->test_validate_post_types( 'llms_rest_validate_products', '', array( $course, $membership ) );
+		$this->validate_post_types_tests( 'llms_rest_validate_products', '', array( $course, $membership ) );
 
 		// Test mixed with a standard post.
 		$this->assertFalse( llms_rest_validate_products( array( $course, $membership, $this->factory->post->create() ) ) );
@@ -420,7 +420,7 @@ class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @return void
 	 */
-	private function test_validate_post_types( $func, $post_type = '', $posts = array() ) {
+	private function validate_post_types_tests( $func, $post_type = '', $posts = array() ) {
 
 		// Test an empty array.
 		$this->assertTrue( $func( array(), true ), $func ); // Allowed.
