@@ -26,15 +26,15 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 	 */
 	protected $columns = array(
 
-		'status'           => '%s',
-		'name'             => '%s',
-		'delivery_url'     => '%s',
-		'secret'           => '%s',
-		'topic'            => '%s',
-		'user_id'          => '%d',
-		'created'          => '%s',
-		'updated'          => '%s',
-		'failure_count'    => '%d',
+		'status'        => '%s',
+		'name'          => '%s',
+		'delivery_url'  => '%s',
+		'secret'        => '%s',
+		'topic'         => '%s',
+		'user_id'       => '%d',
+		'created'       => '%s',
+		'updated'       => '%s',
+		'failure_count' => '%d',
 
 	);
 
