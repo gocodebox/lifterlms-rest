@@ -40,7 +40,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	public function get_item_schema() {
 
-		$schema = parent::get_item_schema();
+		$schema = (array) parent::get_item_schema();
 
 		// Post properties to unset.
 		$properties_to_unset = array(
@@ -48,7 +48,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'excerpt',
 			'featured_media',
 			'password',
-			'permalink',
 			'ping_status',
 			'slug',
 			'status',
@@ -63,7 +62,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$access_plan_properties = require LLMS_REST_API_PLUGIN_DIR . 'includes/server/schemas/schema-access-plans.php';
 
 		$schema['properties'] = array_merge(
-			(array) $schema['properties'],
+			$schema['properties'],
 			$access_plan_properties
 		);
 
@@ -306,6 +305,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( 'url' === $data['redirect_type'] || 'edit' === $context ) {
 			$data['redirect_url'] = $access_plan->get( 'checkout_redirect_url' );
 		}
+
+		// Permalink.
+		$data['permalink'] = $access_plan->get_checkout_url( false );
 
 		// Sale enabled.
 		$data['sale_enabled'] = llms_parse_bool( $access_plan->get( 'on_sale' ) );

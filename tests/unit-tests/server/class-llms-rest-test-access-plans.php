@@ -45,7 +45,8 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $generates_revision_on_creation = false;
 
 	/**
-	 * @since [version]
+	 * Schema properties
+	 *
 	 * @var array
 	 */
 	private $schema_properties = array(
@@ -65,6 +66,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		'length',
 		'menu_order',
 		'period',
+		'permalink',
 		'price',
 		'post_id',
 		'post_type',
