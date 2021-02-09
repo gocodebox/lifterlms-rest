@@ -652,7 +652,6 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->sample_access_plan_args,
 			array(
 				'post_id'   => $course->get( 'id' ),
-				'price'     => 1,
 				'frequency' => 7 // Not valid.
 			)
 		);
@@ -667,6 +666,158 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertResponseStatusEquals( 400, $response );
 		$this->assertEquals( 'Must be an integer in the range 0-6', $response->get_data()['data']['params']['frequency'] );
 
+	}
+
+	/**
+	 * Test post id validation
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_post_id_validation_error() {
+
+		wp_set_current_user( $this->user_allowed );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->sample_access_plan_args,
+				array(
+					'post_id' => $this->factory->course->create() + 10, // This post id doesn't exist at all.
+				)
+			)
+		);
+
+		// Invalid.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Must be a valid course or membership ID', $response->get_data()['data']['params']['post_id'] );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->sample_access_plan_args,
+				array(
+					'post_id' => $this->factory->post->create(), // This post id is not of a course or membership.
+				)
+			)
+		);
+		// Invalid.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Must be a valid course or membership ID', $response->get_data()['data']['params']['post_id'] );
+
+		// Test same thing when updating.
+		$access_plan_id = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+		update_post_meta( $access_plan_id, '_llms_product_id', $this->factory->course->create() );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $access_plan_id,
+			array_merge(
+				$this->sample_access_plan_args,
+				array(
+					'post_id' => $this->factory->post->create(), // This post id is not of a course or membership.
+				)
+			)
+		);
+
+		// Blocked
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Must be a valid course or membership ID', $response->get_data()['data']['params']['post_id'] );
+
+	}
+
+	/**
+	 * Test access plan limit
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_access_plan_limit() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		foreach ( array( 'course', 'llms_membership' ) as $pt ) {
+
+			// Create 5 access plans, by default the limit is 6 per product.
+			$access_plan_ids = $this->factory->post->create_many( 5, array( 'post_type' => $this->post_type ) );
+
+			$product = $this->factory->post->create( array( 'post_type' => $pt ) );
+
+			foreach ( $access_plan_ids as $access_plan_id ) {
+				update_post_meta( $access_plan_id, '_llms_product_id', $product );
+			}
+
+			// Create an ap through api with same product id.
+			$response = $this->perform_mock_request(
+				'POST',
+				$this->route,
+				array_merge(
+					$this->sample_access_plan_args,
+					array(
+						'post_id' => $product,
+					)
+				)
+			);
+
+			// The 6th passes.
+			$this->assertResponseStatusEquals( 201, $response, $pt );
+
+			// Create the 7th ap.
+			$response = $this->perform_mock_request(
+				'POST',
+				$this->route,
+				array_merge(
+					$this->sample_access_plan_args,
+					array(
+						'post_id' => $product,
+					)
+				)
+			);
+
+			// The 7th is blocked.
+			$this->assertResponseStatusEquals( 400, $response, $pt );
+			$this->assertResponseMessageEquals(
+				sprintf(
+					'Only %1$d %2$s allowed per %3$s',
+					6,
+					strtolower( get_post_type_object( $this->post_type )->labels->name ),
+					strtolower( get_post_type_object( $pt )->labels->singular_name )
+				),
+				$response
+			);
+
+			// Create an ap linked to a different product-
+			$access_plan = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+			$new_product = $this->factory->post->create( array( 'post_type' => $pt ) );
+			update_post_meta( $access_plan, '_llms_product_id', $new_product );
+
+			// Update its post_id so that it becomes the 7th ap of the first product.
+			$response = $this->perform_mock_request(
+				'POST',
+				$this->route  . '/' . $access_plan,
+				array_merge(
+					$this->sample_access_plan_args,
+					array(
+						'post_id' => $product,
+					)
+				)
+			);
+
+			// The 7th is blocked.
+			$this->assertResponseStatusEquals( 400, $response, $pt );
+			$this->assertResponseMessageEquals(
+				sprintf(
+					'Only %1$d %2$s allowed per %3$s',
+					6,
+					strtolower( get_post_type_object( $this->post_type )->labels->name ),
+					strtolower( get_post_type_object( $pt )->labels->singular_name )
+				),
+				$response
+			);
+		}
 	}
 
 	/**

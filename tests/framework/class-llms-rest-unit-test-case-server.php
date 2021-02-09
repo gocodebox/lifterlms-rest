@@ -100,14 +100,16 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Assert a WP_REST_Response status code equals an expected status code.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added optional message on failure as third param.
 	 *
-	 * @param int $expected Expected response http status code.
+	 * @param int              $expected Expected response http status code.
 	 * @param WP_REST_Response $response Response object.
+	 * @param string           $message  Optional. Message on failure. Default is empty string.
 	 * @return void
 	 */
-	protected function assertResponseStatusEquals( $expected, WP_REST_Response $response ) {
+	protected function assertResponseStatusEquals( $expected, WP_REST_Response $response, $msg = '' ) {
 
-		$this->assertEquals( $expected, $response->get_status() );
+		$this->assertEquals( $expected, $response->get_status(), $msg );
 
 	}
 
