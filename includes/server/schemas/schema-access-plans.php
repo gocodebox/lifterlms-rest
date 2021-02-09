@@ -112,7 +112,12 @@ return array(
 		'context'     => array( 'view', 'edit' ),
 		'required'    => true,
 		'arg_options' => array(
-			'validate_callback' => 'llms_rest_validate_strictly_positive_int',
+			'validate_callback' => static function ( $val ) {
+				return llms_rest_validate_products( $val ) ? true : new WP_Error(
+					'rest_invalid_param',
+					__( 'Must be a valid course or membership ID', 'lifterlms' )
+				);
+			},
 			'sanitize_callback' => 'absint',
 		),
 	),

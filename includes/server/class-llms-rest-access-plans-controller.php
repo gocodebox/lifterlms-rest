@@ -148,8 +148,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_create = parent::create_item_permissions_check( $request );
 
 		// If current user cannot create the item because of authorization, check if the current user can edit the "parent" course/membership.
-		return $this->related_product_permissions_check( $can_create, $request );
+		$can_create = $this->related_product_permissions_check( $can_create, $request );
 
+		return is_wp_error( $can_create ) ? $can_create : $this->block_request_when_access_plan_limit_reached( $request );
 	}
 
 	/**
@@ -165,7 +166,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_update = parent::update_item_permissions_check( $request );
 
 		// If current user cannot edit the item because of authorization, check if the current user can edit the "parent" course/membership.
-		return $this->related_product_permissions_check( $can_update, $request );
+		$can_update = $this->related_product_permissions_check( $can_update, $request );
+
+		return is_wp_error( $can_update ) ? $can_update : $this->block_request_when_access_plan_limit_reached( $request );
+
 	}
 
 	/**
@@ -706,7 +710,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	private function related_product_permissions_check( $has_permissions, $request ) {
 
 		if ( llms_rest_is_authorization_required_error( $has_permissions ) ) {
-			$product_id               = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
+			$product_id = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
+
 			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
 
 			if ( current_user_can( $product_post_type_object->cap->edit_post, $product_id ) ) {
@@ -715,6 +720,35 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $has_permissions;
+	}
+
+	/**
+	 * Block request when the access plan limit per product is reached.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error
+	 */
+	private function block_request_when_access_plan_limit_reached( $request ) {
+
+		$product_id = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
+		$product    = new LLMS_Product( $product_id );
+		$limit      = $product->get_access_plan_limit();
+
+		if ( count( $product->get_access_plans( false, false ) ) >= $limit ) {
+
+			return llms_rest_bad_request_error(
+				sprintf(
+					// Translators: %1$d = access plans limit per product, %2$s access plan post type plural name, %3$s product post type singular name.
+					__( 'Only %1$d %2$s allowed per %3$s', 'lifterlms' ),
+					$limit,
+					strtolower( get_post_type_object( $this->post_type )->labels->name ),
+					strtolower( get_post_type_object( get_post_type( $product_id ) )->labels->singular_name )
+				)
+			);
+
+		}
+
+		return true;
 	}
 
 }

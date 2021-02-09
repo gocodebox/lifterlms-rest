@@ -270,23 +270,62 @@ function llms_rest_validate_positive_float( $number, $include_zero = true ) {
  *
  * @since [version]
  *
- * @param array $memberships Array of instructors id.
+ * @param int|int[] $memberships Array of memberships id.
  * @return boolean
  */
 function llms_rest_validate_memberships( $memberships ) {
+	return llms_rest_validate_post_types( $memberships, 'llms_membership' );
+}
 
-	$valid = true;
 
-	if ( ! empty( $memberships ) ) {
-		$real_memberships = array_map(
-			function( $membership ) {
-				return ( 'llms_membership' === get_post_type( $membership ) );
-			},
-			$memberships
+/**
+ * Validate submitted array of integers is an array of real courses id, or empty.
+ *
+ * @since [version]
+ *
+ * @param int|int[] $courses Array of courses id.
+ * @return boolean
+ */
+function llms_rest_validate_courses( $courses ) {
+	return llms_rest_validate_post_types( $courses, 'course' );
+}
+
+/**
+ * Validate submitted array of integers is an array of real courses/memberships id, or empty.
+ *
+ * @since [version]
+ *
+ * @param int|int[] $products Array of courses/memberships id.
+ * @return boolean
+ */
+function llms_rest_validate_products( $products ) {
+	return llms_rest_validate_post_types( $products, array( 'course', 'llms_membership' ) );
+}
+
+/**
+ * Validate submitted array of integers is an array of real post types id, or empty.
+ *
+ * @param int|int[]       $ids        A single or a list of post IDs.
+ * @param string|string[] $post_types A single or a list of post types to check against.
+ * @return boolean
+ */
+function llms_rest_validate_post_types( $ids, $post_types ) {
+
+	$valid      = true;
+	$ids        = is_array( $ids ) ? $ids : array( $ids );
+	$post_types = is_array( $post_types ) ? $post_types : array( $post_types );
+
+	if ( ! empty( $ids ) ) {
+		$real_post_types = array_filter(
+			$ids,
+			function( $id ) use ( $post_types ) {
+				return ( in_array( get_post_type( $id ), $post_types, true ) );
+			}
 		);
 
-		$valid = count( array_filter( $real_memberships ) ) === count( $memberships );
+		$valid = count( $real_post_types ) === count( $ids );
 	}
 
 	return $valid;
+
 }
