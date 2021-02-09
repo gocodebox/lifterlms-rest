@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.17
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -175,6 +175,8 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * Retrieves a list of webhook topics.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.6 Fix translated access plans typo.
+	 * @since 1.0.0-beta.18 Remove access_plan.restored topic - access plan post type doesn't support trashing.
 	 *
 	 * @return array
 	 */
@@ -184,51 +186,49 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		 * Filter the available webhook topics.
 		 *
 		 * @since 1.0.0-beta.1
-		 * @since 1.0.0-beta.6 Fix translated access plans typo.
 		 *
 		 * @param array $topics Array of topics.
 		 */
 		return apply_filters(
 			'llms_rest_webhook_topics',
 			array(
-				'course.created'       => __( 'Course created', 'lifterlms' ),
-				'course.updated'       => __( 'Course updated', 'lifterlms' ),
-				'course.deleted'       => __( 'Course deleted', 'lifterlms' ),
-				'course.restored'      => __( 'Course restored', 'lifterlms' ),
-				'section.created'      => __( 'Section created', 'lifterlms' ),
-				'section.updated'      => __( 'Section updated', 'lifterlms' ),
-				'section.deleted'      => __( 'Section deleted', 'lifterlms' ),
-				'lesson.created'       => __( 'Lesson created', 'lifterlms' ),
-				'lesson.updated'       => __( 'Lesson updated', 'lifterlms' ),
-				'lesson.deleted'       => __( 'Lesson deleted', 'lifterlms' ),
-				'lesson.restored'      => __( 'Lesson restored', 'lifterlms' ),
-				'membership.created'   => __( 'Membership created', 'lifterlms' ),
-				'membership.updated'   => __( 'Membership updated', 'lifterlms' ),
-				'membership.deleted'   => __( 'Membership deleted', 'lifterlms' ),
-				'membership.restored'  => __( 'Membership restored', 'lifterlms' ),
-				'access_plan.created'  => __( 'Access Plan created', 'lifterlms' ),
-				'access_plan.updated'  => __( 'Access Plan updated', 'lifterlms' ),
-				'access_plan.deleted'  => __( 'Access Plan deleted', 'lifterlms' ),
-				'access_plan.restored' => __( 'Access Plan restored', 'lifterlms' ),
-				'order.created'        => __( 'Order created', 'lifterlms' ),
-				'order.updated'        => __( 'Order updated', 'lifterlms' ),
-				'order.deleted'        => __( 'Order deleted', 'lifterlms' ),
-				'order.restored'       => __( 'Order restored', 'lifterlms' ),
-				'transaction.created'  => __( 'Transaction created', 'lifterlms' ),
-				'transaction.updated'  => __( 'Transaction updated', 'lifterlms' ),
-				'transaction.deleted'  => __( 'Transaction deleted', 'lifterlms' ),
-				'student.created'      => __( 'Student created', 'lifterlms' ),
-				'student.updated'      => __( 'Student updated', 'lifterlms' ),
-				'student.deleted'      => __( 'Student deleted', 'lifterlms' ),
-				'enrollment.created'   => __( 'Enrollment created', 'lifterlms' ),
-				'enrollment.updated'   => __( 'Enrollment updated', 'lifterlms' ),
-				'enrollment.deleted'   => __( 'Enrollment deleted', 'lifterlms' ),
-				'progress.updated'     => __( 'Progress updated', 'lifterlms' ),
-				'progress.deleted'     => __( 'Progress deleted', 'lifterlms' ),
-				'instructor.created'   => __( 'Instructor created', 'lifterlms' ),
-				'instructor.updated'   => __( 'Instructor updated', 'lifterlms' ),
-				'instructor.deleted'   => __( 'Instructor deleted', 'lifterlms' ),
-				'action'               => __( 'Action', 'lifterlms' ),
+				'course.created'      => __( 'Course created', 'lifterlms' ),
+				'course.updated'      => __( 'Course updated', 'lifterlms' ),
+				'course.deleted'      => __( 'Course deleted', 'lifterlms' ),
+				'course.restored'     => __( 'Course restored', 'lifterlms' ),
+				'section.created'     => __( 'Section created', 'lifterlms' ),
+				'section.updated'     => __( 'Section updated', 'lifterlms' ),
+				'section.deleted'     => __( 'Section deleted', 'lifterlms' ),
+				'lesson.created'      => __( 'Lesson created', 'lifterlms' ),
+				'lesson.updated'      => __( 'Lesson updated', 'lifterlms' ),
+				'lesson.deleted'      => __( 'Lesson deleted', 'lifterlms' ),
+				'lesson.restored'     => __( 'Lesson restored', 'lifterlms' ),
+				'membership.created'  => __( 'Membership created', 'lifterlms' ),
+				'membership.updated'  => __( 'Membership updated', 'lifterlms' ),
+				'membership.deleted'  => __( 'Membership deleted', 'lifterlms' ),
+				'membership.restored' => __( 'Membership restored', 'lifterlms' ),
+				'access_plan.created' => __( 'Access Plan created', 'lifterlms' ),
+				'access_plan.updated' => __( 'Access Plan updated', 'lifterlms' ),
+				'access_plan.deleted' => __( 'Access Plan deleted', 'lifterlms' ),
+				'order.created'       => __( 'Order created', 'lifterlms' ),
+				'order.updated'       => __( 'Order updated', 'lifterlms' ),
+				'order.deleted'       => __( 'Order deleted', 'lifterlms' ),
+				'order.restored'      => __( 'Order restored', 'lifterlms' ),
+				'transaction.created' => __( 'Transaction created', 'lifterlms' ),
+				'transaction.updated' => __( 'Transaction updated', 'lifterlms' ),
+				'transaction.deleted' => __( 'Transaction deleted', 'lifterlms' ),
+				'student.created'     => __( 'Student created', 'lifterlms' ),
+				'student.updated'     => __( 'Student updated', 'lifterlms' ),
+				'student.deleted'     => __( 'Student deleted', 'lifterlms' ),
+				'enrollment.created'  => __( 'Enrollment created', 'lifterlms' ),
+				'enrollment.updated'  => __( 'Enrollment updated', 'lifterlms' ),
+				'enrollment.deleted'  => __( 'Enrollment deleted', 'lifterlms' ),
+				'progress.updated'    => __( 'Progress updated', 'lifterlms' ),
+				'progress.deleted'    => __( 'Progress deleted', 'lifterlms' ),
+				'instructor.created'  => __( 'Instructor created', 'lifterlms' ),
+				'instructor.updated'  => __( 'Instructor updated', 'lifterlms' ),
+				'instructor.deleted'  => __( 'Instructor deleted', 'lifterlms' ),
+				'action'              => __( 'Action', 'lifterlms' ),
 			)
 		);
 

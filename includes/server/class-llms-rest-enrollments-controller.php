@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version 1.0.0-beta.18
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -447,6 +447,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since The`trigger` param is now taken into account.
+	 * @since 1.0.0-beta.18 Provide a more significant error message when trying to delete an item without permissions.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -464,7 +465,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		if ( ! $this->check_delete_permission() ) {
-			return llms_rest_authorization_required_error();
+			return llms_rest_authorization_required_error(
+				sprintf(
+					// Translators: %s = The post type name.
+					__( 'Sorry, you are not allowed to delete enrollments as this user.', 'lifterlms' ),
+					get_post_type_object( $this->post_type )->labels->name
+				)
+			);
+
 		}
 
 		return true;
@@ -782,10 +790,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare enrollments objects query.
+	 * Prepare enrollments objects query
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.12 Updated to reflect changes in the parent class.
+	 * @since 1.0.0-beta.18 Correctly return errors.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error
@@ -794,7 +803,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$prepared = parent::prepare_collection_query_args( $request );
 		if ( is_wp_error( $prepared ) ) {
-			return $wp_error;
+			return $prepared;
 		}
 
 		$prepared['id']   = $request['id'];
@@ -856,6 +865,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 * @since 1.0.0-beta.10 Added subquery to retrive the enrollments trigger.
+	 * @since 1.0.0-beta.18 Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.
@@ -906,7 +916,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$updated_date_status = $wpdb->prepare(
 			"(
-				SELECT user_id, post_id, updated_date, meta_value
+				SELECT DISTINCT user_id, post_id, updated_date, meta_value
 				FROM {$wpdb->prefix}lifterlms_user_postmeta as upm
 				WHERE upm.{$id_column} = %d
 				$filter AND upm.meta_key = '_status'
@@ -931,6 +941,13 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				FROM {$wpdb->prefix}lifterlms_user_postmeta as upm
 				WHERE upm.{$id_column} = %d
 				$filter AND upm.meta_key = '_enrollment_trigger'
+				AND upm.updated_date = (
+					SELECT MAX( upm2.updated_date )
+					FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm2
+					WHERE upm2.meta_key = '_enrollment_trigger'
+					AND upm2.post_id = upm.post_id
+					AND upm2.user_id = upm.user_id
+				)
 			)",
 			array(
 				$query_args['id'],
@@ -1123,11 +1140,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Handles the enrollment creation date.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.4 Fix call to undefined function llms_bad_request_error(), must be llms_rest_bad_request_error().
+	 * @since 1.0.0-beta.4 Fixed call to undefined function `llms_bad_request_error()`, must be `llms_rest_bad_request_error()`.
 	 *
 	 * @param integer $student_id Student id.
-	 * @param integer $post_id The post id.
-	 * @param string  $date Creation date.
+	 * @param integer $post_id    The post id.
+	 * @param string  $date       Creation date.
 	 * @return boolean
 	 */
 	protected function handle_creation_date_update( $student_id, $post_id, $date ) {
@@ -1159,7 +1176,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = (${inner_query});",
 				$date_created
 			)
-		);
+		); // no-cache ok.
 
 		return $result;
 	}
