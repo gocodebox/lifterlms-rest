@@ -368,7 +368,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				'description'       => __( 'Limit result set to posts assigned one or more statuses.', 'lifterlms' ),
 				'type'              => 'array',
 				'items'             => array(
-					'enum' => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft', 'any' ) ),
+					'enum' => array_merge(
+						array_keys(
+							get_post_stati()
+						),
+						array(
+							'any',
+						)
+					),
 					'type' => 'string',
 				),
 				'sanitize_callback' => array( $this, 'sanitize_post_statuses' ),
@@ -1069,6 +1076,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Allow only _built_in and not internal post status (see WordPress `get_post_stati()` ).
 	 *
 	 * @return array
 	 */
@@ -1221,7 +1229,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 					'description' => __( 'The publication status of the post.', 'lifterlms' ),
 					'type'        => 'string',
 					'default'     => 'publish',
-					'enum'        => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) ),
+					'enum'        => array_keys(
+						get_post_stati(
+							array(
+								'_builtin' => true,
+								'internal' => false,
+							)
+						)
+					),
 					'context'     => array( 'view', 'edit' ),
 				),
 				'password'         => array(
@@ -1383,7 +1398,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object Object.
-	 * @return array Array of filters removed for response
+	 * @return array Array of filters removed for response.
 	 */
 	protected function maybe_remove_filters_for_response( $object ) {
 
