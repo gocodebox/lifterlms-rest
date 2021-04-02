@@ -360,17 +360,20 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	public function get_collection_params() {
 
 		$query_params = parent::get_collection_params();
+		$schema       = $this->get_item_schema();
 
-		$query_params['status'] = array(
-			'default'           => 'publish',
-			'description'       => __( 'Limit result set to posts assigned one or more statuses.', 'lifterlms' ),
-			'type'              => 'array',
-			'items'             => array(
-				'enum' => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft', 'any' ) ),
-				'type' => 'string',
-			),
-			'sanitize_callback' => array( $this, 'sanitize_post_statuses' ),
-		);
+		if ( isset( $schema['properties']['status'] ) ) {
+			$query_params['status'] = array(
+				'default'           => 'publish',
+				'description'       => __( 'Limit result set to posts assigned one or more statuses.', 'lifterlms' ),
+				'type'              => 'array',
+				'items'             => array(
+					'enum' => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft', 'any' ) ),
+					'type' => 'string',
+				),
+				'sanitize_callback' => array( $this, 'sanitize_post_statuses' ),
+			);
+		}
 
 		return $query_params;
 
