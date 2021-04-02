@@ -23,6 +23,7 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
+    - $ref: '#/components/parameters/PostStatus'
   responses:
     200:
       description: Successfully returned a list of courses.

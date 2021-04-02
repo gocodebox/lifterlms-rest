@@ -7,7 +7,7 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
  * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
- * @since [version] Added tests on filtering the colection by post status.
+ * @since [version] Added tests on filtering the collection by post status.
  * @version [version]
  */
 
