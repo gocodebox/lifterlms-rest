@@ -1,0 +1,9 @@
+name: status
+in: query
+description: Limit result set to posts assigned one or more statuses.
+required: false
+schema:
+  type: string
+  enum: any possible post status, see WordPress get_post_stati()
+  default: publish
+  example: draft
