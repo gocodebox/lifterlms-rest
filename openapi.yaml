@@ -1059,6 +1059,7 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
+        - $ref: '#/components/parameters/PostStatus'
       responses:
         '200':
           description: Successfully returned a list of courses.
@@ -1088,7 +1089,7 @@ paths:
         - lang: cURL
           source: |-
             curl --request GET \
-              --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
+              --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \
               --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
@@ -1099,7 +1100,7 @@ paths:
               "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             } );
 
-            llms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {
+            llms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {
               if ( err ) {
                 throw new Error( 'Error!' );
               }
@@ -2997,6 +2998,7 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
+        - $ref: '#/components/parameters/PostStatus'
         - name: parent
           description: Filter lessons by the parent post (section) ID.
           in: query
@@ -3034,7 +3036,7 @@ paths:
         - lang: cURL
           source: |-
             curl --request GET \
-              --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987' \
+              --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987' \
               --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
@@ -3045,7 +3047,7 @@ paths:
               "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             } );
 
-            llms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987', function( err, data, res ) {
+            llms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987', function( err, data, res ) {
               if ( err ) {
                 throw new Error( 'Error!' );
               }
@@ -3366,6 +3368,7 @@ paths:
             default: id
         - $ref: '#/components/parameters/Include'
         - $ref: '#/components/parameters/Exclude'
+        - $ref: '#/components/parameters/PostStatus'
       responses:
         '200':
           description: Successfully returned a list of memberships.
@@ -3395,7 +3398,7 @@ paths:
         - lang: cURL
           source: |-
             curl --request GET \
-              --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \
+              --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \
               --user ck_XXXXXX:cs_XXXXXX
         - lang: Node.js
           source: |-
@@ -3406,7 +3409,7 @@ paths:
               "consumerSecret": "cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             } );
 
-            llms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {
+            llms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {
               if ( err ) {
                 throw new Error( 'Error!' );
               }
@@ -7793,10 +7796,8 @@ components:
         - publish
         - pending
         - draft
-        - auto-draft
         - future
         - private
-        - trash
       default: publish
     PostType:
       description: LifterLMS custom post type.
@@ -9055,6 +9056,23 @@ components:
       schema:
         type: string
         example: p4$sW0rd
+    PostStatus:
+      name: status
+      in: query
+      description: Limit result set to posts assigned one or more statuses.
+      required: false
+      schema:
+        type: string
+        enum:
+          - publish
+          - pending
+          - draft
+          - auto-draft
+          - future
+          - private
+          - trash
+        default: publish
+        example: draft
     PostType:
       name: post_type
       in: query
