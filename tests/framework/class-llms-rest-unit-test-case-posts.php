@@ -195,7 +195,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	 */
 	public function test_filter_by_post_status() {
 
-		// Skip those post types which have not status property.
+		// Skip those post types which have no status property.
 		if ( ! isset( $this->endpoint->get_item_schema()['properties']['status'] ) ){
 			$this->markTestSkipped( sprintf( 'post status not available for %1$s', $this->post_type ) );
 		}
