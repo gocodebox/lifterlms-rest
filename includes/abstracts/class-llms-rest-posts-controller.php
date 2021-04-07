@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -351,6 +351,42 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
+	 * Retrieves the query params for the objects collection
+	 *
+	 * @since [version]
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+
+		$query_params = parent::get_collection_params();
+		$schema       = $this->get_item_schema();
+
+		if ( isset( $schema['properties']['status'] ) ) {
+			$query_params['status'] = array(
+				'default'           => 'publish',
+				'description'       => __( 'Limit result set to posts assigned one or more statuses.', 'lifterlms' ),
+				'type'              => 'array',
+				'items'             => array(
+					'enum' => array_merge(
+						array_keys(
+							get_post_stati()
+						),
+						array(
+							'any',
+						)
+					),
+					'type' => 'string',
+				),
+				'sanitize_callback' => array( $this, 'sanitize_post_statuses' ),
+			);
+		}
+
+		return $query_params;
+
+	}
+
+	/**
 	 * Format query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.7
@@ -380,6 +416,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Map schema to query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.12
+	 * @since [version] Map 'status' collection param to to 'post_status' query arg.
 	 *
 	 * @param array           $prepared   Array of collection arguments.
 	 * @param array           $registered Registered collection params.
@@ -403,6 +440,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			'exclude' => 'post__not_in',
 			'include' => 'post__in',
 			'search'  => 's',
+			'status'  => 'post_status',
 		);
 
 		/*
@@ -1038,6 +1076,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Allow only _built_in and not internal post status (see WordPress `get_post_stati()` ).
 	 *
 	 * @return array
 	 */
@@ -1190,7 +1229,14 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 					'description' => __( 'The publication status of the post.', 'lifterlms' ),
 					'type'        => 'string',
 					'default'     => 'publish',
-					'enum'        => array_merge( array_keys( get_post_statuses() ), array( 'future', 'trash', 'auto-draft' ) ),
+					'enum'        => array_keys(
+						get_post_stati(
+							array(
+								'_builtin' => true,
+								'internal' => false,
+							)
+						)
+					),
 					'context'     => array( 'view', 'edit' ),
 				),
 				'password'         => array(
@@ -1352,7 +1398,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param LLMS_Post_Model $object Object.
-	 * @return array Array of filters removed for response
+	 * @return array Array of filters removed for response.
 	 */
 	protected function maybe_remove_filters_for_response( $object ) {
 
@@ -1727,6 +1773,44 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $this->llms_post_class;
+	}
+
+	/**
+	 * Sanitizes and validates the list of post statuses, including whether the user can query private statuses
+	 *
+	 * Heavily based on the WordPress  WP_REST_Posts_Controller::sanitize_post_statuses().
+	 *
+	 * @since [version]
+	 *
+	 * @param string|array    $statuses  One or more post statuses.
+	 * @param WP_REST_Request $request   Full details about the request.
+	 * @param string          $parameter Additional parameter to pass to validation.
+	 * @return array|WP_Error A list of valid statuses, otherwise WP_Error object.
+	 */
+	public function sanitize_post_statuses( $statuses, $request, $parameter ) {
+		$statuses = wp_parse_slug_list( $statuses );
+
+		$attributes     = $request->get_attributes();
+		$default_status = $attributes['args']['status']['default'];
+
+		foreach ( $statuses as $status ) {
+			if ( $status === $default_status ) {
+				continue;
+			}
+
+			$post_type_obj = get_post_type_object( $this->post_type );
+
+			if ( current_user_can( $post_type_obj->cap->edit_posts ) || 'private' === $status && current_user_can( $post_type_obj->cap->read_private_posts ) ) {
+				$result = rest_validate_request_arg( $status, $request, $parameter );
+				if ( is_wp_error( $result ) ) {
+					return $result;
+				}
+			} else {
+				return llms_rest_authorization_required_error( __( 'Status is forbidden.', 'lifterlms' ) );
+			}
+		}
+
+		return $statuses;
 	}
 
 }
