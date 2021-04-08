@@ -852,9 +852,6 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
-          },
-          {
-            "$ref": "#/components/parameters/PostStatus"
           }
         ],
         "responses": {
@@ -899,11 +896,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -2890,9 +2887,6 @@
             "$ref": "#/components/parameters/Exclude"
           },
           {
-            "$ref": "#/components/parameters/PostStatus"
-          },
-          {
             "name": "parent",
             "description": "Filter lessons by the parent post (section) ID.",
             "in": "query",
@@ -2946,11 +2940,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -3238,9 +3232,6 @@
           },
           {
             "$ref": "#/components/parameters/Exclude"
-          },
-          {
-            "$ref": "#/components/parameters/PostStatus"
           }
         ],
         "responses": {
@@ -3285,11 +3276,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -8577,8 +8568,10 @@
           "publish",
           "pending",
           "draft",
+          "auto-draft",
           "future",
-          "private"
+          "private",
+          "trash"
         ],
         "default": "publish"
       },
@@ -10253,26 +10246,6 @@
         "schema": {
           "type": "string",
           "example": "p4$sW0rd"
-        }
-      },
-      "PostStatus": {
-        "name": "status",
-        "in": "query",
-        "description": "Limit result set to posts assigned one or more statuses.",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "publish",
-            "pending",
-            "draft",
-            "auto-draft",
-            "future",
-            "private",
-            "trash"
-          ],
-          "default": "publish",
-          "example": "draft"
         }
       },
       "PostType": {
