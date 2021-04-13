@@ -23,6 +23,7 @@ get:
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'
+    - $ref: '#/components/parameters/PostStatus'
     - name: parent
       description: Filter lessons by the parent post (section) ID.
       in: query
