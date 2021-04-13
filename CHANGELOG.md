@@ -1,6 +1,12 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.19 - 2021-04-13
+---------------------------
+
++ Added collection filtering by post status for courses, lessons, and memberships.
+
+
 v1.0.0-beta.18 - 2021-02-09
 ---------------------------
 

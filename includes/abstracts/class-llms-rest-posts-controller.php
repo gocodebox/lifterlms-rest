@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.19
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -353,7 +353,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.19
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -416,7 +416,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Map schema to query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.12
-	 * @since [version] Map 'status' collection param to to 'post_status' query arg.
+	 * @since 1.0.0-beta.19 Map 'status' collection param to to 'post_status' query arg.
 	 *
 	 * @param array           $prepared   Array of collection arguments.
 	 * @param array           $registered Registered collection params.
@@ -1076,7 +1076,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Allow only _built_in and not internal post status (see WordPress `get_post_stati()` ).
+	 * @since 1.0.0-beta.19 Allow only _built_in and not internal post status (see WordPress `get_post_stati()` ).
 	 *
 	 * @return array
 	 */
@@ -1780,7 +1780,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * Heavily based on the WordPress  WP_REST_Posts_Controller::sanitize_post_statuses().
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.19
 	 *
 	 * @param string|array    $statuses  One or more post statuses.
 	 * @param WP_REST_Request $request   Full details about the request.
