@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.18\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.19\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-02-09T13:12:36-07:00\n"
+"POT-Creation-Date: 2021-04-13T10:38:14-06:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -134,7 +134,7 @@ msgid "Sorry, you are not allowed to create %s as this user."
 msgstr ""
 
 #: includes/abstracts/class-llms-rest-posts-controller.php:199
-#: includes/abstracts/class-llms-rest-posts-controller.php:451
+#: includes/abstracts/class-llms-rest-posts-controller.php:489
 msgid "Sorry, you are not allowed to assign the provided terms."
 msgstr ""
 
@@ -142,149 +142,157 @@ msgstr ""
 msgid "Incorrect password."
 msgstr ""
 
+#: includes/abstracts/class-llms-rest-posts-controller.php:368
+msgid "Limit result set to posts assigned one or more statuses."
+msgstr ""
+
 #. Translators: %s = The post type name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:447
+#: includes/abstracts/class-llms-rest-posts-controller.php:485
 msgid "Sorry, you are not allowed to update %s as this user."
 msgstr ""
 
 #. Translators: %s = The post type name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:597
+#: includes/abstracts/class-llms-rest-posts-controller.php:635
 msgid "Sorry, you are not allowed to delete %s as this user."
 msgstr ""
 
 #. translators: %1$s: post type name, %2$s: force=true
-#: includes/abstracts/class-llms-rest-posts-controller.php:648
+#: includes/abstracts/class-llms-rest-posts-controller.php:686
 msgid "The %1$s does not support trashing. Set '%2$s' to delete."
 msgstr ""
 
 #. translators: %s: post type name
-#: includes/abstracts/class-llms-rest-posts-controller.php:672
+#: includes/abstracts/class-llms-rest-posts-controller.php:710
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1052
+#: includes/abstracts/class-llms-rest-posts-controller.php:1091
 msgid "Unique Identifier. The WordPress Post ID."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1058
+#: includes/abstracts/class-llms-rest-posts-controller.php:1097
 #: includes/server/class-llms-rest-students-progress-controller.php:230
 #: includes/server/class-llms-rest-webhooks-controller.php:182
 msgid "Creation date. Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1063
-#: includes/abstracts/class-llms-rest-posts-controller.php:1080
+#: includes/abstracts/class-llms-rest-posts-controller.php:1102
+#: includes/abstracts/class-llms-rest-posts-controller.php:1119
 msgid "Creation date (in GMT). Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1068
+#: includes/abstracts/class-llms-rest-posts-controller.php:1107
 #: includes/server/class-llms-rest-students-progress-controller.php:239
 #: includes/server/class-llms-rest-webhooks-controller.php:189
 msgid "Date last modified. Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1074
+#: includes/abstracts/class-llms-rest-posts-controller.php:1113
 msgid "Date last modified (in GMT). Format: Y-m-d H:i:s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1089
+#: includes/abstracts/class-llms-rest-posts-controller.php:1128
 msgid "Post title."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1099
+#: includes/abstracts/class-llms-rest-posts-controller.php:1138
 msgid "Raw title. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1104
+#: includes/abstracts/class-llms-rest-posts-controller.php:1143
 msgid "Rendered title."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1113
+#: includes/abstracts/class-llms-rest-posts-controller.php:1152
 msgid "The HTML content of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1122
+#: includes/abstracts/class-llms-rest-posts-controller.php:1161
 msgid "Rendered HTML content."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1128
+#: includes/abstracts/class-llms-rest-posts-controller.php:1167
 msgid "Raw HTML content. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1133
+#: includes/abstracts/class-llms-rest-posts-controller.php:1172
 msgid "Whether the content is protected with a password."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1142
+#: includes/abstracts/class-llms-rest-posts-controller.php:1181
 msgid "The HTML excerpt of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1150
+#: includes/abstracts/class-llms-rest-posts-controller.php:1189
 msgid "Rendered HTML excerpt."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1156
+#: includes/abstracts/class-llms-rest-posts-controller.php:1195
 msgid "Raw HTML excerpt. Useful when displaying title in the WP Block Editor. Only returned in edit context."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1161
+#: includes/abstracts/class-llms-rest-posts-controller.php:1200
 msgid "Whether the excerpt is protected with a password."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1169
+#: includes/abstracts/class-llms-rest-posts-controller.php:1208
 msgid "Post URL."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1176
+#: includes/abstracts/class-llms-rest-posts-controller.php:1215
 msgid "Post URL slug."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1184
+#: includes/abstracts/class-llms-rest-posts-controller.php:1223
 msgid "LifterLMS custom post type"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1190
+#: includes/abstracts/class-llms-rest-posts-controller.php:1229
 msgid "The publication status of the post."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1197
+#: includes/abstracts/class-llms-rest-posts-controller.php:1243
 msgid "Password used to protect access to the content."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1202
+#: includes/abstracts/class-llms-rest-posts-controller.php:1248
 msgid "Featured image ID."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1207
+#: includes/abstracts/class-llms-rest-posts-controller.php:1253
 msgid "Post comment status. Default comment status dependent upon general WordPress post discussion settings."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1214
+#: includes/abstracts/class-llms-rest-posts-controller.php:1260
 msgid "Post ping status. Default ping status dependent upon general WordPress post discussion settings."
 msgstr ""
 
 #. translators: %s: post type
-#: includes/abstracts/class-llms-rest-posts-controller.php:1246
+#: includes/abstracts/class-llms-rest-posts-controller.php:1292
 msgid "The %s cannot be retrieved."
 msgstr ""
 
 #. translators: %s: post type
-#: includes/abstracts/class-llms-rest-posts-controller.php:1272
+#: includes/abstracts/class-llms-rest-posts-controller.php:1318
 msgid "The %s cannot be created."
 msgstr ""
 
 #. Translators: %s = The post type name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:1454
+#: includes/abstracts/class-llms-rest-posts-controller.php:1500
 msgid "Sorry, you are not allowed to create private %s."
 msgstr ""
 
 #. Translators: $s = The post type name.
-#: includes/abstracts/class-llms-rest-posts-controller.php:1461
+#: includes/abstracts/class-llms-rest-posts-controller.php:1507
 msgid "Sorry, you are not allowed to publish %s."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1494
+#: includes/abstracts/class-llms-rest-posts-controller.php:1540
 msgid "Invalid featured media ID."
+msgstr ""
+
+#: includes/abstracts/class-llms-rest-posts-controller.php:1809
+msgid "Status is forbidden."
 msgstr ""
 
 #. Translators: %s = role key.
