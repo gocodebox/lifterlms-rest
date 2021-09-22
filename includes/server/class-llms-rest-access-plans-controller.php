@@ -317,7 +317,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		if ( $data['sale_enabled'] || 'edit' === $context ) {
 			$data['sale_date_start'] = $access_plan->get_date( 'sale_start', 'Y-m-d H:i:s' );
 			$data['sale_date_end']   = $access_plan->get_date( 'sale_end', 'Y-m-d H:i:s' );
-			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'float' );
+			$data['sale_price']      = $access_plan->get_price( 'sale_price', array(), 'float' );
 		}
 
 		// SKU.
