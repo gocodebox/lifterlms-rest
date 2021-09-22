@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -243,6 +243,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Fixed sale date properties.
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Full details about the request.
@@ -314,8 +315,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Sale start/end and price.
 		if ( $data['sale_enabled'] || 'edit' === $context ) {
-			$data['sale_start'] = $access_plan->get_date( 'sale_start' );
-			$data['sale_end']   = $access_plan->get_date( 'sale_end' );
+			$data['sale_date_start'] = $access_plan->get_date( 'sale_start', 'Y-m-d H:i:s' );
+			$data['sale_date_end']   = $access_plan->get_date( 'sale_end', 'Y-m-d H:i:s' );
 			$data['sale_price'] = $access_plan->get_price( 'sale_price', array(), 'float' );
 		}
 

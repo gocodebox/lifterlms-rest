@@ -180,11 +180,11 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single access plan
 	 *
-	 * @since 1.0.0-beta.18
+	 * @since [version]
 	 *
 	 * @return void
 	 */
-	public function test_create_access_plan() {
+	public function test_create_and_get_access_plan() {
 
 		wp_set_current_user( $this->user_allowed );
 
@@ -196,14 +196,28 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		$response = $this->perform_mock_request(
+		$create_response = $this->perform_mock_request(
 			'POST',
 			$this->route,
 			$sample_args
 		);
+		$access_plan = $create_response->get_data();
 
 		// Success.
-		$this->assertResponseStatusEquals( 201, $response );
+		$this->assertResponseStatusEquals( 201, $create_response );
+
+		// Get the access plan.
+		$get_response = $this->perform_mock_request(
+			'GET',
+			trailingslashit( $this->route ) . $access_plan['id'],
+			array(),
+			array( 'context' => 'edit' )
+		);
+
+		$this->assertResponseStatusEquals( 200, $get_response );
+		$this->assertEquals( $access_plan, $get_response->get_data() );
+
+		$this->assertEqualSets( $this->schema_properties, array_keys( $get_response->get_data() ) );
 
 	}
 
