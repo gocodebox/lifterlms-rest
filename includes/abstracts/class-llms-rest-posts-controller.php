@@ -1,6 +1,6 @@
 <?php
 /**
- * REST LLMS Posts Controller Class
+ * REST LLMS Posts Controller Class.
  *
  * @package LifterLMS_REST/Abstracts
  *
@@ -77,9 +77,21 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * LLMS post class name.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @var string;
+	 *
+	 * @var string
 	 */
 	protected $llms_post_class;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->meta = new WP_REST_Post_Meta_Fields( $this->post_type );
+	}
 
 	/**
 	 * Retrieves an array of arguments for the delete endpoint.
@@ -219,8 +231,9 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
-	 *                     fired after inserting/uodateing an llms post into the database.
+	 *                     fired after inserting/updating an llms post into the database.
 	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
+	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -290,13 +303,17 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $terms_update;
 		}
 
-		/**
-		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks
-		 */
-		// $fields_update = $this->update_additional_fields_for_object( $object, $request );
-		// if ( is_wp_error( $fields_update ) ) {
-		// return $fields_update;
-		// }
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $object, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$meta_update = $this->update_meta( $object, $request, $schema );
+		if ( is_wp_error( $meta_update ) ) {
+			return $meta_update;
+		}
+
 		$request->set_param( 'context', 'edit' );
 
 		/**
@@ -511,10 +528,11 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.7 Don't execute `$object->set_bulk()` when there's no data to update:
 	 *                     this fixes an issue when updating only properties which are not handled in `prepare_item_for_database()`.
 	 *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
-	 *                     fired after inserting/uodateing an llms post into the database.
+	 *                     fired after inserting/updating an llms post into the database.
 	 * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
-	 *                     must be false when updating.
+	 *                      must be false when updating.
 	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
+	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -575,13 +593,17 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $terms_update;
 		}
 
-		/**
-		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks
-		 */
-		// $fields_update = $this->update_additional_fields_for_object( $object, $request );
-		// if ( is_wp_error( $fields_update ) ) {
-		// return $fields_update;
-		// }
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $object, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$meta_update = $this->update_meta( $object, $request, $schema );
+		if ( is_wp_error( $meta_update ) ) {
+			return $meta_update;
+		}
+
 		$request->set_param( 'context', 'edit' );
 
 		/**
@@ -861,18 +883,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare a single item for the REST response
+	 * Prepares data of a single object for response.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
+	 * @since [version]
 	 *
-	 * @param LLMS_Post_Model $object  LLMS post object.
+	 * @param obj             $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
+	 * @return array
 	 */
-	public function prepare_item_for_response( $object, $request ) {
-
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+	public function prepare_object_data_for_response( $object, $request ) {
 
 		// Need to set the global $post because of references to the global $post when e.g. filtering the content, or processing blocks/shortcodes.
 		global $post;
@@ -890,7 +909,10 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			$has_password_filter = true;
 		}
 
-		$data = $this->prepare_object_for_response( $object, $request );
+		$data = parent::prepare_object_data_for_response( $object, $request );
+
+		// Filter data including only schema props.
+		$data = array_intersect_key( $data, array_flip( $this->get_fields_for_response( $request ) ) );
 
 		if ( $has_password_filter ) {
 			// Reset filter.
@@ -901,18 +923,8 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		$post = $temp; // phpcs:ignore
 		wp_reset_postdata();
 
-		// Filter data including only schema props.
-		$data = array_intersect_key( $data, array_flip( $this->get_fields_for_response( $request ) ) );
+		return $data;
 
-		// Filter data by context. E.g. in "view" mode the password property won't be allowed.
-		$data = $this->filter_response_by_context( $data, $context );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		$response->add_links( $this->prepare_links( $object, $request ) );
-
-		return $response;
 	}
 
 	/**
@@ -1086,12 +1098,11 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.19 Allow only _built_in and not internal post status (see WordPress `get_post_stati()` ).
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -1277,11 +1288,20 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			),
 		);
 
-		/**
-		 * TODO: understand how to treat possible conflicting properties => instructors are registered as additional rest field by llms_blocks.
-		 */
-		// $schema = $this->add_additional_fields_schema( $schema );
 		return $schema;
+
+	}
+
+	/**
+	 * Add custom fields registered via `register_meta`.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $schema The resource item schema.
+	 * @return array
+	 */
+	protected function add_meta_fields_schema( $schema ) {
+		return post_type_supports( $this->post_type, 'custom-fields' ) ? parent::add_meta_fields_schema( $schema ) : $schema;
 	}
 
 	/**

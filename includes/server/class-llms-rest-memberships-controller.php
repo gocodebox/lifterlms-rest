@@ -40,11 +40,26 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	protected $rest_base = 'memberships';
 
 	/**
+	 * Additional field names to skip.
+	 *
+	 * @var string[]
+	 */
+	protected $disallowed_additional_fields = array(
+		'visibility',
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.9
+	 * @since [version] Call parent constructor.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
+
+		parent::__construct();
+
 		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
 	}
@@ -111,12 +126,13 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Membership's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.9
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
-		$schema = parent::get_item_schema();
+	protected function get_item_schema_base() {
+
+		$schema = (array) parent::get_item_schema_base();
 
 		$schema['properties']['auto_enroll'] = array(
 			'description' => __(
@@ -277,10 +293,18 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		 * Filter item schema for the membership controller.
 		 *
 		 * @since 1.0.0-beta.9
+		 * @deprecated [version]
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		$schema = apply_filters( 'llms_rest_membership_item_schema', $schema );
+		$schema = apply_filters_deprecated(
+			'llms_rest_membership_item_schema',
+			array(
+				$schema,
+			),
+			'[version]',
+			"llms_rest_{$this->get_object_type( $schema )}_item_schema"
+		);
 
 		return $schema;
 	}
@@ -559,6 +583,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 				'schema' => array( $this->enrollments_controller, 'get_public_item_schema' ),
 			)
 		);
+
 	}
 
 	/**

@@ -9,7 +9,9 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @since 1.0.0-beta.7 Unknown.
+ * @since [version] Added schema `meta` property.
+ * @version [version]
  */
 class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -80,8 +82,9 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added schema `meta` property.
 	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_get_item_schema() {
 
@@ -109,6 +112,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 			'billing_postcode',
 			'billing_country',
 			'avatar_urls',
+			'meta',
 		);
 
 		$this->assertEquals( $props, array_keys( $schema['properties'] ) );

@@ -36,7 +36,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	private $expected_link_rels = array( 'self', 'collection', 'course', 'parent', 'siblings', 'next', 'previous' );
 
 	/**
-	 * Array of schema properties.
+	 * Schema properties.
 	 *
 	 * @var array
 	 */
@@ -56,6 +56,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		'excerpt',
 		'featured_media',
 		'menu_order',
+		'meta',
 		'order',
 		'parent_id',
 		'password',

@@ -7,7 +7,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.10
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -79,7 +79,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function create_object( $prepared, $request ) {
@@ -129,7 +129,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return object
 	 */
 	protected function get_objects_query( $prepared, $request ) {
@@ -165,9 +165,9 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param obj             $query Objects query result.
+	 * @param obj             $query    Objects query result.
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return array {
 	 *     Array of pagination information.
 	 *
@@ -191,12 +191,41 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	}
 
 	/**
+	 * Prepares data of a single object for response.
+	 *
+	 * @since [version]
+	 *
+	 * @param obj             $object  Raw object from database.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array
+	 */
+	public function prepare_object_data_for_response( $object, $request ) {
+
+		$data = $this->prepare_object_for_response( $object, $request );
+
+		$data = $this->parse_custom_meta_fields( $data, $object, $request );
+
+		if ( rest_is_field_included( 'meta', $this->get_fields_for_response( $request ) ) ) {
+			$data['meta'] = $this->meta->get_value( $this->get_object_id( $object ), $request );
+			$data         = $this->parse_custom_meta_fields( $data );
+		}
+
+		$data = $this->add_additional_fields_to_object( $data, $request );
+
+		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+		$data    = $this->filter_response_by_context( $data, $context );
+
+		return $data;
+
+	}
+
+	/**
 	 * Prepare an object for response.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()`.
 	 *
-	 * @param LLMS_Abstract_User_Data $object User object.
+	 * @param LLMS_Abstract_User_Data $object  User object.
 	 * @param WP_REST_Request         $request Request object.
 	 * @return array
 	 */
@@ -227,7 +256,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function update_object( $prepared, $request ) {

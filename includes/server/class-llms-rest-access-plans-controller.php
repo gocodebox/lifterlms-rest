@@ -32,15 +32,15 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	protected $rest_base = 'access-plans';
 
 	/**
-	 * Get the Access Plan's schema, conforming to JSON Schema
+	 * Get the Access Plan's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.18
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	public function get_item_schema_base() {
 
-		$schema = (array) parent::get_item_schema();
+		$schema = (array) parent::get_item_schema_base();
 
 		// Post properties to unset.
 		$properties_to_unset = array(
@@ -52,6 +52,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'slug',
 			'status',
 		);
+
 		foreach ( $properties_to_unset as $to_unset ) {
 			unset( $schema['properties'][ $to_unset ] );
 		}

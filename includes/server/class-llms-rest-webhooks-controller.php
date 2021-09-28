@@ -63,7 +63,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.3
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function create_object( $prepared, $request ) {
@@ -92,7 +92,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param obj             $object Instance of the object from $this->get_object().
+	 * @param obj             $object  Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error true when the object is removed, WP_Error on failure.
 	 */
@@ -126,11 +126,11 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Webhook's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.3
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -273,7 +273,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param int  $id Webhook ID.
+	 * @param int  $id      Webhook ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return WP_Error|LLMS_REST_API_Key
 	 */
@@ -343,7 +343,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param LLMS_Abstract_User_Data $object User object.
+	 * @param LLMS_Abstract_User_Data $object  User object.
 	 * @param WP_REST_Request         $request Request object.
 	 * @return array
 	 */

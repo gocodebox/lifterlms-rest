@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.26
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -661,13 +661,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Enrollments's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.10 Added the `trigger` property.
-	 *                     Added backticks in properties description where convenient.
-	 *                     Added `llms_rest_enrollments_item_schema` filter hook.
+	 * @since [version]
+	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -713,6 +711,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			),
 		);
 
+		$object_type = $this->get_object_type( $schema );
+
 		/**
 		 * Filter item schema for the enrollments controller.
 		 *
@@ -720,7 +720,12 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		return apply_filters( 'llms_rest_enrollments_item_schema', $schema );
+		return apply_filters_deprecated(
+			'llms_rest_enrollments_item_schema',
+			array( $schema ),
+			'[version]',
+			"llms_rest_{$this->get_object_type( $schema )}_item_schema"
+		);
 
 	}
 

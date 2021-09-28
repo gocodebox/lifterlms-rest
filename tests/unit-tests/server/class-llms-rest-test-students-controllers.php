@@ -15,6 +15,7 @@
  *                      Added tests on firing student registration action hook.
  * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
  * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since [version] Added schema `meta` property.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -739,6 +740,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added `meta` property.
 	 *
 	 * @return void
 	 */
@@ -768,6 +770,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 			'billing_postcode',
 			'billing_country',
 			'avatar_urls',
+			'meta',
 		);
 
 		$this->assertEquals( $props, array_keys( $schema['properties'] ) );
