@@ -245,7 +245,8 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Fixed sale date properties.
+	 * @since [version] Fixed return format of the `access_expires` property.
+	 *                      Fixed sale date properties.
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Full details about the request.
@@ -264,7 +265,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Access expires date.
 		if ( 'limited-date' === $data['access_expiration'] || 'edit' === $context ) {
-			$data['access_expires'] = $access_plan->get_date( 'access_expires' );
+			$data['access_expires'] = $access_plan->get_date( 'access_expires', 'Y-m-d H:i:s' );
 		}
 
 		// Access length and period.
