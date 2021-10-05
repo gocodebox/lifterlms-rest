@@ -149,13 +149,14 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		// If current user cannot create the item because of authorization, check if the current user can edit the "parent" course/membership.
 		$can_create = $this->related_product_permissions_check( $can_create, $request );
 
-		return is_wp_error( $can_create ) ? $can_create : $this->block_request_when_access_plan_limit_reached( $request );
+		return is_wp_error( $can_create ) ? $can_create : $this->allow_request_when_access_plan_limit_not_reached( $request );
 	}
 
 	/**
 	 * Check if a given request has access to update an item
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -167,7 +168,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		// If current user cannot edit the item because of authorization, check if the current user can edit the "parent" course/membership.
 		$can_update = $this->related_product_permissions_check( $can_update, $request );
 
-		return is_wp_error( $can_update ) ? $can_update : $this->block_request_when_access_plan_limit_reached( $request );
+		return is_wp_error( $can_update ) ? $can_update : $this->allow_request_when_access_plan_limit_not_reached( $request );
 
 	}
 
@@ -175,6 +176,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Check if a given request has access to delete an item
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -705,6 +707,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Check if the current user, who has no permissions to manipulate the access plan post, can edit its related product.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Made sure either we're creating or updating prior to check related product's permissions.
 	 *
 	 * @param boolean|WP_Error $has_permissions Whether or not the current user has the permission to manipulate the resource.
 	 * @param WP_REST_Request  $request         Full details about the request.
@@ -713,6 +716,12 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	private function related_product_permissions_check( $has_permissions, $request ) {
 
 		if ( llms_rest_is_authorization_required_error( $has_permissions ) ) {
+
+			// `id` required on "reading/updating", `post_id` required on "creating".
+			if ( empty( $request['id'] ) && empty( $request['post_id'] ) ) {
+				return $has_permissions;
+			}
+
 			$product_id = isset( $request['id'] ) /* not creation */ ? $this->get_object( (int) $request['id'] )->get( 'product_id' ) : (int) $request['post_id'];
 
 			$product_post_type_object = get_post_type_object( get_post_type( $product_id ) );
@@ -726,12 +735,19 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Block request when the access plan limit per product is reached.
+	 * Allow request when the access plan limit per product is not reached.
+	 *
+	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error
 	 */
-	private function block_request_when_access_plan_limit_reached( $request ) {
+	private function allow_request_when_access_plan_limit_not_reached( $request ) {
+
+		// `id` required on "reading/updating", `post_id` required on "creating".
+		if ( empty( $request['id'] ) && empty( $request['post_id'] ) ) {
+			return true;
+		}
 
 		$product_id = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
 		$product    = new LLMS_Product( $product_id );
