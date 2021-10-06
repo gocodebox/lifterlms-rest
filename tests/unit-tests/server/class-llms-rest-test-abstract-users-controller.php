@@ -19,9 +19,9 @@ class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 
 		// Stub of the abstract.
 		$this->stub = new class extends LLMS_REST_Users_Controller {

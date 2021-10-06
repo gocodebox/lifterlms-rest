@@ -21,11 +21,11 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_api_keys" );
-		parent::setUp();
+		parent::set_up();
 	}
 
 	/**

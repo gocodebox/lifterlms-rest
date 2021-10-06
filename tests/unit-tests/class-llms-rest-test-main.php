@@ -2,7 +2,7 @@
 /**
  * Test the main class / loader.
  *
- * @package  LifterLMS_REST/Tests
+ * @package LifterLMS_REST/Tests
  *
  * @group main
  *
@@ -18,9 +18,9 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->main = LLMS_REST_API();
 
 	}
@@ -113,6 +113,9 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	 */
 	public function test_load_textdomain() {
 
+		// Make sure textdomain is not loaded.
+		unload_textdomain( 'lifterlms' );
+
 		$dirs = array(
 			WP_LANG_DIR . '/lifterlms', // "Safe" directory.
 			WP_LANG_DIR . '/plugins', // Default language directory.
@@ -122,15 +125,15 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 		foreach ( $dirs as $dir ) {
 
 			// Make sure the initial strings work.
-			$this->assertEquals( 'LifterLMS REST API', __( 'LifterLMS REST API', 'lifterlms' ) );
-			$this->assertEquals( 'Post title.', __( 'Post title.', 'lifterlms' ) );
+			$this->assertEquals( 'LifterLMS REST API', __( 'LifterLMS REST API', 'lifterlms' ), $dir);
+			$this->assertEquals( 'Post title.', __( 'Post title.', 'lifterlms' ), $dir );
 
 			// Load from the "safe" directory.
 			$file = $this->copy_mo( $dir );
 			$this->main->load_textdomain();
 
-			$this->assertEquals( 'BetterLMS REST API', __( 'LifterLMS REST API', 'lifterlms' ) );
-			$this->assertEquals( 'Item title.', __( 'Item title.', 'lifterlms' ) );
+			$this->assertEquals( 'BetterLMS REST API', __( 'LifterLMS REST API', 'lifterlms' ), $dir );
+			$this->assertEquals( 'Item title.', __( 'Item title.', 'lifterlms' ), $dir );
 
 			// Clean up.
 			$this->clear_mo( $file );

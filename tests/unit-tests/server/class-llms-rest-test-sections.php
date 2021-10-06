@@ -8,7 +8,7 @@
  * @group rest_sections
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::setUp(),
+ * @since 1.0.0-beta.7 Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::set_up(),
  *                  fixed sections fields checks when retrieving the collection.
  * @version 1.0.0-beta.7
  */
@@ -40,11 +40,11 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::setUp()
+	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::set_up()
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->user_allowed = $this->factory->user->create(
 			array(
 				'role' => 'administrator',

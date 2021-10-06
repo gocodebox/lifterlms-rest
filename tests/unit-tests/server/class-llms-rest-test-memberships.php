@@ -113,8 +113,8 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 		$this->endpoint       = new LLMS_REST_Memberships_Controller();
 		$this->user_allowed   = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber' ) );

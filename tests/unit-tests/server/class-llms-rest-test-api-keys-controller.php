@@ -26,9 +26,9 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator', ) );
 		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber', ) );
 		$this->endpoint = new LLMS_REST_API_Keys_Controller();
@@ -42,9 +42,9 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_api_keys" );

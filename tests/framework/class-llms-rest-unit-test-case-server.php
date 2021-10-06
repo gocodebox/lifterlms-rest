@@ -57,9 +57,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since 1.0.0-beta.1
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->server = rest_get_server();
 
 	}
@@ -288,9 +288,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since 1.0.0-beta.1
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 
 		global $wp_rest_server;
 		unset( $this->server );

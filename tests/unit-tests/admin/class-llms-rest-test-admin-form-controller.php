@@ -20,9 +20,9 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 
 		// Ensure required classes are loaded.
 		set_current_screen( 'index.php' );
@@ -40,9 +40,9 @@ class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 		foreach( LLMS_Admin_Notices::get_notices() as $id ) {
 			LLMS_Admin_Notices::delete_notice( $id );
 		}
