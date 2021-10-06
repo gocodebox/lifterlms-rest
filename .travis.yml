@@ -1,6 +1,3 @@
-import:
- - gocodebox/lifterlms:.config/travis/add-on.yml
-
 jobs:
   include:
   - name: "Test OpenAPI Spec"
