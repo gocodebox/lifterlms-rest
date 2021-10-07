@@ -2,6 +2,8 @@ LifterLMS REST API
 ==================
 
 [![Test PHPUnit][img-phpunit-tests]][link-phpunit-tests]
+[![PHP Tests Coverage][img-gh-tests-coverage]][link-gh-tests-coverage]
+[![PHPCS Coding Standards][img-phpcs-checks]][link-phpcs-checks]
 [![Code Climate maintainability][img-cc-maintainability]][link-cc]
 [![Code Climate test coverage][img-cc-coverage]][link-cc-coverage]
 
@@ -82,6 +84,8 @@ These steps require `write` access to the repository as well as access to the in
 [link-support]: https://lifterlms.com/my-account/my-tickets "LifterLMS customer support"
 [link-support-forums]: https://wordpress.org/support/plugin/lifterlms "LifterLMS user support forums"
 [link-phpunit-tests]: https://travis-ci.com/github/gocodebox/lifterlms "PHPUnit Tests Status"
+[link-gh-tests-coverage]: https://github.com/gocodebox/lifterlms-rest/actions/workflows/php-test-coverage.yml "PHP Tests Coverage"
+[link-phpcs-checks]: https://github.com/gocodebox/lifterlms-rest/actions/workflows/coding-standards.yml "PHPCS Coding Standards Checks"
 
 [img-cc-coverage]:https://img.shields.io/codeclimate/coverage/gocodebox/lifterlms-rest?style=for-the-badge&logo=code-climate
 [img-cc-maintainability]:https://img.shields.io/codeclimate/maintainability/gocodebox/lifterlms-rest?logo=code-climate&style=for-the-badge
@@ -89,3 +93,5 @@ These steps require `write` access to the repository as well as access to the in
 [img-php]: https://img.shields.io/badge/PHP-7.2%2B-brightgreen?style=for-the-badge&logoColor=white&logo=php
 [img-slack]: https://img.shields.io/badge/chat-on%20slack-blueviolet?style=for-the-badge&logo=slack
 [img-phpunit-tests]: https://img.shields.io/github/workflow/status/gocodebox/lifterlms-rest/Test%20PHPUnit?label=PHPUnit&logo=github&style=for-the-badge
+[img-gh-tests-coverage]: https://img.shields.io/github/workflow/status/gocodebox/lifterlms-rest/PHP%20Code%20Coverage%20Report?label=PHP%20Tests%20Coverage&logo=github&style=for-the-badge
+[img-phpcs-checks]:  https://img.shields.io/github/workflow/status/gocodebox/lifterlms-rest/Coding%20Standards?label=PHPCS&logo=github&style=for-the-badge
