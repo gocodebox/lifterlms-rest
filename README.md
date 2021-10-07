@@ -83,7 +83,7 @@ These steps require `write` access to the repository as well as access to the in
 [link-slack]: https://lifterlms.com/slack "Chat with the community on Slack"
 [link-support]: https://lifterlms.com/my-account/my-tickets "LifterLMS customer support"
 [link-support-forums]: https://wordpress.org/support/plugin/lifterlms "LifterLMS user support forums"
-[link-phpunit-tests]: https://travis-ci.com/github/gocodebox/lifterlms "PHPUnit Tests Status"
+[link-phpunit-tests]: https://travis-ci.com/github/gocodebox/lifterlms-rest "PHPUnit Tests Status"
 [link-gh-tests-coverage]: https://github.com/gocodebox/lifterlms-rest/actions/workflows/php-test-coverage.yml "PHP Tests Coverage"
 [link-phpcs-checks]: https://github.com/gocodebox/lifterlms-rest/actions/workflows/coding-standards.yml "PHPCS Coding Standards Checks"
 
