@@ -27,8 +27,8 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.7
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 
 		// assume all posts have been migrated to the block editor to avoid adding parts to the content.
 		add_filter( 'llms_blocks_is_post_migrated', '__return_true' );

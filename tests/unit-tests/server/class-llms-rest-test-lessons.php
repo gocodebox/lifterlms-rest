@@ -78,9 +78,9 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->user_allowed = $this->factory->user->create(
 			array(
 				'role' => 'administrator',

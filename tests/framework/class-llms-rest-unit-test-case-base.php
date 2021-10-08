@@ -153,9 +153,9 @@ class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 
 		// Remove possibly mocked headers.
 		unset( $_SERVER['HTTP_X_LLMS_CONSUMER_KEY'], $_SERVER['HTTP_X_LLMS_CONSUMER_SECRET'] );

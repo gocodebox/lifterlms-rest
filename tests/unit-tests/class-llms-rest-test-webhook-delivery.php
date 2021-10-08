@@ -45,8 +45,8 @@ class LLMS_REST_Test_Webhook_Delivery extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 		add_filter( 'llms_rest_webhook_deliver_async', '__return_false' );
 		add_action( 'llms_rest_webhook_delivery', array( $this, 'watch_for_delivery' ), 10, 5 );
 	}
@@ -58,9 +58,9 @@ class LLMS_REST_Test_Webhook_Delivery extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 		remove_filter( 'llms_rest_webhook_deliver_async', '__return_false' );
 		remove_action( 'llms_rest_webhook_delivery', array( $this, 'watch_for_delivery' ), 10 );
 		global $wpdb;

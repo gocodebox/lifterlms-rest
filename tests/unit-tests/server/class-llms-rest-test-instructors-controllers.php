@@ -27,9 +27,9 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function set_up() {
 
-		parent::setUp();
+		parent::set_up();
 		$this->user_admin = $this->factory->user->create( array( 'role' => 'administrator', ) );
 		$this->user_subscriber = $this->factory->user->create( array( 'role' => 'subscriber', ) );
 		$this->user_instructor = $this->factory->user->create( array( 'role' => 'instructor', ) );
@@ -274,9 +274,9 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tear_down() {
 
-		parent::tearDown();
+		parent::tear_down();
 
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );

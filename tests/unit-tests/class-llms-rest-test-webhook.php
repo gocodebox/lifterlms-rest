@@ -60,8 +60,8 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 	}
 
 	/**
@@ -71,8 +71,8 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
-		parent::tearDown();
+	public function tear_down() {
+		parent::tear_down();
 
 		add_filter( 'llms_rest_webhook_pre_ping', '__return_true' );
 		remove_filter( 'pre_http_request', array( $this, 'mock_request' ), 10 );

@@ -42,8 +42,8 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Setup our test server, endpoints, and user info.
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 
 		global $wpdb;
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}lifterlms_user_postmeta" );
@@ -111,8 +111,8 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		foreach ( $res_data as $enrollment ) {
 			$this->assertEquals( $course_ids[$i], $res_data[$i]['post_id'] );
 			// Make sure post_id and student_id are integers.
-			$this->assertInternalType( "int", $res_data[$i]['post_id'] );
-			$this->assertInternalType( "int", $res_data[$i]['student_id'] );
+			$this->assertIsInt( $res_data[$i]['post_id'] );
+			$this->assertIsInt( $res_data[$i]['student_id'] );
 			$i++;
 		}
 
@@ -289,7 +289,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $user_id, $res_data['student_id'] );
 		$this->assertEquals( $course_id[0], $res_data['post_id'] );
 		$this->assertEquals( 'enrolled', $res_data['status'] );
-		$this->assertEquals( strtotime( $date_now ), strtotime( $res_data['date_created'] ), '', $this->date_delta );
+		$this->assertEqualsWithdelta( strtotime( $date_now ), strtotime( $res_data['date_created'] ), $this->date_delta );
 		$this->assertEquals( $res_data['date_created'], $res_data['date_updated'] );
 
 		$student = new LLMS_Student($user_id);
@@ -377,7 +377,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$this->assertEquals( $user_id, $res_data['student_id'] );
 		$this->assertEquals( $course_id, $res_data['post_id'] );
 		$this->assertEquals( 'enrolled', $res_data['status'] );
-		$this->assertEquals( strtotime( $date_now ), strtotime( $res_data['date_created'] ), '', $this->date_delta );
+		$this->assertEqualsWithDelta( strtotime( $date_now ), strtotime( $res_data['date_created'] ), $this->date_delta );
 		$this->assertEquals( $res_data['date_created'], $res_data['date_updated'] );
 		$this->assertEquals( 'unspecified', $res_data['trigger'] );
 
