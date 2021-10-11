@@ -180,7 +180,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test creating a single access plan
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.20
 	 *
 	 * @return void
 	 */

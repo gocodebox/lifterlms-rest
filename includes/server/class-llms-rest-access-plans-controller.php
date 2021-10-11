@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version [version]
+ * @version 1.0.0-beta.20
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -156,7 +156,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Check if a given request has access to update an item
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
+	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -176,7 +176,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Check if a given request has access to delete an item
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
+	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -245,7 +245,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Fixed return format of the `access_expires` property.
+	 * @since 1.0.0-beta.20 Fixed return format of the `access_expires` property.
 	 *                      Fixed sale date properties.
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
@@ -708,7 +708,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Check if the current user, who has no permissions to manipulate the access plan post, can edit its related product.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Made sure either we're creating or updating prior to check related product's permissions.
+	 * @since 1.0.0-beta.20 Made sure either we're creating or updating prior to check related product's permissions.
 	 *
 	 * @param boolean|WP_Error $has_permissions Whether or not the current user has the permission to manipulate the resource.
 	 * @param WP_REST_Request  $request         Full details about the request.
@@ -738,7 +738,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Allow request when the access plan limit per product is not reached.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.20
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error

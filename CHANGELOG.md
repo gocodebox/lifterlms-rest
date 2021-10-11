@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.20 - 2021-10-11
+---------------------------
+
++ Fixed an issue that generated a PHP Fatal when retrieving the list of access plans if logged in as administrator.
++ Fixed the access plan's `access_expires` property format not respecting the specs (Y-m-d H:i:s).
++ Fixed an issue that made the access plan's properties `sale_date_start` and `sale_date_end` to be returned as empty.
+
+
 v1.0.0-beta.19 - 2021-04-13
 ---------------------------
 
