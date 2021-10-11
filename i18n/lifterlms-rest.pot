@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LifterLMS REST API plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.19\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.20\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-13T10:38:14-06:00\n"
+"POT-Creation-Date: 2021-10-11T13:08:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms-dev 1.0.0\n"
 "X-Domain: lifterlms\n"
@@ -866,7 +866,7 @@ msgid "Retrieve access plans for a specific list of one or more posts. Accepts a
 msgstr ""
 
 #. Translators: %1$d = access plans limit per product, %2$s access plan post type plural name, %3$s product post type singular name.
-#: includes/server/class-llms-rest-access-plans-controller.php:744
+#: includes/server/class-llms-rest-access-plans-controller.php:762
 msgid "Only %1$d %2$s allowed per %3$s"
 msgstr ""
 
