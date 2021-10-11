@@ -10,7 +10,7 @@
  * Plugin Name: LifterLMS REST API
  * Plugin URI: https://lifterlms.com/
  * Description: REST API feature plugin for the LifterLMS Core.
- * Version: 1.0.0-beta.19
+ * Version: 1.0.0-beta.20
  * Author: LifterLMS
  * Author URI: https://lifterlms.com/
  * Text Domain: lifterlms
