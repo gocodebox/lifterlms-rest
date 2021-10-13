@@ -70,6 +70,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $disallowed_meta_fields = array();
 
 	/**
+	 * Flags whether the additional fields have been added to schema.
+	 *
+	 * @var boolean
+	 */
+	protected $additional_fields_added;
+
+	/**
 	 * Create an item.
 	 *
 	 * @since 1.0.0-beta.1
@@ -623,6 +630,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		// Adds the schema from additional fields to a schema array.
 		$this->schema = $this->add_additional_fields_schema( $schema );
 
+		$this->additional_fields_added = true;
+
 		return $this->schema;
 
 	}
@@ -676,7 +685,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				 */
 				apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields )
 			),
-			isset( $this->schema ) ? array_flip( array_keys( $this->schema['properties'] ) ) : array()
+			isset( $this->schema ) && empty( $this->additional_fields_added ) ? array_flip( array_keys( $this->schema['properties'] ) ) : array()
 		);
 
 	}
