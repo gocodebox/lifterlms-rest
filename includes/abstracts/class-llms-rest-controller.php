@@ -70,11 +70,11 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $disallowed_meta_fields = array();
 
 	/**
-	 * Flags whether the additional fields have been added to schema.
+	 * Caches the additional fields added to the schema.
 	 *
-	 * @var boolean
+	 * @var string[]
 	 */
-	protected $additional_fields_added;
+	protected $additional_fields_schema;
 
 	/**
 	 * Create an item.
@@ -628,9 +628,16 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$this->schema = $this->filter_item_schema( $schema );
 
 		// Adds the schema from additional fields to a schema array.
-		$this->schema = $this->add_additional_fields_schema( $schema );
+		$schema = $this->add_additional_fields_schema( $schema );
 
-		$this->additional_fields_added = true;
+		$this->additional_fields_schema = array_keys(
+			array_diff_key(
+				$schema['properties'],
+				$this->schema['properties'],
+			)
+		);
+
+		$this->schema = $schema;
 
 		return $this->schema;
 
@@ -671,7 +678,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return array();
 		}
 
-		return array_diff_key(
+		$additional_fields = array_diff_key(
 			parent::get_additional_fields( $object_type ),
 			array_flip(
 				/**
@@ -685,8 +692,21 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				 */
 				apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields )
 			),
-			isset( $this->schema ) && empty( $this->additional_fields_added ) ? array_flip( array_keys( $this->schema['properties'] ) ) : array()
 		);
+
+		if ( isset( $this->schema ) && ! isset( $this->additional_fields_schema ) ) {
+			$additional_fields = array_diff_key(
+				$additional_fields,
+				array_flip( array_keys( $this->schema['properties'] ) )
+			);
+		} elseif ( ! empty( $this->additional_fields_schema ) ) {
+			$additional_fields = array_intersect_key(
+				$additional_fields,
+				array_flip( $this->additional_fields_schema )
+			);
+		}
+
+		return $additional_fields;
 
 	}
 
