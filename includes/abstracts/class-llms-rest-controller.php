@@ -637,6 +637,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function add_meta_fields_schema( $schema ) {
 		$schema['properties']['meta'] = $this->meta->get_field_schema();
+		$schema['properties']         = $this->parse_custom_meta_fields( $schema['properties'], $this->get_object_type( $schema ), true );
 		return $schema;
 	}
 
@@ -685,11 +686,12 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 *
 	 * @since [version]
 	 *
-	 * @param array  $data        Array of object data.
+	 * @param array  $data        Array of object data or schema properties.
 	 * @param string $object_type The object type.
+	 * @param bool   $for_schema  Whether the parsing is for schema properties.
 	 * @return array
 	 */
-	protected function parse_custom_meta_fields( $data, $object_type = null ) {
+	protected function parse_custom_meta_fields( $data, $object_type = null, $for_schema = false ) {
 
 		if ( empty( $data['meta'] ) ) {
 			return $data;
@@ -703,30 +705,39 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return $data;
 		}
 
-		$data['meta'] = array_diff_key(
-			$data['meta'],
-			array_flip(
-				/**
-				 * Filters the disallowed meta fields.
-				 *
-				 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
-				 *
-				 * @since [version]
-				 *
-				 * @param string[] $disallowed_meta_fields Meta field names to skip.
-				 */
-				apply_filters( "llms_rest_{$object_type}_disallowed_meta_fields", $this->disallowed_meta_fields )
-			),
-			isset( $this->schema ) ?
-				array_flip(
-					array_map(
-						array( $this, 'meta_name_from_property_name' ),
-						array_keys( $this->schema['properties'] )
-					)
-				)
-				:
-				array()
+		$properties = array_keys( isset( $this->schema ) ? $this->schema['properties'] : $data );
+
+		/**
+		 * Filters the disallowed meta fields.
+		 *
+		 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
+		 *
+		 * @since [version]
+		 *
+		 * @param string[] $disallowed_meta_fields Meta field names to skip.
+		 */
+		$disallowed_meta_fields = array_flip( apply_filters( "llms_rest_{$object_type}_disallowed_meta_fields", $this->disallowed_meta_fields ) );
+
+		$disallowed_meta_from_schema_properties = array_flip(
+			array_map(
+				array( $this, 'meta_name_from_property_name' ),
+				$properties
+			)
 		);
+
+		if ( $for_schema ) {
+			$data['meta']['properties'] = array_diff_key(
+				$data['meta']['properties'],
+				$disallowed_meta_fields,
+				$disallowed_meta_from_schema_properties
+			);
+		} else {
+			$data['meta'] = array_diff_key(
+				$data['meta'],
+				$disallowed_meta_fields,
+				$disallowed_meta_from_schema_properties
+			);
+		}
 
 		return $data;
 	}
