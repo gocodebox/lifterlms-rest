@@ -1034,7 +1034,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		if ( ! empty( $schema['properties']['meta'] ) && isset( $request['meta'] ) ) {
 
-			$request = parse_custom_meta_fields( $request['meta'] );
+			$request = $this->parse_custom_meta_fields( $request['meta'] );
 			if ( empty( $request_meta['data'] ) ) {
 				return;
 			}
