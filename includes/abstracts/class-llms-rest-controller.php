@@ -70,7 +70,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $disallowed_meta_fields = array();
 
 	/**
-	 * Caches the additional fields added to the schema.
+	 * Caches the additional field names added to the schema.
 	 *
 	 * @var string[]
 	 */
@@ -628,16 +628,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$this->schema = $this->filter_item_schema( $schema );
 
 		// Adds the schema from additional fields to a schema array.
-		$schema = $this->add_additional_fields_schema( $schema );
-
-		$this->additional_fields_schema = array_keys(
-			array_diff_key(
-				$schema['properties'],
-				$this->schema['properties']
-			)
-		);
-
-		$this->schema = $schema;
+		$this->schema = $this->add_additional_fields_schema( $schema );
 
 		return $this->schema;
 
@@ -694,16 +685,17 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			)
 		);
 
-		if ( isset( $this->schema ) && ! isset( $this->additional_fields_schema ) ) {
-			$additional_fields = array_diff_key(
-				$additional_fields,
-				array_flip( array_keys( $this->schema['properties'] ) )
-			);
-		} elseif ( ! empty( $this->additional_fields_schema ) ) {
+		if ( isset( $this->additional_fields_schema ) ) {
 			$additional_fields = array_intersect_key(
 				$additional_fields,
 				array_flip( $this->additional_fields_schema )
 			);
+		} elseif ( isset( $this->schema ) ) {
+			$additional_fields = array_diff_key(
+				$additional_fields,
+				array_flip( array_keys( $this->schema['properties'] ) )
+			);
+			$this->additional_fields_schema = array_keys( $additional_fields );
 		}
 
 		return $additional_fields;
