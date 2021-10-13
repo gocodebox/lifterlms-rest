@@ -633,7 +633,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$this->additional_fields_schema = array_keys(
 			array_diff_key(
 				$schema['properties'],
-				$this->schema['properties'],
+				$this->schema['properties']
 			)
 		);
 
@@ -691,7 +691,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				 * @param string[] $disallowed_additional_fields Additional field names to skip.
 				 */
 				apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields )
-			),
+			)
 		);
 
 		if ( isset( $this->schema ) && ! isset( $this->additional_fields_schema ) ) {
