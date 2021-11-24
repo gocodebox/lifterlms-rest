@@ -1,0 +1,3 @@
+significance: minor
+type: dev
+entry: Renamed `LLMS_REST_API_Keys_Query` and `LLMS_REST_Webhooks_Query` `preprare_query()` methods to `prepare_query`.
