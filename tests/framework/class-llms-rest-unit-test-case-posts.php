@@ -415,7 +415,6 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 		$this->assertEquals( 0, count( $res_data ), $this->post_type );
 
-		wp_set_current_user(0);
 	}
 
 	/**
