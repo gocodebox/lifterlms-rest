@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.19
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -34,6 +34,7 @@ defined( 'ABSPATH' ) || exit;
  *                     must be false when updating.
  * @since 1.0.0-beta.12 Moved parameters to query args mapping from `$this->prepare_collection_params()` to `$this->map_params_to_query_args()`.
  * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
+ * @since [version] Enable search.
  */
 abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
@@ -62,7 +63,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		'date_created',
 		'date_updated',
 		'menu_order',
+		'relevance',
 	);
+
+	/**
+	 * Whether search is allowed
+	 *
+	 * @var boolean
+	 */
+	protected $is_searchable = true;
 
 	/**
 	 * LLMS post class name.

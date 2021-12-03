@@ -8,6 +8,7 @@ get:
     - $ref: '#/components/parameters/Page'
     - $ref: '#/components/parameters/PerPage'
     - $ref: '#/components/parameters/Order'
+    - $ref: '#/components/parameters/Search'
     - name: orderby
       description: Specify the sort field for a collection of results.
       in: query
@@ -20,6 +21,7 @@ get:
           - date_created
           - date_updated
           - order
+          - relevance
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'

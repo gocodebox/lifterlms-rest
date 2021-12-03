@@ -7,10 +7,11 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
  * @since 1.0.0-beta.18 Added utility to retrieve schema defaults.
- * @version 1.0.0-beta.18
+ * @since [version] Added tests on the search param.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
+
 	/**
 	 * @var LLMS_REST_Controller
 	 */
@@ -110,6 +111,103 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected function assertResponseStatusEquals( $expected, WP_REST_Response $response, $msg = '' ) {
 
 		$this->assertEquals( $expected, $response->get_status(), $msg );
+
+	}
+
+	/**
+	 * Test collection params contain 'search'.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_collection_params_contain_search() {
+
+		if ( ! isset( $this->endpoint ) ) {
+			$this->markTestSkipped(
+				sprintf(
+					'No endpoint set, cannot check its collection params. (%1$s)',
+					get_class( $this )
+				)
+			);
+		}
+
+		if ( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'is_searchable' ) ) {
+			$this->assertContains(
+				'search',
+				array_keys( $this->endpoint->get_collection_params() )
+			);
+		} else {
+			$this->assertNotContains(
+				'search',
+				array_keys( $this->endpoint->get_collection_params() )
+			);
+		}
+	}
+
+	/**
+	 * Test allowing 'relevance' orderby
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_allow_relevance_orderby() {
+
+		if ( ! isset( $this->endpoint ) ) {
+			$this->markTestSkipped(
+				sprintf(
+					'No endpoint set, cannot check its collection params. (%1$s)',
+					get_class( $this )
+				)
+			);
+		}
+
+		if ( ! LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'is_searchable' ) ) {
+			$this->markTestSkipped(
+				sprintf(
+					'The %1$s endpoint is not searchable',
+					LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+				)
+			);
+		}
+
+		if ( ! in_array( 'relevance', (array) LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'orderby_properties' ), true ) ) {
+			$this->markTestSkipped(
+				sprintf(
+					'The %1$s endpoint\'s orderby_properties property doesn\'t contain "relevance"',
+					LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+				)
+			);
+		}
+
+		// No search term defined.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'orderby' => 'relevance'
+			)
+		);
+
+		// Bad request.
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertResponseMessageEquals( 'You need to define a search term to order by relevance.', $response );
+
+		// Search term defined.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'orderby' => 'relevance',
+				'search'  => 'a',
+			)
+		);
+
+		// Fine.
+		$this->assertResponseStatusEquals( 200, $response );
 
 	}
 
