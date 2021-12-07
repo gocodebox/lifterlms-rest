@@ -14,10 +14,12 @@
     "url": "https://github.com/gocodebox/lifterlms-rest/issues"
   },
   "devDependencies": {
+    "@lifterlms/dev": "^0.0.2",
     "openapi-snippet": "^0.9.1",
     "swagger-repo": "^2.0.0-rc.15"
   },
   "scripts": {
+    "dev": "llms-dev",
     "start": "swagger-repo serve -p 8888",
     "build": "npm run build:docs && llms-dev pot",
     "build:docs": "npm run build:spec && npm run build:snippets && npm run build:spec",
