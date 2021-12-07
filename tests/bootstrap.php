@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.17
+ * @version [version]
  */
 
 require_once './vendor/lifterlms/lifterlms-tests/bootstrap.php';
@@ -37,10 +37,15 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 	 * Install the plugin
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Ensure install class is included.
 	 *
 	 * @return void
 	 */
 	public function install() {
+
+		// Ensure install class is available.
+		require_once $this->plugin_dir . '/includes/class-llms-rest-install.php';
+
 		// Adds filters so tables will be created during LLMS Core installs.
 		LLMS_REST_Install::init();
 		parent::install();
