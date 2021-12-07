@@ -20,6 +20,7 @@ get:
           - date_created
           - date_updated
           - order
+          - relevance
         default: id
     - $ref: '#/components/parameters/Include'
     - $ref: '#/components/parameters/Exclude'

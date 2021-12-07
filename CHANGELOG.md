@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.21 - 2021-12-07
+---------------------------
+
+##### New Features
+
++ Post based resources like couress, memberships, section, lessons... are now searchable.
+
+
 v1.0.0-beta.20 - 2021-10-11
 ---------------------------
 
