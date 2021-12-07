@@ -8,7 +8,7 @@
  * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
  * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
  * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
- * @version 1.0.0-beta.19
+ * @since [version] Test search.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -332,6 +332,88 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 
 		$this->assertEquals( 1, count( $res_data ), $this->post_type );
 		$this->assertEquals( $post, $res_data[0]['id'], $this->post_type );
+
+	}
+
+
+	/**
+	 * Test collection search.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_search() {
+
+		if ( ! LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'is_searchable' ) ) {
+			$this->markTestSkipped(
+				sprintf(
+					'The %1$s endpoint is not searchable',
+					LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+				)
+			);
+		}
+
+		wp_set_current_user(
+			$this->factory->user->create(
+				array(
+					'role' => 'administrator',
+				)
+			)
+		);
+
+		// Create two posts.
+		$post_match = $this->factory->post->create(
+			array(
+				'post_type'  => $this->post_type,
+				'post_title' => 'Match when searching with the term "whatever"',
+			)
+		);
+
+		$post_unmatch = $this->factory->post->create(
+			array(
+				'post_type'  => $this->post_type,
+				'post_title' => 'This doesn\'t match the search',
+			)
+		);
+		// Access plans need a product id.
+		if ( 'llms_access_plan' === $this->post_type ) {
+			$course =  $this->factory->post->create( array( 'post_type' => 'course' ) );
+			llms_get_post( $post_match )->set( 'product_id', $course );
+			llms_get_post( $post_unmatch )->set( 'product_id', $course );
+		}
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route
+		);
+		$res_data = $response->get_data();
+		$this->assertEquals( 2, count( $res_data ), $this->post_type );
+
+		// Search.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search' => 'whatever',
+			)
+		);
+		$res_data = $response->get_data();
+		$this->assertEquals( 1, count( $res_data ), $this->post_type );
+		$this->assertEquals( $post_match, $res_data[0]['id'], $this->post_type );
+
+		// Search no matches.
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route,
+			array(),
+			array(
+				'search' => 'foreveryoung',
+			)
+		);
+		$res_data = $response->get_data();
+		$this->assertEquals( 0, count( $res_data ), $this->post_type );
 
 	}
 

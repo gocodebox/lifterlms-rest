@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Lessons Controller.
+ * REST Lessons Controller
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -58,6 +58,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		'date_created',
 		'date_updated',
 		'order',
+		'relevance',
 	);
 
 	/**
