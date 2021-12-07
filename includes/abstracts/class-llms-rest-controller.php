@@ -366,6 +366,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Format search query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.12
+	 * @since 1.0.0-beta.21 Return an error if requesting a list ordered by 'relevance' without providing a search string.
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
@@ -416,6 +417,15 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			}
 
 			$prepared['search'] = '*' . $prepared['search'] . '*';
+
+		} else {
+
+			// Ensure a search string is set in case the orderby is set to 'relevance'.
+			if ( ! empty( $request['orderby'] ) && 'relevance' === $request['orderby'] ) {
+				return llms_rest_bad_request_error(
+					__( 'You need to define a search term to order by relevance.', 'lifterlms' )
+				);
+			}
 		}
 
 		return $prepared;
