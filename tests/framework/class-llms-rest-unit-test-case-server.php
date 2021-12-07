@@ -7,7 +7,7 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
  * @since 1.0.0-beta.18 Added utility to retrieve schema defaults.
- * @since [version] Added tests on the search param.
+ * @since 1.0.0-beta.21 Added tests on the search param.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -117,7 +117,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test collection params contain 'search'.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.21
 	 *
 	 * @return void
 	 */
@@ -148,7 +148,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test allowing 'relevance' orderby
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.21
 	 *
 	 * @return void
 	 */

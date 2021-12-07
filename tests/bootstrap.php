@@ -5,7 +5,7 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.21
  */
 
 require_once './vendor/lifterlms/lifterlms-tests/bootstrap.php';
@@ -37,7 +37,7 @@ class LLMS_REST_Tests_Bootstrap extends LLMS_Tests_Bootstrap {
 	 * Install the plugin
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Ensure install class is included.
+	 * @since 1.0.0-beta.21 Ensure install class is included.
 	 *
 	 * @return void
 	 */

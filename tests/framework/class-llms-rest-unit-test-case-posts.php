@@ -8,7 +8,7 @@
  * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
  * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
  * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
- * @since [version] Test search.
+ * @since 1.0.0-beta.21 Test search.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -339,7 +339,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test collection search.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.21
 	 *
 	 * @return void
 	 */
