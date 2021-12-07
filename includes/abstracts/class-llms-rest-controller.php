@@ -366,7 +366,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Format search query arguments to retrieve a collection of objects.
 	 *
 	 * @since 1.0.0-beta.12
-	 * @since [version] Return an error if requesting a list ordered by 'relevance' without providing a search string.
+	 * @since 1.0.0-beta.21 Return an error if requesting a list ordered by 'relevance' without providing a search string.
 	 *
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
