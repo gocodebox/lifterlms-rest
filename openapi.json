@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.0.0-beta.19",
+    "version": "1.0.0-beta.20",
     "title": "LifterLMS REST API",
     "description": "# Introduction\nLifterLMS (LLMS) is fully integrated with the [WordPress REST API](https://developer.wordpress.org/rest-api/). This allows LifterLMS data to be created, read, updated, and deleted using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.\n## Public Beta\nAs of LifterLMS version 3.34.0, the LifterLMS REST API is included in the LifterLMS core plugin for public evaluation and testing.\nThe specification may change over the next few months as we evaluate feedback and use-cases. If you are building integrations relying on the REST API please keep your eye on our changelog and let us know how things are going!\nIf you're interested in contributing or discussing the REST API, please join us in [GitHub](https://github.com/gocodebox/lifterlms-rest) and post in `#developers` on the [LifterLMS Community Slack](https://lifterlms.com/slack).\n## Requirements\nTo use the latest version of the REST API you must be using the following:\n\n  + LifterLMS Version 3.34.0+.\n  + WordPress 5.2+.\n  + Pretty permalinks in `Settings -> Permalinks` so that the custom endpoints are supported. **Default permalinks will not work.**\n  + An SSL certificate.\n\n## Libraries and Tools\n### Official Libraries\nLifterLMS develops and maintains official libraries for different programming languages so you can easily build around the REST API.\n\n  + [Node/Javascript](https://github.com/gocodebox/llms-api-node)\n  + PHP (coming soon)\n\n### Tools\nSome useful tools to help develop and access the REST API:\n\n  + [Postman](https://www.getpostman.com/) - A multi platform REST API GUI client.\n  + [RESTCLient](https://addons.mozilla.org/en-US/firefox/addon/restclient/) - A free Firefox add-on.\n  + [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) - A free Google Chrome extension.\n  + [RequestBin](https://requestbin.com/) - A free service allowing you to quickly test webhooks.\n\n# Base URL\nThe LifterLMS REST API extends the [WordPress REST API](https://developer.wordpress.org/rest-api/) which is a [distributed API](https://developer.wordpress.org/rest-api/reference/#a-distributed-api) available individually on any WordPress website.\n\nAs a distributed API, there is no singular root or base URL to use when performing API requests.\n\nFor most WordPress websites, the base REST URL is located at `/wp-json/`, but this can be customized on a site-by-site basis.\n\nIf you're not sure what your site's base REST URL is, you can discover it using the [WordPress REST API discovery proccess](https://developer.wordpress.org/rest-api/using-the-rest-api/discovery/).\n\nThe examples found throughout this reference use `https://example.tld/wp-json/` as the base REST URL. This should be replaced with your website's actual base URL when using the REST API.\n# Authentication\nRequests to most API resources require authentication. Authentication can be preformed by providing API Credentials by using as the username and password via [HTTP Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) or through request headers.\n\nRequests to the REST API may only be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). Requests made over HTTP will fail.\n## Basic Authentication\nThe preferred authentication method is HTTP Basic Authentication.\nTo use HTTP Basic Auth, provide the Consumer Key as the username and the Consumer Secret as the password.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -u ck_d7W85twOWT0poKzDSAQzI7:cs_8bsMmRfjW1HgEFw5ad7BIF\n```\n## Header Authentication\nAlternatively, requests may be authenticated by providing the Consumer Key and Consumer Secret as the request headers `X-LLMS-CONSUMER-KEY` and `X-LLMS-CONSUMER-SECRET`.\n```\n  curl https://example.tld/wp-json/llms/v1/courses \\\n    -H X-LLMS-CONSUMER-KEY:ck_d7W85twOWT0poKzDSAQzI7 \\\n    -H X-LLMS-CONSUMER-SECRET:cs_8bsMmRfjW1HgEFw5ad7BIF\n```",
     "x-logo": {
@@ -174,6 +174,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -185,7 +188,8 @@
                 "title",
                 "date_created",
                 "date_updated",
-                "menu_order"
+                "menu_order",
+                "relevance"
               ],
               "default": "id"
             }
@@ -248,11 +252,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/access-plans?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&post_id=123%2C456', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -831,6 +835,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -842,7 +849,8 @@
                 "title",
                 "date_created",
                 "date_updated",
-                "menu_order"
+                "menu_order",
+                "relevance"
               ],
               "default": "id"
             }
@@ -899,11 +907,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/courses?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -1399,6 +1407,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -1408,7 +1419,8 @@
               "enum": [
                 "id",
                 "name",
-                "date_created"
+                "date_created",
+                "relevance"
               ],
               "default": "id"
             }
@@ -1462,11 +1474,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/groups?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -2380,7 +2392,7 @@
             "$ref": "#/components/parameters/Order"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchUsers"
           },
           {
             "$ref": "#/components/parameters/SearchColumns"
@@ -2867,6 +2879,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -2878,7 +2893,8 @@
                 "title",
                 "date_created",
                 "date_updated",
-                "order"
+                "order",
+                "relevance"
               ],
               "default": "id"
             }
@@ -2946,11 +2962,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/lessons?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft&parent=987', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -3217,6 +3233,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -3228,7 +3247,8 @@
                 "title",
                 "date_created",
                 "date_updated",
-                "menu_order"
+                "menu_order",
+                "relevance"
               ],
               "default": "id"
             }
@@ -3285,11 +3305,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/memberships?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&status=draft', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -3680,6 +3700,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -3689,7 +3712,8 @@
                 "id",
                 "title",
                 "date_created",
-                "date_updated"
+                "date_updated",
+                "relevance"
               ],
               "default": "id"
             }
@@ -3753,11 +3777,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quiz-questions?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&quiz=789', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -4155,6 +4179,9 @@
             "$ref": "#/components/parameters/Order"
           },
           {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
             "name": "orderby",
             "description": "Specify the sort field for a collection of results.",
             "in": "query",
@@ -4164,7 +4191,8 @@
                 "id",
                 "title",
                 "date_created",
-                "date_updated"
+                "date_updated",
+                "relevance"
               ],
               "default": "id"
             }
@@ -4250,11 +4278,11 @@
         "x-code-samples": [
           {
             "lang": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:cs_XXXXXX"
+            "source": "curl --request GET \\\n  --url 'https://example.tld/wp-json/llms/v1/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE' \\\n  --user ck_XXXXXX:cs_XXXXXX"
           },
           {
             "lang": "Node.js",
-            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
+            "source": "const llmsAPI = require( \"llms-api-node\" );\nconst llms = new llmsAPI( {\n  \"url\": \"https://example.tld\",\n  \"consumerKey\": \"ck_XXXXXXXXXXXXXXXXXXXXXX\",\n  \"consumerSecret\": \"cs_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"\n} );\n\nllms.get( '/quizzes?context=edit&page=1&per_page=SOME_INTEGER_VALUE&order=SOME_STRING_VALUE&search=term&orderby=SOME_STRING_VALUE&include=1%2C2%2C3&exclude=10%2C11%2C12&parent=789&course=1234&status=SOME_STRING_VALUE', function( err, data, res ) {\n  if ( err ) {\n    throw new Error( 'Error!' );\n  }\n  console.log( data );\n} );"
           }
         ]
       },
@@ -4490,7 +4518,8 @@
                 "title",
                 "date_created",
                 "date_updated",
-                "order"
+                "order",
+                "relevance"
               ],
               "default": "id"
             }
@@ -4889,7 +4918,7 @@
             "$ref": "#/components/parameters/Order"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchUsers"
           },
           {
             "$ref": "#/components/parameters/SearchColumns"
@@ -10300,7 +10329,7 @@
         "required": false,
         "schema": {
           "type": "string",
-          "example": "jamie@lifterlms.com"
+          "example": "term"
         }
       },
       "SearchColumns": {
@@ -10321,6 +10350,16 @@
             "url",
             "username"
           ]
+        }
+      },
+      "SearchUsers": {
+        "name": "search",
+        "in": "query",
+        "description": "Filter results to those matching the specified search string.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "jamie@lifterlms.com"
         }
       }
     },
