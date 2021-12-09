@@ -31,7 +31,7 @@ jobs:
       run: npm run build:docs
 
     - name: Deploy
-      run: |
-        git config --global user.name "branch-sync[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        npm run gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./web_deploy
