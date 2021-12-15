@@ -1,6 +1,15 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.22 - 2021-12-15
+---------------------------
+
+##### Developer Notes
+
++ The LifterLMS Core minimum required version has been raised to version 6.0.0-alpha.1.
++ Renamed `LLMS_REST_API_Keys_Query` and `LLMS_REST_Webhooks_Query` `preprare_query()` methods to `prepare_query`. [gocodebox/lifterlms#859](https://github.com/gocodebox/lifterlms#859)
+
+
 v1.0.0-beta.21 - 2021-12-07
 ---------------------------
 
