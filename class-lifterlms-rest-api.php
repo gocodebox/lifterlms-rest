@@ -196,15 +196,17 @@ final class LifterLMS_REST_API {
 	 * @since 1.0.0-beta.8 Load webhooks actions a little bit later: at init 6 instead of init 10,
 	 *                     just after all the db tables are created (init 5),
 	 *                     to avoid PHP warnings on first plugin activation.
+	 * @since [version] Bump minimum required version to 6.0.0-alpha.1.
+	 *                     Use `llms()` in favor of deprecated `LLMS()`.
 	 *
 	 * @return void
 	 */
 	public function init() {
 
-		// only load if we have the minimum LifterLMS version installed & activated.
-		if ( function_exists( 'LLMS' ) && version_compare( '3.32.0', LLMS()->version, '<=' ) ) {
+		// Only load if we have the minimum LifterLMS version installed & activated.
+		if ( function_exists( 'llms' ) && version_compare( '6.0.0-alpha.1', llms()->version, '<=' ) ) {
 
-			// load includes.
+			// Load includes.
 			$this->includes();
 
 			add_action( 'init', array( $this->webhooks(), 'load' ), 6 );
@@ -239,7 +241,7 @@ final class LifterLMS_REST_API {
 	 */
 	public function load_textdomain() {
 
-		// load locale.
+		// Load locale.
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'lifterlms' );
 
 		// Load from the LifterLMS "safe" directory if it exists.
