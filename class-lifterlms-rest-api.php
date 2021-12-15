@@ -26,7 +26,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.21';
+	public $version = '1.0.0-beta.22';
 
 	/**
 	 * Constructor.
@@ -196,7 +196,7 @@ final class LifterLMS_REST_API {
 	 * @since 1.0.0-beta.8 Load webhooks actions a little bit later: at init 6 instead of init 10,
 	 *                     just after all the db tables are created (init 5),
 	 *                     to avoid PHP warnings on first plugin activation.
-	 * @since [version] Bump minimum required version to 6.0.0-alpha.1.
+	 * @since 1.0.0-beta.22 Bump minimum required version to 6.0.0-alpha.1.
 	 *                     Use `llms()` in favor of deprecated `LLMS()`.
 	 *
 	 * @return void

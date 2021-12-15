@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.22
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -124,7 +124,7 @@ class LLMS_REST_API_Keys_Query extends LLMS_Database_Query {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.16 Use `$this->sql_select_columns({columns})` to determine the columns to select.
-	 * @since [version] Renamed from `preprare_query()`.
+	 * @since 1.0.0-beta.22 Renamed from `preprare_query()`.
 	 *
 	 * @return string
 	 */
