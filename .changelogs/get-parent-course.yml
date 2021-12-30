@@ -1,0 +1,3 @@
+significance: minor
+type: changed
+entry: Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
