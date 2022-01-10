@@ -710,9 +710,10 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Override.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
-	 * @param $expected array Array of expected properties.
-	 * @param $lesson LLMS_Post Instance of LLMS_Post.
+	 * @param array           $expected Array of expected properties.
+	 * @param LLMS_Post_Model $lesson   Instance of LLMS_Post_Model.
 	 * @return array
 	 */
 	protected function filter_expected_fields( $expected, $lesson ) {
@@ -727,7 +728,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 		$expected['parent_id'] = $lesson->get_parent_section();
 
 		// Parent course.
-		$expected['course_id'] = $lesson->get_parent_course();
+		$expected['course_id'] = $lesson->get( 'parent_course' );
 
 		// Order.
 		$expected['order'] = $lesson->get( 'order' );
