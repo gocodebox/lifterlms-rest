@@ -405,12 +405,17 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed expected 'order' field, added expected 'parent_id'.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 *
+	 * @param array           $expected  Array of expected properties.
+	 * @param LLMS_Post_Model $llms_post Instance of LLMS_Post_Model.
+	 * @return array
 	 */
 	protected function filter_expected_fields( $expected, $llms_post ) {
 
 		unset( $expected['content'] );
-		$expected[ 'order' ] = $llms_post->get('order');
-		$expected[ 'parent_id' ] = $llms_post->get_parent_course();
+		$expected['order']     = $llms_post->get( 'order' );
+		$expected['parent_id'] = $llms_post->get( 'parent_course' );
 
 		return $expected;
 
