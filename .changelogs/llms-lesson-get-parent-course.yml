@@ -1,3 +1,0 @@
-significance: minor
-type: changed
-entry: Replaced the calls to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.

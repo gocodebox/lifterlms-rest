@@ -710,7 +710,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Override.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param array           $expected Array of expected properties.
 	 * @param LLMS_Post_Model $lesson   Instance of LLMS_Post_Model.

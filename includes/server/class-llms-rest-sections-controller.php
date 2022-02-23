@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.23
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -331,7 +331,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Section    $section Section object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -410,7 +410,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fix the way we get the section's parent course object.
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
-	 * @since [version] Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Section    $section LLMS Section.
 	 * @param WP_REST_Request $request Request object.
