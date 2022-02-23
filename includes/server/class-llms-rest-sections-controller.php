@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.21
+ * @version 1.0.0-beta.23
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -331,6 +331,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Prepare a single object output for response.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.23 Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Section    $section Section object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -341,7 +342,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$data = parent::prepare_object_for_response( $section, $request );
 
 		// Parent course.
-		$data['parent_id'] = $section->get_parent_course();
+		$data['parent_id'] = $section->get( 'parent_course' );
 
 		// Order.
 		$data['order'] = $section->get( 'order' );
@@ -409,6 +410,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fix the way we get the section's parent course object.
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
+	 * @since 1.0.0-beta.23 Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Section    $section LLMS Section.
 	 * @param WP_REST_Request $request Request object.
@@ -417,7 +419,7 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	protected function prepare_links( $section, $request ) {
 
 		$links            = parent::prepare_links( $section, $request );
-		$parent_course_id = $section->get_parent_course();
+		$parent_course_id = $section->get( 'parent_course' );
 
 		// If the section has no course parent return earlier.
 		if ( ! $parent_course_id ) {

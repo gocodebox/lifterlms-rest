@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.21
+ * @version 1.0.0-beta.23
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -107,6 +107,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -147,7 +148,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			 */
 			if ( $request['id'] ) {
 				$lesson = $this->get_object( $request['id'] );
-				if ( $lesson && $parent_course_id === $lesson->get_parent_course() ) {
+				if ( $lesson && $parent_course_id === $lesson->get( 'parent_course' ) ) {
 					unset( $prepared_item['parent_course'] );
 				}
 			}
@@ -531,6 +532,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7 Added following properties to the response object:
 	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
 	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Lesson     $lesson Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -550,7 +552,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		$data['parent_id'] = $lesson->get_parent_section();
 
 		// Parent course.
-		$data['course_id'] = $lesson->get_parent_course();
+		$data['course_id'] = $lesson->get( 'parent_course' );
 
 		// Order.
 		$data['order'] = $lesson->get( 'order' );
@@ -711,6 +713,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *                  Following links added: `prerequisite`, `quiz`.
 	 *                  Added `llms_rest_lesson_links` filter hook.
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Lesson     $lesson  LLMS Section.
 	 * @param WP_REST_Request $request Request object.
@@ -723,7 +726,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		unset( $links['content'] );
 
 		$lesson_id         = $lesson->get( 'id' );
-		$parent_course_id  = $lesson->get_parent_course();
+		$parent_course_id  = $lesson->get( 'parent_course' );
 		$parent_section_id = $lesson->get_parent_section();
 
 		$lesson_links = array();
@@ -804,8 +807,9 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Checks if a Lesson can be read
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
-	 * @param LLMS_Lesson $lesson The Lesson oject.
+	 * @param LLMS_Lesson $lesson The Lesson object.
 	 * @return bool Whether the post can be read.
 	 *
 	 * @todo Implement read permission based on the section's id:
@@ -816,7 +820,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		/**
 		 * As of now, lessons of password protected courses cannot be read
 		 */
-		if ( post_password_required( $lesson->get_parent_course() ) ) {
+		if ( post_password_required( $lesson->get( 'parent_course' ) ) ) {
 			return false;
 		}
 

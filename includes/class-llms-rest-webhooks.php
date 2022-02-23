@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version 1.0.0-beta.23
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -239,6 +239,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.11 `'save_post_*'` hooks number of arguments reduced to two.
+	 * @since 1.0.0-beta.23 Replaced deprecated `llms_user_removed_from_membership_level` action hook with `llms_user_removed_from_membership`.
 	 *
 	 * @return array
 	 */
@@ -371,7 +372,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'llms_user_course_enrollment_updated'     => 2,
 				'llms_user_membership_enrollment_updated' => 2,
 				'llms_user_removed_from_course'           => 2,
-				'llms_user_removed_from_membership_level' => 2,
+				'llms_user_removed_from_membership'       => 2,
 			),
 			'enrollment.deleted'  => array(
 				'llms_user_enrollment_deleted' => 2,
