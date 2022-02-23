@@ -1,6 +1,16 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.23 - 2022-02-23
+---------------------------
+
+##### Updates and Enhancements
+
++ Replaced call to deprecated `LLMS_Section::get_parent_course()` with `LLMS_Section::get( 'parent_course' )`.
++ Replaced the calls to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
++ Replaced deprecated `llms_user_removed_from_membership_level` action hook with `llms_user_removed_from_membership`.
+
+
 v1.0.0-beta.22 - 2021-12-15
 ---------------------------
 

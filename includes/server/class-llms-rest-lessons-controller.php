@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.23
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -107,7 +107,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
-	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -532,7 +532,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7 Added following properties to the response object:
 	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
 	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
-	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Lesson     $lesson Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -713,7 +713,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *                  Following links added: `prerequisite`, `quiz`.
 	 *                  Added `llms_rest_lesson_links` filter hook.
 	 * @since 1.0.0-beta.14 Added `$request` parameter.
-	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Lesson     $lesson  LLMS Section.
 	 * @param WP_REST_Request $request Request object.
@@ -807,7 +807,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * Checks if a Lesson can be read
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
 	 *
 	 * @param LLMS_Lesson $lesson The Lesson object.
 	 * @return bool Whether the post can be read.
