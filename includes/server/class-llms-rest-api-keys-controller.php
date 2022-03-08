@@ -281,15 +281,15 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
-	 * @param obj             $query Objects query result.
-	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param LLMS_REST_API_Keys_Query $query    Objects query result returned by {@see LLMS_REST_API_Keys_Controller::get_objects_query()}.
+	 * @param array                    $prepared Array of collection arguments.
+	 * @param WP_REST_Request          $request  Request object.
 	 * @return array {
 	 *     Array of pagination information.
 	 *
-	 *     @type int $current_page Current page number.
+	 *     @type int $current_page  Current page number.
 	 *     @type int $total_results Total number of results.
-	 *     @type int $total_pages Total number of results pages.
+	 *     @type int $total_pages   Total number of results pages.
 	 * }
 	 */
 	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
