@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -245,6 +245,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Retrieve pagination information from an objects query.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -261,8 +262,8 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 
 		return array(
 			'current_page'  => $query->get( 'page' ),
-			'total_results' => $query->found_results,
-			'total_pages'   => $query->max_pages,
+			'total_results' => $query->get_found_results(),
+			'total_pages'   => $query->get_max_pages(),
 		);
 
 	}

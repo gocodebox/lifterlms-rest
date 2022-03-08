@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -279,6 +279,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * Retrieve pagination information from an objects query.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @param obj             $query Objects query result.
 	 * @param array           $prepared Array of collection arguments.
@@ -293,9 +294,9 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 */
 	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
-		$total_results = (int) $query->found_results;
+		$total_results = (int) $query->get_found_results();
 		$current_page  = isset( $prepared['page'] ) ? (int) $prepared['page'] : 1;
-		$total_pages   = (int) $query->max_pages;
+		$total_pages   = (int) $query->get_max_pages();
 
 		return compact( 'current_page', 'total_results', 'total_pages' );
 
