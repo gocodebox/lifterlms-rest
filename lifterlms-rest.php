@@ -17,7 +17,7 @@
  * Domain Path: /i18n
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Requires LifterLMS: 3.32.0
+ * Requires LifterLMS: 6.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -60,7 +60,7 @@ if ( ! class_exists( 'LifterLMS_REST_API' ) ) {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return LLMS_REST_API
+	 * @return LifterLMS_REST_API
 	 */
 	function LLMS_REST_API() {
 		return LifterLMS_REST_API::instance();

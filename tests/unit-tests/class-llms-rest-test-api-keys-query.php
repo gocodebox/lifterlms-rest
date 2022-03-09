@@ -59,6 +59,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the include and exclude arguments.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -73,13 +74,13 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 		$query = new LLMS_REST_API_Keys_Query( array(
 			'include' => $ids,
 		) );
-		$this->assertEquals( 5, $query->found_results );
+		$this->assertEquals( 5, $query->get_found_results() );
 		$this->assertEquals( $ids, wp_list_pluck( $query->get_results(), 'id' ) );
 
 		$query = new LLMS_REST_API_Keys_Query( array(
 			'exclude' => $ids,
 		) );
-		$this->assertEquals( 5, $query->found_results );
+		$this->assertEquals( 5, $query->get_found_results() );
 		$this->assertEquals( range( 6, 10 ), wp_list_pluck( $query->get_results(), 'id' ) );
 
 	}
@@ -88,6 +89,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test pagination of query results.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -97,8 +99,8 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 
 		$query = new LLMS_REST_API_Keys_Query( array() );
 		$this->assertEquals( 10, count( $query->get_results() ) );
-		$this->assertEquals( 25, $query->found_results );
-		$this->assertEquals( 3, $query->max_pages );
+		$this->assertEquals( 25, $query->get_found_results() );
+		$this->assertEquals( 3, $query->get_max_pages() );
 		$this->assertEquals( range( 1, 10 ), wp_list_pluck( $query->get_results(), 'id' ) );
 		$this->assertTrue( $query->is_first_page() );
 
@@ -115,6 +117,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the permissions arguments.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -125,12 +128,12 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 		$this->create_many_api_keys( 5, 'write' );
 
 		$query = new LLMS_REST_API_Keys_Query( array() );
-		$this->assertEquals( 15, $query->found_results );
+		$this->assertEquals( 15, $query->get_found_results() );
 
 		foreach ( array_keys( LLMS_REST_API()->keys()->get_permissions() ) as $pem ) {
 
 			$query = new LLMS_REST_API_Keys_Query( array( 'permissions' => $pem ) );
-			$this->assertEquals( 5, $query->found_results );
+			$this->assertEquals( 5, $query->get_found_results() );
 
 		}
 
@@ -233,6 +236,7 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the users include and exclude arguments.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -247,13 +251,13 @@ class LLMS_REST_Test_API_Keys_Query extends LLMS_REST_Unit_Test_Case_Base {
 			'user' => $uid,
 		) );
 		$res_1 = wp_list_pluck( $query->get_results(), 'id' );
-		$this->assertEquals( 5, $query->found_results );
+		$this->assertEquals( 5, $query->get_found_results() );
 
 		$query = new LLMS_REST_API_Keys_Query( array(
 			'user_not_in' => $uid,
 		) );
 		$res_2 = wp_list_pluck( $query->get_results(), 'id' );
-		$this->assertEquals( 5, $query->found_results );
+		$this->assertEquals( 5, $query->get_found_results() );
 		$this->assertTrue( $res_1 !== $res_2 );
 
 	}
