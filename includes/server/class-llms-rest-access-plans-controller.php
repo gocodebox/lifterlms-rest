@@ -433,11 +433,12 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Updates an existing single LLMS_Access_Plan in the database
+	 * Updates an existing single LLMS_Access_Plan in the database.
 	 *
 	 * This method should be used for access plan properties that require the access plan id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Fixed reference to a non-existent schema property: visibiliy in place of visibility.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -562,7 +563,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$this->handle_props_interdependency( $to_set, $access_plan, $creating );
 
 		// Visibility.
-		if ( ! empty( $schema['properties']['visibiliy'] ) && isset( $request['visibility'] ) ) {
+		if ( ! empty( $schema['properties']['visibility'] ) && isset( $request['visibility'] ) ) {
 			$visibility = $access_plan->set_visibility( $request['visibility'] );
 			if ( is_wp_error( $visibility ) ) {
 				return $visibility;
