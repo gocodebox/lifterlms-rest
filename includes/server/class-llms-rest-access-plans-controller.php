@@ -637,7 +637,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		} else {
 
 			$subordinate_props['is_free']     = 'yes';
-			$subordinate_props['price']       = (float) 0;
+			$subordinate_props['price']       = 0.0;
 			$subordinate_props['frequency']   = 0;
 			$subordinate_props['on_sale']     = 'no';
 			$subordinate_props['trial_offer'] = 'no';
