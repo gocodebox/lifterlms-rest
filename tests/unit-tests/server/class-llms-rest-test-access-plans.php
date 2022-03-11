@@ -8,7 +8,8 @@
  * @group rest_access_plans
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.18
+ * @since [version] Added tests on updating a free access plan.
+ * @version [version]
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -577,6 +578,50 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		foreach ( $free_props as $prop => $value ) {
 			$this->assertEquals( $value, $ap->get( $prop ), $prop );
 		}
+
+	}
+
+	/**
+	 * Test update free access plan.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_update_free_access_plan() {
+		// Create free access plan.
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+				'price'   => 0,
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$access_plan_id = $response->get_data()['id'];
+
+		// Update the title.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $access_plan_id,
+			array(
+				'title' => 'Updated Title',
+			)
+		);
+
+		// Update is allowed.
+		$this->assertResponseStatusEquals( 200, $response );
+		$ap = new LLMS_Access_Plan( $access_plan_id );
+		$this->assertEquals( $ap->get('title'), 'Updated Title' );
 
 	}
 

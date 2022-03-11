@@ -1,0 +1,3 @@
+significance: patch
+type: fixed
+entry: Fixed reference to a non-existent schema property, visibiliy in place of visibility, when updating/adding an access plan.

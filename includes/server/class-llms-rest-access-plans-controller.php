@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.20
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -433,11 +433,12 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Updates an existing single LLMS_Access_Plan in the database
+	 * Updates an existing single LLMS_Access_Plan in the database.
 	 *
 	 * This method should be used for access plan properties that require the access plan id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Fixed reference to a non-existent schema property: visibiliy in place of visibility.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -562,7 +563,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$this->handle_props_interdependency( $to_set, $access_plan, $creating );
 
 		// Visibility.
-		if ( ! empty( $schema['properties']['visibiliy'] ) && isset( $request['visibility'] ) ) {
+		if ( ! empty( $schema['properties']['visibility'] ) && isset( $request['visibility'] ) ) {
 			$visibility = $access_plan->set_visibility( $request['visibility'] );
 			if ( is_wp_error( $visibility ) ) {
 				return $visibility;
@@ -611,6 +612,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * These properties must be compared to the saved value before updating, because if equal they will produce an error(see update_post_meta()).
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Cast `price` property to float.
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -636,7 +638,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		} else {
 
 			$subordinate_props['is_free']     = 'yes';
-			$subordinate_props['price']       = 0;
+			$subordinate_props['price']       = 0.0;
 			$subordinate_props['frequency']   = 0;
 			$subordinate_props['on_sale']     = 'no';
 			$subordinate_props['trial_offer'] = 'no';
