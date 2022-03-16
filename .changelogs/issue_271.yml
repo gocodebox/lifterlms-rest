@@ -2,4 +2,4 @@ significance: patch
 type: fixed
 links:
   - "#271"
-entry: Fixed issue that prevented to enable access plan `forced_redirect` property.
+entry: Fixed issue that prevented updating the access plan `redirect_forced` property.

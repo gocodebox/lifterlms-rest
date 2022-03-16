@@ -439,7 +439,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since [version] Fixed reference to a non-existent schema property: visibiliy in place of visibility.
-	 *                      Fixed issue which prevented to enable redirect_forced property.
+	 *                      Fixed issue that prevented updating the access plan `redirect_forced` property.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
