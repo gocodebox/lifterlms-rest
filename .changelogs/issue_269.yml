@@ -1,0 +1,5 @@
+significance: patch
+type: fixed
+links:
+  - "#269"
+entry: Fixed access plan `availability_restrictions` property never returned.
