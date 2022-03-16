@@ -691,7 +691,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		);
 		$this->assertTrue(
 			llms_parse_bool(
-				( new LLMS_Access_Plan( $response->get_data()['id'] ) )->get('trial_offer' )
+				( new LLMS_Access_Plan( $response->get_data()['id'] ) )->get( 'trial_offer' )
 			)
 		);
 	}
