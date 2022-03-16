@@ -7,7 +7,7 @@
  * @package LifterLMS/Classes
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.18
+ * @version [version]
  *
  * @see LLMS_REST_Access_Plans_Controller::get_item_schema()
  */
@@ -58,7 +58,7 @@ return array(
 		'context'     => array( 'view', 'edit' ),
 	),
 	'availability_restrictions' => array(
-		'description' => __( 'Restrict usage of this access plan to students enrolled in at least one of the specified memberships.', 'lifterlms' ),
+		'description' => __( 'Restrict usage of this access plan to students enrolled in at least one of the specified memberships. Applicable only when `post_id` refers to a Course.', 'lifterlms' ),
 		'type'        => 'array',
 		'items'       => array(
 			'type' => 'integer',

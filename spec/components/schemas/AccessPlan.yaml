@@ -72,7 +72,9 @@ allOf:
         type: string
         example: '2019-03-23 23:59:59'
       availability_restrictions:
-        description: Restrict usage of this access plan to students enrolled in at least one of the specified memberships.
+        description:  >-
+          Restrict usage of this access plan to students enrolled in at least one of the specified memberships.<br>
+          Applicable only when `post_id` refers to a Course.
         type: array
         minimum: 1
         example: [ 123, 456, 789 ]
