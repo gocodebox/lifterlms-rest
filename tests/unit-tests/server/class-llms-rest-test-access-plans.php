@@ -932,7 +932,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since [version] Check updating an access plan of a product with access plan limit reached.
-	 * @group sbiliguda
+	 *
 	 * @return void
 	 */
 	public function test_access_plan_limit() {
