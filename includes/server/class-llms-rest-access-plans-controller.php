@@ -446,6 +446,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.18
 	 * @since [version] Fixed reference to a non-existent schema property: visibiliy in place of visibility.
 	 *                      Fixed issue that prevented updating the access plan `redirect_forced` property.
+	 *                      Better handling of the availability_restrictions.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -544,14 +545,22 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Availability restrictions.
+		$current_availability              = $access_plan->get( 'availability' );
+		$current_availability_restrictions = $access_plan->get( 'availability_restrictions' );
 		// If access plan related post type is not a course, set availability to 'open' and clean the `availability_restrictions` array.
 		if ( 'course' !== $access_plan->get_product_type() ) {
-			$to_set['availability']              = 'open';
-			$to_set['availability_restrictions'] = array();
+			$to_set['availability'] = 'open';
+			if ( ! empty( $current_availability_restrictions ) ) {
+				$to_set['availability_restrictions'] = array();
+			}
 		} elseif ( ! empty( $schema['properties']['availability_restrictions'] ) && isset( $request['availability_restrictions'] ) ) {
 			$to_set['availability_restrictions'] = $request['availability_restrictions'];
-			// If availability restrictions supplied id not empty, set `availability` to 'members'.
+			// If availability restrictions supplied is not empty, set `availability` to 'members'.
 			$to_set['availability'] = ! empty( $to_set['availability_restrictions'] ) ? 'members' : 'open';
+		}
+		// Only set availaibility if different from the previous one, because if equal they will produce an error (see update_post_meta()).
+		if ( isset( $to_set['availability'] ) && $to_set['availability'] === $current_availability ) {
+			unset( $to_set['availability'] );
 		}
 
 		// Redirect forced.
@@ -626,7 +635,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since [version] Cast `price` property to float.
-	 *                      Add `availability` and `availability_restrictions` to the subordinate props.
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -636,17 +644,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	private function add_subordinate_props( &$to_set, $saved_props, $creating ) {
 
 		$subordinate_props = array();
-
-		/**
-		 * Add `availability` and `availability_restrictions` to the subordinate props,
-		 * so that they doen't get set again if the old values equal the new ones.
-		 */
-		if ( isset( $to_set['availability'] ) ) {
-			$subordinate_props['availability'] = $to_set['availability'];
-		}
-		if ( isset( $to_set['availability_restrictions'] ) ) {
-			$subordinate_props['availability_restrictions'] = $to_set['availability_restrictions'];
-		}
 
 		// Merge new properties to set and saved props.
 		$props = wp_parse_args( $to_set, $saved_props );
