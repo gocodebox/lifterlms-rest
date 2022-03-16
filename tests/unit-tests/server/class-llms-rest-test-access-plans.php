@@ -758,6 +758,17 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( 'open', $access_plan->get( 'availability' ) );
 		$this->assertEquals( array(), $access_plan->get( 'availability_restrictions' ) );
 		$this->assertFalse( array_key_exists( 'availability_restrictions', $response->get_data() ) );
+		// Update the access plan related to membership: no issues:
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'title' => 'Update this title'
+			)
+		);
+		$this->assertEquals( 'open', $access_plan->get( 'availability' ) );
+		$this->assertEquals( array(), $access_plan->get( 'availability_restrictions' ) );
+		$this->assertFalse( array_key_exists( 'availability_restrictions', $response->get_data() ) );
 
 		// Turn back the product post type to a course and assign back the restrictions
 		$response = $this->perform_mock_request(
