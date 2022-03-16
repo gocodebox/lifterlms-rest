@@ -10,6 +10,7 @@
  * @since 1.0.0-beta.18
  * @since [version] Added tests on updating a free access plan.
  *                      Added tests on `availability_restrictions`.
+ *                      Added tests on updating access plan of a product with access plans limit reached.
  * @version [version]
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
@@ -920,16 +921,17 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		// Blocked
+		// Blocked.
 		$this->assertResponseStatusEquals( 400, $response );
 		$this->assertEquals( 'Must be a valid course or membership ID', $response->get_data()['data']['params']['post_id'] );
 
 	}
 
 	/**
-	 * Test access plan limit
+	 * Test access plan limit.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since [version] Check updating an access plan of a product with access plan limit reached.
 	 *
 	 * @return void
 	 */
@@ -959,7 +961,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 					)
 				)
 			);
-
+			$sixth_ap = $response->get_data()['id'];
 			// The 6th passes.
 			$this->assertResponseStatusEquals( 201, $response, $pt );
 
@@ -986,6 +988,18 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 				),
 				$response
 			);
+
+			// Update the 6th.
+			$response = $this->perform_mock_request(
+				'POST',
+				$this->route . '/' . $sixth_ap,
+				array(
+					'title' => 'Updated',
+				)
+			);
+
+			// Update passes.
+			$this->assertResponseStatusEquals( 200, $response, $pt );
 
 			// Create an ap linked to a different product.
 			$access_plan = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
