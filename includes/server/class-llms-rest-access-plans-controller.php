@@ -153,7 +153,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to update an item
+	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
@@ -173,10 +173,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to delete an item
+	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -767,6 +766,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Allow request when the access plan limit per product is not reached.
 	 *
 	 * @since 1.0.0-beta.20
+	 * @since [version] Made sure we can update an access plan of a product even if its access plan limit has already been reached.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error
@@ -778,11 +778,15 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			return true;
 		}
 
-		$product_id = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
-		$product    = new LLMS_Product( $product_id );
-		$limit      = $product->get_access_plan_limit();
+		$product_id           = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
+		$product              = new LLMS_Product( $product_id );
+		$limit                = $product->get_access_plan_limit();
+		$product_access_plans = $product->get_access_plans( false, false );
+		// Check whether we're updating an access plan, and whether this access plan was already a destination's product access plan,
+		// otherwise we're either creating an access plan or moving the access plans from a product to a different one.
+		$updating_product_access_plan = ! empty( $request['id'] ) && ! empty( $product_access_plans ) && in_array( $request['id'], wp_list_pluck( $product_access_plans, 'id' ), true );
 
-		if ( count( $product->get_access_plans( false, false ) ) >= $limit ) {
+		if ( ! $updating_product_access_plan && count( $product_access_plans ) >= $limit ) {
 
 			return llms_rest_bad_request_error(
 				sprintf(
