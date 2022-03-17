@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version [version]
+ * @version 1.0.0-beta-24
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -246,7 +246,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.18
 	 * @since 1.0.0-beta.20 Fixed return format of the `access_expires` property.
 	 *                      Fixed sale date properties.
-	 * @since [version] Fixed `availability_restrictions` never returned.
+	 * @since 1.0.0-beta-24 Fixed `availability_restrictions` never returned.
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Full details about the request.
@@ -444,7 +444,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * This method should be used for access plan properties that require the access plan id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Fixed reference to a non-existent schema property: visibiliy in place of visibility.
+	 * @since 1.0.0-beta-24 Fixed reference to a non-existent schema property: visibiliy in place of visibility.
 	 *                      Fixed issue that prevented updating the access plan `redirect_forced` property.
 	 *                      Better handling of the availability_restrictions.
 	 *
@@ -634,7 +634,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * These properties must be compared to the saved value before updating, because if equal they will produce an error(see update_post_meta()).
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Cast `price` property to float.
+	 * @since 1.0.0-beta-24 Cast `price` property to float.
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -763,7 +763,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Allow request when the access plan limit per product is not reached.
 	 *
 	 * @since 1.0.0-beta.20
-	 * @since [version] Made sure we can update an access plan of a product even if its access plan limit has already been reached.
+	 * @since 1.0.0-beta-24 Made sure we can update an access plan of a product even if its access plan limit has already been reached.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error

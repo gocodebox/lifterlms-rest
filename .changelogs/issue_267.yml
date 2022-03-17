@@ -1,5 +1,0 @@
-significance: patch
-type: fixed
-links:
-  - "#267"
-entry: Fixed issue when updating a free access plan.

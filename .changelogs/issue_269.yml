@@ -1,5 +1,0 @@
-significance: patch
-type: fixed
-links:
-  - "#269"
-entry: Fixed issue causing the access plan `availability_restrictions` property to always return an empty array.

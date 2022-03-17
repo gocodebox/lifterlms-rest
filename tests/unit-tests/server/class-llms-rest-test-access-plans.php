@@ -8,10 +8,10 @@
  * @group rest_access_plans
  *
  * @since 1.0.0-beta.18
- * @since [version] Added tests on updating a free access plan.
+ * @since 1.0.0-beta-24 Added tests on updating a free access plan.
  *                      Added tests on `availability_restrictions`.
  *                      Added tests on updating access plan of a product with access plans limit reached.
- * @version [version]
+ * @version 1.0.0-beta-24
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -586,7 +586,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test update free access plan.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta-24
 	 *
 	 * @return void
 	 */
@@ -700,7 +700,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test availability_restrictions.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta-24
 	 *
 	 * @return void
 	 */
@@ -801,7 +801,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test availability_restrictions validation.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta-24
 	 *
 	 * @return void
 	 */
@@ -942,7 +942,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Test access plan limit.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Check updating an access plan of a product with access plan limit reached.
+	 * @since 1.0.0-beta-24 Check updating an access plan of a product with access plan limit reached.
 	 *
 	 * @return void
 	 */
