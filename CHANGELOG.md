@@ -1,6 +1,18 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta-24 - 2022-03-17
+---------------------------
+
+##### Bug Fixes
+
++ Fixed reference to a non-existent schema property, visibiliy in place of visibility, when updating/adding an access plan.
++ Fixed issue when updating a free access plan. [#267](https://github.com/gocodebox/lifterlms-rest#267)
++ Fixed issue causing the access plan `availability_restrictions` property to always return an empty array. [#269](https://github.com/gocodebox/lifterlms-rest#269)
++ Fixed issue that prevented updating the access plan `redirect_forced` property. [#271](https://github.com/gocodebox/lifterlms-rest#271)
++ Fixed issue updating access plans when there are 6 (max) plans associated with a course/membership. [#272](https://github.com/gocodebox/lifterlms-rest#272)
+
+
 v1.0.0-beta.23 - 2022-02-23
 ---------------------------
 

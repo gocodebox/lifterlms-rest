@@ -60,7 +60,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the include and exclude arguments.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
+	 * @since 1.0.0-beta-24 Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -90,7 +90,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test pagination of query results.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
+	 * @since 1.0.0-beta-24 Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */
@@ -118,7 +118,7 @@ class LLMS_REST_Test_Webhooks_Query extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the status filter arguments.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
+	 * @since 1.0.0-beta-24 Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @return void
 	 */

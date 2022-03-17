@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version [version]
+ * @version 1.0.0-beta-24
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -245,7 +245,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Retrieve pagination information from an objects query.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Fixed access of protected LLMS_Abstract_Query properties.
+	 * @since 1.0.0-beta-24 Fixed access of protected LLMS_Abstract_Query properties.
 	 *
 	 * @param LLMS_REST_Webhooks_Query $query    Objects query result returned by {@see LLMS_REST_Webhooks_Controller::get_objects_query()}.
 	 * @param array                    $prepared Array of collection arguments.

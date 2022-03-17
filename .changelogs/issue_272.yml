@@ -1,5 +1,0 @@
-significance: patch
-type: fixed
-links:
-  - "#272"
-entry: Fixed issue updating access plans when there are 6 (max) plans associated with a course/membership.
