@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version 1.0.0-beta.3
+ * @version 1.0.0-beta-24
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -245,24 +245,25 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Retrieve pagination information from an objects query.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since 1.0.0-beta-24 Fixed access of protected LLMS_Abstract_Query properties.
 	 *
-	 * @param obj             $query Objects query result.
-	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param LLMS_REST_Webhooks_Query $query    Objects query result returned by {@see LLMS_REST_Webhooks_Controller::get_objects_query()}.
+	 * @param array                    $prepared Array of collection arguments.
+	 * @param WP_REST_Request          $request  Request object.
 	 * @return array {
 	 *     Array of pagination information.
 	 *
-	 *     @type int $current_page Current page number.
+	 *     @type int $current_page  Current page number.
 	 *     @type int $total_results Total number of results.
-	 *     @type int $total_pages Total number of results pages.
+	 *     @type int $total_pages   Total number of results pages.
 	 * }
 	 */
 	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
 
 		return array(
 			'current_page'  => $query->get( 'page' ),
-			'total_results' => $query->found_results,
-			'total_pages'   => $query->max_pages,
+			'total_results' => $query->get_found_results(),
+			'total_pages'   => $query->get_max_pages(),
 		);
 
 	}
@@ -293,8 +294,8 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.3
 	 *
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_User_Query
+	 * @param WP_REST_Request $request  Request object.
+	 * @return LLMS_REST_Webhooks_Query
 	 */
 	protected function get_objects_query( $prepared, $request ) {
 

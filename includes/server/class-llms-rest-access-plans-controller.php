@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.20
+ * @version 1.0.0-beta-24
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -153,7 +153,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to update an item
+	 * Check if a given request has access to update an item.
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
@@ -173,10 +173,9 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to delete an item
+	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since 1.0.0-beta.20 Call to private method `block_request_when_access_plan_limit` replaced with a call to the new `allow_request_when_access_plan_limit_not_reached` method.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -247,6 +246,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.18
 	 * @since 1.0.0-beta.20 Fixed return format of the `access_expires` property.
 	 *                      Fixed sale date properties.
+	 * @since 1.0.0-beta-24 Fixed `availability_restrictions` never returned.
 	 *
 	 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request     Full details about the request.
@@ -274,8 +274,14 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$data['access_period'] = $access_plan->get( 'access_period' );
 		}
 
-		// Availability restrictions.
-		$data['availability_restrictions'] = $access_plan->has_availability_restrictions() ? array() : $access_plan->get_array( 'availability_restrictions' );
+		// Availability restrictions, only returned for courses.
+		if ( 'course' === $access_plan->get_product_type() ) {
+			$data['availability_restrictions'] = $access_plan->has_availability_restrictions()
+				?
+				array_map( 'absint', $access_plan->get_array( 'availability_restrictions' ) )
+				:
+				array();
+		}
 
 		// Enroll text.
 		$data['enroll_text'] = $access_plan->get_enroll_text();
@@ -433,11 +439,14 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Updates an existing single LLMS_Access_Plan in the database
+	 * Updates an existing single LLMS_Access_Plan in the database.
 	 *
 	 * This method should be used for access plan properties that require the access plan id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since 1.0.0-beta-24 Fixed reference to a non-existent schema property: visibiliy in place of visibility.
+	 *                      Fixed issue that prevented updating the access plan `redirect_forced` property.
+	 *                      Better handling of the availability_restrictions.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -536,13 +545,27 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Availability restrictions.
-		if ( ! empty( $schema['properties']['availability_restrictions'] ) && isset( $request['availability_restrictions'] ) ) {
+		$current_availability              = $access_plan->get( 'availability' );
+		$current_availability_restrictions = $access_plan->get( 'availability_restrictions' );
+		// If access plan related post type is not a course, set availability to 'open' and clean the `availability_restrictions` array.
+		if ( 'course' !== $access_plan->get_product_type() ) {
+			$to_set['availability'] = 'open';
+			if ( ! empty( $current_availability_restrictions ) ) {
+				$to_set['availability_restrictions'] = array();
+			}
+		} elseif ( ! empty( $schema['properties']['availability_restrictions'] ) && isset( $request['availability_restrictions'] ) ) {
 			$to_set['availability_restrictions'] = $request['availability_restrictions'];
+			// If availability restrictions supplied is not empty, set `availability` to 'members'.
+			$to_set['availability'] = ! empty( $to_set['availability_restrictions'] ) ? 'members' : 'open';
+		}
+		// Only set availaibility if different from the previous one, because if equal they will produce an error (see update_post_meta()).
+		if ( isset( $to_set['availability'] ) && $to_set['availability'] === $current_availability ) {
+			unset( $to_set['availability'] );
 		}
 
 		// Redirect forced.
 		if ( ! empty( $schema['properties']['redirect_forced'] ) && isset( $request['redirect_forced'] ) ) {
-			$to_set['checkout_redirect_forced'] = $request['redirect_forced'];
+			$to_set['checkout_redirect_forced'] = $request['redirect_forced'] ? 'yes' : 'no';
 		}
 
 		// Frequency.
@@ -562,7 +585,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$this->handle_props_interdependency( $to_set, $access_plan, $creating );
 
 		// Visibility.
-		if ( ! empty( $schema['properties']['visibiliy'] ) && isset( $request['visibility'] ) ) {
+		if ( ! empty( $schema['properties']['visibility'] ) && isset( $request['visibility'] ) ) {
 			$visibility = $access_plan->set_visibility( $request['visibility'] );
 			if ( is_wp_error( $visibility ) ) {
 				return $visibility;
@@ -611,6 +634,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * These properties must be compared to the saved value before updating, because if equal they will produce an error(see update_post_meta()).
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since 1.0.0-beta-24 Cast `price` property to float.
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -636,7 +660,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		} else {
 
 			$subordinate_props['is_free']     = 'yes';
-			$subordinate_props['price']       = 0;
+			$subordinate_props['price']       = 0.0;
 			$subordinate_props['frequency']   = 0;
 			$subordinate_props['on_sale']     = 'no';
 			$subordinate_props['trial_offer'] = 'no';
@@ -739,6 +763,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Allow request when the access plan limit per product is not reached.
 	 *
 	 * @since 1.0.0-beta.20
+	 * @since 1.0.0-beta-24 Made sure we can update an access plan of a product even if its access plan limit has already been reached.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error
@@ -750,11 +775,15 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			return true;
 		}
 
-		$product_id = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
-		$product    = new LLMS_Product( $product_id );
-		$limit      = $product->get_access_plan_limit();
+		$product_id           = isset( $request['post_id'] ) ? $request['post_id'] : $this->get_object( (int) $request['id'] )->get( 'product_id' );
+		$product              = new LLMS_Product( $product_id );
+		$limit                = $product->get_access_plan_limit();
+		$product_access_plans = $product->get_access_plans( false, false );
+		// Check whether we're updating an access plan, and whether this access plan was already a destination's product access plan,
+		// otherwise we're either creating an access plan or moving the access plans from a product to a different one.
+		$updating_product_access_plan = ! empty( $request['id'] ) && ! empty( $product_access_plans ) && in_array( $request['id'], wp_list_pluck( $product_access_plans, 'id' ), true );
 
-		if ( count( $product->get_access_plans( false, false ) ) >= $limit ) {
+		if ( ! $updating_product_access_plan && count( $product_access_plans ) >= $limit ) {
 
 			return llms_rest_bad_request_error(
 				sprintf(

@@ -489,11 +489,11 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	}
 
 	/**
-	 * Retrieve pagination information from an objects query
+	 * Retrieve pagination information from an objects query.
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param obj             $query    Objects query result.
+	 * @param WP_User_Query   $query    Objects query result returned by {@see LLMS_REST_Users_Controller::get_objects_query()}.
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array {

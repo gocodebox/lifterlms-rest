@@ -8,7 +8,10 @@
  * @group rest_access_plans
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.18
+ * @since 1.0.0-beta-24 Added tests on updating a free access plan.
+ *                      Added tests on `availability_restrictions`.
+ *                      Added tests on updating access plan of a product with access plans limit reached.
+ * @version 1.0.0-beta-24
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -178,7 +181,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test creating a single access plan
+	 * Test creating a single access plan.
 	 *
 	 * @since 1.0.0-beta.20
 	 *
@@ -581,6 +584,50 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test update free access plan.
+	 *
+	 * @since 1.0.0-beta-24
+	 *
+	 * @return void
+	 */
+	public function test_update_free_access_plan() {
+		// Create free access plan.
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+				'price'   => 0,
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$access_plan_id = $response->get_data()['id'];
+
+		// Update the title.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $access_plan_id,
+			array(
+				'title' => 'Updated Title',
+			)
+		);
+
+		// Update is allowed.
+		$this->assertResponseStatusEquals( 200, $response );
+		$ap = new LLMS_Access_Plan( $access_plan_id );
+		$this->assertEquals( $ap->get('title'), 'Updated Title' );
+
+	}
+
+	/**
 	 * Test create free paid access plan
 	 *
 	 * @since 1.0.0-beta.18
@@ -645,13 +692,162 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 		);
 		$this->assertTrue(
 			llms_parse_bool(
-				( new LLMS_Access_Plan( $response->get_data()['id'] ) )->get ('trial_offer' )
+				( new LLMS_Access_Plan( $response->get_data()['id'] ) )->get( 'trial_offer' )
 			)
 		);
 	}
 
 	/**
-	 * Test frequency validation
+	 * Test availability_restrictions.
+	 *
+	 * @since 1.0.0-beta-24
+	 *
+	 * @return void
+	 */
+	public function test_availability_restrictions() {
+
+		// Create an access plan.
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id' => $course->get( 'id' ),
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$this->assertResponseStatusEquals( 201, $response );
+		$this->assertEmpty( $response->get_data()['availability_restrictions'] );
+
+		// Add availability_restrictions.
+		// Create two memberships.
+		$membership_ids = $this->factory->post->create_many( 2, array( 'post_type' => 'llms_membership' ) );
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'availability_restrictions' => $membership_ids,
+			)
+		);
+
+		$this->assertResponseStatusEquals( 200, $response );
+		$this->assertEqualSets( $membership_ids, $response->get_data()['availability_restrictions'] );
+		$access_plan = new LLMS_Access_Plan( $response->get_data()['id'] );
+		$this->assertEquals( 'members', $access_plan->get( 'availability' ) );
+
+		// Turn the product post type to a membership.
+		$membership_id = $this->factory->post->create( array( 'post_type' => 'llms_membership' ) );
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'post_id' => $membership_id,
+			)
+		);
+		$this->assertEquals( 'open', $access_plan->get( 'availability' ) );
+		$this->assertEquals( array(), $access_plan->get( 'availability_restrictions' ) );
+		$this->assertFalse( array_key_exists( 'availability_restrictions', $response->get_data() ) );
+		// Update the access plan related to membership: no issues:
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'title' => 'Update this title'
+			)
+		);
+		$this->assertEquals( 'open', $access_plan->get( 'availability' ) );
+		$this->assertEquals( array(), $access_plan->get( 'availability_restrictions' ) );
+		$this->assertFalse( array_key_exists( 'availability_restrictions', $response->get_data() ) );
+
+		// Turn back the product post type to a course and assign back the restrictions
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'post_id'                   => $course->get( 'id' ),
+				'availability_restrictions' => $membership_ids,
+			)
+		);
+		// Availability restricted again.
+		$this->assertEquals( 'members', $access_plan->get( 'availability' ) );
+		// Availability restrictions returned for memberships in edit context.
+		$this->assertEqualSets( $membership_ids, $response->get_data()['availability_restrictions'] );
+
+		// Flush the availability restrictions.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'availability_restrictions' => array(),
+			)
+		);
+		$this->assertEquals( 'open', $access_plan->get( 'availability' ) );
+		$this->assertEmpty( $response->get_data()['availability_restrictions'] );
+
+	}
+
+	/**
+	 * Test availability_restrictions validation.
+	 *
+	 * @since 1.0.0-beta-24
+	 *
+	 * @return void
+	 */
+	public function test_availability_restrictions_validation_error() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course      = $this->factory->course->create_and_get();
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id'                   => $course->get( 'id' ),
+				'availability_restrictions' => 7, // Not valid.
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Invalid parameter.', $response->get_data()['data']['params']['availability_restrictions'] );
+
+		$sample_args = array_merge(
+			$this->sample_access_plan_args,
+			array(
+				'post_id'                   => $course->get( 'id' ),
+				'availability_restrictions' => array( 20 ), // Not valid.
+			)
+		);
+
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			$sample_args
+		);
+
+		$this->assertResponseStatusEquals( 400, $response );
+		$this->assertEquals( 'Invalid parameter.', $response->get_data()['data']['params']['availability_restrictions'] );
+
+	}
+
+	/**
+	 * Test frequency validation.
 	 *
 	 * @since 1.0.0-beta.18
 	 *
@@ -736,16 +932,17 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		// Blocked
+		// Blocked.
 		$this->assertResponseStatusEquals( 400, $response );
 		$this->assertEquals( 'Must be a valid course or membership ID', $response->get_data()['data']['params']['post_id'] );
 
 	}
 
 	/**
-	 * Test access plan limit
+	 * Test access plan limit.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since 1.0.0-beta-24 Check updating an access plan of a product with access plan limit reached.
 	 *
 	 * @return void
 	 */
@@ -775,7 +972,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 					)
 				)
 			);
-
+			$sixth_ap = $response->get_data()['id'];
 			// The 6th passes.
 			$this->assertResponseStatusEquals( 201, $response, $pt );
 
@@ -803,7 +1000,19 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 				$response
 			);
 
-			// Create an ap linked to a different product-
+			// Update the 6th.
+			$response = $this->perform_mock_request(
+				'POST',
+				$this->route . '/' . $sixth_ap,
+				array(
+					'title' => 'Updated',
+				)
+			);
+
+			// Update passes.
+			$this->assertResponseStatusEquals( 200, $response, $pt );
+
+			// Create an ap linked to a different product.
 			$access_plan = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
 			$new_product = $this->factory->post->create( array( 'post_type' => $pt ) );
 			update_post_meta( $access_plan, '_llms_product_id', $new_product );
