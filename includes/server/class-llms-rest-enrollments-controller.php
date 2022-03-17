@@ -768,15 +768,15 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.7
 	 *
-	 * @param obj             $query Objects query result.
+	 * @param stdClass        $query    Objects query result returned by {@see LLMS_REST_Enrollments_Controller::get_objects_query()}.
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return array {
 	 *     Array of pagination information.
 	 *
-	 *     @type int $current_page Current page number.
+	 *     @type int $current_page  Current page number.
 	 *     @type int $total_results Total number of results.
-	 *     @type int $total_pages Total number of results pages.
+	 *     @type int $total_pages   Total number of results pages.
 	 * }
 	 */
 	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
@@ -860,16 +860,16 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get enrollments query
+	 * Get enrollments query.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
-	 * @since 1.0.0-beta.10 Added subquery to retrive the enrollments trigger.
+	 * @since 1.0.0-beta.10 Added subquery to retrieve the enrollments trigger.
 	 * @since 1.0.0-beta.18 Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
-	 * @param  WP_REST_Request $request    Optional. Full details about the request. Defaut null.
-	 * @return object An object with two fields: items an array of OBJECT result of the query; found_reults the total found items
+	 * @param  WP_REST_Request $request    Optional. Full details about the request. Default null.
+	 * @return stdClass An object with two fields: 'items' an array of OBJECT result of the query; 'found_results' the total found items.
 	 */
 	protected function get_objects_query( $query_args, $request = null ) {
 
