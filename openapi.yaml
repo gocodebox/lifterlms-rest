@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0-beta.23
+  version: 1.0.0-beta-24
   title: LifterLMS REST API
   description: |-
     # Introduction
@@ -6030,7 +6030,7 @@ components:
               type: string
               example: '2019-03-23 23:59:59'
             availability_restrictions:
-              description: Restrict usage of this access plan to students enrolled in at least one of the specified memberships.
+              description: Restrict usage of this access plan to students enrolled in at least one of the specified memberships.<br> Applicable only when `post_id` refers to a Course.
               type: array
               minimum: 1
               example:
