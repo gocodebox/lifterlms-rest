@@ -4947,7 +4947,7 @@
           },
           {
             "name": "enrolled_in",
-            "description": "Retrieve only students not enrolled in the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
+            "description": "Retrieve only students enrolled in the specified course(s) and/or\nmembership(s).\n\nAccepts a single WP Post ID or a comma separated list of IDs.\n",
             "in": "query",
             "required": false,
             "schema": {
