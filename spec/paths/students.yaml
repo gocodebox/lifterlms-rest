@@ -26,7 +26,7 @@ get:
     - $ref: '#/components/parameters/Exclude'
     - name: enrolled_in
       description: |
-        Retrieve only students not enrolled in the specified course(s) and/or
+        Retrieve only students enrolled in the specified course(s) and/or
         membership(s).
 
         Accepts a single WP Post ID or a comma separated list of IDs.
