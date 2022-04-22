@@ -197,15 +197,16 @@ final class LifterLMS_REST_API {
 	 *                     just after all the db tables are created (init 5),
 	 *                     to avoid PHP warnings on first plugin activation.
 	 * @since 1.0.0-beta.22 Bump minimum required version to 6.0.0-alpha.1.
-	 *                     Use `llms()` in favor of deprecated `LLMS()`.
+	 *                      Use `llms()` in favor of deprecated `LLMS()`.
 	 * @since [version] Perform some db clean-up on user deletion.
+	 *                      Bump minimum required version to 6.5.0.
 	 *
 	 * @return void
 	 */
 	public function init() {
 
 		// Only load if we have the minimum LifterLMS version installed & activated.
-		if ( ! function_exists( 'llms' ) || version_compare( '6.0.0-alpha.1', llms()->version, '>' ) ) {
+		if ( ! function_exists( 'llms' ) || version_compare( '6.5.0-alpha.1', llms()->version, '>' ) ) {
 			return;
 		}
 

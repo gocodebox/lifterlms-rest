@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.23
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -257,6 +257,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -295,7 +296,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $lesson->set_bulk( $to_set, true );
+			$update = $lesson->set_bulk( $to_set, true, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}

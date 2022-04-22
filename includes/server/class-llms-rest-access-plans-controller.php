@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta-24
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -447,6 +447,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta-24 Fixed reference to a non-existent schema property: visibiliy in place of visibility.
 	 *                      Fixed issue that prevented updating the access plan `redirect_forced` property.
 	 *                      Better handling of the availability_restrictions.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Access_Plan $access_plan   LLMS Access Plan instance.
 	 * @param WP_REST_Request  $request       Full details about the request.
@@ -594,7 +595,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $access_plan->set_bulk( $to_set, true );
+			$update = $access_plan->set_bulk( $to_set, true, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
