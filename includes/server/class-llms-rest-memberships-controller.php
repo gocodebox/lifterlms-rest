@@ -650,15 +650,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 					$to_set[ $prop ] = str_replace( '{{membership_id}}', $membership_id, $to_set[ $prop ] );
 				}
 			}
-		} else { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-			$_props = array(
-				'restriction_add_notice',
-			);
-			foreach ( $_props as $_prop ) {
-				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $membership->get( $_prop ) ) {
-					unset( $to_set[ $_prop ] );
-				}
-			}
 		}
 
 		// Set bulk.

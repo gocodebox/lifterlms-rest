@@ -9,6 +9,7 @@
  * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
  * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
  * @since 1.0.0-beta.21 Test search.
+ * @since [version] Added tests on updating post meta with the same value as the stored one.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -414,6 +415,69 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		);
 		$res_data = $response->get_data();
 		$this->assertEquals( 0, count( $res_data ), $this->post_type );
+
+	}
+
+	/**
+	 * Test updating post meta using the same value as the stored one.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_update_meta_same_stored_value() {
+
+		wp_set_current_user(
+			$this->factory->user->create(
+				array(
+					'role' => 'administrator',
+				)
+			)
+		);
+
+		// Create a post type and get the resource.
+		$pt = $this->create_post_resource();
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->route . '/' . $pt->ID,
+		);
+
+		// Update the resource with exactly the same data.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $pt->ID,
+			$response->get_data()
+		);
+
+		// Success.
+		$this->assertResponseStatusEquals( 200, $response, $this->post_type );
+
+	}
+
+	/**
+	 * Create a resource for this post type.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $params Array of request params.
+	 * @return WP_Post
+	 */
+	protected function create_post_resource( $params = array() ) {
+
+		$resource = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				array(
+					'title'   => sprintf( "A %s", $this->post_type ),
+					'content' => sprintf( "Some content for %s", $this->post_type ),
+				),
+				$params
+			)
+		);
+
+		return get_post( $resource->get_data()['id'] );
 
 	}
 

@@ -11,7 +11,7 @@
  * @since 1.0.0-beta-24 Added tests on updating a free access plan.
  *                      Added tests on `availability_restrictions`.
  *                      Added tests on updating access plan of a product with access plans limit reached.
- * @version 1.0.0-beta-24
+ * @since [version] Added protected method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -138,7 +138,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Test list access plans pagination success
+	 * Test list access plans pagination success.
 	 *
 	 * @since 1.0.0-beta.18
 	 *
@@ -1270,6 +1270,31 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 			$response->get_links()['post'][0]['href']
 		);
 
+
+	}
+
+	/**
+	 * Create a resource for this post type.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $params Array of request params.
+	 * @return WP_Post
+	 */
+	protected function create_post_resource( $params = array() ) {
+
+		$course_id = $this->factory->course->create(
+			array(
+				'sections' => 0,
+			)
+		);
+
+		return parent::create_post_resource(
+			array(
+				'price'   => 0,
+				'post_id' => $course_id,
+			)
+		);
 
 	}
 

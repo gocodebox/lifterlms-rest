@@ -929,7 +929,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
-		// Enrolmments opens/closes messages.
+		// Enrollments opens/closes messages.
 		if ( ! empty( $schema['properties']['enrollment_opens_message'] ) && isset( $request['enrollment_opens_message'] ) ) {
 			if ( is_string( $request['enrollment_opens_message'] ) ) {
 				$to_set['enrollment_opens_message'] = $request['enrollment_opens_message'];
@@ -962,17 +962,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			foreach ( $_to_expand_props as $prop ) {
 				if ( ! empty( $to_set[ $prop ] ) ) {
 					$to_set[ $prop ] = str_replace( '{{course_id}}', $course_id, $to_set[ $prop ] );
-				}
-			}
-		} else { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-			$_props = array(
-				'time_period',
-				'enrollment_period',
-				'has_prerequisite',
-			);
-			foreach ( $_props as $_prop ) {
-				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $course->get( $_prop ) ) {
-					unset( $to_set[ $_prop ] );
 				}
 			}
 		}

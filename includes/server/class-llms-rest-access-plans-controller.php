@@ -559,10 +559,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			// If availability restrictions supplied is not empty, set `availability` to 'members'.
 			$to_set['availability'] = ! empty( $to_set['availability_restrictions'] ) ? 'members' : 'open';
 		}
-		// Only set availaibility if different from the previous one, because if equal they will produce an error (see update_post_meta()).
-		if ( isset( $to_set['availability'] ) && $to_set['availability'] === $current_availability ) {
-			unset( $to_set['availability'] );
-		}
 
 		// Redirect forced.
 		if ( ! empty( $schema['properties']['redirect_forced'] ) && isset( $request['redirect_forced'] ) ) {
@@ -636,6 +632,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.18
 	 * @since 1.0.0-beta-24 Cast `price` property to float.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param array $to_set      Array of properties to be set.
 	 * @param array $saved_props Array of LLMS_Access_Plan properties as saved in the db.
@@ -666,15 +663,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$subordinate_props['on_sale']     = 'no';
 			$subordinate_props['trial_offer'] = 'no';
 
-		}
-
-		if ( ! $creating ) { // Remove already set properties.
-
-			foreach ( $subordinate_props as $_prop => $value ) {
-				if ( isset( $saved_props[ $_prop ] ) && $saved_props[ $_prop ] === $value ) {
-					unset( $subordinate_props[ $_prop ] );
-				}
-			}
 		}
 
 		$to_set = array_merge( $to_set, $subordinate_props );
