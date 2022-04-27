@@ -1,0 +1,5 @@
+significance: patch
+type: fixed
+links:
+  - "#173"
+entry: Allow deletion of an unenrolled student's progress.

@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -95,8 +95,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	protected function delete_object( $object, $request ) {
 
 		$post = llms_get_post( $request['post_id'] );
-
-		$ids = 'lesson' === $post->get( 'type' ) ? array( $post->get( 'id' ) ) : $post->get_lessons( 'ids' );
+		$ids  = 'lesson' === $post->get( 'type' ) ? array( $post->get( 'id' ) ) : $post->get_lessons( 'ids' );
 
 		if ( $ids ) {
 			foreach ( $ids as $id ) {
@@ -519,19 +518,21 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Validate the path parameter "post_id".
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Skip enrollment validation for `DELETE` request method.
 	 *
-	 * @param int             $value Post ID.
+	 * @param int             $value   Post ID.
 	 * @param WP_REST_Request $request Request object.
-	 * @param string          $param Parameter name ("post_id").
+	 * @param string          $param   Parameter name ("post_id").
 	 * @return bool
 	 */
 	public function validate_post_id( $value, $request, $param ) {
+
 		$post = get_post( $value );
 		if ( ! $post ) {
 			return false;
 		} elseif ( ! in_array( $post->post_type, array( 'course', 'lesson', 'section' ), true ) ) {
 			return false;
-		} elseif ( ! llms_is_user_enrolled( $request['id'], $value ) ) {
+		} elseif ( 'DELETE' !== $request->get_method() && ! llms_is_user_enrolled( $request['id'], $value ) ) {
 			return false;
 		}
 
