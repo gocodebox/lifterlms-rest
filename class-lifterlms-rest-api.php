@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -198,21 +198,44 @@ final class LifterLMS_REST_API {
 	 *                     to avoid PHP warnings on first plugin activation.
 	 * @since 1.0.0-beta.22 Bump minimum required version to 6.0.0-alpha.1.
 	 *                     Use `llms()` in favor of deprecated `LLMS()`.
+	 * @since [version] Perform some db clean-up on user deletion.
 	 *
 	 * @return void
 	 */
 	public function init() {
 
 		// Only load if we have the minimum LifterLMS version installed & activated.
-		if ( function_exists( 'llms' ) && version_compare( '6.0.0-alpha.1', llms()->version, '<=' ) ) {
-
-			// Load includes.
-			$this->includes();
-
-			add_action( 'init', array( $this->webhooks(), 'load' ), 6 );
-
+		if ( ! ( function_exists( 'llms' ) && version_compare( '6.0.0-alpha.1', llms()->version, '<=' ) ) ) {
+			return;
 		}
 
+		// Load includes.
+		$this->includes();
+
+		add_action( 'init', array( $this->webhooks(), 'load' ), 6 );
+		add_action( 'deleted_user', array( $this, 'on_user_deletion' ) );
+
+	}
+
+	/**
+	 * When a user is deleted in WordPress, delete corresponding LifterLMS REST API data.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $user_id The ID of the just deleted WP_User.
+	 * @return void
+	 */
+	public function on_user_deletion( $user_id ) {
+
+		global $wpdb;
+
+		// Delete user's API keys.
+		$wpdb->delete(
+			"{$wpdb->prefix}lifterlms_api_keys",
+			array(
+				'user_id' => $user_id,
+			)
+		);// db-cache ok.
 	}
 
 	/**
