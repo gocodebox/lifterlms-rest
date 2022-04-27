@@ -98,7 +98,8 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 */
 	public function test_delete_item_non_existing_post() {
 
-		$route = $this->get_route( $this->user_student, 1234567 );
+		$course = $this->factory->course->create( array( 'sections' => 0 ) );
+		$route  = $this->get_route( $this->user_student, $course + 1 );
 		wp_set_current_user( $this->user_allowed );
 		$response = $this->perform_mock_request( 'DELETE', $route );
 
@@ -374,16 +375,16 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 */
 	public function test_validate_post_id_delete_method() {
 
+		$course_id = $this->factory->course->create( array( 'sections' => 0 ) );
+
 		// Post doesn't exist.
-		$course_id = 12345;
-		$request   = new WP_REST_Request( 'DELETE', $this->get_route( $this->user_student, $course_id ) );
+		$request = new WP_REST_Request( 'DELETE', $this->get_route( $this->user_student, $course_id + 1 ) );
 		$request->set_url_params( array( 'id' => $this->user_student ) );
 
 		// Not valid.
-		$this->assertFalse( $this->endpoint->validate_post_id( $course_id, $request, 'post_id' ) );
+		$this->assertFalse( $this->endpoint->validate_post_id( $course_id + 1, $request, 'post_id' ) );
 
 		// Post exists but user is not enrolled.
-		$course_id = $this->factory->course->create( array( 'sections' => 0 ) );
 		$request   = new WP_REST_Request( 'POST', $this->get_route( $this->user_student, $course_id ) );
 		$request->set_url_params( array( 'id' => $this->user_student ) );
 
