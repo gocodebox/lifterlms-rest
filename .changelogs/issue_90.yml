@@ -1,0 +1,5 @@
+significance: minor
+type: fixed
+links:
+  - "#90"
+entry: Delete API Keys when user is deleted.

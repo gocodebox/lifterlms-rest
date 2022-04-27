@@ -7,7 +7,7 @@
  * @group main
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version [version] Added tests on keys being deleted on user deletion.
  */
 class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -74,14 +74,11 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * [test_constructor description]
+	 * Test class constructor.
 	 *
 	 * @since 1.0.0-beta.17
 	 *
-	 * @see [Reference]
-	 * @link [URL]
-	 *
-	 * @return [type] [description]
+	 * @return void
 	 */
 	public function test_constructor() {
 
@@ -105,7 +102,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * Test load_textdomain()
+	 * Test load_textdomain().
 	 *
 	 * @since 1.0.0-beta.17
 	 *
@@ -153,6 +150,75 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	public function test_webhooks() {
 
 		$this->assertTrue( is_a( $this->main->webhooks(), 'LLMS_REST_Webhooks' ) );
+
+	}
+
+	/**
+	 * Test on_user_deletion() method: api keys deletion.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_on_user_deletion_keys_deletion() {
+
+		$api_keys = $this->main->keys();
+
+		// Use default permissions.
+		$data = array(
+			'description' => 'Test Key',
+			'user_id' => $this->factory->user->create(),
+		);
+		$ret = $api_keys->create( $data );
+		$this->assertTrue( is_a( $ret, 'LLMS_REST_API_Key' ) );
+		$this->assertTrue( $ret->exists() );
+
+		// Create user A.
+		$user_a = $this->factory->user->create();
+		// Create user B.
+		$user_b = $this->factory->user->create();
+
+		// Create 2 api keys for user A.
+		$data = array(
+			'description' => 'Test Key',
+			'user_id' => $user_a,
+		);
+		$keys_a_1= $api_keys->create( $data );
+		$this->assertTrue( is_a( $keys_a_1, 'LLMS_REST_API_Key' ) );
+		$this->assertTrue( $keys_a_1->exists() );
+		$data = array(
+			'description' => 'Test Key',
+			'user_id' => $user_a,
+		);
+		$keys_a_2 = $api_keys->create( $data );
+		$this->assertTrue( is_a( $keys_a_2, 'LLMS_REST_API_Key' ) );
+		$this->assertTrue( $keys_a_2->exists() );
+
+		// Create api keys for user B.
+		$data = array(
+			'description' => 'Test Key',
+			'user_id' => $user_b,
+		);
+		$keys_b_1= $api_keys->create( $data );
+		$this->assertTrue( is_a( $keys_b_1, 'LLMS_REST_API_Key' ) );
+		$this->assertTrue( $keys_b_1->exists() );
+
+		// Delete user B.
+		wp_delete_user( $user_b );
+
+		// Check user B keys are deleted.
+		$this->assertFalse( $keys_b_1->exists() );
+
+		// Check user A keys are still there.
+		$this->assertTrue( $keys_a_1->exists() );
+		$this->assertTrue( $keys_a_2->exists() );
+
+		// Delete user A.
+		wp_delete_user( $user_a );
+
+		// Check user A keys are deleted.
+		$this->assertFalse( $keys_a_1->exists() );
+		$this->assertFalse( $keys_a_2->exists() );
 
 	}
 
