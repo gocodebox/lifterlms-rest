@@ -205,7 +205,7 @@ final class LifterLMS_REST_API {
 	public function init() {
 
 		// Only load if we have the minimum LifterLMS version installed & activated.
-		if ( ! ( function_exists( 'llms' ) && version_compare( '6.0.0-alpha.1', llms()->version, '<=' ) ) ) {
+		if ( ! function_exists( 'llms' ) || version_compare( '6.0.0-alpha.1', llms()->version, '>' ) ) {
 			return;
 		}
 
