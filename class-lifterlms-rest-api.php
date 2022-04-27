@@ -234,7 +234,8 @@ final class LifterLMS_REST_API {
 			"{$wpdb->prefix}lifterlms_api_keys",
 			array(
 				'user_id' => $user_id,
-			)
+			),
+			array( '%d' )
 		);// db-cache ok.
 	}
 
