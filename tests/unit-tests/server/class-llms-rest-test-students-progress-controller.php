@@ -8,7 +8,6 @@
  * @group rest_progress
  *
  * @since 1.0.0-beta.1
- * @since [version] Added test on deleting progress for unenrolled students.
  * @version [version]
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
