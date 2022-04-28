@@ -76,7 +76,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected $sections_controller;
 
 	/**
-	 * Additional field names to skip.
+	 * Additional rest field names to skip (added via `register_rest_field()`).
 	 *
 	 * @var string[]
 	 */

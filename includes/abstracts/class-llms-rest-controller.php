@@ -1,6 +1,6 @@
 <?php
 /**
- * Base REST Controller.
+ * Base REST Controller
  *
  * @package  LifterLMS_REST/Abstracts
  *
@@ -56,25 +56,25 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $schema;
 
 	/**
-	 * Additional field names to skip.
+	 * Additional rest field names to skip (added via `register_rest_field()`).
 	 *
 	 * @var string[]
 	 */
 	protected $disallowed_additional_fields = array();
 
 	/**
-	 * Meta field names to skip.
+	 * Meta field names to skip (added via `register_meta()`).
 	 *
 	 * @var string[]
 	 */
 	protected $disallowed_meta_fields = array();
 
 	/**
-	 * Caches the additional field names added to the schema.
+	 * Caches the additional fields added to the schema.
 	 *
 	 * @var string[]
 	 */
-	protected $additional_fields_schema;
+	protected $additional_fields;
 
 	/**
 	 * Create an item.
@@ -625,9 +625,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			$schema = $this->add_meta_fields_schema( $schema );
 		}
 
+		/**
+		 * Set `$this->schema` here so that we can exclude additional fields (added through add_additional_fields_schema() below)
+		 * already covered by the base, filtered, schema.
+		 */
 		$this->schema = $this->filter_item_schema( $schema );
 
-		// Adds the schema from additional fields to a schema array.
+		// Adds the schema from additional fields (registered via `register_rest_field()`) to the schema array.
 		$this->schema = $this->add_additional_fields_schema( $schema );
 
 		return $this->schema;
@@ -644,7 +648,11 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function add_meta_fields_schema( $schema ) {
 		$schema['properties']['meta'] = $this->meta->get_field_schema();
-		$schema['properties']         = $this->parse_custom_meta_fields( $schema['properties'], $this->get_object_type( $schema ), true );
+		$schema['properties']         = $this->filter_disallowed_meta_fields(
+			$schema['properties'],
+			$this->get_object_type( $schema ),
+			true
+		);
 		return $schema;
 	}
 
@@ -661,16 +669,19 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function get_additional_fields( $object_type = null ) {
 
-		if ( ! $object_type ) {
-			$object_type = $this->get_object_type();
+		if ( isset( $this->additional_fields ) ) {
+			return $this->additional_fields;
 		}
 
-		if ( ! $object_type ) {
+		$this->additional_fields = parent::get_additional_fields( $object_type );
+
+		if ( empty( $this->additional_fields ) ) {
 			return array();
 		}
 
-		$additional_fields = array_diff_key(
-			parent::get_additional_fields( $object_type ),
+		// Exclude disallowed fields.
+		$this->additional_fields = array_diff_key(
+			$this->additional_fields,
 			array_flip(
 				/**
 				 * Filters the disallowed additional fields.
@@ -679,31 +690,26 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				 *
 				 * @since [version]
 				 *
-				 * @param string[] $disallowed_additional_fields Additional field names to skip.
+				 * @param string[] $disallowed_additional_fields Additional rest field names to skip (added via `register_rest_field()`).
 				 */
 				apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields )
 			)
 		);
 
-		if ( isset( $this->additional_fields_schema ) ) {
-			$additional_fields = array_intersect_key(
-				$additional_fields,
-				array_flip( $this->additional_fields_schema )
-			);
-		} elseif ( isset( $this->schema ) ) {
-			$additional_fields = array_diff_key(
-				$additional_fields,
+		// Exclude additional fields already covered in the schema.
+		if ( isset( $this->schema ) ) {
+			$this->additional_fields = array_diff_key(
+				$this->additional_fields,
 				array_flip( array_keys( $this->schema['properties'] ) )
 			);
-			$this->additional_fields_schema = array_keys( $additional_fields );
 		}
 
-		return $additional_fields;
+		return $this->additional_fields;
 
 	}
 
 	/**
-	 * Parse custom meta fields.
+	 * Filter disallowed meta fields.
 	 *
 	 * @since [version]
 	 *
@@ -712,7 +718,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @param bool   $for_schema  Whether the parsing is for schema properties.
 	 * @return array
 	 */
-	protected function parse_custom_meta_fields( $data, $object_type = null, $for_schema = false ) {
+	protected function filter_disallowed_meta_fields( $data, $object_type = null, $for_schema = false ) {
 
 		if ( empty( $data['meta'] ) ) {
 			return $data;
@@ -726,7 +732,19 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return $data;
 		}
 
-		$properties = array_keys( isset( $this->schema ) ? $this->schema['properties'] : $data );
+		// Building the schema?
+		if ( $for_schema ) {
+			/**
+			 * If meta fields are to be parsed to create the schema, then the schema properties
+			 * are meant to be passed in the `$data` parameter, and the meta properties to filter
+			 * are in $data['meta']['properties'].
+			 */
+			$schema_properties = $data;
+			$meta              = &$data['meta']['properties'];
+		} else {
+			$schema_properties = $this->schema['properties'];
+			$meta              = &$data['meta'];
+		}
 
 		/**
 		 * Filters the disallowed meta fields.
@@ -735,32 +753,30 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * @since [version]
 		 *
-		 * @param string[] $disallowed_meta_fields Meta field names to skip.
+		 * @param string[] $disallowed_meta_fields Meta field names to skip (added via `register_meta()`).
 		 */
-		$disallowed_meta_fields = array_flip( apply_filters( "llms_rest_{$object_type}_disallowed_meta_fields", $this->disallowed_meta_fields ) );
+		$disallowed_meta_fields = apply_filters( "llms_rest_{$object_type}_disallowed_meta_fields", $this->disallowed_meta_fields );
 
+		/**
+		 * Disallow meta fields which are already defined as schema properties:
+		 * E.g. Course's `length` is a Course meta field registered via `register_meta()` in LifterLMS Blocks,
+		 * but it's already a Course resource schema property, so we don't want it appearing among the resource's meta.
+		 */
 		$disallowed_meta_from_schema_properties = array_flip(
 			array_map(
 				array( $this, 'meta_name_from_property_name' ),
-				$properties
+				array_keys( $schema_properties )
 			)
 		);
 
-		if ( $for_schema ) {
-			$data['meta']['properties'] = array_diff_key(
-				$data['meta']['properties'],
-				$disallowed_meta_fields,
-				$disallowed_meta_from_schema_properties
-			);
-		} else {
-			$data['meta'] = array_diff_key(
-				$data['meta'],
-				$disallowed_meta_fields,
-				$disallowed_meta_from_schema_properties
-			);
-		}
+		$meta = array_diff_key(
+			$meta,
+			array_flip( $disallowed_meta_fields ),
+			array_flip( $disallowed_meta_from_schema_properties )
+		);
 
 		return $data;
+
 	}
 
 	/**
@@ -796,8 +812,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function filter_item_schema( $schema ) {
 
-		$schema_fields = array_keys( $schema['properties'] );
 		$object_type   = $this->get_object_type( $schema );
+		$schema_fields = array_keys( $schema['properties'] );
 
 		/**
 		 * Filters the item schema.
@@ -816,6 +832,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
 		 *
 		 * @since [version]
+		 *
 		 * @param bool  $allow  Whether to allow filtering the item schema to add fields.
 		 * @param array $schema The item schema.
 		 */
@@ -824,7 +841,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			$new_fields = array_diff( array_keys( $schema['properties'] ), $schema_fields );
 			if ( count( $new_fields ) > 0 ) {
 				_doing_it_wrong(
-					__METHOD__,
+					"llms_rest_{$object_type}_item_schema",
 					sprintf(
 						/* translators: %s: register_rest_field */
 						__( 'Please use %s to add new schema properties.', 'lifterlms' ),
@@ -1066,7 +1083,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		if ( ! empty( $schema['properties']['meta'] ) && isset( $request['meta'] ) ) {
 
-			$request = $this->parse_custom_meta_fields( $request );
+			$request = $this->filter_disallowed_meta_fields( $request );
 
 			if ( empty( $request['meta'] ) ) {
 				return;

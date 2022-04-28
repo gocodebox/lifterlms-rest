@@ -69,7 +69,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	protected $parent_id;
 
 	/**
-	 * Meta field names to skip.
+	 * Meta field names to skip (added via `register_meta()`).
 	 *
 	 * @var string[]
 	 */

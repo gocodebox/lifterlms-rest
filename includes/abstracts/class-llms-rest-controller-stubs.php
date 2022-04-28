@@ -205,7 +205,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
 		if ( rest_is_field_included( 'meta', $this->get_fields_for_response( $request ) ) ) {
 			$data['meta'] = $this->meta->get_value( $this->get_object_id( $object ), $request );
-			$data         = $this->parse_custom_meta_fields( $data );
+			$data         = $this->filter_disallowed_meta_fields( $data );
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );

@@ -40,7 +40,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	protected $rest_base = 'memberships';
 
 	/**
-	 * Additional field names to skip.
+	 * Additional rest field names to skip (added via `register_rest_field()`).
 	 *
 	 * @var string[]
 	 */
