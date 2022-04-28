@@ -2,5 +2,5 @@ significance: patch
 type: changed
 links:
   - "#222"
-entry: Stop returning an error when updating resources properties with a new
+entry: Stop returning an error when updating resource properties with a
   value equal to the saved one.
