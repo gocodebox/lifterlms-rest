@@ -56,6 +56,15 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $schema;
 
 	/**
+	 * Prefix for internal meta field keys.
+	 *
+	 * @since [version]
+	 *
+	 * @var string
+	 */
+	protected $meta_prefix = '_llms_';
+
+	/**
 	 * Additional rest field names to skip (added via `register_rest_field()`).
 	 *
 	 * @var string[]
@@ -742,6 +751,10 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			$schema_properties = $data;
 			$meta              = &$data['meta']['properties'];
 		} else {
+			/**
+			 * Otherwise get the schema properties from the already defined resource schema, and
+			 * the properties to filter are in $data['meta'].
+			 */
 			$schema_properties = $this->schema['properties'];
 			$meta              = &$data['meta'];
 		}
@@ -759,14 +772,12 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		/**
 		 * Disallow meta fields which are already defined as schema properties:
-		 * E.g. Course's `length` is a Course meta field registered via `register_meta()` in LifterLMS Blocks,
+		 * E.g. Course's `_llms_length` is a Course meta field registered via `register_meta()` in LifterLMS Blocks,
 		 * but it's already a Course resource schema property, so we don't want it appearing among the resource's meta.
 		 */
-		$disallowed_meta_from_schema_properties = array_flip(
-			array_map(
-				array( $this, 'meta_name_from_property_name' ),
-				array_keys( $schema_properties )
-			)
+		$disallowed_meta_from_schema_properties = array_map(
+			array( $this, 'meta_name_from_property_name' ),
+			array_keys( $schema_properties )
 		);
 
 		$meta = array_diff_key(
@@ -788,7 +799,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @return string
 	 */
 	protected function meta_name_from_property_name( $property_name ) {
-		return "_llms_{$property_name}";
+		return $this->meta_prefix . $property_name;
 	}
 
 	/**

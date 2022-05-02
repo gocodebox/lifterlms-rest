@@ -64,6 +64,15 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	);
 
 	/**
+	 * Prefix for internal meta field keys.
+	 *
+	 * @since [version]
+	 *
+	 * @var string
+	 */
+	protected $meta_prefix = 'llms_';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since [version]
