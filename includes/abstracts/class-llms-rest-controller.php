@@ -657,11 +657,14 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function add_meta_fields_schema( $schema ) {
 		$schema['properties']['meta'] = $this->meta->get_field_schema();
-		$schema['properties']         = $this->filter_disallowed_meta_fields(
-			$schema['properties'],
-			$this->get_object_type( $schema ),
-			true
-		);
+		$schema['properties']['meta'] = isset( $schema['properties']['meta']['properties'] ) ?
+			$this->exclude_disallowed_meta_fields(
+				$schema['properties']['meta']['properties'],
+				$this->get_object_type( $schema ),
+				$schema
+			)
+			:
+			$schema['properties']['meta'];
 		return $schema;
 	}
 
@@ -705,7 +708,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			)
 		);
 
-		// Exclude additional fields already covered in the schema.
+		/**
+		 * Exclude additional fields already covered in the schema.
+		 *
+		 * This is meant to run only once, because otherwise we have no way
+		 * to determine whether the property comes from the original scheme
+		 * definition, or has been added via `register_rest_field`.
+		 */
 		if ( isset( $this->schema ) ) {
 			$this->additional_fields = array_diff_key(
 				$this->additional_fields,
@@ -718,19 +727,19 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	}
 
 	/**
-	 * Filter disallowed meta fields.
+	 * Exclude disallowed meta fields.
 	 *
 	 * @since [version]
 	 *
-	 * @param array  $data        Array of object data or schema properties.
+	 * @param array  $meta        Array of meta fields.
 	 * @param string $object_type The object type.
-	 * @param bool   $for_schema  Whether the parsing is for schema properties.
+	 * @param array  $schema      The resource item schema. Falls back on the defined schema if not supplied.
 	 * @return array
 	 */
-	protected function filter_disallowed_meta_fields( $data, $object_type = null, $for_schema = false ) {
+	protected function exclude_disallowed_meta_fields( $meta, $object_type = null, $schema = array() ) {
 
-		if ( empty( $data['meta'] ) ) {
-			return $data;
+		if ( empty( $meta ) ) {
+			return $meta;
 		}
 
 		if ( ! $object_type ) {
@@ -738,26 +747,10 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		if ( ! $object_type ) {
-			return $data;
+			return $meta;
 		}
 
-		// Building the schema?
-		if ( $for_schema ) {
-			/**
-			 * If meta fields are to be parsed to create the schema, then the schema properties
-			 * are meant to be passed in the `$data` parameter, and the meta properties to filter
-			 * are in $data['meta']['properties'].
-			 */
-			$schema_properties = $data;
-			$meta              = &$data['meta']['properties'];
-		} else {
-			/**
-			 * Otherwise get the schema properties from the already defined resource schema, and
-			 * the properties to filter are in $data['meta'].
-			 */
-			$schema_properties = $this->schema['properties'];
-			$meta              = &$data['meta'];
-		}
+		$schema_properties = empty( $schema ) ? $this->schema['properties'] : $schema['properties'];
 
 		/**
 		 * Filters the disallowed meta fields.
@@ -786,7 +779,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			array_flip( $disallowed_meta_from_schema_properties )
 		);
 
-		return $data;
+		return $meta;
 
 	}
 
@@ -1094,7 +1087,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		if ( ! empty( $schema['properties']['meta'] ) && isset( $request['meta'] ) ) {
 
-			$request = $this->filter_disallowed_meta_fields( $request );
+			$request['meta'] = $this->exclude_disallowed_meta_fields( $request['meta'] );
 
 			if ( empty( $request['meta'] ) ) {
 				return;

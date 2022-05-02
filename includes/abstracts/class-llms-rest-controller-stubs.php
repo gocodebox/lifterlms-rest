@@ -201,11 +201,11 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 */
 	public function prepare_object_data_for_response( $object, $request ) {
 
-		$data = $this->prepare_object_for_response( $object, $request );
-
-		if ( rest_is_field_included( 'meta', $this->get_fields_for_response( $request ) ) ) {
+		$data            = $this->prepare_object_for_response( $object, $request );
+		$response_fields = $this->get_fields_for_response( $request );
+		if ( rest_is_field_included( 'meta', $response_fields ) ) {
 			$data['meta'] = $this->meta->get_value( $this->get_object_id( $object ), $request );
-			$data         = $this->filter_disallowed_meta_fields( $data );
+			$data['meta'] = $this->exclude_disallowed_meta_fields( $data['meta'] );
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );

@@ -45,7 +45,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * @var string[]
 	 */
 	protected $disallowed_additional_fields = array(
-		'visibility',
+		'visibility', // catalog_visibility in the resource schema.
 	);
 
 	/**
