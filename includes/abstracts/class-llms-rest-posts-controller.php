@@ -303,15 +303,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $terms_update;
 		}
 
+		$meta_update = $this->update_meta( $object, $request, $schema );
+		if ( is_wp_error( $meta_update ) ) {
+			return $meta_update;
+		}
+
 		// Fields registered via `register_rest_field()`.
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
-		}
-
-		$meta_update = $this->update_meta( $object, $request, $schema );
-		if ( is_wp_error( $meta_update ) ) {
-			return $meta_update;
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -593,15 +593,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $terms_update;
 		}
 
+		$meta_update = $this->update_meta( $object, $request, $schema );
+		if ( is_wp_error( $meta_update ) ) {
+			return $meta_update;
+		}
+
 		// Fields registered via `register_rest_field()`.
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
-		}
-
-		$meta_update = $this->update_meta( $object, $request, $schema );
-		if ( is_wp_error( $meta_update ) ) {
-			return $meta_update;
 		}
 
 		$request->set_param( 'context', 'edit' );

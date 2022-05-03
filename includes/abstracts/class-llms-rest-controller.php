@@ -58,8 +58,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Prefix for internal meta field keys.
 	 *
-	 * @since [version]
-	 *
 	 * @var string
 	 */
 	protected $meta_prefix = '_llms_';
@@ -113,14 +111,14 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$this->object_inserted( $object, $request, $schema, true );
 
-		$fields_update = $this->update_additional_fields_for_object( $item, $request );
-		if ( is_wp_error( $fields_update ) ) {
-			return $fields_update;
-		}
-
 		$meta_update = $this->update_meta( $object, $request, $schema );
 		if ( is_wp_error( $meta_update ) ) {
 			return $meta_update;
+		}
+
+		$fields_update = $this->update_additional_fields_for_object( $item, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
 		}
 
 		$this->object_completely_inserted( $object, $request, $schema, true );
@@ -615,7 +613,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 	}
 
-
 	/**
 	 * Get the LLMS REST resource schema, conforming to JSON Schema.
 	 *
@@ -630,18 +627,27 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		$schema = $this->get_item_schema_base();
-		if ( ! empty( $this->meta ) ) {
-			$schema = $this->add_meta_fields_schema( $schema );
-		}
+
+		$schema = $this->add_meta_fields_schema( $schema );
+
+		// Allow the schema to be filtered.
+		$schema = $this->filter_item_schema( $schema );
 
 		/**
-		 * Set `$this->schema` here so that we can exclude additional fields (added through add_additional_fields_schema() below)
+		 * Set `$this->schema` here so that we can exclude additional fields
 		 * already covered by the base, filtered, schema.
+		 *
+		 * Additional fields are added through the call to add_additional_fields_schema() below,
+		 * which will call {@see LLMS_REST_Controller::get_additional_fields()), which requires
+		 * $this->schema to be set.
 		 */
-		$this->schema = $this->filter_item_schema( $schema );
+		$this->schema = $schema;
 
-		// Adds the schema from additional fields (registered via `register_rest_field()`) to the schema array.
-		$this->schema = $this->add_additional_fields_schema( $schema );
+		/**
+		 * Adds the schema from additional fields (registered via `register_rest_field()`) to the schema array.
+		 * Note: WordPress core doesn't cache the additional fields in the schema, see https://core.trac.wordpress.org/ticket/47871#comment:5
+		 */
+		$this->schema = $this->add_additional_fields_schema( $this->schema );
 
 		return $this->schema;
 
@@ -656,16 +662,17 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @return array
 	 */
 	protected function add_meta_fields_schema( $schema ) {
-		$schema['properties']['meta'] = $this->meta->get_field_schema();
-		$schema['properties']['meta'] = isset( $schema['properties']['meta']['properties'] ) ?
-			$this->exclude_disallowed_meta_fields(
+
+		if ( ! empty( $this->meta ) ) {
+			$schema['properties']['meta'] = $this->meta->get_field_schema();
+			$schema['properties']['meta'] = $this->exclude_disallowed_meta_fields(
 				$schema['properties']['meta']['properties'],
-				$this->get_object_type( $schema ),
 				$schema
-			)
-			:
-			$schema['properties']['meta'];
+			);
+		}
+
 		return $schema;
+
 	}
 
 	/**
@@ -681,46 +688,53 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function get_additional_fields( $object_type = null ) {
 
+		// We require the $this->schema['properties'] to be set.
+		if ( ! isset( $this->schema['properties'] ) ) {
+			_doing_it_wrong(
+				$this->get_class() . '::get_additional_fields()',
+				__( "Please make sure the instance's schema['properties'] is set.", 'lifterlms' ),
+				'[version]'
+			);
+			return parent::get_additional_fields( $object_type );
+		}
+
+		// Return cached fields.
 		if ( isset( $this->additional_fields ) ) {
 			return $this->additional_fields;
 		}
 
-		$this->additional_fields = parent::get_additional_fields( $object_type );
+		$additional_fields = parent::get_additional_fields( $object_type );
+		if ( ! empty( $additional_fields ) ) {
+			/**
+			 * Filters the disallowed additional fields.
+			 *
+			 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
+			 *
+			 * @since [version]
+			 *
+			 * @param string[] $disallowed_additional_fields Additional rest field names to skip (added via `register_rest_field()`).
+			 */
+			$disallowed_fields = apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields );
 
-		if ( empty( $this->additional_fields ) ) {
-			return array();
-		}
-
-		// Exclude disallowed fields.
-		$this->additional_fields = array_diff_key(
-			$this->additional_fields,
-			array_flip(
-				/**
-				 * Filters the disallowed additional fields.
-				 *
-				 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
-				 *
-				 * @since [version]
-				 *
-				 * @param string[] $disallowed_additional_fields Additional rest field names to skip (added via `register_rest_field()`).
-				 */
-				apply_filters( "llms_rest_{$object_type}_disallowed_additional_fields", $this->disallowed_additional_fields )
-			)
-		);
-
-		/**
-		 * Exclude additional fields already covered in the schema.
-		 *
-		 * This is meant to run only once, because otherwise we have no way
-		 * to determine whether the property comes from the original scheme
-		 * definition, or has been added via `register_rest_field`.
-		 */
-		if ( isset( $this->schema ) ) {
-			$this->additional_fields = array_diff_key(
-				$this->additional_fields,
-				array_flip( array_keys( $this->schema['properties'] ) )
+			/**
+			 * Exclude:
+			 * - disallowed fields defined in the instance's property `disallowed_additional_fields`.
+			 * - additional fields already covered in the schema.
+			 *
+			 * This is meant to run only once, because otherwise we have no way
+			 * to determine whether the property comes from the original scheme
+			 * definition, or has been added via `register_rest_field()`.
+			 */
+			$additional_fields = array_diff_key(
+				$additional_fields,
+				array_flip( array_keys( $this->schema['properties'] ) ),
+				array_flip( $disallowed_fields )
 			);
+
 		}
+
+		// Cache additional field.
+		$this->additional_fields = $additional_fields;
 
 		return $this->additional_fields;
 
@@ -731,26 +745,19 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 *
 	 * @since [version]
 	 *
-	 * @param array  $meta        Array of meta fields.
-	 * @param string $object_type The object type.
-	 * @param array  $schema      The resource item schema. Falls back on the defined schema if not supplied.
+	 * @param array $meta   Array of meta fields.
+	 * @param array $schema The resource item schema. Falls back on the defined schema if not supplied.
 	 * @return array
 	 */
-	protected function exclude_disallowed_meta_fields( $meta, $object_type = null, $schema = array() ) {
+	protected function exclude_disallowed_meta_fields( $meta, $schema = array() ) {
 
-		if ( empty( $meta ) ) {
+		$schema = empty( $schema ) ? $this->schema : $schema;
+
+		if ( empty( $schema ) || empty( $meta ) ) {
 			return $meta;
 		}
 
-		if ( ! $object_type ) {
-			$object_type = $this->get_object_type();
-		}
-
-		if ( ! $object_type ) {
-			return $meta;
-		}
-
-		$schema_properties = empty( $schema ) ? $this->schema['properties'] : $schema['properties'];
+		$object_type = $this->get_object_type( $schema );
 
 		/**
 		 * Filters the disallowed meta fields.
@@ -770,7 +777,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 */
 		$disallowed_meta_from_schema_properties = array_map(
 			array( $this, 'meta_name_from_property_name' ),
-			array_keys( $schema_properties )
+			array_keys( $schema['properties'] )
 		);
 
 		$meta = array_diff_key(
@@ -816,8 +823,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function filter_item_schema( $schema ) {
 
-		$object_type   = $this->get_object_type( $schema );
-		$schema_fields = array_keys( $schema['properties'] );
+		$object_type       = $this->get_object_type( $schema );
+		$unfiltered_schema = $schema;
 
 		/**
 		 * Filters the item schema.
@@ -842,7 +849,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 */
 		if ( ! apply_filters( "llms_rest_allow_filtering_{$object_type}_item_schema_to_add_fields", false, $schema ) ) {
 			// Emit a _doing_it_wrong warning if user tries to add new properties using this filter.
-			$new_fields = array_diff( array_keys( $schema['properties'] ), $schema_fields );
+			$new_fields = array_diff_key( $schema['properties'], $unfiltered_schema['properties'] );
 			if ( count( $new_fields ) > 0 ) {
 				_doing_it_wrong(
 					"llms_rest_{$object_type}_item_schema",
@@ -911,7 +918,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
 	 * @since [version] Move big part of the logic to the new method `LLMS_REST_Controller_Stubs::prepare_object_data_for_response()`.
 	 *
-	 * @param obj             $object Raw object from database.
+	 * @param obj             $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
@@ -1052,14 +1059,14 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$this->object_inserted( $object, $request, $schema, false );
 
-		$fields_update = $this->update_additional_fields_for_object( $item, $request );
-		if ( is_wp_error( $fields_update ) ) {
-			return $fields_update;
-		}
-
 		$meta_update = $this->update_meta( $object, $request, $schema );
 		if ( is_wp_error( $meta_update ) ) {
 			return $meta_update;
+		}
+
+		$fields_update = $this->update_additional_fields_for_object( $item, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
 		}
 
 		$this->object_completely_inserted( $object, $request, $schema, false );
@@ -1085,19 +1092,20 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function update_meta( $object, $request, $schema ) {
 
-		if ( ! empty( $schema['properties']['meta'] ) && isset( $request['meta'] ) ) {
+		if ( empty( $schema['properties']['meta'] ) || empty( $request['meta'] ) ) {
+			return;
+		}
 
-			$request['meta'] = $this->exclude_disallowed_meta_fields( $request['meta'] );
+		$request['meta'] = $this->exclude_disallowed_meta_fields( $request['meta'] );
 
-			if ( empty( $request['meta'] ) ) {
-				return;
-			}
+		if ( empty( $request['meta'] ) ) {
+			return;
+		}
 
-			$meta_update = $this->meta->update_value( $request['meta'], $this->get_object_id( $object ) );
+		$meta_update = $this->meta->update_value( $request['meta'], $this->get_object_id( $object ) );
 
-			if ( is_wp_error( $meta_update ) ) {
-				return $meta_update;
-			}
+		if ( is_wp_error( $meta_update ) ) {
+			return $meta_update;
 		}
 
 	}
