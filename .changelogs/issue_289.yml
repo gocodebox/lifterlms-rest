@@ -1,0 +1,6 @@
+significance: patch
+type: fixed
+links:
+  - "#289"
+entry: Fixed an issue that caused an error when moving a lesson from one section
+  to another.

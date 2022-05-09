@@ -707,6 +707,33 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test updating the lessons parent section.
+	 *
+	 * @since [version]
+	 *
+	 * @link https://github.com/gocodebox/lifterlms-rest/issues/289
+	 *
+	 * @return void
+	 */
+	public function test_update_parent_section() {
+
+		// Setup.
+		wp_set_current_user( $this->user_allowed );
+		$course = $this->factory->course->create_and_get();
+
+		// Get IDs for the first lesson and the second section.
+		$sections     = $course->get_sections();
+		$section_2_id = $sections[1]->get( 'id' );
+		$lesson_1_id  = $sections[0]->get_lessons( 'ids' )[0];
+
+		// Update the lesson's parent section.
+		$route    = "$this->route/$lesson_1_id";
+		$response = $this->perform_mock_request( 'POST', $route, array( 'parent_id' => $section_2_id ) );
+		$this->assertFalse( $response->is_error() );
+		$this->assertEquals( $section_2_id, $response->get_data()['parent_id'] );
+	}
+
+	/**
 	 * Override.
 	 *
 	 * @since 1.0.0-beta.7

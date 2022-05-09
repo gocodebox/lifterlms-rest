@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.23
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -108,6 +108,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
 	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @size [version] Fixed how a change to the parent course ID is checked.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -135,20 +136,18 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 			$prepared_item['parent_section'] = $parent_section && is_a( $parent_section, 'LLMS_Section' ) ? $request['parent_id'] : 0;
 
-			// Retrive the parent course id.
-			if ( $prepared_item['parent_section'] ) {
-				$parent_course = $parent_section->get_course();
-			}
+			// Retrieve the parent course.
+			$parent_course = $prepared_item['parent_section'] ? $parent_section->get_course() : null;
 
 			$prepared_item['parent_course'] = ! empty( $parent_course ) && is_a( $parent_course, 'LLMS_Course' ) ? $parent_course->get( 'id' ) : 0;
 
-			/**
-			 * The parent course is 'derivate', we need to be sure that, if updating, the new value is different from the previous one
-			 * otherwise the underlying wp function `update_post_meta()` will return `false`.
+			/*
+			 * If updating an existing lesson without changing its parent course, do not try to update the parent course
+			 * because the underlying WP `update_post_meta()` function will return `false`.
 			 */
 			if ( $request['id'] ) {
 				$lesson = $this->get_object( $request['id'] );
-				if ( $lesson && $parent_course_id === $lesson->get( 'parent_course' ) ) {
+				if ( $lesson && $lesson->get( 'parent_course' ) === $prepared_item['parent_course'] ) {
 					unset( $prepared_item['parent_course'] );
 				}
 			}
