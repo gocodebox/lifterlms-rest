@@ -200,9 +200,10 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Create an API Key
+	 * Create an API Key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -215,6 +216,13 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
 		}
+
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $key, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+		$request->set_param( 'context', 'edit' );
 
 		$response = $this->prepare_item_for_response( $key, $request );
 		$response->set_status( 201 );
@@ -329,6 +337,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * Update an API Key
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -342,6 +351,13 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			return $request;
 		}
 
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $key, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
 		$response = $this->prepare_item_for_response( $key, $request );
 
 		return $response;

@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version 1.0.0-beta-24
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -363,9 +363,10 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Update an Webhook
+	 * Update a Webhook.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -373,13 +374,21 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	public function update_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key      = LLMS_REST_API()->webhooks()->update( $prepared );
+		$webhook  = LLMS_REST_API()->webhooks()->update( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
 		}
 
-		$response = $this->prepare_item_for_response( $key, $request );
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $webhook, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		$response = $this->prepare_item_for_response( $webhook, $request );
 
 		return $response;
 
