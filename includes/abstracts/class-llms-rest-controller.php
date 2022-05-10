@@ -103,12 +103,11 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$item   = $this->prepare_item_for_database( $request );
 		$object = $this->create_object( $item, $request );
-		$schema = $this->get_item_schema();
-
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
+		$schema = $this->get_item_schema();
 		$this->object_inserted( $object, $request, $schema, true );
 
 		$meta_update = $this->update_meta( $object, $request, $schema );
@@ -126,7 +125,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$request->set_param( 'context', 'edit' );
 
 		$response = $this->prepare_item_for_response( $object, $request );
-		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $this->get_object_id( $object ) ) ) );
@@ -664,8 +662,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected function add_meta_fields_schema( $schema ) {
 
 		if ( ! empty( $this->meta ) ) {
-			$schema['properties']['meta'] = $this->meta->get_field_schema();
-			$schema['properties']['meta'] = $this->exclude_disallowed_meta_fields(
+			$schema['properties']['meta']               = $this->meta->get_field_schema();
+			$schema['properties']['meta']['properties'] = $this->exclude_disallowed_meta_fields(
 				$schema['properties']['meta']['properties'],
 				$schema
 			);
@@ -1074,7 +1072,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$request->set_param( 'context', 'edit' );
 
 		$response = $this->prepare_item_for_response( $object, $request );
-		$response = rest_ensure_response( $response );
 
 		return $response;
 

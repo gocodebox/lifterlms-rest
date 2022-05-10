@@ -577,12 +577,12 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 */
 		do_action( "llms_rest_insert_{$this->post_type}", $object, $request, $schema, false );
 
-		$object_id = $object->get( 'id' );
-
 		$additional_fields = $this->update_additional_object_fields( $object, $request, $schema, $prepared_item, false );
 		if ( is_wp_error( $additional_fields ) ) {
 			return $additional_fields;
 		}
+
+		$object_id = $object->get( 'id' );
 
 		if ( ! empty( $schema['properties']['featured_media'] ) && isset( $request['featured_media'] ) ) {
 			$this->handle_featured_media( $request['featured_media'], $object_id );
