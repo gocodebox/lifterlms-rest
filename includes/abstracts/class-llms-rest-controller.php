@@ -116,7 +116,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return $meta_update;
 		}
 
-		$fields_update = $this->update_additional_fields_for_object( $item, $request );
+		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
@@ -1064,7 +1064,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return $meta_update;
 		}
 
-		$fields_update = $this->update_additional_fields_for_object( $item, $request );
+		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
