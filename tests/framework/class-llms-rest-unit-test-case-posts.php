@@ -9,7 +9,7 @@
  * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
  * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
  * @since 1.0.0-beta.21 Test search.
- * @since [version] Added tests on updating post meta with the same value as the stored one.
+ * @since 1.0.0-beta.25 Added tests on updating post meta with the same value as the stored one.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -421,7 +421,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test updating post meta using the same value as the stored one.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @return void
 	 */
@@ -458,7 +458,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Create a resource for this post type.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @param array $params Array of request params.
 	 * @return WP_Post

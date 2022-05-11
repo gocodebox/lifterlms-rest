@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -220,7 +220,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                     fired after inserting/uodateing an llms post into the database.
-	 * @since [version] Allow updating meta with the same value as the stored one.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -514,7 +514,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *                     fired after inserting/uodateing an llms post into the database.
 	 * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
 	 *                     must be false when updating.
-	 * @since [version] Allow updating meta with the same value as the stored one.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.9
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -567,7 +567,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * This method should be used for membership properties that require the membership id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @since [version] Allow updating meta with the same value as the stored one.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Membership $membership    LLMS_Membership instance.
 	 * @param WP_REST_Request $request       Full details about the request.

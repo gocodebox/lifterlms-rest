@@ -9,7 +9,7 @@
  *
  * @since 1.0.0-beta.7
  * @since 1.0.0-beta.15 Added tests on setting lesson parents.
- * @since [version] Added protected method `create_post_resource()` (override).
+ * @since 1.0.0-beta.25 Added protected method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -710,7 +710,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test updating the lessons parent section.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @link https://github.com/gocodebox/lifterlms-rest/issues/289
 	 *
@@ -738,7 +738,7 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Create a resource for this post type.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @param array $params Array of request params.
 	 * @return WP_Post

@@ -8,7 +8,7 @@
  * @group rest_progress
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -92,7 +92,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Test delete progress of non existing post.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @return void
 	 */
@@ -110,7 +110,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Test delete progress on existing post but unenrolled user.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @return void
 	 */
@@ -369,7 +369,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Test `validate_post_id()` method on DELETE.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @return void
 	 */

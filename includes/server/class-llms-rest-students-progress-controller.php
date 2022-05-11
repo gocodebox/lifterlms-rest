@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -518,7 +518,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Validate the path parameter "post_id".
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Skip enrollment validation for `DELETE` request method.
+	 * @since 1.0.0-beta.25 Skip enrollment validation for `DELETE` request method.
 	 *
 	 * @param int             $value   Post ID.
 	 * @param WP_REST_Request $request Request object.

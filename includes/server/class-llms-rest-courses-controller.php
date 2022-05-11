@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -798,7 +798,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     so to instruct it to return a WP_Error on failure.
 	 * @since 1.0.0-beta.9 Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
 	 *                     Also made sure course's `instructor` is at least set as the post author.
-	 * @since [version] Allow updating meta with the same value as the stored one.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
