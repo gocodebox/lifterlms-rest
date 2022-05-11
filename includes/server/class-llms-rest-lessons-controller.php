@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.23
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -108,6 +108,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
 	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 * @since 1.0.0-beta.25 Remove now useless check on the existing parent course id when setting it automatically on parent section's id update.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -135,23 +136,13 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 			$prepared_item['parent_section'] = $parent_section && is_a( $parent_section, 'LLMS_Section' ) ? $request['parent_id'] : 0;
 
-			// Retrive the parent course id.
+			// Retrieve the parent course id.
 			if ( $prepared_item['parent_section'] ) {
 				$parent_course = $parent_section->get_course();
 			}
 
 			$prepared_item['parent_course'] = ! empty( $parent_course ) && is_a( $parent_course, 'LLMS_Course' ) ? $parent_course->get( 'id' ) : 0;
 
-			/**
-			 * The parent course is 'derivate', we need to be sure that, if updating, the new value is different from the previous one
-			 * otherwise the underlying wp function `update_post_meta()` will return `false`.
-			 */
-			if ( $request['id'] ) {
-				$lesson = $this->get_object( $request['id'] );
-				if ( $lesson && $parent_course_id === $lesson->get( 'parent_course' ) ) {
-					unset( $prepared_item['parent_course'] );
-				}
-			}
 		}
 
 		// Course id.
@@ -257,6 +248,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -287,15 +279,9 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		// Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
 		$to_set['has_prerequisite'] = empty( $to_set['prerequisite'] ) ? 'no' : 'yes';
 
-		if ( ! $creating ) {
-			if ( $to_set['has_prerequisite'] === $lesson->get( 'has_prerequisite' ) ) {
-				unset( $to_set['has_prerequisite'] );
-			}
-		}
-
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $lesson->set_bulk( $to_set, true );
+			$update = $lesson->set_bulk( $to_set, true, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
