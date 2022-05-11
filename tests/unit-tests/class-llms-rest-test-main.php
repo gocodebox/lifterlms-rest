@@ -7,7 +7,7 @@
  * @group main
  *
  * @since 1.0.0-beta.1
- * @version [version] Added tests on keys being deleted on user deletion.
+ * @version 1.0.0-beta.25 Added tests on keys being deleted on user deletion.
  */
 class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 
@@ -156,7 +156,7 @@ class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test on_user_deletion() method: api keys deletion.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @return void
 	 */

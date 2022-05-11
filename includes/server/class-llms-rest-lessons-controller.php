@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -108,7 +108,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.15 Fixed setting/updating parent section/course.
 	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
-	 * @since [version] Remove now useless check on the existing parent course id when setting it automatically on parent section's id update.
+	 * @since 1.0.0-beta.25 Remove now useless check on the existing parent course id when setting it automatically on parent section's id update.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Array of lesson args or WP_Error.
@@ -248,7 +248,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @since 1.0.0-beta.7
 	 * @since 1.0.0-beta.8 Call `set_bulk()` llms post method passing `true` as second parameter,
 	 *                     so to instruct it to return a WP_Error on failure.
-	 * @since [version] Allow updating meta with the same value as the stored one.
+	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
 	 * @param WP_REST_Request $request       Full details about the request.

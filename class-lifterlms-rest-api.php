@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.25
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta-24';
+	public $version = '1.0.0-beta.25';
 
 	/**
 	 * Constructor.
@@ -198,7 +198,7 @@ final class LifterLMS_REST_API {
 	 *                     to avoid PHP warnings on first plugin activation.
 	 * @since 1.0.0-beta.22 Bump minimum required version to 6.0.0-alpha.1.
 	 *                      Use `llms()` in favor of deprecated `LLMS()`.
-	 * @since [version] Perform some db clean-up on user deletion.
+	 * @since 1.0.0-beta.25 Perform some db clean-up on user deletion.
 	 *                      Bump minimum required version to 6.5.0.
 	 *
 	 * @return void
@@ -221,7 +221,7 @@ final class LifterLMS_REST_API {
 	/**
 	 * When a user is deleted in WordPress, delete corresponding LifterLMS REST API data.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.25
 	 *
 	 * @param int $user_id The ID of the just deleted WP_User.
 	 * @return void

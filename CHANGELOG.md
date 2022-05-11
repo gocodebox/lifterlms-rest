@@ -1,6 +1,19 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.25 - 2022-05-11
+---------------------------
+
+##### Updates and Enhancements
+
++ Stop returning an error when updating resource properties with a value equal to the saved one. [#222](https://github.com/gocodebox/lifterlms-rest#222), [#289](https://github.com/gocodebox/lifterlms-rest#289)
+
+##### Bug Fixes
+
++ Allow deletion of an unenrolled student's progress. [#173](https://github.com/gocodebox/lifterlms-rest#173)
++ Delete API Keys when user is deleted. [#90](https://github.com/gocodebox/lifterlms-rest#90)
+
+
 v1.0.0-beta-24 - 2022-03-17
 ---------------------------
 
