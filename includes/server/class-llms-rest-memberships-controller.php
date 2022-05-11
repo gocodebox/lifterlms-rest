@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Memberships Controller.
+ * REST Memberships Controller
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.9
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -567,6 +567,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * This method should be used for membership properties that require the membership id in order to be saved in the database.
 	 *
 	 * @since 1.0.0-beta.9
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Membership $membership    LLMS_Membership instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -649,20 +650,11 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 					$to_set[ $prop ] = str_replace( '{{membership_id}}', $membership_id, $to_set[ $prop ] );
 				}
 			}
-		} else { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-			$_props = array(
-				'restriction_add_notice',
-			);
-			foreach ( $_props as $_prop ) {
-				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $membership->get( $_prop ) ) {
-					unset( $to_set[ $_prop ] );
-				}
-			}
 		}
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $membership->set_bulk( $to_set, true );
+			$update = $membership->set_bulk( $to_set, true, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}

@@ -9,6 +9,7 @@
  *
  * @since 1.0.0-beta.7
  * @since 1.0.0-beta.15 Added tests on setting lesson parents.
+ * @since [version] Added protected method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -703,6 +704,60 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 			$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
 
 		}
+
+	}
+
+	/**
+	 * Test updating the lessons parent section.
+	 *
+	 * @since [version]
+	 *
+	 * @link https://github.com/gocodebox/lifterlms-rest/issues/289
+	 *
+	 * @return void
+	 */
+	public function test_update_parent_section() {
+
+		// Setup.
+		wp_set_current_user( $this->user_allowed );
+		$course = $this->factory->course->create_and_get();
+
+		// Get IDs for the first lesson and the second section.
+		$sections     = $course->get_sections();
+		$section_2_id = $sections[1]->get( 'id' );
+		$lesson_1_id  = $sections[0]->get_lessons( 'ids' )[0];
+
+		// Update the lesson's parent section.
+		$route    = "{$this->route}/{$lesson_1_id}";
+		$response = $this->perform_mock_request( 'POST', $route, array( 'parent_id' => $section_2_id ) );
+		$this->assertFalse( $response->is_error() );
+		$this->assertEquals( $section_2_id, $response->get_data()['parent_id'] );
+
+	}
+
+	/**
+	 * Create a resource for this post type.
+	 *
+	 * @since [version]
+	 *
+	 * @param array $params Array of request params.
+	 * @return WP_Post
+	 */
+	protected function create_post_resource( $params = array() ) {
+
+		$course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 0,
+			)
+		);
+
+		return parent::create_post_resource(
+			array(
+				'parent_id' => $course->get_sections('ids')[0],
+				'course_id' => $course->get('id'),
+			)
+		);
 
 	}
 

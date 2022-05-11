@@ -1253,11 +1253,11 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 		$this->assertEquals( $update_data['date_created'], $res_data['date_created'] );
 		$this->assertEquals( $update_data['status'], $res_data['status'] );
 
-		// check the course has no prerequisites.
+		// Check the course has no prerequisites.
 		$course = new LLMS_Course( $res_data['id'] );
 		$this->assertFalse( $course->has_prerequisite() );
 
-		// create a course prerequisite.
+		// Create a course prerequisite.
 		$prerequisite_id       = $this->factory->course->create();
 		$track                 = wp_insert_term( 'mock track', 'course_track' );
 		$prerequisite_track_id = $track['term_id'];
@@ -1279,7 +1279,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		$res_data = $response->get_data();
 
-		// check the course has prerequisites.
+		// Check the course has prerequisites.
 		$course = new LLMS_Course( $res_data['id'] );
 		$this->assertTrue( $course->has_prerequisite() );
 		$this->assertTrue( $course->has_prerequisite( 'course' ) );

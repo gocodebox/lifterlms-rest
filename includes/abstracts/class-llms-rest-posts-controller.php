@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.21
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,12 +23,12 @@ defined( 'ABSPATH' ) || exit;
  *                     Fix wp:featured_media link, we don't expose any embeddable field.
  *                     Also `self` and `collection` links prepared in the parent class.
  *                     Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
- *                     fired after inserting/updateing an llms post into the database.
+ *                     fired after inserting/updating an llms post into the database.
  * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
  *                     Initialize `$prepared_item` array before adding values to it.
  * @since 1.0.0-beta.9 Implemented a generic way to create and get an llms post object instance given a `post_type`.
  *                     In `get_objects_from_query()` avoid performing an additional query, just return the already retrieved posts.
- *                     Removed `"llms_rest_{$this->post_type}_filters_removed_for_reponse"` filter hooks,
+ *                     Removed `"llms_rest_{$this->post_type}_filters_removed_for_response"` filter hooks,
  *                     `"llms_rest_{$this->post_type}_filters_removed_for_response"` added.
  * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
  *                     must be false when updating.
@@ -220,6 +220,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                     fired after inserting/uodateing an llms post into the database.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -261,7 +262,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		// Set all the other properties.
 		// TODO: maybe we want to filter the post properties that have already been inserted before.
-		$set_bulk_result = $object->set_bulk( $prepared_item, true );
+		$set_bulk_result = $object->set_bulk( $prepared_item, true, true );
 		if ( is_wp_error( $set_bulk_result ) ) {
 
 			if ( 'db_update_error' === $set_bulk_result->get_error_code() ) {
@@ -513,6 +514,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 *                     fired after inserting/uodateing an llms post into the database.
 	 * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
 	 *                     must be false when updating.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -529,7 +531,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $prepared_item;
 		}
 
-		$update_result = empty( array_diff_key( $prepared_item, array_flip( array( 'id' ) ) ) ) ? false : $object->set_bulk( $prepared_item, true );
+		$update_result = empty( array_diff_key( $prepared_item, array_flip( array( 'id' ) ) ) ) ? false : $object->set_bulk( $prepared_item, true, true );
 		if ( is_wp_error( $update_result ) ) {
 
 			if ( 'db_update_error' === $update_result->get_error_code() ) {

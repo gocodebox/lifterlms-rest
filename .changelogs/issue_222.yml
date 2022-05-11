@@ -1,0 +1,7 @@
+significance: patch
+type: changed
+links:
+  - "#222"
+  - "#289"
+entry: Stop returning an error when updating resource properties with a
+  value equal to the saved one.

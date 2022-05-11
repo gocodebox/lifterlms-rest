@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -798,6 +798,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 *                     so to instruct it to return a WP_Error on failure.
 	 * @since 1.0.0-beta.9 Use `WP_Error::$errors` in place of `WP_Error::has_errors()` to support WordPress version prior to 5.1.
 	 *                     Also made sure course's `instructor` is at least set as the post author.
+	 * @since [version] Allow updating meta with the same value as the stored one.
 	 *
 	 * @param LLMS_Course     $course        LLMS_Course instance.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -928,7 +929,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 			}
 		}
 
-		// Enrolmments opens/closes messages.
+		// Enrollments opens/closes messages.
 		if ( ! empty( $schema['properties']['enrollment_opens_message'] ) && isset( $request['enrollment_opens_message'] ) ) {
 			if ( is_string( $request['enrollment_opens_message'] ) ) {
 				$to_set['enrollment_opens_message'] = $request['enrollment_opens_message'];
@@ -963,22 +964,11 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 					$to_set[ $prop ] = str_replace( '{{course_id}}', $course_id, $to_set[ $prop ] );
 				}
 			}
-		} else { // Needed until the following will be implemented: https://github.com/gocodebox/lifterlms/issues/908.
-			$_props = array(
-				'time_period',
-				'enrollment_period',
-				'has_prerequisite',
-			);
-			foreach ( $_props as $_prop ) {
-				if ( isset( $to_set[ $_prop ] ) && $to_set[ $_prop ] === $course->get( $_prop ) ) {
-					unset( $to_set[ $_prop ] );
-				}
-			}
 		}
 
 		// Set bulk.
 		if ( ! empty( $to_set ) ) {
-			$update = $course->set_bulk( $to_set, true );
+			$update = $course->set_bulk( $to_set, true, true );
 			if ( is_wp_error( $update ) ) {
 				$error = $update;
 			}
