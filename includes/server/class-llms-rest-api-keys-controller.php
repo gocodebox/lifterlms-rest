@@ -222,8 +222,8 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
-		$request->set_param( 'context', 'edit' );
 
+		$request->set_param( 'context', 'edit' );
 		$response = $this->prepare_item_for_response( $key, $request );
 		$response->set_status( 201 );
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $key->get( 'id' ) ) ) );

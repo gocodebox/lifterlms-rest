@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Courses Controller.
+ * REST Courses Controller
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -81,7 +81,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	 * @var string[]
 	 */
 	protected $disallowed_additional_fields = array(
-		'visibility', // catalog_visibility in the resource schema.
+		'visibility', // It maps to `catalog_visibility` in the resource schema.
 	);
 
 	/**

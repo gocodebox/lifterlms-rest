@@ -2,7 +2,7 @@
 /**
  * Base REST Controller
  *
- * @package  LifterLMS_REST/Abstracts
+ * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
  * @version [version]
@@ -110,11 +110,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$schema = $this->get_item_schema();
 		$this->object_inserted( $object, $request, $schema, true );
 
+		// Registered via `register_meta()`.
 		$meta_update = $this->update_meta( $object, $request, $schema );
 		if ( is_wp_error( $meta_update ) ) {
 			return $meta_update;
 		}
 
+		// Registered via `register_rest_field()`.
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
@@ -251,7 +253,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		// page and per_page params are already specified in WP_Rest_Controller->get_collection_params().
-
 		$query_params['order'] = array(
 			'description'       => __( 'Order sort attribute ascending or descending.', 'lifterlms' ),
 			'type'              => 'string',
@@ -626,6 +627,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$schema = $this->get_item_schema_base();
 
+		// Add custom fields registered via `register_meta()`.
 		$schema = $this->add_meta_fields_schema( $schema );
 
 		// Allow the schema to be filtered.
@@ -720,7 +722,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			 * - additional fields already covered in the schema.
 			 *
 			 * This is meant to run only once, because otherwise we have no way
-			 * to determine whether the property comes from the original scheme
+			 * to determine whether the property comes from the original schema
 			 * definition, or has been added via `register_rest_field()`.
 			 */
 			$additional_fields = array_diff_key(
@@ -1057,11 +1059,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$this->object_inserted( $object, $request, $schema, false );
 
+		// Registered via `register_meta()`.
 		$meta_update = $this->update_meta( $object, $request, $schema );
 		if ( is_wp_error( $meta_update ) ) {
 			return $meta_update;
 		}
 
+		// Registered via `register_rest_field()`.
 		$fields_update = $this->update_additional_fields_for_object( $object, $request );
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;

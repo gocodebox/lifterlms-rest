@@ -1,11 +1,11 @@
 <?php
 /**
- * REST LLMS Posts Controller Class.
+ * REST LLMS Posts Controller Class
  *
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -4,7 +4,7 @@
  *
  * All methods which *must* be defined by extending classes are stubbed here.
  *
- * @package  LifterLMS_REST/Abstracts
+ * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
  * @version [version]
@@ -203,11 +203,14 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 
 		$data            = $this->prepare_object_for_response( $object, $request );
 		$response_fields = $this->get_fields_for_response( $request );
+		// Include meta data registered via `register_meta()`.
 		if ( rest_is_field_included( 'meta', $response_fields ) ) {
 			$data['meta'] = $this->meta->get_value( $this->get_object_id( $object ), $request );
+			// Exclude disallowed meta.
 			$data['meta'] = $this->exclude_disallowed_meta_fields( $data['meta'] );
 		}
 
+		// Include custom REST fields registered via `register_rest_field()`.
 		$data = $this->add_additional_fields_to_object( $data, $request );
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

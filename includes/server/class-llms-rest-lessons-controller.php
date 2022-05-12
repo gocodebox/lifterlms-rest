@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -520,14 +520,11 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added following properties to the response object:
-<<<<<<< HEAD
-	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
-	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
-	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
-=======
 	 *                     public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
 	 *                     Added `llms_rest_prepare_lesson_object_response` filter hook.
->>>>>>> 90c3429 (Handle registered meta and registered rest fields)
+	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 *                      public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
+	 *                      Added `llms_rest_prepare_lesson_object_response` filter hook.
 	 *
 	 * @param LLMS_Lesson     $lesson  Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
