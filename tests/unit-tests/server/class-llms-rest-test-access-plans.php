@@ -6,6 +6,7 @@
  *
  * @group REST
  * @group rest_access_plans
+ * @group rest_posts
  *
  * @since 1.0.0-beta.18
  * @since 1.0.0-beta-24 Added tests on updating a free access plan.

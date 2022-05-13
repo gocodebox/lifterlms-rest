@@ -6,6 +6,7 @@
  *
  * @group REST
  * @group rest_courses
+ * @group rest_posts
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::set_up().

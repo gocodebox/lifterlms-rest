@@ -6,6 +6,7 @@
  *
  * @group REST
  * @group rest_lessons
+ * @group rest_posts
  *
  * @since 1.0.0-beta.7
  * @since 1.0.0-beta.15 Added tests on setting lesson parents.

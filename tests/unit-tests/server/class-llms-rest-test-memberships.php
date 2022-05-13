@@ -6,6 +6,7 @@
  *
  * @group REST
  * @group rest_memberships
+ * @group rest_posts
  *
  * @since 1.0.0-beta.9
  * @since 1.0.0-beta.11 Fixed `post_type` property.

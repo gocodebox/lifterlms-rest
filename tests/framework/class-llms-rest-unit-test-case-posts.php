@@ -18,7 +18,8 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 
     /**
 	 * db post type of the model being tested
-	 * @var  string
+	 *
+	 * @var string
 	 */
     protected $post_type = '';
 
@@ -456,14 +457,116 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test item schema with meta fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_meta() {
+
+		global $wp_meta_keys;
+		$original_wp_meta_keys = $wp_meta_keys;
+
+		// Create a post first.
+		wp_set_current_user( $this->user_allowed );
+		$post      = $this->create_post_resource();
+		$llms_post = llms_get_post( $post );
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+			// Nothing else to do.
+			return;
+		} else {
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Register a meta.
+		register_meta(
+			'post',
+			'meta_test',
+			array(
+				'description'       => 'Meta test',
+				'object_subtype'    => $this->post_type,
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => true,
+			)
+		);
+
+		register_meta(
+			'post',
+			'meta_test_not_in_rest',
+			array(
+				'description'       => 'Meta test',
+				'object_subtype'    => $this->post_type,
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => false,
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$this->assertEquals(
+			array( 'meta_test' ),
+			array_keys( $response->get_data()['meta'] )
+		);
+
+		// Register meta which are not allowed because it's potentially covered by the schema.
+		$meta_prefix = LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' );
+		$schema_properties = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_item_schema_base' )['properties'];
+
+		foreach ( $schema_properties as $property => $schema ) {
+			register_meta(
+				'post',
+				"{$meta_prefix}$property",
+				array(
+					'description'       => 'Meta test',
+					'object_subtype'    => $this->post_type,
+					'type'              => 'string',
+					'single'            => true,
+					'show_in_rest'      => true,
+				)
+			);
+		}
+
+		// Meta above not registered.
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$this->assertEquals(
+			array( 'meta_test' ),
+			array_keys( $response->get_data()['meta'] )
+		);
+
+		// Unregister meta.
+		$wp_meta_keys = $original_wp_meta_keys;
+
+	}
+
+	/**
 	 * Create a resource for this post type.
 	 *
 	 * @since 1.0.0-beta.25
+	 * @since [version] Log in before creating the post, log out right after.
 	 *
 	 * @param array $params Array of request params.
 	 * @return WP_Post
 	 */
 	protected function create_post_resource( $params = array() ) {
+
+		$log_user = ! is_user_logged_in();
+		if ( $log_user ) {
+			wp_set_current_user( $this->user_allowed );
+		}
 
 		$resource = $this->perform_mock_request(
 			'POST',
@@ -477,7 +580,13 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			)
 		);
 
-		return get_post( $resource->get_data()['id'] );
+		$post = get_post( $resource->get_data()['id'] );
+
+		if ( $log_user ) {
+			wp_set_current_user( 0 );
+		}
+
+		return $post;
 
 	}
 
