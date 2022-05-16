@@ -4,12 +4,7 @@
  *
  * @package LifterLMS_REST_API/Tests
  *
- * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
- * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
- * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
- * @since 1.0.0-beta.21 Test search.
- * @since 1.0.0-beta.25 Added tests on updating post meta with the same value as the stored one.
+ * @since [version]
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -52,22 +47,22 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 			'user',
 			'meta_test',
 			array(
-				'description'       => 'Meta test',
-				'type'              => 'string',
-				'single'            => true,
-				'show_in_rest'      => true,
+				'description'  => 'Meta test',
+				'type'         => 'string',
+				'single'       => true,
+				'show_in_rest' => true,
 			)
 		);
 
 		// Register a meta, do not show in rest.
 		register_meta(
-			'post',
+			'user',
 			'meta_test_not_in_rest',
 			array(
-				'description'       => 'Meta test',
-				'type'              => 'string',
-				'single'            => true,
-				'show_in_rest'      => false,
+				'description'  => 'Meta test',
+				'type'         => 'string',
+				'single'       => true,
+				'show_in_rest' => false,
 			)
 		);
 
@@ -87,10 +82,10 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 				'user',
 				"{$meta_prefix}$property",
 				array(
-					'description'       => 'Meta test',
-					'type'              => 'string',
-					'single'            => true,
-					'show_in_rest'      => true,
+					'description'  => 'Meta test',
+					'type'         => 'string',
+					'single'       => true,
+					'show_in_rest' => true,
 				)
 			);
 		}
@@ -129,7 +124,9 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 			$this->route,
 			array(
 				'email'   => 'mock@mock.mock',
-				$meta_key => 'whatever',
+				'meta' => array(
+					$meta_key => 'whatever',
+				),
 			)
 		);
 
@@ -150,7 +147,9 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 			'POST',
 			$this->route . '/' . $response->get_data()['id'],
 			array(
-				$meta_key => 'whatever update',
+				'meta' => array(
+					$meta_key => 'whatever',
+				),
 			)
 		);
 
@@ -180,7 +179,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		global $wp_meta_keys;
 		$original_wp_meta_keys = $wp_meta_keys;
 
-		wp_set_current_user( $this->user_allowed );
+		wp_set_current_user( $this->user_admin );
 
 		// Register a meta, do not show in rest.
 		$meta_key = uniqid( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' ) );
@@ -200,8 +199,10 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 			'POST',
 			$this->route,
 			array(
-				'email'   => 'mock@mock.mock',
-				$meta_key => 'whatever',
+				'email' => 'mock@mock.mock',
+				'meta'  => array(
+					$meta_key => 'whatever',
+				),
 			)
 		);
 
@@ -222,7 +223,9 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 			'POST',
 			$this->route . '/' . $response->get_data()['id'],
 			array(
-				$meta_key => 'whatever update',
+				'meta' => array(
+					$meta_key => 'whatever update',
+				),
 			)
 		);
 
@@ -234,7 +237,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 
 		// Check there's no user meta set.
 		$this->assertEmpty(
-			get_user_meta( $response->get_data()['id'], $meta_key ),
+			get_user_meta( $response->get_data()['id'], $meta_key, true ),
 			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
 		);
 
@@ -255,19 +258,19 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		global $wp_meta_keys;
 		$original_wp_meta_keys = $wp_meta_keys;
 
-		wp_set_current_user( $this->user_allowed );
+		wp_set_current_user( $this->user_admin );
 
 		// Register a meta and set it.
 		$meta_key = uniqid( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' ) );
 		register_meta(
-			'post',
+			'user',
 			$meta_key,
 			array(
-				'description'       => 'Meta test',
-				'object_subtype'    => $this->post_type,
-				'type'              => 'string',
-				'single'            => true,
-				'show_in_rest'      => true,
+				'description'    => 'Meta test',
+				'type'           => 'string',
+				'single'         => true,
+				'show_in_rest'   => true,
+				'auth_callback'  => '__return_true',
 			)
 		);
 
@@ -275,82 +278,54 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		$response = $this->perform_mock_request(
 			'POST',
 			$this->route,
-			array_merge(
-				$this->get_creation_args(),
-				array(
+			array(
+				'email' => 'mock@mock.mock',
+				'meta'  => array(
 					$meta_key => 'whatever',
-				)
+				),
 			)
 		);
 
-		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
-		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
-			$this->assertArrayNotHasKey(
-				'meta',
-				$response->get_data()
-			);
+		$this->assertEquals(
+			array(
+				$meta_key => 'whatever',
+			),
+			$response->get_data()['meta'],
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
 
-			// Check there's no post meta set.
-			$this->assertEmpty(
-				get_post_meta( $response->get_data()['id'], $meta_key ),
-				$this->post_type
-			);
-
-		} else {
-			// Otherwise check the meta `$meta_key` is included in the response.
-			$this->assertEquals(
-				array(
-					$meta_key = 'whatever',
-				),
-				$response->get_data()['meta'],
-				$this->post_type
-			);
-
-			// Check the meta.
-			$this->assertEquals(
-				'whatever',
-				get_post_meta( $response->get_data()['id'], $meta_key ),
-				$this->post_type
-			);
-		}
+		// Check the meta.
+		$this->assertEquals(
+			'whatever',
+			get_user_meta( $response->get_data()['id'], $meta_key, true ),
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
 
 		// Update.
 		$response = $this->perform_mock_request(
 			'POST',
 			$this->route . '/' . $response->get_data()['id'],
 			array(
-				$meta_key => 'whatever update',
+				'meta' => array(
+					$meta_key => 'whatever update',
+				),
 			)
 		);
 
-		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
-		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
-			$this->assertArrayNotHasKey(
-				'meta',
-				$response->get_data()
-			);
-			// Check there's no post meta set.
-			$this->assertEmpty(
-				get_post_meta( $response->get_data()['id'], $meta_key ),
-				$this->post_type
-			);
-		} else {
-			// Otherwise check the meta `$meta_key` is included in the response.
-			$this->assertEquals(
-				array(
-					$meta_key = 'whatever update',
-				),
-				$response->get_data()['meta'],
-				$this->post_type
-			);
+		$this->assertEquals(
+			array(
+				$meta_key => 'whatever update',
+			),
+			$response->get_data()['meta'],
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
 
-			// Check the meta.
-			$this->assertEquals(
-				'whatever update',
-				get_post_meta( $response->get_data()['id'], $meta_key ),
-				$this->post_type
-			);
-		}
+		// Check the meta.
+		$this->assertEquals(
+			'whatever update',
+			get_user_meta( $response->get_data()['id'], $meta_key, true ),
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
 
 		// Unregister meta.
 		$wp_meta_keys = $original_wp_meta_keys;

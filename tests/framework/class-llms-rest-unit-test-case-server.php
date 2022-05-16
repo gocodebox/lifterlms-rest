@@ -54,6 +54,20 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected $defaults;
 
 	/**
+	 * Original registered rest fields.
+	 *
+	 * @var string
+	 */
+	protected $original_rest_fields;
+
+	/**
+	 * Object type
+	 *
+	 * @var string
+	 */
+	protected $object_type;
+
+	/**
 	 * Setup our test server.
 	 *
 	 * @since 1.0.0-beta.1
@@ -209,6 +223,76 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		// Fine.
 		$this->assertResponseStatusEquals( 200, $response );
 
+	}
+
+	/**
+	 * Register rest field.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function register_rest_field( $field ) {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		register_rest_field(
+			$this->object_type,
+			$field,
+			array(
+				'get_callback'    => function ( $object ) use ( $field ) {
+					// Get field as single value from post meta.
+					return $this->get_registered_rest_field_value( $object, $field );
+				},
+				'update_callback' => function ( $value, $object ) use ( $field ) {
+					return $this->set_registered_rest_field_value( $value, $object, $field );
+				},
+				'schema'          => array(
+					'type'        => 'string',
+					'arg_options' => array(
+						'sanitize_callback' => function ( $value ) {
+							// Make the value safe for storage.
+							return sanitize_text_field( $value );
+						},
+					),
+				),
+			)
+		);
+
+	}
+
+	/**
+	 * Save original rest additional fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function save_original_rest_additional_fields() {
+
+		global $wp_rest_additional_fields;
+		$original_rest_fields = $wp_rest_additional_fields;
+
+	}
+
+	/**
+	 * Unregister custom rest fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function unregister_rest_additional_fields() {
+		if ( ! isset( $this->original_rest_fields ) ) {
+			return;
+		}
+
+		global $wp_rest_additional_fields;
+		$wp_rest_additional_fields = $original_rest_fields;
+		unset( $this->original_rest_fields );
 	}
 
 	/**
@@ -385,6 +469,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Unset the server.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Unregister custom rest fields.
 	 */
 	public function tear_down() {
 
@@ -394,6 +479,8 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		unset( $this->server );
 
 		$wp_rest_server = null;
+
+		$this->unregister_rest_additional_fields();
 
 	}
 

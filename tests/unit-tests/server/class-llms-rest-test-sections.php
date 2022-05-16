@@ -12,6 +12,7 @@
  * @since 1.0.0-beta.7 Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::set_up(),
  *                     fixed sections fields checks when retrieving the collection.
  * @since 1.0.0-beta.25 Added protected method `create_post_resource()` (override).
+ * @since [version] Added protected method `get_creation_args()` (override). removed method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -402,14 +403,13 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Create a resource for this post type.
+	 * Get resource creation args.
 	 *
-	 * @since 1.0.0-beta.25
+	 * @since [version]
 	 *
-	 * @param array $params Array of request params.
-	 * @return WP_Post
+	 * @return void
 	 */
-	protected function create_post_resource( $params = array() ) {
+	protected function get_creation_args() {
 
 		$course_id = $this->factory->course->create(
 			array(
@@ -417,7 +417,8 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		return parent::create_post_resource(
+		return array_merge(
+			parent::get_creation_args(),
 			array(
 				'parent_id' => $course_id,
 			)

@@ -11,6 +11,7 @@
  * @since 1.0.0-beta.7
  * @since 1.0.0-beta.15 Added tests on setting lesson parents.
  * @since 1.0.0-beta.25 Added protected method `create_post_resource()` (override).
+ * @since [version] Added protected method `get_creation_args()` (override). removed method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -738,14 +739,13 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Create a resource for this post type.
+	 * Get resource creation args.
 	 *
-	 * @since 1.0.0-beta.25
+	 * @since [version]
 	 *
-	 * @param array $params Array of request params.
-	 * @return WP_Post
+	 * @return void
 	 */
-	protected function create_post_resource( $params = array() ) {
+	protected function get_creation_args() {
 
 		$course = $this->factory->course->create_and_get(
 			array(
@@ -754,7 +754,8 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		return parent::create_post_resource(
+		return array_merge(
+			parent::get_creation_args(),
 			array(
 				'parent_id' => $course->get_sections('ids')[0],
 				'course_id' => $course->get('id'),
