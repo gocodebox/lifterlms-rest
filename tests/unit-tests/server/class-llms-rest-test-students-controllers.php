@@ -17,7 +17,7 @@
  * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  * @since [version] Added schema `meta` property.
  */
-class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
 	/**
 	 * Route.
@@ -1337,6 +1337,17 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
 		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_insert_student' ) );
 		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_after_insert_student' ) );
+	}
+
+	/**
+	 * Create user, returns the user ID.
+	 *
+	 * @since [version]
+	 *
+	 * @return int
+	 */
+	protected function create_user() {
+		return $this->factory->student->create();
 	}
 
 }

@@ -13,7 +13,7 @@
  * @since [version] Added schema `meta` property.
  * @version [version]
  */
-class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
 	/**
 	 * Route.
@@ -285,6 +285,17 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
 
+	}
+
+	/**
+	 * Create user, returns the user ID.
+	 *
+	 * @since [version]
+	 *
+	 * @return int
+	 */
+	protected function create_user() {
+		return $this->factory->user->create( array( 'role' => 'instructor' ) );
 	}
 
 }

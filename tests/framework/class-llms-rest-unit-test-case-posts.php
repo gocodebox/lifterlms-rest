@@ -1,6 +1,6 @@
 <?php
 /**
- * LifterLMS REST API witServer Unit Test Case Bootstrap
+ * LifterLMS REST API Posts Unit Test Case Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
  *
@@ -491,7 +491,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			);
 		}
 
-		// Register a meta.
+		// Register a meta, show it in rest.
 		register_meta(
 			'post',
 			'meta_test',
@@ -504,6 +504,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			)
 		);
 
+		// Register a meta, do not show in rest.
 		register_meta(
 			'post',
 			'meta_test_not_in_rest',
@@ -519,7 +520,8 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
 		$this->assertEquals(
 			array( 'meta_test' ),
-			array_keys( $response->get_data()['meta'] )
+			array_keys( $response->get_data()['meta'] ),
+			$this->post_type
 		);
 
 		// Register meta which are not allowed because it's potentially covered by the schema.
@@ -544,7 +546,8 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
 		$this->assertEquals(
 			array( 'meta_test' ),
-			array_keys( $response->get_data()['meta'] )
+			array_keys( $response->get_data()['meta'] ),
+			$this->post_type
 		);
 
 		// Unregister meta.
