@@ -10,7 +10,7 @@
  *
  * @since 1.0.0-beta.3
  * @since 1.0.0-beta.10 Fixed failing tests.
- * @version 1.0.0-beta.10
+ * @version [version]
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -20,6 +20,13 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * @var string
 	 */
 	protected $route = '/llms/v1/webhooks';
+
+	/**
+	 * Object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'webhook';
 
 	private function assertIsAWebhook( $data ) {
 

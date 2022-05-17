@@ -8,7 +8,7 @@
  * @group rest_api_keys
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
+ * @version [version]
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -18,6 +18,13 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * @var string
 	 */
 	protected $route = '/llms/v1/api-keys';
+
+	/**
+	 * Object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'api_key';
 
 	/**
 	 * Setup test
@@ -76,6 +83,57 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 		$this->assertTrue( array_key_exists( 'user_id', $schema['properties'] ) );
 		$this->assertTrue( array_key_exists( 'truncated_key', $schema['properties'] ) );
 		$this->assertTrue( array_key_exists( 'last_access', $schema['properties'] ) );
+
+	}
+
+	/**
+	 * Test schema adding additional fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_additional_fields() {
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		$key = $this->get_mock_api_key( 'read_write', $this->user_allowed, false );
+		$id = $key->get( 'id' );
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		$response = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertArrayHasKey(
+			$field,
+			$response->get_data(),
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
+
+		// Register a field not for this resource.
+		register_rest_field(
+			$this->object_type . uniqid(),
+			$field . '-unrelated',
+			array(
+				'get_callback'    => function ( $object ) use ( $field ) {
+					return '';
+				},
+				'update_callback' => function ( $value, $object ) use ( $field ) {
+				},
+				'schema'          => array(
+					'type' => 'string'
+				),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', sprintf( '%1$s/%2$d', $this->route, $id ) );
+		$this->assertArrayNotHasKey(
+			$field . '-unrelated',
+			$response->get_data(),
+			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
+		);
 
 	}
 

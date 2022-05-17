@@ -77,13 +77,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $disallowed_meta_fields = array();
 
 	/**
-	 * Caches the additional fields added to the schema.
-	 *
-	 * @var string[]
-	 */
-	protected $additional_fields;
-
-	/**
 	 * Create an item.
 	 *
 	 * @since 1.0.0-beta.1
@@ -622,7 +615,8 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	public function get_item_schema() {
 
 		if ( isset( $this->schema ) ) {
-			return $this->schema;
+			// Additional fields are not cached in the schema, @see https://core.trac.wordpress.org/ticket/47871#comment:5.
+			return $this->add_additional_fields_schema( $this->schema );
 		}
 
 		$schema = $this->get_item_schema_base();
@@ -638,7 +632,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 * already covered by the base, filtered, schema.
 		 *
 		 * Additional fields are added through the call to add_additional_fields_schema() below,
-		 * which will call {@see LLMS_REST_Controller::get_additional_fields()), which requires
+		 * which will call {@see LLMS_REST_Controller::get_additional_fields()}, which requires
 		 * $this->schema to be set.
 		 */
 		$this->schema = $schema;
@@ -647,9 +641,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 * Adds the schema from additional fields (registered via `register_rest_field()`) to the schema array.
 		 * Note: WordPress core doesn't cache the additional fields in the schema, see https://core.trac.wordpress.org/ticket/47871#comment:5
 		 */
-		$this->schema = $this->add_additional_fields_schema( $this->schema );
-
-		return $this->schema;
+		return $this->add_additional_fields_schema( $this->schema );
 
 	}
 
@@ -688,19 +680,9 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function get_additional_fields( $object_type = null ) {
 
-		// We require the $this->schema['properties'] to be set.
+		// We require the $this->schema['properties'] to be set in order to exclude fields.
 		if ( ! isset( $this->schema['properties'] ) ) {
-			_doing_it_wrong(
-				$this->get_class() . '::get_additional_fields()',
-				__( "Please make sure the instance's schema['properties'] is set.", 'lifterlms' ),
-				'[version]'
-			);
 			return parent::get_additional_fields( $object_type );
-		}
-
-		// Return cached fields.
-		if ( isset( $this->additional_fields ) ) {
-			return $this->additional_fields;
 		}
 
 		$additional_fields = parent::get_additional_fields( $object_type );
@@ -733,10 +715,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		}
 
-		// Cache additional field.
-		$this->additional_fields = $additional_fields;
-
-		return $this->additional_fields;
+		return $additional_fields;
 
 	}
 

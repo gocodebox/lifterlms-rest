@@ -11,7 +11,6 @@
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Unknown.
  * @since [version] Added schema `meta` property.
- * @version [version]
  */
 class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
@@ -26,6 +25,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Define `$this->object_type` as 'instructor'.
 	 *
 	 * @return void
 	 */
@@ -38,6 +38,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 		$this->user_assistant = $this->factory->user->create( array( 'role' => 'instructors_assistant', ) );
 		$asst = llms_get_instructor( $this->user_assistant )->add_parent( $this->user_instructor );
 		$this->endpoint = new LLMS_REST_Instructors_Controller();
+		$this->object_type = 'instructor';
 
 	}
 

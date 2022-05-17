@@ -134,7 +134,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'api_key',
+			'title'      => 'webhook',
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(

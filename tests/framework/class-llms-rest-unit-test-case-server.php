@@ -61,7 +61,16 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected $original_rest_fields;
 
 	/**
-	 * Object type
+	 * Additional rest fields.
+	 *
+	 * @var array
+	 */
+	protected $rest_additional_fields;
+
+	/**
+	 * Object type.
+	 *
+	 * Used by meta and additional rest fields.
 	 *
 	 * @var string
 	 */
@@ -234,11 +243,6 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 */
 	protected function register_rest_field( $field ) {
 
-		if ( empty( $this->object_type ) ) {
-			$this->markTestSkipped( 'No rest fields to test' );
-			return;
-		}
-
 		register_rest_field(
 			$this->object_type,
 			$field,
@@ -265,6 +269,28 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
+	 * Set rest field value.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function set_registered_rest_field_value( $value, $object, $field ) {
+		$this->rest_additional_fields[ $this->object_type ][ $field ] = $value;
+	}
+
+	/**
+	 * Get rest field value.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	protected function get_registered_rest_field_value( $object, $field ) {
+		return $this->rest_additional_fields[ $this->object_type ] [$field ] ?? '';
+	}
+
+	/**
 	 * Save original rest additional fields.
 	 *
 	 * @since [version]
@@ -274,7 +300,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected function save_original_rest_additional_fields() {
 
 		global $wp_rest_additional_fields;
-		$original_rest_fields = $wp_rest_additional_fields;
+		$this->original_rest_additional_fields = $wp_rest_additional_fields;
 
 	}
 
@@ -286,13 +312,15 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @return void
 	 */
 	protected function unregister_rest_additional_fields() {
-		if ( ! isset( $this->original_rest_fields ) ) {
+
+		if ( ! isset( $this->original_rest_additional_fields ) ) {
 			return;
 		}
 
 		global $wp_rest_additional_fields;
-		$wp_rest_additional_fields = $original_rest_fields;
-		unset( $this->original_rest_fields );
+		$wp_rest_additional_fields = $this->original_rest_additional_fields;
+		unset( $this->original_rest_additional_fields );
+
 	}
 
 	/**

@@ -444,6 +444,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
 	 * @since 1.0.0-beta.26 Made sure only real API Key object's properties are retrieved.
+	 * @since [version] Handle additional fields.
 	 *
 	 * @param LLMS_REST_API_Key $item    API Key object.
 	 * @param WP_REST_Request   $request Request object.
@@ -456,7 +457,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		);
 
 		// Add all readable properties.
-		$fields_for_response = $this->get_fields_for_response( $request );
+		$fields_for_response = array_diff( $this->get_fields_for_response( $request ), array_keys( $this->get_additional_fields() ) );
 		foreach ( $this->map_schema_to_database() as $schema_field => $db_field ) {
 			if ( in_array( $schema_field, $fields_for_response, true ) ) {
 				$data[ $schema_field ] = $item->get( $db_field );
@@ -468,6 +469,9 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			$data['consumer_key']    = $item->get( 'consumer_key_one_time' );
 			$data['consumer_secret'] = $item->get( 'consumer_secret' );
 		}
+
+		// Include custom REST fields registered via `register_rest_field()`.
+		$data = $this->add_additional_fields_to_object( $data, $request );
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->filter_response_by_context( $data, $context );

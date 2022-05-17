@@ -92,6 +92,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Define `$this->object_type` as 'student'.
 	 *
 	 * @return void
 	 */
@@ -102,7 +103,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 		$this->user_instructor = $this->factory->user->create( array( 'role' => 'instructor', ) );
 		$this->user_subscriber = $this->factory->user->create( array( 'role' => 'subscriber', ) );
 		$this->endpoint = new LLMS_REST_Students_Controller();
-
+		$this->object_type = 'student';
 	}
 
 	/**

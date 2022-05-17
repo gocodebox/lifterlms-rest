@@ -10,6 +10,8 @@
  * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
  * @since 1.0.0-beta.21 Test search.
  * @since 1.0.0-beta.25 Added tests on updating post meta with the same value as the stored one.
+ * @since [version] Defined `$this->object_type` as `$this->post_type`.
+ *                      Added tests on custom meta and custom rest fields.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -24,10 +26,10 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	protected $post_type = '';
 
 	/**
-	 *
 	 * Setup.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Define `$this->object_type` as `$this->post_type`.
 	 */
 	public function set_up() {
 		parent::set_up();
@@ -40,6 +42,9 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		// clean the db from this post type
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
+
+		$this->object_type = $this->post_type;
+
 	}
 
 
@@ -457,6 +462,64 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test schema adding additional fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_additional_fields() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Create a post first.
+		$post      = $this->create_post_resource();
+		$llms_post = llms_get_post( $post );
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$this->assertArrayHasKey(
+			$field,
+			$response->get_data(),
+			$this->post_type
+		);
+
+		// Register a field not for this resource.
+		register_rest_field(
+			$this->object_type . uniqid(),
+			$field . '-unrelated',
+			array(
+				'get_callback'    => function ( $object ) use ( $field ) {
+					return '';
+				},
+				'update_callback' => function ( $value, $object ) use ( $field ) {
+				},
+				'schema'          => array(
+					'type' => 'string'
+				),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+
+		$this->assertArrayNotHasKey(
+			$field . '-unrelated',
+			$response->get_data(),
+			$this->object_type
+		);
+
+	}
+
+	/**
 	 * Test item schema with meta fields.
 	 *
 	 * @since [version]
@@ -497,7 +560,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			'meta_test',
 			array(
 				'description'       => 'Meta test',
-				'object_subtype'    => $this->post_type,
+				'object_subtype'    => $this->object_type,
 				'type'              => 'string',
 				'single'            => true,
 				'show_in_rest'      => true,
@@ -510,7 +573,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			'meta_test_not_in_rest',
 			array(
 				'description'       => 'Meta test',
-				'object_subtype'    => $this->post_type,
+				'object_subtype'    => $this->object_type,
 				'type'              => 'string',
 				'single'            => true,
 				'show_in_rest'      => false,
@@ -534,7 +597,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 				"{$meta_prefix}$property",
 				array(
 					'description'       => 'Meta test',
-					'object_subtype'    => $this->post_type,
+					'object_subtype'    => $this->object_type,
 					'type'              => 'string',
 					'single'            => true,
 					'show_in_rest'      => true,
@@ -659,7 +722,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 			$meta_key,
 			array(
 				'description'       => 'Meta test',
-				'object_subtype'    => $this->post_type,
+				'object_subtype'    => $this->object_type,
 				'type'              => 'string',
 				'single'            => true,
 				'show_in_rest'      => false,
