@@ -225,9 +225,10 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()`.
+	 * @since [version] Exclude additional fields added via `register_rest_field`.
 	 *
-	 * @param LLMS_Abstract_User_Data $object  User object.
-	 * @param WP_REST_Request         $request Request object.
+	 * @param object          $object  Raw object from database.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
@@ -237,12 +238,13 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 			_doing_it_wrong( 'LLMS_REST_Controller::prepare_object_for_response', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 		}
 
-		$prepared = array();
-		$map      = array_flip( $this->map_schema_to_database() );
-		$fields   = $this->get_fields_for_response( $request );
+		$prepared          = array();
+		$map               = array_flip( $this->map_schema_to_database() );
+		$fields            = $this->get_fields_for_response( $request );
+		$additional_fields = array_keys( $this->get_additional_fields() );
 
 		foreach ( $map as $db_key => $schema_key ) {
-			if ( in_array( $schema_key, $fields, true ) ) {
+			if ( in_array( $schema_key, $fields, true ) && ! in_array( $schema_key, $additional_fields, true ) ) {
 				$prepared[ $schema_key ] = $object->get( $db_key );
 			}
 		}
