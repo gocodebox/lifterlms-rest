@@ -790,9 +790,10 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * @return mixed The resource identifier.
 	 */
 	protected function create_resource() {
-		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
-		llms_enroll_student( $this->user_student, $course );
-		return array( $this->user_student, $course );
+		$student = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		$course  = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
+		llms_enroll_student( $student, $course );
+		return array( $student, $course );
 	}
 
 	/**
