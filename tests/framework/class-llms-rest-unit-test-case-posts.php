@@ -5,13 +5,6 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
- * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
- * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
- * @since 1.0.0-beta.21 Test search.
- * @since 1.0.0-beta.25 Added tests on updating post meta with the same value as the stored one.
- * @since [version] Defined `$this->object_type` as `$this->post_type`.
- *                      Added tests on custom meta and custom rest fields.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';

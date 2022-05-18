@@ -9,8 +9,6 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Unknown.
- * @since [version] Added schema `meta` property.
  */
 class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 

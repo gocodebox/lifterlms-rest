@@ -5,9 +5,6 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
- * @since 1.0.0-beta.18 Added utility to retrieve schema defaults.
- * @since 1.0.0-beta.21 Added tests on the search param.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -329,6 +326,46 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+
+	/**
+	 * Test setting a registered field.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_field() {
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		// On creation.
+		if ( ! method_exists( $this, 'get_creation_args' ) ) {
+			return;
+		}
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->get_route(),
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					$field => "custom_{$field}_value",
+				)
+			)
+		);
+
+		// Check the value
+		$this->assertEquals(
+			"custom_{$field}_value",
+			$response->get_data()[$field]
+		);
+
+	}
+
 	/**
 	 * Get route.
 	 *
@@ -337,8 +374,8 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @param mixed $resource_id.
 	 * @return string
 	 */
-	protected function get_route( $resource_id ) {
-		$route = $this->route . '/' . $resource_id;
+	protected function get_route( $resource_id = null ) {
+		$route = $resource_id ? $this->route . '/' . $resource_id : $this->route;
 		return $route;
 	}
 
