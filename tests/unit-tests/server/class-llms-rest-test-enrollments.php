@@ -47,81 +47,18 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Users creation moved in the `parent::set_up()`.
+	 *
+	 * @return void.
 	 */
 	public function set_up() {
 		parent::set_up();
 
 		global $wpdb;
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}lifterlms_user_postmeta" );
-
 		$this->endpoint = new LLMS_REST_Enrollments_Controller();
-
-		$this->user_allowed = $this->factory->user->create(
-			array(
-				'role' => 'administrator',
-			)
-		);
-
-		$this->user_forbidden = $this->factory->user->create(
-			array(
-				'role' => 'subscriber',
-			)
-		);
-	}
-
-	/**
-	 * Test schema adding additional fields.
-	 *
-	 * @since [version]
-	 *
-	 * @return void
-	 */
-	public function test_schema_with_additional_fields() {
-
-		wp_set_current_user( $this->user_allowed );
-		$this->save_original_rest_additional_fields();
-
-		// Create user.
-		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
-
-		// Create new course.
-		$course_id = $this->factory->course->create();
-
-		llms_enroll_student( $user_id, $course_id, 'test_enrollment_schema' );
-
-		// Register a rest field, for this resource.
-		$field = uniqid();
-		$this->register_rest_field( $field );
-
-		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id );
-		$this->assertArrayHasKey(
-			$field,
-			$response->get_data(),
-			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
-		);
-
-		// Register a field not for this resource.
-		register_rest_field(
-			$this->object_type . uniqid(),
-			$field . '-unrelated',
-			array(
-				'get_callback'    => function ( $object ) use ( $field ) {
-					return '';
-				},
-				'update_callback' => function ( $value, $object ) use ( $field ) {
-				},
-				'schema'          => array(
-					'type' => 'string'
-				),
-			)
-		);
-
-		$response = $this->perform_mock_request( 'GET', $this->parse_route( $user_id ) . '/' . $course_id );
-		$this->assertArrayNotHasKey(
-			$field . '-unrelated',
-			$response->get_data(),
-			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
-		);
 
 	}
 
@@ -829,6 +766,43 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 	}
 
+	/**
+	 * Get route.
+	 *
+	 * @since [version]
+	 *
+	 * @param int $student_id Student identifier.
+	 * @param int $post_id    Post identifier.
+	 * @return string
+	 */
+	protected function get_route( $student_id, $post_id = null ) {
+		$route = $this->parse_route( $student_id);
+		if ( $post_id ) {
+			$route .= '/' . $post_id;
+		}
+		return $route;
+	}
+	/**
+	 * Create resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
+		llms_enroll_student( $this->user_student, $course );
+		return array( $this->user_student, $course );
+	}
+
+	/**
+	 * Parse route.
+	 *
+	 * @since 1.0.0-beta.1
+	 *
+	 * @param int $student_id Student identifier.
+	 * @return string
+	 */
 	private function parse_route( $student_id ) {
 		return str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 	}

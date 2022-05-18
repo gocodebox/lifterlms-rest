@@ -79,23 +79,13 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since [version] Users creation moved in the `parent::set_up()`.
 	 *
 	 * @return void
 	 */
 	public function set_up() {
 
 		parent::set_up();
-		$this->user_allowed = $this->factory->user->create(
-			array(
-				'role' => 'administrator',
-			)
-		);
-
-		$this->user_forbidden = $this->factory->user->create(
-			array(
-				'role' => 'subscriber',
-			)
-		);
 
 		$this->sample_lesson = array(
 			'title'        => array(

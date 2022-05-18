@@ -74,18 +74,6 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 
 		parent::set_up();
 		$this->endpoint     = new LLMS_REST_Courses_Controller();
-		$this->user_allowed = $this->factory->user->create(
-			array(
-				'role' => 'administrator',
-			)
-		);
-
-		$this->user_forbidden = $this->factory->user->create(
-			array(
-				'role' => 'subscriber',
-			)
-		);
-
 		$this->sample_course_args = array(
 			'title'        => array(
 				'rendered' => 'Getting Started with LifterLMS',

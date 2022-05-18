@@ -85,7 +85,17 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		parent::set_up();
 		$this->server = rest_get_server();
+		$this->user_allowed = $this->factory->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
 
+		$this->user_forbidden = $this->factory->user->create(
+			array(
+				'role' => 'subscriber',
+			)
+		);
 	}
 
 	/**
@@ -166,6 +176,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 				array_keys( $this->endpoint->get_collection_params() )
 			);
 		}
+
 	}
 
 	/**
@@ -235,6 +246,103 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
+	 * Test schema adding additional fields.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_additional_fields() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		if ( ! method_exists( $this, 'create_resource' ) ) {
+			$this->markTestSkipped( 'Cannot run this test, please implement `create_resource()` method.' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Create a resource first.
+		$resource_id = $this->create_resource();
+		$resource_id = is_array( $resource_id ) ? $resource_id : array( $resource_id );
+
+		// Register a rest field, for this resource.
+		$allowed_field = $field = uniqid();
+		$this->register_rest_field( $field );
+
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+		$this->assertArrayHasKey(
+			$field,
+			$response->get_data(),
+			$this->object_type
+		);
+
+		// Register a field not for this resource.
+		register_rest_field(
+			$this->object_type . uniqid(),
+			$field . '-unrelated',
+			array(
+				'get_callback'    => function ( $object ) use ( $field ) {
+					return '';
+				},
+				'update_callback' => function ( $value, $object ) use ( $field ) {
+				},
+				'schema'          => array(
+					'type' => 'string'
+				),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+
+		$this->assertArrayNotHasKey(
+			$field . '-unrelated',
+			$response->get_data(),
+			$this->object_type
+		);
+
+		// Register fields which are not allowed because potentially covered by the schema.
+		$schema_properties = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_item_schema_base' )['properties'];
+
+		foreach ( $schema_properties as $property => $schema ) {
+			$this->register_rest_field( $property );
+		}
+
+		// If the registered rest fields above overrode the original schema properties we'd expect
+		// the default values returned in the response.
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+		$data     = $response->get_data();
+		foreach ( $data as $field => $value ) {
+			if ( $field !== $allowed_field ) {
+				$this->assertNotEquals(
+					"{$field}_default_value",
+					$value,
+					$field
+				);
+			}
+		}
+
+	}
+
+	/**
+	 * Get route.
+	 *
+	 * @since [version]
+	 *
+	 * @param mixed $resource_id.
+	 * @return string
+	 */
+	protected function get_route( $resource_id ) {
+		$route = $this->route . '/' . $resource_id;
+		return $route;
+	}
+
+	/**
 	 * Register rest field.
 	 *
 	 * @since [version]
@@ -287,7 +395,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * @return void
 	 */
 	protected function get_registered_rest_field_value( $object, $field ) {
-		return $this->rest_additional_fields[ $this->object_type ] [$field ] ?? '';
+
+		return $this->rest_additional_fields[ $this->object_type ] [$field ] ?? "{$field}_default_value";
+
 	}
 
 	/**
@@ -320,6 +430,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		global $wp_rest_additional_fields;
 		$wp_rest_additional_fields = $this->original_rest_additional_fields;
 		unset( $this->original_rest_additional_fields );
+		unset( $this->rest_additional_fields );
 
 	}
 
@@ -498,6 +609,8 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since [version] Unregister custom rest fields.
+	 *
+	 * @return void
 	 */
 	public function tear_down() {
 

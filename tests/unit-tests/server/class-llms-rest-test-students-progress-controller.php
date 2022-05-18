@@ -28,6 +28,11 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Users creation moved in the `parent::set_up()`.
+	 *
+	 * @return void
 	 */
 	public function set_up() {
 
@@ -37,14 +42,11 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_user_postmeta" );
 
 		$this->endpoint = new LLMS_REST_Students_Progress_Controller();
-
-		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		$this->user_student = $this->factory->student->create();
 
 	}
 
-	private function get_route( $student_id, $post_id = null ) {
+	protected function get_route( $student_id, $post_id = null ) {
 		$route = str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 		if ( $post_id ) {
 			$route .= '/' . $post_id;
@@ -61,59 +63,6 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 		$routes = $this->server->get_routes();
 		$this->assertArrayHasKey( $this->route . '/(?P<post_id>[\d]+)', $routes );
-
-	}
-
-	/**
-	 * Test schema adding additional fields.
-	 *
-	 * @since [version]
-	 *
-	 * @return void
-	 */
-	public function test_schema_with_additional_fields() {
-
-		wp_set_current_user( $this->user_allowed );
-		$this->save_original_rest_additional_fields();
-
-		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
-		$route = $this->get_route( $this->user_student, $course );
-		llms_enroll_student( $this->user_student, $course );
-		$student = llms_get_student( $this->user_student );
-
-		// Register a rest field, for this resource.
-		$field = uniqid();
-		$this->register_rest_field( $field );
-
-		$response = $this->perform_mock_request( 'GET', $route );
-		$this->assertArrayHasKey(
-			$field,
-			$response->get_data(),
-			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
-		);
-
-		// Register a field not for this resource.
-		register_rest_field(
-			$this->object_type . uniqid(),
-			$field . '-unrelated',
-			array(
-				'get_callback'    => function ( $object ) use ( $field ) {
-					return '';
-				},
-				'update_callback' => function ( $value, $object ) use ( $field ) {
-				},
-				'schema'          => array(
-					'type' => 'string'
-				),
-			)
-		);
-
-		$response = $this->perform_mock_request( 'GET', $route );
-		$this->assertArrayNotHasKey(
-			$field . '-unrelated',
-			$response->get_data(),
-			LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'rest_base' )
-		);
 
 	}
 
@@ -459,6 +408,19 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		// Valid course.
 		$this->assertTrue( $this->endpoint->validate_post_id( $course_id, $request, 'post_id' ) );
 
+	}
+
+	/**
+	 * Create resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
+		llms_enroll_student( $this->user_student, $course );
+		return array( $this->user_student, $course );
 	}
 
 }
