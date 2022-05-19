@@ -633,7 +633,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * Additional fields are added through the call to add_additional_fields_schema() below,
 		 * which will call {@see LLMS_REST_Controller::get_additional_fields()}, which requires
-		 * $this->schema to be set.
+		 * `$this->schema` to be set.
 		 */
 		$this->schema = $schema;
 
@@ -680,7 +680,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 */
 	protected function get_additional_fields( $object_type = null ) {
 
-		// We require the $this->schema['properties'] to be set in order to exclude fields.
+		// We require the `$this->schema['properties']` to be set in order to exclude additional fields already covered by our schema definition.
 		if ( ! isset( $this->schema['properties'] ) ) {
 			return parent::get_additional_fields( $object_type );
 		}

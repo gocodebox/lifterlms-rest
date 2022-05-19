@@ -9,13 +9,6 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.10 Added test_set_roles().
- * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
- * @since 1.0.0-beta.12 Added tests on students search.
- *                      Added tests on firing student registration action hook.
- * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
- * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
- * @since [version] Added schema `meta` property.
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 

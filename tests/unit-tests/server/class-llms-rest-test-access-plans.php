@@ -9,11 +9,6 @@
  * @group rest_posts
  *
  * @since 1.0.0-beta.18
- * @since 1.0.0-beta-24 Added tests on updating a free access plan.
- *                      Added tests on `availability_restrictions`.
- *                      Added tests on updating access plan of a product with access plans limit reached.
- * @since 1.0.0-beta.25 Added protected method `create_post_resource()` (override).
- * @since [version] Added protected method `get_creation_args()` (override). removed method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -1280,7 +1275,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @return array
 	 */
 	protected function get_creation_args() {
 

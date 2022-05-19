@@ -8,7 +8,6 @@
  * @group rest_api_keys
  *
  * @since 1.0.0-beta.1
- * @version [version]
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -437,8 +436,24 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * @return mixed The resource identifier.
 	 */
 	protected function create_resource() {
-		$key = $this->get_mock_api_key( 'read_write', $this->user_allowed, false );
+		$args = $this->get_creation_args();
+		$key = $this->get_mock_api_key( $args['permissions'], $args['user_id'], false );
 		return $key->get( 'id' );
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_creation_args() {
+		return array(
+			'user_id'      => $this->user_allowed,
+			'permissions'  => 'read_write',
+			'description'  => 'My API Key',
+		);
 	}
 
 }

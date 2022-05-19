@@ -9,8 +9,6 @@
  * @group rest_webhooks
  *
  * @since 1.0.0-beta.3
- * @since 1.0.0-beta.10 Fixed failing tests.
- * @version [version]
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -499,6 +497,17 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	protected function create_resource() {
 		$hook = $this->get_hook();
 		return $hook->get( 'id' );
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_creation_args() {
+		return $this->get_hook_args();
 	}
 
 }

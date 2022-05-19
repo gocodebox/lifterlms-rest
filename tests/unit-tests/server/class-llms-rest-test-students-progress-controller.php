@@ -8,7 +8,6 @@
  * @group rest_progress
  *
  * @since 1.0.0-beta.1
- * @version [version]
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -25,6 +24,13 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 * @var string
 	 */
 	protected $object_type = 'students-progress';
+
+	/**
+	 * Can the resource be created.
+	 *
+	 * @var boolean
+	 */
+	protected $is_creatable = false;
 
 	/**
 	 * Setup our test server, endpoints, and user info.
@@ -46,7 +52,18 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 
 	}
 
-	protected function get_route( $student_id, $post_id = null ) {
+	/**
+	 * Get route.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Make the student_id optional.
+	 *
+	 * @param int $student_id Student identifier.
+	 * @param int $post_id    Post identifier.
+	 * @return string
+	 */
+	protected function get_route( $student_id = null, $post_id = null ) {
+		$student_id = $student_id ? $student_id : $this->user_student;
 		$route = str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 		if ( $post_id ) {
 			$route .= '/' . $post_id;

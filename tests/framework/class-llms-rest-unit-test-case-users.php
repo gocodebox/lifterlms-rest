@@ -348,7 +348,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @return array
 	 */
 	protected function get_creation_args() {
 		return array(

@@ -74,6 +74,13 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected $object_type;
 
 	/**
+	 * Can the resource be created.
+	 *
+	 * @var boolean
+	 */
+	protected $is_creatable = true;
+
+	/**
 	 * Setup our test server.
 	 *
 	 * @since 1.0.0-beta.1
@@ -336,6 +343,11 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 */
 	public function test_set_registered_field() {
 
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
 		wp_set_current_user( $this->user_allowed );
 		$this->save_original_rest_additional_fields();
 
@@ -343,26 +355,27 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		$field = uniqid();
 		$this->register_rest_field( $field );
 
-		// On creation.
-		if ( ! method_exists( $this, 'get_creation_args' ) ) {
-			return;
-		}
-		$response = $this->perform_mock_request(
-			'POST',
-			$this->get_route(),
-			array_merge(
-				$this->get_creation_args(),
-				array(
-					$field => "custom_{$field}_value",
+		$route = $this->get_route();
+		if ( $this->is_creatable ) {
+			// On creation.
+			$response = $this->perform_mock_request(
+				'POST',
+				$route,
+				array_merge(
+					$this->get_creation_args(),
+					array(
+						$field => "custom_{$field}_value",
+					)
 				)
-			)
-		);
+			);
 
-		// Check the value
-		$this->assertEquals(
-			"custom_{$field}_value",
-			$response->get_data()[$field]
-		);
+			// Check the value.
+			$this->assertEquals(
+				"custom_{$field}_value",
+				$response->get_data()[$field]
+			);
+
+		}
 
 	}
 
@@ -388,16 +401,16 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 */
 	protected function register_rest_field( $field ) {
 
+		$object_type = $this->object_type;
 		register_rest_field(
-			$this->object_type,
+			$object_type,
 			$field,
 			array(
-				'get_callback'    => function ( $object ) use ( $field ) {
-					// Get field as single value from post meta.
-					return $this->get_registered_rest_field_value( $object, $field );
+				'get_callback'    => function ( $object ) use ( $field, $object_type ) {
+					return $this->get_registered_rest_field_value( $object, $field, $object_type );
 				},
-				'update_callback' => function ( $value, $object ) use ( $field ) {
-					return $this->set_registered_rest_field_value( $value, $object, $field );
+				'update_callback' => function ( $value, $object ) use ( $field, $object_type ) {
+					return $this->set_registered_rest_field_value( $value, $object, $field, $object_type );
 				},
 				'schema'          => array(
 					'type'        => 'string',
@@ -418,10 +431,14 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since [version]
 	 *
+	 * @param mixed  $value       The field value.
+	 * @param mixed  $object      The prepared object data.
+	 * @param string $field       The field name.
+	 * @param string $object_type The resource object type.
 	 * @return void
 	 */
-	protected function set_registered_rest_field_value( $value, $object, $field ) {
-		$this->rest_additional_fields[ $this->object_type ][ $field ] = $value;
+	protected function set_registered_rest_field_value( $value, $object, $field, $object_type ) {
+		$this->rest_additional_fields[ $object_type ][ $field ] = $value;
 	}
 
 	/**
@@ -429,12 +446,13 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @since [version]
 	 *
-	 * @return void
+	 * @param mixed  $object      The prepared object data.
+	 * @param string $field       The field name.
+	 * @param string $object_type The resource object type.
+	 * @return mixed
 	 */
-	protected function get_registered_rest_field_value( $object, $field ) {
-
-		return $this->rest_additional_fields[ $this->object_type ] [$field ] ?? "{$field}_default_value";
-
+	protected function get_registered_rest_field_value( $object, $field, $object_type ) {
+		return $this->rest_additional_fields[ $object_type ][$field ] ?? "{$field}_default_value";
 	}
 
 	/**
@@ -467,7 +485,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		global $wp_rest_additional_fields;
 		$wp_rest_additional_fields = $this->original_rest_additional_fields;
 		unset( $this->original_rest_additional_fields );
-		unset( $this->rest_additional_fields );
+		unset( $this->rest_additional_fields[ $this->object_type ] );
 
 	}
 

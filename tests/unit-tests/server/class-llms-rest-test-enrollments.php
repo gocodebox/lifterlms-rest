@@ -53,7 +53,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		global $wpdb;
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}lifterlms_user_postmeta" );
 		$this->endpoint = new LLMS_REST_Enrollments_Controller();
-
+		$this->user_student = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 	}
 
 	/**
@@ -78,8 +78,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
 		wp_set_current_user( $this->user_allowed );
 
-		// Create user.
-		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
+		$user_id = $this->user_student;
 
 		// Create new courses.
 		$course_ids = $this->factory->post->create_many( 5, array( 'post_type' => 'course' ) );
@@ -342,6 +341,19 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Check we're not allowed to get results.
 		$this->assertResponseStatusEquals( 403, $response );
 
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_creation_args() {
+		return array(
+			'post_id' => $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) ),
+		);
 	}
 
 	/**
@@ -769,13 +781,20 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * @param int $post_id    Post identifier.
 	 * @return string
 	 */
-	protected function get_route( $student_id, $post_id = null ) {
+	protected function get_route( $student_id = null, $post_id = null ) {
+		if ( is_null( $student_id) ) {
+			$student_id = $this->user_student;
+			if ( is_null( $post_id ) ) { // When both are null, we guess we're creating an enrollment.
+				$post_id  = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
+			}
+		}
 		$route = $this->parse_route( $student_id );
 		if ( $post_id ) {
 			$route .= '/' . $post_id;
 		}
 		return $route;
 	}
+
 	/**
 	 * Create resource.
 	 *

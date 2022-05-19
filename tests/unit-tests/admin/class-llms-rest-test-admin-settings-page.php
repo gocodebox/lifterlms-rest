@@ -8,7 +8,6 @@
  * @group admin_settings_page
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Admin_Settings_Page extends LLMS_REST_Unit_Test_Case_Base {
 

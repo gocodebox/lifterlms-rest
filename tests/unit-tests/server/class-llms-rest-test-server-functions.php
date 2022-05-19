@@ -8,10 +8,6 @@
  * @group rest_functions
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.12 Test the `llms_rest_authorization_required_error()` function `$check_authenticated` parameter.
- * @since 1.0.0-beta.18 Added tests on `llms_rest_is_*_error()` and `llms_rest_get_all_error_statuses()` functions.
- *                  Added tests on post types validation functions.
- * @version 1.0.0-beta.18
  */
 class LLMS_REST_Test_Server_Functions extends LLMS_REST_Unit_Test_Case_Server {
 
