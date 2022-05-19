@@ -317,8 +317,11 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 			$this->register_rest_field( $property );
 		}
 
-		// If the registered rest fields above overrode the original schema properties we'd expect
-		// the default values returned in the response.
+		/**
+		 * If the registered rest fields above overrode the original schema properties we'd expect
+		 * the default values returned in the response, since we don't allow this then the value
+		 * won't be the default one for the custom field.
+		 */
 		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
 		$data     = $response->get_data();
 		foreach ( $data as $field => $value ) {
@@ -376,6 +379,21 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 			);
 
 		}
+
+		// On update.
+		$response = $this->perform_mock_request(
+			'POST',
+			$route,
+			array(
+				$field => "custom_{$field}_value_updated",
+			)
+		);
+
+		// Check the value.
+		$this->assertEquals(
+			"custom_{$field}_value_updated",
+			$response->get_data()[$field]
+		);
 
 	}
 
