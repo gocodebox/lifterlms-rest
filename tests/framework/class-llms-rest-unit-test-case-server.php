@@ -74,11 +74,18 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected $object_type;
 
 	/**
-	 * Can the resource be created.
+	 * Can the resource be created via REST.
 	 *
 	 * @var boolean
 	 */
-	protected $is_creatable = true;
+	protected $is_creatable_via_rest = true;
+
+	/**
+	 * Update method.
+	 *
+	 * @var string
+	 */
+	protected $update_method = 'POST';
 
 	/**
 	 * Setup our test server.
@@ -336,6 +343,51 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	/**
+	 * Test setting a registered field.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_field_on_creation() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		if ( ! $this->is_creatable_via_rest ) {
+			$this->markTestSkipped( 'This resource doesn\'t have a creation endpoint' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		$route = $this->get_route();
+		$response = $this->perform_mock_request(
+			'POST',
+			$route,
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					$field => "custom_{$field}_value",
+				)
+			)
+		);
+
+		// Check the value.
+		$this->assertEquals(
+			"custom_{$field}_value",
+			$response->get_data()[$field]
+		);
+
+	}
 
 	/**
 	 * Test setting a registered field.
@@ -344,7 +396,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 *
 	 * @return void
 	 */
-	public function test_set_registered_field() {
+	public function test_set_registered_field_on_update() {
 
 		if ( empty( $this->object_type ) ) {
 			$this->markTestSkipped( 'No rest fields to test' );
@@ -358,40 +410,29 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 		$field = uniqid();
 		$this->register_rest_field( $field );
 
-		$route = $this->get_route();
-		if ( $this->is_creatable ) {
-			// On creation.
-			$response = $this->perform_mock_request(
-				'POST',
-				$route,
-				array_merge(
-					$this->get_creation_args(),
-					array(
-						$field => "custom_{$field}_value",
-					)
-				)
-			);
+		// Create a resource first.
+		$resource_id = $this->create_resource();
+		$resource_id = is_array( $resource_id ) ? $resource_id : array( $resource_id );
 
-			// Check the value.
-			$this->assertEquals(
-				"custom_{$field}_value",
-				$response->get_data()[$field]
-			);
-
-			$route = $this->get_route( $response->get_data()['id'] );
-
-		}
-
-		// On update.
 		$response = $this->perform_mock_request(
-			'POST',
-			$route,
-			array(
-				$field => "custom_{$field}_value_updated",
+			'GET',
+			$this->get_route( ...$resource_id )
+		);
+
+		// Resource exists, we can update.
+		$this->assertResponseStatusEquals( 200, $response );
+
+		$response = $this->perform_mock_request(
+			$this->update_method,
+			$this->get_route( ...$resource_id ),
+			array_merge(
+				$this->get_update_args(),
+				array(
+					$field => "custom_{$field}_value_updated",
+				)
 			)
 		);
 
-		// Check the value.
 		$this->assertEquals(
 			"custom_{$field}_value_updated",
 			$response->get_data()[$field]
@@ -698,6 +739,17 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		$this->unregister_rest_additional_fields();
 
+	}
+
+	/**
+	 * Get resource update args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	protected function get_update_args() {
+		return array();
 	}
 
 }

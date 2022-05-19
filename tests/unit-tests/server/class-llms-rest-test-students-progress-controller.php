@@ -26,11 +26,11 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	protected $object_type = 'students-progress';
 
 	/**
-	 * Can the resource be created.
+	 * Can the resource be created via REST.
 	 *
 	 * @var boolean
 	 */
-	protected $is_creatable = false;
+	protected $is_creatable_via_rest = false;
 
 	/**
 	 * Setup our test server, endpoints, and user info.
@@ -438,6 +438,19 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
 		llms_enroll_student( $this->user_student, $course );
 		return array( $this->user_student, $course );
+	}
+
+	/**
+	 * Get resource update args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	protected function get_update_args() {
+		return array(
+			'status' => 'complete',
+		);
 	}
 
 }
