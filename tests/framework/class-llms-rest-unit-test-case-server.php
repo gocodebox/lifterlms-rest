@@ -378,6 +378,8 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 				$response->get_data()[$field]
 			);
 
+			$route = $this->get_route( $response->get_data()['id'] );
+
 		}
 
 		// On update.

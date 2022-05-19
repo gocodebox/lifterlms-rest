@@ -61,6 +61,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Insert the prepared data into the database.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Exclude additional fields registered via `register_rest_field()`.
 	 *
 	 * @param array           $prepared Prepared item data.
 	 * @param WP_REST_Request $request  Request object.
@@ -68,6 +69,8 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 */
 	protected function create_object( $prepared, $request ) {
 
+		// Exclude additional fields registered via `register_rest_field()`.
+		$prepared = array_diff_key( $prepared, $this->get_additional_fields() );
 		return LLMS_REST_API()->webhooks()->create( $prepared );
 
 	}
@@ -374,6 +377,8 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	public function update_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
+		// Exclude additional fields registered via `register_rest_field()`.
+		$prepared = array_diff_key( $prepared, $this->get_additional_fields() );
 		$webhook  = LLMS_REST_API()->webhooks()->update( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
