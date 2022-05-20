@@ -85,6 +85,15 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	);
 
 	/**
+	 * Meta field names to skip (added via `register_meta()`).
+	 *
+	 * @var string[]
+	 */
+	protected $disallowed_meta_fields = array(
+		'_llms_length',
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1

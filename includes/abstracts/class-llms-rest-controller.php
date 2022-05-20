@@ -56,13 +56,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	protected $schema;
 
 	/**
-	 * Prefix for internal meta field keys.
-	 *
-	 * @var string
-	 */
-	protected $meta_prefix = '_llms_';
-
-	/**
 	 * Additional rest field names to skip (added via `register_rest_field()`).
 	 *
 	 * @var string[]
@@ -94,13 +87,16 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return llms_rest_bad_request_error( __( 'Cannot create an existing resource.', 'lifterlms' ) );
 		}
 
-		$item   = $this->prepare_item_for_database( $request );
+		$schema = $this->get_item_schema();
+
+		$item = $this->prepare_item_for_database( $request );
+		// Exclude additional fields registered via `register_rest_field()`.
+		$item   = array_diff_key( $item, $this->get_additional_fields() );
 		$object = $this->create_object( $item, $request );
 		if ( is_wp_error( $object ) ) {
 			return $object;
 		}
 
-		$schema = $this->get_item_schema();
 		$this->object_inserted( $object, $request, $schema, true );
 
 		// Registered via `register_meta()`.
@@ -749,36 +745,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 */
 		$disallowed_meta_fields = apply_filters( "llms_rest_{$object_type}_disallowed_meta_fields", $this->disallowed_meta_fields );
 
-		/**
-		 * Disallow meta fields which are already defined as schema properties:
-		 * E.g. Course's `_llms_length` is a Course meta field registered via `register_meta()` in LifterLMS Blocks,
-		 * but it's already a Course resource schema property, so we don't want it appearing among the resource's meta.
-		 */
-		$disallowed_meta_from_schema_properties = array_map(
-			array( $this, 'meta_name_from_property_name' ),
-			array_keys( $schema['properties'] )
-		);
-
 		$meta = array_diff_key(
 			$meta,
-			array_flip( $disallowed_meta_fields ),
-			array_flip( $disallowed_meta_from_schema_properties )
+			array_flip( $disallowed_meta_fields )
 		);
 
 		return $meta;
 
-	}
-
-	/**
-	 * Return the possible meta name given a property name.
-	 *
-	 * @since [version]
-	 *
-	 * @param string $property_name The schema property name.
-	 * @return string
-	 */
-	protected function meta_name_from_property_name( $property_name ) {
-		return $this->meta_prefix . $property_name;
 	}
 
 	/**
@@ -1028,9 +1001,11 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			return $object;
 		}
 
-		$item   = $this->prepare_item_for_database( $request );
-		$object = $this->update_object( $item, $request );
 		$schema = $this->get_item_schema();
+		$item   = $this->prepare_item_for_database( $request );
+		// Exclude additional fields registered via `register_rest_field()`.
+		$item   = array_diff_key( $item, $this->get_additional_fields() );
+		$object = $this->update_object( $item, $request );
 
 		if ( is_wp_error( $object ) ) {
 			return $object;

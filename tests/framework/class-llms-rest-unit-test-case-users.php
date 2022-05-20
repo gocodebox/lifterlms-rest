@@ -74,13 +74,12 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		);
 
 		// Register meta which are not allowed because potentially covered by the schema.
-		$meta_prefix = LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' );
-		$schema_properties = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_item_schema_base' )['properties'];
+		$disallowed_meta_fields = LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'disallowed_meta_fields' );
 
-		foreach ( $schema_properties as $property => $schema ) {
+		foreach ( $disallowed_meta_fields as $meta_field ) {
 			register_meta(
 				'user',
-				"{$meta_prefix}$property",
+				$meta_field,
 				array(
 					'description'  => 'Meta test',
 					'type'         => 'string',
@@ -116,7 +115,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// Set a meta which is not registered.
-		$meta_key = uniqid( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' ) );
+		$meta_key = uniqid();
 
 		// On creation.
 		$response = $this->perform_mock_request(
@@ -182,7 +181,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// Register a meta, do not show in rest.
-		$meta_key = uniqid( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' ) );
+		$meta_key = uniqid();
 		register_meta(
 			'user',
 			$meta_key,
@@ -261,7 +260,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 		wp_set_current_user( $this->user_allowed );
 
 		// Register a meta and set it.
-		$meta_key = uniqid( LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'meta_prefix' ) );
+		$meta_key = uniqid();
 		register_meta(
 			'user',
 			$meta_key,

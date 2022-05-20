@@ -240,12 +240,15 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 */
 	public function create_item( $request ) {
 
+		$schema = $this->get_item_schema();
+
 		$prepared_item = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $prepared_item ) ) {
 			return $prepared_item;
 		}
 
-		$object = $this->create_llms_post( $prepared_item );
+		$prepared_item = array_diff_key( $prepared_item, $this->get_additional_fields() );
+		$object        = $this->create_llms_post( $prepared_item );
 		if ( is_wp_error( $object ) ) {
 
 			if ( 'db_insert_error' === $object->get_error_code() ) {
@@ -256,8 +259,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 			return $object;
 		}
-
-		$schema = $this->get_item_schema();
 
 		/**
 		 * Fires after a single llms post is created or updated via the REST API.
@@ -544,11 +545,13 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 			return $object;
 		}
 
+		$schema        = $this->get_item_schema();
 		$prepared_item = $this->prepare_item_for_database( $request );
+
 		if ( is_wp_error( $prepared_item ) ) {
 			return $prepared_item;
 		}
-
+		$prepared_item = array_diff_key( $prepared_item, $this->get_additional_fields() );
 		$update_result = empty( array_diff_key( $prepared_item, array_flip( array( 'id' ) ) ) ) ? false : $object->set_bulk( $prepared_item, true, true );
 		if ( is_wp_error( $update_result ) ) {
 
@@ -560,8 +563,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 			return $update_result;
 		}
-
-		$schema = $this->get_item_schema();
 
 		/**
 		 * Fires after a single llms post is created or updated via the REST API.

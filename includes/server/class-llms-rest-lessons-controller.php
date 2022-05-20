@@ -75,6 +75,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 */
 	protected $disallowed_meta_fields = array(
 		'_llms_assignment',
+		'_llms_quiz',
 	);
 
 	/**
