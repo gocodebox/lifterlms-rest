@@ -892,7 +892,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
-	public function prepare_object_data_for_response( $object, $request ) {
+	protected function prepare_object_data_for_response( $object, $request ) {
 
 		// Need to set the global $post because of references to the global $post when e.g. filtering the content, or processing blocks/shortcodes.
 		global $post;

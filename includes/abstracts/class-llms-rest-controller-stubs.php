@@ -199,7 +199,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
-	public function prepare_object_data_for_response( $object, $request ) {
+	protected function prepare_object_data_for_response( $object, $request ) {
 
 		$data            = $this->prepare_object_for_response( $object, $request );
 		$response_fields = $this->get_fields_for_response( $request );
