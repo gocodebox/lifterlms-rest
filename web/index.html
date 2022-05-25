@@ -59,7 +59,8 @@
 	</nav>
     {{redocBody}}
     <script>
-    	if ( -1 !== window.location.href.indexOf( '//gocodebox.github.io' ) ) {
+    	if ( 0 === window.location.href.indexOf( 'https://gocodebox.github.io' ) ||
+	    		( 0 === window.location.href.indexOf( 'http://gocodebox.github.io' ) ) {
     		window.location.replace( 'https://developer.lifterlms.com/rest-api/' + window.location.hash );
     	}
     </script>
