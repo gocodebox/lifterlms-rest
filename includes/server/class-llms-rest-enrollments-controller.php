@@ -731,6 +731,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		 * Filter item schema for the enrollments controller.
 		 *
 		 * @since 1.0.0-beta.10
+		 * @deprecated [version]
 		 *
 		 * @param array $schema Item schema data.
 		 */

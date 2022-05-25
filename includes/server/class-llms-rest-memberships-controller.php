@@ -297,7 +297,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		$schema = apply_filters_deprecated(
+		return apply_filters_deprecated(
 			'llms_rest_membership_item_schema',
 			array(
 				$schema,
@@ -306,7 +306,6 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 			"llms_rest_{$this->get_object_type( $schema )}_item_schema"
 		);
 
-		return $schema;
 	}
 
 	/**

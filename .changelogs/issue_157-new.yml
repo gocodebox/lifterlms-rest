@@ -3,4 +3,4 @@ type: performance
 links:
   - "#73"
 entry: Cache results of get_item_schema on controller instances for performance.
-  Additional schema fields are not cached.
+  Additional schema fields, added via `register_rest_field()`, are not cached.
