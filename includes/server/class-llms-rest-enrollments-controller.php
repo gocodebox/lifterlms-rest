@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.18
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -446,7 +446,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * Check if a given request has access to delete an item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since The`trigger` param is now taken into account.
+	 * @since 1.0.0-beta.10 The`trigger` param is now taken into account.
 	 * @since 1.0.0-beta.18 Provide a more significant error message when trying to delete an item without permissions.
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
@@ -1011,7 +1011,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Filter enrollment to include only fields available for response.
-	 *                     Added `llms_rest_prepare_enrollment_object_response` filter hook.
+	 *                      Added `llms_rest_prepare_enrollment_object_response` filter hook.
 	 *
 	 * @param stdClass        $enrollment Enrollment object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -1111,6 +1111,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added the `trigger` paramater.
+	 * @since [version] Fixed passing a 3rd parameter to `LLMS_Student::enroll()` method.
 	 *
 	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.
@@ -1125,7 +1126,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			case 'enrolled':
 				// The default trigger for the `LLMS_Student::enroll()` method is 'unspecified'.
 				$trigger = $trigger && 'any' !== $trigger ? $trigger : 'unspecified';
-				$updated = $student->enroll( $post_id, 'admin_' . get_current_user_id(), $trigger );
+				$updated = $student->enroll( $post_id, $trigger );
 				break;
 			default:
 				$updated = $student->unenroll( $post_id, $trigger, $status );

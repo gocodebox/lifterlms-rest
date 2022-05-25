@@ -8,12 +8,6 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Added links test.
- * @since 1.0.0-beta.10 Added test on the trigger property/param.
- * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
- * @since 1.0.0-beta.16 Compare dates using timestamps instead of date strings using a 60 second delta.
- * @since 1.0.0-beta.18 Added test on enrollment trigger retrieval.
- * @version 1.0.0-beta.18
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -416,6 +410,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added test on the trigger property/arg.
+	 * @since [version] Fixed expected trigger.
 	 */
 	public function test_update_enrollment_status() {
 
@@ -461,7 +456,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 		$this->assertEquals( 'enrolled', $res_data['status'] );
 		$this->assertEquals( 'enrolled', $student->get_enrollment_status( $course_id, true ) );
-		$this->assertEquals( "admin_{$this->user_allowed}", $student->get_enrollment_trigger( $course_id ) );
+		$this->assertEquals( 'unspecified', $student->get_enrollment_trigger( $course_id ) );
 
 		// Check update passing a trigger.
 		$status   = 'expired';

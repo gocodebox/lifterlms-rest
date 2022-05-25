@@ -1,0 +1,5 @@
+significance: patch
+type: fixed
+links:
+  - "#278"
+entry: Fixed enrollment status update provides two triggers.
