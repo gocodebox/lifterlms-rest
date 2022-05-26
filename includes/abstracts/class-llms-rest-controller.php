@@ -283,6 +283,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Get a single item.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Don't call `rest_ensure_response()` twice, already called in `$this->prepare_item_for_response()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -296,7 +297,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 
 		$response = $this->prepare_item_for_response( $object, $request );
 
-		return rest_ensure_response( $response );
+		return $response;
 
 	}
 
