@@ -61,13 +61,14 @@
     <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.40/bundles/redoc.standalone.js"></script>
     <script>
       Redoc.init(
-        './openapi.json?v=1653060560085',
+        './openapi.json?v=1653591681643',
         {"theme":{"logo":{"gutter":"20px 80px 10px 20px"},"colors":{"primary":{"main":"#466dd8"}},"typography":{"headings":{"fontFamily":"Montserrat","fontWeight":600},"fontFamily":"Montserrat","fontWeight":300,"fontSize":"16px"},"rightPanel":{"backgroundColor":"#222"}},"noAutoAuth":true,"requiredPropsFirst":true,"sortPropsAlphabetically":true,"redocURL":"https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.40/bundles/redoc.standalone.js"},
         document.getElementById("redoc_container")
       );
     </script>
     <script>
-    	if ( -1 !== window.location.href.indexOf( '//gocodebox.github.io' ) ) {
+    	if ( 0 === window.location.href.indexOf( 'https://gocodebox.github.io' ) ||
+	    		( 0 === window.location.href.indexOf( 'http://gocodebox.github.io' ) ) {
     		window.location.replace( 'https://developer.lifterlms.com/rest-api/' + window.location.hash );
     	}
     </script>
