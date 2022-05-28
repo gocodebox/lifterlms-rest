@@ -1,0 +1,5 @@
+significance: patch
+type: fixed
+links:
+  - "#278"
+entry: Removed the extra parameter passed to `LLMS_Student::enroll()` during status updates.
