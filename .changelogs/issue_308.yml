@@ -1,0 +1,6 @@
+significance: patch
+type: fixed
+links:
+  - "#308"
+entry: Fixed an issue that produced the enrollment of the current user into a
+  course when they were trying to enroll an user with ID 0.
