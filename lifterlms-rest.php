@@ -5,19 +5,19 @@
  * @package  LifterLMS_REST_API/Main
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
+ * @version 1.0.0-beta.26
  *
  * Plugin Name: LifterLMS REST API
  * Plugin URI: https://lifterlms.com/
  * Description: REST API feature plugin for the LifterLMS Core.
- * Version: 1.0.0-beta.25
+ * Version: 1.0.0-beta.26
  * Author: LifterLMS
  * Author URI: https://lifterlms.com/
  * Text Domain: lifterlms
  * Domain Path: /i18n
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Requires LifterLMS: 6.5.0
+ * Requires LifterLMS: 7.0.2
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -38,7 +38,7 @@ if ( ! defined( 'LLMS_REST_API_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'LLMS_REST_API_PLUGIN_DIR' ) ) {
-	define( 'LLMS_REST_API_PLUGIN_DIR', dirname( __FILE__ ) . '/' );
+	define( 'LLMS_REST_API_PLUGIN_DIR', __DIR__ . '/' );
 }
 
 if ( ! defined( 'LLMS_REST_API_PLUGIN_URL' ) ) {
