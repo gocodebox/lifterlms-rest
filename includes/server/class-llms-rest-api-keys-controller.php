@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Controller for API Keys.
+ * REST Controller for API Keys
  *
- * @package  LifterLMS_REST/Classes
+ * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta-24
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Added: `get_objects_from_query()`, `get_objects_query()`, `get_pagination_data_from_query()`, `prepare_collection_items_for_response()` methods overrides.
- *                  `get_items()` method abstracted and moved in LLMS_REST_Controller.
+ *                    `get_items()` method abstracted and moved in LLMS_REST_Controller.
  * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
 class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
@@ -427,8 +427,9 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
+	 * @since [version] Made sure only real API Key object's properties are retrieved.
 	 *
-	 * @param LLMS_REST_API_Key $item API Key object.
+	 * @param LLMS_REST_API_Key $item    API Key object.
 	 * @param WP_REST_Request   $request Request object.
 	 * @return WP_REST_Response
 	 */
@@ -439,8 +440,11 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		);
 
 		// Add all readable properties.
-		foreach ( $this->get_fields_for_response( $request ) as $field ) {
-			$data[ $field ] = $item->get( $field );
+		$fields_for_response = $this->get_fields_for_response( $request );
+		foreach ( $this->map_schema_to_database() as $schema_field => $db_field ) {
+			if ( in_array( $schema_field, $fields_for_response, true ) ) {
+				$data[ $schema_field ] = $item->get( $db_field );
+			}
 		}
 
 		// Is a creation request, return consumer key & secret.
