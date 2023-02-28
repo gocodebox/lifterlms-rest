@@ -8,12 +8,6 @@
  * @group rest_enrollments
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Added links test.
- * @since 1.0.0-beta.10 Added test on the trigger property/param.
- * @since 1.0.0-beta.11 Fixed pagination test taking into account course post revisions.
- * @since 1.0.0-beta.16 Compare dates using timestamps instead of date strings using a 60 second delta.
- * @since 1.0.0-beta.18 Added test on enrollment trigger retrieval.
- * @version 1.0.0-beta.18
  */
 class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -62,7 +56,6 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 			)
 		);
 	}
-
 
 	/**
 	 * Test route registration.
@@ -412,10 +405,30 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test producing 404 error when creating a single enrollment.
+	 *
+	 * @since 1.0.0-beta.26
+	 * @return void
+	 */
+	public function test_create_enrollment_404() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		$course_id = $this->factory->post->create( array( 'post_type' => 'course' ) );
+
+		$response = $this->perform_mock_request( 'POST',  $this->parse_route( 0 )  . '/' . $course_id );
+		$date_now = date( 'Y-m-d H:i:s' );
+
+		$this->assertResponseStatusEquals( 404, $response );
+
+	}
+
+	/**
 	 * Test update enrollment status.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added test on the trigger property/arg.
+	 * @since 1.0.0-beta.26 Fixed expected trigger.
 	 */
 	public function test_update_enrollment_status() {
 
@@ -461,7 +474,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		$res_data = $response->get_data();
 		$this->assertEquals( 'enrolled', $res_data['status'] );
 		$this->assertEquals( 'enrolled', $student->get_enrollment_status( $course_id, true ) );
-		$this->assertEquals( "admin_{$this->user_allowed}", $student->get_enrollment_trigger( $course_id ) );
+		$this->assertEquals( 'unspecified', $student->get_enrollment_trigger( $course_id ) );
 
 		// Check update passing a trigger.
 		$status   = 'expired';
@@ -697,8 +710,12 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test protected enrollment_exists method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.26 Added tests on checking enrollment existence of a logged out user by a logged in user
+	 *
+	 * @return void
 	 */
 	public function test_enrollment_exists() {
+
 		$error_code = 'llms_rest_not_found';
 
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( 789, 879 ) );
@@ -723,7 +740,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Enrollment exists because the $student has been enrolled yet.
 		$this->assertTrue( $result );
 
-		// Enenroll Student.
+		// Unenroll Student.
 		llms_unenroll_student( $student_id, $course_id );
 		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( $student_id, $course_id ) );
 		// Enrollment still exists because the $student has been unenrolled but not deleted.
@@ -735,6 +752,13 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 		// Enrollment still exists because the $student has been unenrolled but not deleted.
 		$this->assertWPError( $result );
 		$this->assertWPErrorCodeEquals( $error_code, $result );
+
+		// Check we don't fall back on the current user when a falsy user ID is supplied.
+		wp_set_current_user( $this->user_allowed );
+		$result = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'enrollment_exists', array( 0, $course_id ) );
+		$this->assertWPError( $result );
+		$this->assertWPErrorCodeEquals( $error_code, $result );
+
 	}
 
 	private function parse_route( $student_id ) {

@@ -786,6 +786,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the get_object method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.26 Check we don't fall back on the current user when a falsy user ID is supplied.
 	 *
 	 * @return void
 	 */
@@ -799,6 +800,17 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 		// 404.
 		$error_404 = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_object', array( $id + 1 ) );
+		$this->assertIsWPError( $error_404 );
+		$this->assertWPErrorCodeEquals( 'llms_rest_not_found', $error_404 );
+
+		// 404.
+		$error_404 = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_object', array( 0 ) );
+		$this->assertIsWPError( $error_404 );
+		$this->assertWPErrorCodeEquals( 'llms_rest_not_found', $error_404 );
+
+		// 404: check we don't fall back on the current user when a falsy user ID is supplied.
+		wp_set_current_user( $this->user_admin );
+		$error_404 = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_object', array( 0 ) );
 		$this->assertIsWPError( $error_404 );
 		$this->assertWPErrorCodeEquals( 'llms_rest_not_found', $error_404 );
 
