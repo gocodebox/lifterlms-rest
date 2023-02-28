@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.26
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -264,7 +264,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Don't autoload current user if a falsy user id is supplied.
+	 * @since 1.0.0-beta.26 Don't autoload current user if a falsy user id is supplied.
 	 *
 	 * @param int[] $ids {
 	 *     Numeric array of ids.

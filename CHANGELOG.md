@@ -1,6 +1,19 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.26 - 2023-02-28
+---------------------------
+
+##### Bug Fixes
+
++ Removed the extra parameter passed to `LLMS_Student::enroll()` during status updates. [#278](https://github.com/gocodebox/lifterlms-rest#278)
++ Fixed an issue that produced the enrollment of the current user into a course when they were trying to enroll an user with ID 0. [#308](https://github.com/gocodebox/lifterlms-rest#308)
+
+##### Developer Notes
+
++ The LifterLMS Core minimum required version has been raised to version 7.0.2. [#308](https://github.com/gocodebox/lifterlms-rest#308)
+
+
 v1.0.0-beta.25 - 2022-05-11
 ---------------------------
 

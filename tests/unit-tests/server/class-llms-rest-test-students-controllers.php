@@ -786,7 +786,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the get_object method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Check we don't fall back on the current user when a falsy user ID is supplied.
+	 * @since 1.0.0-beta.26 Check we don't fall back on the current user when a falsy user ID is supplied.
 	 *
 	 * @return void
 	 */

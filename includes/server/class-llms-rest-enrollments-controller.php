@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.26
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -294,7 +294,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Handle the `trigger` param.
-	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
+	 * @since 1.0.0-beta.26 By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -378,7 +378,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
 	 * @since 1.0.0-beta.10 Handle `trigger` param.
-	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
+	 * @since 1.0.0-beta.26 By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -522,7 +522,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added the `trigger` param.
-	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
+	 * @since 1.0.0-beta.26 By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param int     $student_id Student ID.
 	 * @param int     $post_id    The course/membership ID.
@@ -1114,7 +1114,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added the `trigger` paramater.
-	 * @since [version] Fixed passing a 3rd parameter to `LLMS_Student::enroll()` method.
+	 * @since 1.0.0-beta.26 Fixed passing a 3rd parameter to `LLMS_Student::enroll()` method.
 	 *
 	 * @param LLMS_Student $student Student.
 	 * @param integer      $post_id The post id.
