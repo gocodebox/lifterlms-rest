@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -264,6 +264,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Don't autoload current user if a falsy user id is supplied.
 	 *
 	 * @param int[] $ids {
 	 *     Numeric array of ids.
@@ -285,7 +286,11 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
 		$post = llms_get_post( $post_id );
 
-		$student = llms_get_student( $student_id );
+		$student = llms_get_student( $student_id, false );
+
+		if ( ! $student ) {
+			return llms_rest_not_found_error();
+		}
 
 		$obj->student_id = $student_id;
 		$obj->post_id    = $post_id;

@@ -109,7 +109,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Fixed description of the `post_id` path parameter.
 	 * @since 1.0.0-beta.10 Add `trigger` param for create/update/delete endpoints.
-	 *                     Use backticks in args descriptions.
+	 *                      Use backticks in args descriptions.
 	 *
 	 * @return void
 	 */
@@ -294,6 +294,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Handle the `trigger` param.
+	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -306,14 +307,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		// The default trigger for the `LLMS_Student::enroll()` method is 'unspecified'.
 		$trigger = $request['trigger'] && 'any' !== $request['trigger'] ? $request['trigger'] : 'unspecified';
 
-		// check both students and product exist.
-		$student = new LLMS_Student( $user_id );
+		// Check both students and product exist.
+		$student = new LLMS_Student( $user_id, false );
 
 		if ( ! $student->exists() ) {
 			return llms_rest_not_found_error();
 		}
 
-		// can only be enrolled in the following post types.
+		// Can only be enrolled in the following post types.
 		$product_type = get_post_type( $post_id );
 		if ( ! $product_type ) {
 			return llms_rest_not_found_error();
@@ -377,6 +378,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
 	 * @since 1.0.0-beta.10 Handle `trigger` param.
+	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -386,14 +388,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$student_id = (int) $request['id'];
 		$post_id    = (int) $request['post_id'];
 
-		// check both students and product exist.
-		$student = new LLMS_Student( $student_id );
+		// Check both students and product exist.
+		$student = new LLMS_Student( $student_id, false );
 
 		if ( ! $student->exists() ) {
 			return llms_rest_not_found_error();
 		}
 
-		// can only be enrolled in the following post types.
+		// Can only be enrolled in the following post types.
 		$product_type = get_post_type( $post_id );
 		if ( ! $product_type ) {
 			return llms_rest_not_found_error();
@@ -520,6 +522,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added the `trigger` param.
+	 * @since [version] By default don't load the current user if a falsy student ID is supplied.
 	 *
 	 * @param int     $student_id Student ID.
 	 * @param int     $post_id    The course/membership ID.
@@ -529,7 +532,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 */
 	protected function enrollment_exists( $student_id, $post_id, $trigger = 'any', $wp_error = true ) {
 
-		$student = llms_get_student( $student_id );
+		$student = llms_get_student( $student_id, false );
 
 		if ( empty( $student ) ) {
 			return $wp_error ? llms_rest_not_found_error() : false;
