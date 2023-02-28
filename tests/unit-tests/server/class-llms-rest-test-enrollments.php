@@ -407,7 +407,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test producing 404 error when creating a single enrollment.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.26
 	 * @return void
 	 */
 	public function test_create_enrollment_404() {
@@ -428,7 +428,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Added test on the trigger property/arg.
-	 * @since [version] Fixed expected trigger.
+	 * @since 1.0.0-beta.26 Fixed expected trigger.
 	 */
 	public function test_update_enrollment_status() {
 
@@ -710,7 +710,7 @@ class LLMS_REST_Test_Enrollments extends LLMS_REST_Unit_Test_Case_Server {
 	 * Test protected enrollment_exists method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added tests on checking enrollment existence of a logged out user by a logged in user
+	 * @since 1.0.0-beta.26 Added tests on checking enrollment existence of a logged out user by a logged in user
 	 *
 	 * @return void
 	 */

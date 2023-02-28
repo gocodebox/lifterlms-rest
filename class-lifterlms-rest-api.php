@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST_API/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.26
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ final class LifterLMS_REST_API {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0-beta.25';
+	public $version = '1.0.0-beta.26';
 
 	/**
 	 * Constructor.
@@ -200,7 +200,7 @@ final class LifterLMS_REST_API {
 	 *                      Use `llms()` in favor of deprecated `LLMS()`.
 	 * @since 1.0.0-beta.25 Perform some db clean-up on user deletion.
 	 *                      Bump minimum required version to 6.5.0.
-	 * @since [version] Bump minimum required version to 7.0.2.
+	 * @since 1.0.0-beta.26 Bump minimum required version to 7.0.2.
 	 *
 	 * @return void
 	 */

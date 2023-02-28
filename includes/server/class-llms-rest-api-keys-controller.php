@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.26
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -427,7 +427,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
-	 * @since [version] Made sure only real API Key object's properties are retrieved.
+	 * @since 1.0.0-beta.26 Made sure only real API Key object's properties are retrieved.
 	 *
 	 * @param LLMS_REST_API_Key $item    API Key object.
 	 * @param WP_REST_Request   $request Request object.

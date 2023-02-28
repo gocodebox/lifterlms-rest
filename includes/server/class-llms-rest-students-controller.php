@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.26
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -198,7 +198,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * Get object.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Don't autoload current user if a falsy user id is supplied.
+	 * @since 1.0.0-beta.26 Don't autoload current user if a falsy user id is supplied.
 	 *
 	 * @param int $id Object ID.
 	 * @return LLMS_Student|WP_Error
