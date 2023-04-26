@@ -4,5 +4,5 @@ links:
   - "#157"
 entry: Deprecated `llms_rest_enrollments_item_schema` and
   `llms_rest_membership_item_schema` filter hooks in favor of
-  `llms_rest_{$this->get_object_type( $schema )}_item_schema` where the object
+  `llms_rest_$object_type_item_schema` where the object
   type is, respectively, equal to 'students-enrollments' and 'llms-membership'.

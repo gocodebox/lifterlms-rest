@@ -809,7 +809,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 					sprintf(
 						/* translators: %s: register_rest_field */
 						__( 'Please use %s to add new schema properties.', 'lifterlms' ),
-						'register_rest_field'
+						'register_rest_field()'
 					),
 					'[version]'
 				);
