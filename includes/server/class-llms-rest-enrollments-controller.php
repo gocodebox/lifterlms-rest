@@ -5,7 +5,7 @@
  * @package LLMS_REST
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.26
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -295,6 +295,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.10 Handle the `trigger` param.
 	 * @since 1.0.0-beta.26 By default don't load the current user if a falsy student ID is supplied.
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -334,6 +335,12 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$request->set_param( 'context', 'edit' );
 		$enrollment = $this->get_object( $user_id, $post_id );
+
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $enrollment, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
 
 		$response = $this->prepare_item_for_response( $enrollment, $request );
 
@@ -379,6 +386,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.4 Return a bad request error when supplying an invalid date_created param.
 	 * @since 1.0.0-beta.10 Handle `trigger` param.
 	 * @since 1.0.0-beta.26 By default don't load the current user if a falsy student ID is supplied.
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -438,8 +446,14 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$enrollment = $this->get_object( $student_id, $post_id );
 
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $enrollment, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
 		$response = $this->prepare_item_for_response( $enrollment, $request );
-		$response = rest_ensure_response( $response );
+
 		return $response;
 
 	}
@@ -661,13 +675,11 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Enrollments's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.10 Added the `trigger` property.
-	 *                     Added backticks in properties description where convenient.
-	 *                     Added `llms_rest_enrollments_item_schema` filter hook.
+	 * @since [version]
+	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -713,14 +725,22 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			),
 		);
 
+		$object_type = $this->get_object_type( $schema );
+
 		/**
 		 * Filter item schema for the enrollments controller.
 		 *
 		 * @since 1.0.0-beta.10
+		 * @deprecated [version]
 		 *
 		 * @param array $schema Item schema data.
 		 */
-		return apply_filters( 'llms_rest_enrollments_item_schema', $schema );
+		return apply_filters_deprecated(
+			'llms_rest_enrollments_item_schema',
+			array( $schema ),
+			'[version]',
+			"llms_rest_{$this->get_object_type( $schema )}_item_schema"
+		);
 
 	}
 

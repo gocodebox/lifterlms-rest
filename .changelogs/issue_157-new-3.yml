@@ -1,0 +1,7 @@
+significance: patch
+type: dev
+links:
+  - "#157"
+entry: Added `llms_rest_{$object_type}_item_schema` that will allow filtering
+  any resource schema. Additional schema fields, added via `register_rest_field()`, are not
+  included.

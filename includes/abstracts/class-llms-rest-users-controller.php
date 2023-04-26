@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -62,6 +62,17 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 		'url'      => 'user_url',
 		'name'     => 'display_name',
 	);
+
+	/**
+	 * Constructor.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->meta = new WP_REST_User_Meta_Fields();
+	}
 
 	/**
 	 * Determine if the current user has permissions to manage the role(s) present in a request
@@ -232,7 +243,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	}
 
 	/**
-	 * Retrieve an array of allowed user role values
+	 * Retrieve an array of allowed user role values.
 	 *
 	 * @since 1.0.0-beta.1
 	 *
@@ -246,13 +257,13 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	}
 
 	/**
-	 * Get the item schema
+	 * Get the item schema base.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',

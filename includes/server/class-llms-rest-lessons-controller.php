@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -69,11 +69,26 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	protected $parent_id;
 
 	/**
+	 * Meta field names to skip (added via `register_meta()`).
+	 *
+	 * @var string[]
+	 */
+	protected $disallowed_meta_fields = array(
+		'_llms_assignment',
+		'_llms_quiz',
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call parent constructor.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
+
+		parent::__construct();
 
 		$this->collection_params = $this->build_collection_params();
 
@@ -253,7 +268,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 * @param LLMS_Lesson     $lesson        LLMS_Lesson instance.
 	 * @param WP_REST_Request $request       Full details about the request.
 	 * @param array           $schema        The item schema.
-	 * @param array           $prepared_item Array.
+	 * @param array           $prepared_item Prepared item array.
 	 * @param bool            $creating      Optional. Whether we're in creation or update phase. Default true (create).
 	 * @return bool|WP_Error True on success or false if nothing to update, WP_Error object if something went wrong during the update.
 	 */
@@ -298,16 +313,13 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Lesson's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Added the following properties: drip_date, drip_days, drip_method, public, quiz.
-	 *                  Added `llms_rest_lesson_item_schema` filter hook.
-	 * @since 1.0.0-beta.15 Fixed `course_id` property access: it must be read-only.
+	 * @since [version]
 	 *
 	 * @return array Item schema data.
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
-		$schema = parent::get_item_schema();
+		$schema = (array) parent::get_item_schema_base();
 
 		$lesson_properties = array(
 			'parent_id'    => array(
@@ -456,14 +468,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 		$schema['properties'] = array_merge( (array) $schema['properties'], $lesson_properties );
 
-		/**
-		 * Filter item schema for the lessons controller.
-		 *
-		 * @since 1.0.0-beta.7
-		 *
-		 * @param array $schema Item schema data.
-		 */
-		return apply_filters( 'llms_rest_lesson_item_schema', $schema );
+		return $schema;
 
 	}
 
@@ -472,7 +477,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @return array The Enrollments collection parameters.
+	 * @return array The Lessons collection parameters.
 	 */
 	public function get_collection_params() {
 		return $this->collection_params;
@@ -483,7 +488,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param array $collection_params The Enrollments collection parameters to be set.
+	 * @param array $collection_params The Lessons collection parameters to be set.
 	 * @return void
 	 */
 	public function set_collection_params( $collection_params ) {
@@ -516,11 +521,13 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Added following properties to the response object:
-	 *                  public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
-	 *                  Added `llms_rest_prepare_lesson_object_response` filter hook.
+	 *                     public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
+	 *                     Added `llms_rest_prepare_lesson_object_response` filter hook.
 	 * @since 1.0.0-beta.23 Replaced the call to the deprecated `LLMS_Lesson::get_parent_course()` method with `LLMS_Lesson::get( 'parent_course' )`.
+	 *                      public, points, quiz, drip_method, drip_days, drip_date, prerequisite, audio_embed, video_embed.
+	 *                      Added `llms_rest_prepare_lesson_object_response` filter hook.
 	 *
-	 * @param LLMS_Lesson     $lesson Lesson object.
+	 * @param LLMS_Lesson     $lesson  Lesson object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array
 	 */

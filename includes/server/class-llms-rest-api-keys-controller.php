@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.26
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -105,11 +105,11 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the API Key's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -200,9 +200,10 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Create an API Key
+	 * Create an API Key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -216,6 +217,13 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			return $request;
 		}
 
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $key, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
 		$response = $this->prepare_item_for_response( $key, $request );
 		$response->set_status( 201 );
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $key->get( 'id' ) ) ) );
@@ -329,6 +337,7 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	 * Update an API Key
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -342,6 +351,13 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 			return $request;
 		}
 
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $key, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
 		$response = $this->prepare_item_for_response( $key, $request );
 
 		return $response;
@@ -421,48 +437,27 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		return $prepared;
 
 	}
-
 	/**
-	 * Prepare an API Key for a REST response.
+	 * Prepare an object for response.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
-	 * @since 1.0.0-beta.26 Made sure only real API Key object's properties are retrieved.
+	 * @since [version]
 	 *
-	 * @param LLMS_REST_API_Key $item    API Key object.
+	 * @param LLMS_REST_API_Key $object  API Key object.
 	 * @param WP_REST_Request   $request Request object.
-	 * @return WP_REST_Response
+	 * @return array
 	 */
-	public function prepare_item_for_response( $item, $request ) {
+	protected function prepare_object_for_response( $object, $request ) {
 
-		$data = array(
-			'id' => $item->get( 'id' ),
-		);
-
-		// Add all readable properties.
-		$fields_for_response = $this->get_fields_for_response( $request );
-		foreach ( $this->map_schema_to_database() as $schema_field => $db_field ) {
-			if ( in_array( $schema_field, $fields_for_response, true ) ) {
-				$data[ $schema_field ] = $item->get( $db_field );
-			}
-		}
+		$data       = parent::prepare_object_for_response( $object, $request );
+		$data['id'] = $object->get( 'id' );
 
 		// Is a creation request, return consumer key & secret.
 		if ( 'POST' === $request->get_method() && sprintf( '/%1$s/%2$s', $this->namespace, $this->rest_base ) === $request->get_route() ) {
-			$data['consumer_key']    = $item->get( 'consumer_key_one_time' );
-			$data['consumer_secret'] = $item->get( 'consumer_secret' );
+			$data['consumer_key']    = $object->get( 'consumer_key_one_time' );
+			$data['consumer_secret'] = $object->get( 'consumer_secret' );
 		}
 
-		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data    = $this->filter_response_by_context( $data, $context );
-
-		// Wrap the data in a response object.
-		$response = rest_ensure_response( $data );
-
-		// Add links.
-		$response->add_links( $this->prepare_links( $item, $request ) );
-
-		return $response;
+		return $data;
 
 	}
 

@@ -7,8 +7,6 @@
  * @group auth
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.12 Unset the global `current_user` where needed to catch possibile infinite loops on authentication error.
- * @version 1.0.0-beta.12
  */
 class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 

@@ -7,8 +7,6 @@
  * @group webhooks
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.10 Fix failing tests.
- * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 

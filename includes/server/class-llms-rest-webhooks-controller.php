@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version 1.0.0-beta-24
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -63,7 +63,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.3
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function create_object( $prepared, $request ) {
@@ -92,7 +92,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param obj             $object Instance of the object from $this->get_object().
+	 * @param obj             $object  Instance of the object from $this->get_object().
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error true when the object is removed, WP_Error on failure.
 	 */
@@ -126,15 +126,15 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Webhook's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.3
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'api_key',
+			'title'      => 'webhook',
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
@@ -273,7 +273,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param int  $id Webhook ID.
+	 * @param int  $id      Webhook ID.
 	 * @param bool $hydrate If true, pulls all key data from the database on instantiation.
 	 * @return WP_Error|LLMS_REST_API_Key
 	 */
@@ -343,7 +343,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.3
 	 *
-	 * @param LLMS_Abstract_User_Data $object User object.
+	 * @param LLMS_Abstract_User_Data $object  User object.
 	 * @param WP_REST_Request         $request Request object.
 	 * @return array
 	 */
@@ -363,9 +363,10 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Update an Webhook
+	 * Update a Webhook.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -373,13 +374,23 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	public function update_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key      = LLMS_REST_API()->webhooks()->update( $prepared );
+		// Exclude additional fields registered via `register_rest_field()`.
+		$prepared = array_diff_key( $prepared, $this->get_additional_fields() );
+		$webhook  = LLMS_REST_API()->webhooks()->update( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
 		}
 
-		$response = $this->prepare_item_for_response( $key, $request );
+		// Fields registered via `register_rest_field()`.
+		$fields_update = $this->update_additional_fields_for_object( $webhook, $request );
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		$response = $this->prepare_item_for_response( $webhook, $request );
 
 		return $response;
 

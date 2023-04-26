@@ -9,8 +9,6 @@
  * @group rest_webhooks
  *
  * @since 1.0.0-beta.3
- * @since 1.0.0-beta.10 Fixed failing tests.
- * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -20,6 +18,13 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * @var string
 	 */
 	protected $route = '/llms/v1/webhooks';
+
+	/**
+	 * Object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'webhook';
 
 	private function assertIsAWebhook( $data ) {
 
@@ -48,6 +53,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since [version] Users creation moved in the `parent::set_up()`.
 	 *
 	 * @return void
 	 */
@@ -59,8 +65,6 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_webhooks" );
 
 		$this->endpoint = new LLMS_REST_Webhooks_Controller();
-
-		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'instructor' ) );
 
 	}
@@ -481,6 +485,29 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 			$this->assertEquals( $val, $data[ $key ] );
 		}
 
+	}
+
+	/**
+	 * Create resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		$hook = $this->get_hook();
+		return $hook->get( 'id' );
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	public function get_creation_args() {
+		return $this->get_hook_args();
 	}
 
 }

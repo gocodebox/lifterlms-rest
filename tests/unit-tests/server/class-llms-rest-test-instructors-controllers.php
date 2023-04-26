@@ -9,9 +9,8 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
  */
-class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
 	/**
 	 * Route.
@@ -24,6 +23,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Define `$this->object_type` as 'instructor'.
 	 *
 	 * @return void
 	 */
@@ -36,6 +36,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 		$this->user_assistant = $this->factory->user->create( array( 'role' => 'instructors_assistant', ) );
 		$asst = llms_get_instructor( $this->user_assistant )->add_parent( $this->user_instructor );
 		$this->endpoint = new LLMS_REST_Instructors_Controller();
+		$this->object_type = 'instructor';
 
 	}
 
@@ -80,8 +81,9 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added schema `meta` property.
 	 *
-	 * @return [type]
+	 * @return void
 	 */
 	public function test_get_item_schema() {
 
@@ -109,6 +111,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 			'billing_postcode',
 			'billing_country',
 			'avatar_urls',
+			'meta',
 		);
 
 		$this->assertEquals( $props, array_keys( $schema['properties'] ) );
@@ -281,6 +284,17 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Se
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
 
+	}
+
+	/**
+	 * Create user, returns the user ID.
+	 *
+	 * @since [version]
+	 *
+	 * @return int
+	 */
+	protected function create_user() {
+		return $this->factory->user->create( array( 'role' => 'instructor' ) );
 	}
 
 }

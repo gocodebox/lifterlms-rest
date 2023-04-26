@@ -8,7 +8,6 @@
  * @group rest_progress
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
  */
 class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -20,7 +19,26 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	protected $route = '/llms/v1/students/(?P<id>[\d]+)/progress';
 
 	/**
+	 * Object type
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'students-progress';
+
+	/**
+	 * Can the resource be created via REST.
+	 *
+	 * @var boolean
+	 */
+	protected $is_creatable_via_rest = false;
+
+	/**
 	 * Setup our test server, endpoints, and user info.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Users creation moved in the `parent::set_up()`.
+	 *
+	 * @return void
 	 */
 	public function set_up() {
 
@@ -30,14 +48,22 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}lifterlms_user_postmeta" );
 
 		$this->endpoint = new LLMS_REST_Students_Progress_Controller();
-
-		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		$this->user_student = $this->factory->student->create();
 
 	}
 
-	private function get_route( $student_id, $post_id = null ) {
+	/**
+	 * Get route.
+	 *
+	 * @since 1.0.0-beta.1
+	 * @since [version] Make the student_id optional.
+	 *
+	 * @param int $student_id Student identifier.
+	 * @param int $post_id    Post identifier.
+	 * @return string
+	 */
+	protected function get_route( $student_id = null, $post_id = null ) {
+		$student_id = $student_id ? $student_id : $this->user_student;
 		$route = str_replace( '(?P<id>[\d]+)', $student_id, $this->route );
 		if ( $post_id ) {
 			$route .= '/' . $post_id;
@@ -399,6 +425,32 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 		// Valid course.
 		$this->assertTrue( $this->endpoint->validate_post_id( $course_id, $request, 'post_id' ) );
 
+	}
+
+	/**
+	 * Create resource.
+	 *
+	 * @since [version]
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		$course = $this->factory->course->create( array( 'sections' => 1, 'lessons' => 1 ) );
+		llms_enroll_student( $this->user_student, $course );
+		return array( $this->user_student, $course );
+	}
+
+	/**
+	 * Get resource update args.
+	 *
+	 * @since [version]
+	 *
+	 * @return array
+	 */
+	protected function get_update_args() {
+		return array(
+			'status' => 'complete',
+		);
 	}
 
 }

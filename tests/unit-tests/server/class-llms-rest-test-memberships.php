@@ -6,12 +6,9 @@
  *
  * @group REST
  * @group rest_memberships
+ * @group rest_posts
  *
  * @since 1.0.0-beta.9
- * @since 1.0.0-beta.11 Fixed `post_type` property.
- * @version 1.0.0-beta.17
- *
- * @todo do more tests on the membership update/delete.
  */
 class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -55,7 +52,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $generates_revision_on_creation = true;
 
 	/**
+	 * Schema properties.
+	 *
 	 * @since 1.0.0-beta.9
+	 * @since [version] Added `meta` property.
+	 *
 	 * @var array
 	 */
 	private $schema_properties = array(
@@ -73,6 +74,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		'id',
 		'instructors',
 		'menu_order',
+		'meta',
 		'password',
 		'permalink',
 		'ping_status',

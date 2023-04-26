@@ -8,7 +8,6 @@
  * @group api_keys
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_API_Key extends LLMS_REST_Unit_Test_Case_Base {
 

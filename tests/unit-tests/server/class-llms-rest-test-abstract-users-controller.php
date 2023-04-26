@@ -8,7 +8,6 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.1
  */
 class LLMS_REST_Test_Abstract_Users_Controller extends LLMS_REST_Unit_Test_Case_Server {
 

@@ -5,7 +5,6 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.3 Add hook-related mock functions.
  */
 class LLMS_REST_Unit_Test_Case_Base extends LLMS_Unit_Test_Case {
 

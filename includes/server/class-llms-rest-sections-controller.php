@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.23
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -76,10 +76,14 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Call parent constructor.
 	 *
 	 * @param string $content_controller_class Optional. The class name of the content controller. Default 'LLMS_REST_Lessons_Controller'.
+	 * @return void
 	 */
 	public function __construct( $content_controller_class = 'LLMS_REST_Lessons_Controller' ) {
+
+		parent::__construct();
 
 		$this->collection_params        = $this->build_collection_params();
 		$this->content_controller_class = $content_controller_class;
@@ -225,15 +229,15 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 	}
 
 	/**
-	 * Get the Section's schema, conforming to JSON Schema.
+	 * Get the Section's schema base, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	public function get_item_schema_base() {
 
-		$schema = parent::get_item_schema();
+		$schema = parent::get_item_schema_base();
 
 		// Section's title.
 		$schema['properties']['title']['description'] = __( 'Section Title', 'lifterlms' );
