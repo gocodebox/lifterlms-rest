@@ -105,7 +105,7 @@ class LLMS_REST_Admin_Form_Controller {
 			'name'         => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_name' ),
 			'status'       => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_status' ),
 			'topic'        => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_topic' ),
-			'delivery_url' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_delivery_url' ),
+			'delivery_url' => llms_filter_input( INPUT_POST, 'llms_rest_webhook_delivery_url', FILTER_SANITIZE_URL ),
 			'secret'       => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_secret' ),
 		);
 

@@ -266,7 +266,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 		$create = LLMS_REST_API()->keys()->create(
 			array(
 				'description' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_description' ),
-				'user_id'     => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_user_id' ),
+				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
 				'permissions' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_permissions' ),
 			)
 		);
