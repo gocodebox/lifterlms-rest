@@ -5,13 +5,13 @@
  * @package LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin Settings Page: REST API
+ * Admin Settings Page: REST API.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Improve UX of key generation and updates.
@@ -257,6 +257,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to create a new API key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return LLMS_REST_API_Key|WP_Error
 	 */
@@ -264,9 +265,9 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 
 		$create = LLMS_REST_API()->keys()->create(
 			array(
-				'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
-				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
-				'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
+				'description' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_description' ),
+				'user_id'     => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_user_id' ),
+				'permissions' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_permissions' ),
 			)
 		);
 
@@ -282,6 +283,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to save an API key.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @param int $key_id API Key ID.
 	 * @return LLMS_REST_API_Key|WP_Error
@@ -297,9 +299,9 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 		$update = LLMS_REST_API()->keys()->update(
 			array(
 				'id'          => $key_id,
-				'description' => llms_filter_input( INPUT_POST, 'llms_rest_key_description', FILTER_SANITIZE_STRING ),
+				'description' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_description' ),
 				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
-				'permissions' => llms_filter_input( INPUT_POST, 'llms_rest_key_permissions', FILTER_SANITIZE_STRING ),
+				'permissions' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_permissions' ),
 			)
 		);
 

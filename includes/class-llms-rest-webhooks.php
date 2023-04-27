@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.23
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -111,6 +111,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix formatting error.
 	 * @since 1.0.0-beta.17 Remove reference to 'pending_delivery' (unused) column.
+	 * @since [version] Don't use deprecated `strftime` function.
 	 *
 	 * @return array
 	 */
@@ -122,10 +123,16 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 			'failure_count' => 0,
 			'user_id'       => get_current_user_id(),
 			'name'          => sprintf(
-				// Translators: %s = created date.
-				__( 'Webhook created on %s', 'lifterlms' ),
-				// Translators: Date format.
-				strftime( _x( '%b %d, %Y @ %I:%M %p', 'Webhook created on date parsed by strftime', 'lifterlms' ) ) // phpcs:disable WordPress.WP.I18n.UnorderedPlaceholdersText
+				// Translators: %1$s = created date.
+				__( 'Webhook created on %1$s', 'lifterlms' ),
+				wp_date(
+					sprintf(
+						// Translators: %1$s Date format as specified in the WordPress General Settings, %1$s Time format as specified in the WordPress General Settings.
+						_x( '%1$s @ %2$s', 'Webhook created on date parsed by wp_date', 'lifterlms' ),
+						get_option( 'date_format' ),
+						get_option( 'time_format' )
+					)
+				)
 			),
 		);
 
