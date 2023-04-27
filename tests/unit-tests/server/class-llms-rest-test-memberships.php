@@ -112,6 +112,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.9
+	 * @since [version] Updated sample membership args for compatibility with WordPress 6.2.
 	 *
 	 * @return void
 	 */
@@ -127,9 +128,9 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 				'raw'      => 'Gold',
 			),
 			'content'      => array(
-				'rendered' => "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. " .
+				'rendered' => "\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. " .
 				              "Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
-				'raw'      => "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>" .
+				'raw'      => "<!-- wp:heading -->\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>" .
 				              "Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, " .
 				              "omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
 			),

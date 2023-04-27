@@ -52,6 +52,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::set_up()
+	 * @since [version] Updated sample course args for compatibility with WordPress 6.2.
 	 *
 	 * @return void
 	 */
@@ -65,8 +66,8 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 				'raw'      => 'Getting Started with LifterLMS',
 			),
 			'content'      => array(
-				'rendered' => "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
-				'raw'      => "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
+				'rendered' => "\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
+				'raw'      => "<!-- wp:heading -->\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
 			),
 			'date_created' => '2019-05-20 17:22:05',
 			'status'       => 'publish',
