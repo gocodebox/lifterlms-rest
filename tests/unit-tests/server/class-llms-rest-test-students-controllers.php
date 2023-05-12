@@ -701,6 +701,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		// Enroll a student.
 		llms_enroll_student( $args['include'][0], $course );
+		$this->assertTrue( llms_is_user_enrolled( $args['include'][0], $course ) );
 
 		// Return only the non-enrolled students.
 		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
