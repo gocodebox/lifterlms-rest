@@ -36,7 +36,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Users creation moved in the `parent::set_up()`.
+	 * @since 1.0.0-beta.27 Users creation moved in the `parent::set_up()`.
 	 *
 	 * @return void
 	 */
@@ -56,7 +56,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	 * Get route.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Make the student_id optional.
+	 * @since 1.0.0-beta.27 Make the student_id optional.
 	 *
 	 * @param int $student_id Student identifier.
 	 * @param int $post_id    Post identifier.
@@ -430,7 +430,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Create resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return mixed The resource identifier.
 	 */
@@ -443,7 +443,7 @@ class LLMS_REST_Test_Students_Progress_Controller extends LLMS_REST_Unit_Test_Ca
 	/**
 	 * Get resource update args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

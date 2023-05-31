@@ -85,7 +85,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Define `$this->object_type` as 'student'.
+	 * @since 1.0.0-beta.27 Define `$this->object_type` as 'student'.
 	 *
 	 * @return void
 	 */
@@ -735,7 +735,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added `meta` property.
+	 * @since 1.0.0-beta.27 Added `meta` property.
 	 *
 	 * @return void
 	 */
@@ -1337,7 +1337,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	/**
 	 * Create user, returns the user ID.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return int
 	 */

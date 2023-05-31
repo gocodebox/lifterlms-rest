@@ -259,7 +259,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test schema adding additional fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -346,7 +346,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test setting a registered field.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -392,7 +392,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Test setting a registered field.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -443,7 +443,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Get route.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param mixed $resource_id.
 	 * @return string
@@ -456,7 +456,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Register rest field.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -490,7 +490,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Set rest field value.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param mixed  $value       The field value.
 	 * @param mixed  $object      The prepared object data.
@@ -505,7 +505,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Get rest field value.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param mixed  $object      The prepared object data.
 	 * @param string $field       The field name.
@@ -519,7 +519,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Save original rest additional fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -533,7 +533,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Unregister custom rest fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -724,7 +724,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Unset the server.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Unregister custom rest fields.
+	 * @since 1.0.0-beta.27 Unregister custom rest fields.
 	 *
 	 * @return void
 	 */
@@ -744,7 +744,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	/**
 	 * Get resource update args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

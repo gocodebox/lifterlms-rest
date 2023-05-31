@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -76,7 +76,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.12 Call `object_inserted` and `object_completely_inserted` after an object is
 	 *                      respectively inserted in the DB and all its additional fields have been
 	 *                      updated as well (completely inserted).
-	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
+	 * @since 1.0.0-beta.27 Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response
@@ -283,7 +283,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * Get a single item.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Don't call `rest_ensure_response()` twice, already called in `$this->prepare_item_for_response()`.
+	 * @since 1.0.0-beta.27 Don't call `rest_ensure_response()` twice, already called in `$this->prepare_item_for_response()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -605,7 +605,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Get the LLMS REST resource schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
@@ -645,7 +645,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Add custom fields registered via `register_meta()`.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param array $schema The resource item schema.
 	 * @return array
@@ -669,7 +669,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 *
 	 * Overrides wp core `get_additional_fields()` to allow excluding fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param string $object_type The object type.
 	 * @return array Registered additional fields (if any), empty array if none or if the object type could
@@ -689,7 +689,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			 *
 			 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
 			 *
-			 * @since [version]
+			 * @since 1.0.0-beta.27
 			 *
 			 * @param string[] $disallowed_additional_fields Additional rest field names to skip (added via `register_rest_field()`).
 			 */
@@ -719,7 +719,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Exclude disallowed meta fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param array $meta   Array of meta fields.
 	 * @param array $schema The resource item schema. Falls back on the defined schema if not supplied.
@@ -740,7 +740,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.27
 		 *
 		 * @param string[] $disallowed_meta_fields Meta field names to skip (added via `register_meta()`).
 		 */
@@ -758,7 +758,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Get the LLMS REST resource schema base properties, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
@@ -769,7 +769,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Filter the item schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param array $schema The resource item schema.
 	 * @return array
@@ -784,7 +784,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.27
 		 *
 		 * @param array $schema The item schema.
 		 */
@@ -795,7 +795,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 *
 		 * The dynamic portion of the hook name, `$object_type`, refers the object type this controller is responsible for managing.
 		 *
-		 * @since [version]
+		 * @since 1.0.0-beta.27
 		 *
 		 * @param bool  $allow  Whether to allow filtering the item schema to add fields.
 		 * @param array $schema The item schema.
@@ -824,7 +824,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 *
 	 * Overrides wp core `get_object_type()` to allow passing an item schema to retrieve the type from.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param null|array $schema Optional. The item schema. Default `null`.
 	 * @return string
@@ -869,7 +869,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Return early with a WP_Error if `$object` is a WP_Error.
 	 * @since 1.0.0-beta.14 Pass the `$request` parameter to `prepare_links()`.
-	 * @since [version] Move big part of the logic to the new method `LLMS_REST_Controller_Stubs::prepare_object_data_for_response()`.
+	 * @since 1.0.0-beta.27 Move big part of the logic to the new method `LLMS_REST_Controller_Stubs::prepare_object_data_for_response()`.
 	 *
 	 * @param obj             $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.
@@ -990,7 +990,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	 * @since 1.0.0-beta.12 Call `object_inserted` and `object_completely_inserted` after an object is
 	 *                      respectively inserted in the DB and all its additional fields have been
 	 *                      updated as well (completely inserted).
-	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
+	 * @since 1.0.0-beta.27 Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
@@ -1039,7 +1039,7 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 	/**
 	 * Update meta.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param object          $object  Inserted or updated object.
 	 * @param WP_REST_Request $request Request object.

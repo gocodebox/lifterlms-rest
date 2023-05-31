@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -66,7 +66,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -259,7 +259,7 @@ abstract class LLMS_REST_Users_Controller extends LLMS_Rest_Controller {
 	/**
 	 * Get the item schema base.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -257,7 +257,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to create a new API key.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return LLMS_REST_API_Key|WP_Error
 	 */
@@ -283,7 +283,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 * Form handler to save an API key.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @param int $key_id API Key ID.
 	 * @return LLMS_REST_API_Key|WP_Error

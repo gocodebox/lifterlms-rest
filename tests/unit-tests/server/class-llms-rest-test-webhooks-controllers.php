@@ -53,7 +53,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Users creation moved in the `parent::set_up()`.
+	 * @since 1.0.0-beta.27 Users creation moved in the `parent::set_up()`.
 	 *
 	 * @return void
 	 */
@@ -490,7 +490,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Create resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return mixed The resource identifier.
 	 */
@@ -502,7 +502,7 @@ class LLMS_REST_Test_Webhooks_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Get resource creation args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

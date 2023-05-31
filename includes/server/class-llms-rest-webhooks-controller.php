@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.3
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -126,7 +126,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the Webhook's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
@@ -366,7 +366,7 @@ class LLMS_REST_Webhooks_Controller extends LLMS_REST_Controller {
 	 * Update a Webhook.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Handle custom rest fields registered via `register_rest_field()`.
+	 * @since 1.0.0-beta.27 Handle custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_Error|WP_REST_Response

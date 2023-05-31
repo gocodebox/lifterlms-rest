@@ -52,7 +52,7 @@ class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::set_up()
-	 * @since [version] Updated sample course args for compatibility with WordPress 6.2.
+	 * @since 1.0.0-beta.27 Updated sample course args for compatibility with WordPress 6.2.
 	 *
 	 * @return void
 	 */
