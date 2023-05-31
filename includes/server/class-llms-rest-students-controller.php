@@ -1,11 +1,11 @@
 <?php
 /**
- * REST Resource Controller for Students
+ * REST Resource Controller for Students.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.26
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -131,26 +131,18 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	}
 
 	/**
-	 * Get the item schema.
+	 * Get the item schema base.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.12 Added item schema filter.
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	public function get_item_schema_base() {
 
-		$schema                                   = parent::get_item_schema();
+		$schema                                   = parent::get_item_schema_base();
 		$schema['properties']['roles']['default'] = array( 'student' );
 
-		/**
-		 * Filter item schema for the studend controller.
-		 *
-		 * @since 1.0.0-beta.12
-		 *
-		 * @param array $schema Item schema data.
-		 */
-		return apply_filters( 'llms_rest_student_item_schema', $schema );
+		return $schema;
 
 	}
 
@@ -216,7 +208,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return WP_User_Query
 	 */
 	protected function get_objects_query( $prepared, $request ) {
@@ -311,7 +303,7 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 * @return array
 	 */
 	protected function prepare_args_for_total_count_query( $args, $request ) {
-		// run the query again on page one to get a proper total count.
+		// Run the query again on page one to get a proper total count.
 		$args['page'] = 1;
 		return $args;
 	}

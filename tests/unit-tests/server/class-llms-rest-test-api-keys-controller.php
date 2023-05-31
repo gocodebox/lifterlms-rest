@@ -8,7 +8,6 @@
  * @group rest_api_keys
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.7
  */
 class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server {
 
@@ -20,17 +19,23 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	protected $route = '/llms/v1/api-keys';
 
 	/**
+	 * Object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'api_key';
+
+	/**
 	 * Setup test
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Users creation moved in the `parent::set_up()`.
 	 *
 	 * @return void
 	 */
 	public function set_up() {
 
 		parent::set_up();
-		$this->user_allowed = $this->factory->user->create( array( 'role' => 'administrator', ) );
-		$this->user_forbidden = $this->factory->user->create( array( 'role' => 'subscriber', ) );
 		$this->endpoint = new LLMS_REST_API_Keys_Controller();
 
 	}
@@ -421,6 +426,34 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 		$this->assertTrue( $this->endpoint->validate_user_exists( $this->user_allowed ) );
 		$this->assertFalse( $this->endpoint->validate_user_exists( $this->factory->user->create() + 1 ) );
 
+	}
+
+	/**
+	 * Create resource.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		$args = $this->get_creation_args();
+		$key = $this->get_mock_api_key( $args['permissions'], $args['user_id'], false );
+		return $key->get( 'id' );
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return array
+	 */
+	public function get_creation_args() {
+		return array(
+			'user_id'      => $this->user_allowed,
+			'permissions'  => 'read_write',
+			'description'  => 'My API Key',
+		);
 	}
 
 }

@@ -9,14 +9,8 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.10 Added test_set_roles().
- * @since 1.0.0-beta.11 Added tests on custom fields request-db mapping.
- * @since 1.0.0-beta.12 Added tests on students search.
- *                      Added tests on firing student registration action hook.
- * @since 1.0.0-beta.13 Fix test failing on WP core 5.0.
- * @since 1.0.0-beta.14 Update `prepare_links()` to accept a second parameter, `WP_REST_Request`.
  */
-class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Server {
+class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
 	/**
 	 * Route.
@@ -91,6 +85,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Define `$this->object_type` as 'student'.
 	 *
 	 * @return void
 	 */
@@ -101,7 +96,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$this->user_instructor = $this->factory->user->create( array( 'role' => 'instructor', ) );
 		$this->user_subscriber = $this->factory->user->create( array( 'role' => 'subscriber', ) );
 		$this->endpoint = new LLMS_REST_Students_Controller();
-
+		$this->object_type = 'student';
 	}
 
 	/**
@@ -706,6 +701,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 
 		// Enroll a student.
 		llms_enroll_student( $args['include'][0], $course );
+		$this->assertTrue( llms_is_user_enrolled( $args['include'][0], $course ) );
 
 		// Return only the non-enrolled students.
 		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
@@ -739,6 +735,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Added `meta` property.
 	 *
 	 * @return void
 	 */
@@ -768,6 +765,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 			'billing_postcode',
 			'billing_country',
 			'avatar_urls',
+			'meta',
 		);
 
 		$this->assertEquals( $props, array_keys( $schema['properties'] ) );
@@ -1334,6 +1332,17 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Serve
 		$this->assertEquals( $did_registration + 1, did_action( 'llms_rest_student_registered' ) );
 		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_insert_student' ) );
 		$this->assertEquals( $did_registration + 2, did_action( 'llms_rest_after_insert_student' ) );
+	}
+
+	/**
+	 * Create user, returns the user ID.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return int
+	 */
+	protected function create_user() {
+		return $this->factory->student->create();
 	}
 
 }

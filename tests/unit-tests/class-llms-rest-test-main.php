@@ -7,7 +7,6 @@
  * @group main
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25 Added tests on keys being deleted on user deletion.
  */
 class LLMS_REST_Test_Main extends LLMS_REST_Unit_Test_Case_Base {
 

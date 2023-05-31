@@ -8,8 +8,6 @@
  * @group admin_forms
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.10 Fixed failing tests.
- * @version 1.0.0-beta.10
  */
 class LLMS_REST_Test_Admin_Form_Controller extends LLMS_REST_Unit_Test_Case_Base {
 

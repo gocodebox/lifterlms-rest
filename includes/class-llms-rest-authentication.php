@@ -186,6 +186,7 @@ class LLMS_REST_Authentication {
 	 * Locate credentials in the $_SERVER superglobal.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @param string $key_var Variable name for the consumer key.
 	 * @param string $secret_var Variable name for the consumer secret.
@@ -194,8 +195,8 @@ class LLMS_REST_Authentication {
 	private function get_credentials( $key_var, $secret_var ) {
 
 		// Use `filter_var()` instead of `llms_filter_input()` due to PHP bug with `filter_input()`: https://bugs.php.net/bug.php?id=49184.
-		$key    = isset( $_SERVER[ $key_var ] ) ? filter_var( wp_unslash( $_SERVER[ $key_var ] ), FILTER_SANITIZE_STRING ) : null;
-		$secret = isset( $_SERVER[ $secret_var ] ) ? filter_var( wp_unslash( $_SERVER[ $secret_var ] ), FILTER_SANITIZE_STRING ) : null;
+		$key    = isset( $_SERVER[ $key_var ] ) ? sanitize_text_field( filter_var( wp_unslash( $_SERVER[ $key_var ] ) ) ) : null;
+		$secret = isset( $_SERVER[ $secret_var ] ) ? sanitize_text_field( filter_var( wp_unslash( $_SERVER[ $secret_var ] ) ) ) : null;
 
 		if ( ! $key || ! $secret ) {
 			return false;

@@ -1,6 +1,28 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.27 - 2023-05-31
+---------------------------
+
+##### Updates and Enhancements
+
++ Replaced use of deprecated `strftime()`.
++ Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+
+##### Developer Notes
+
++ Fixed unit tests on WordPress 6.2.
++ Allow all the resources to be extended using `register_rest_field()`. [#157](https://github.com/gocodebox/lifterlms-rest#157)
++ Added the ability for all the `WP_Post` and `WP_User` based resources to manage custom meta registered via `register_meta()`. [#157](https://github.com/gocodebox/lifterlms-rest#157)
++ Added `llms_rest_{$object_type}_item_schema` that will allow filtering any resource schema. Additional schema fields, added via `register_rest_field()`, are not included. [#157](https://github.com/gocodebox/lifterlms-rest#157)
++ Added `llms_rest_allow_filtering_{$object_type}_item_schema_to_add_fields` filter hook. It allows adding additional fields using the filter hook `llms_rest_{$object_type}_item_schema` without warnings. By default additional fields should be added via `register_rest_field()`. [#157](https://github.com/gocodebox/lifterlms-rest#157)
++ Deprecated `llms_rest_enrollments_item_schema` and `llms_rest_membership_item_schema` filter hooks in favor of `llms_rest_$object_type_item_schema` where the object type is, respectively, equal to 'students-enrollments' and 'llms-membership'. [#157](https://github.com/gocodebox/lifterlms-rest#157)
+
+##### Performance Improvements
+
++ Cache results of get_item_schema on controller instances for performance. Additional schema fields, added via `register_rest_field()`, are not cached. [#73](https://github.com/gocodebox/lifterlms-rest#73)
+
+
 v1.0.0-beta.26 - 2023-02-28
 ---------------------------
 

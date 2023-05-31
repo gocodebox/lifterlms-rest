@@ -5,13 +5,13 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.25
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Courses_Controller class
+ * LLMS_REST_Courses_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.7 Make `access_opens_date`, `access_closes_date`, `enrollment_opens_date`, `enrollment_closes_date` nullable.
@@ -62,25 +62,48 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected $post_type = 'course';
 
 	/**
-	 * Enrollments controller
+	 * Enrollments controller.
 	 *
 	 * @var LLMS_REST_Enrollments_Controller
 	 */
 	protected $enrollments_controller;
 
 	/**
-	 * Sections controller
+	 * Sections controller.
 	 *
 	 * @var LLMS_REST_Sections_Controller
 	 */
 	protected $sections_controller;
 
 	/**
+	 * Additional rest field names to skip (added via `register_rest_field()`).
+	 *
+	 * @var string[]
+	 */
+	protected $disallowed_additional_fields = array(
+		'visibility', // It maps to `catalog_visibility` in the resource schema.
+	);
+
+	/**
+	 * Meta field names to skip (added via `register_meta()`).
+	 *
+	 * @var string[]
+	 */
+	protected $disallowed_meta_fields = array(
+		'_llms_length',
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Call parent constructor.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
+
+		parent::__construct();
 
 		$this->enrollments_controller = new LLMS_REST_Enrollments_Controller();
 		$this->enrollments_controller->set_collection_params( $this->get_enrollments_collection_params() );
@@ -140,10 +163,11 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'schema' => array( $this->sections_controller, 'get_public_item_schema' ),
 			)
 		);
+
 	}
 
 	/**
-	 * Retrieve an ID from the object
+	 * Retrieve an ID from the object.
 	 *
 	 * @since 1.0.0-beta.7
 	 *
@@ -160,16 +184,13 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Course's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.8 Renamed `sales_page_page_type` and `sales_page_page_url` properties, respectively to `sales_page_type` and `sales_page_url` according to the specs.
-	 *                     Add missing quotes in enrollment/access default messages shortcodes.
-	 * @since 1.0.0-beta.9 Make sure instructors list is either not empty and composed by real user ids.
-	 *                     Added `llms_rest_course_item_schema` filter hook.
+	 * @since 1.0.0-beta.27
+	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
-		$schema = parent::get_item_schema();
+		$schema = (array) parent::get_item_schema_base();
 
 		$course_properties = array(
 			'catalog_visibility'        => array(
@@ -517,14 +538,7 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$schema['properties'] = array_merge( (array) $schema['properties'], $course_properties );
 
-		/**
-		 * Filter item schema for the course controller.
-		 *
-		 * @since 1.0.0-beta.9
-		 *
-		 * @param array $schema Item schema data.
-		 */
-		return apply_filters( 'llms_rest_course_item_schema', $schema );
+		return $schema;
 
 	}
 

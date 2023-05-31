@@ -1,32 +1,28 @@
 <?php
 /**
- * LifterLMS REST API witServer Unit Test Case Bootstrap
+ * LifterLMS REST API Posts Unit Test Case Bootstrap
  *
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Fixed some expected properties not tested at all, and wrong excerpts.
- * @since 1.0.0-beta.8 Added tests on getting links to terms based on the current user caps.
- * @since 1.0.0-beta.19 Added tests on filtering the collection by post status.
- * @since 1.0.0-beta.21 Test search.
- * @since 1.0.0-beta.25 Added tests on updating post meta with the same value as the stored one.
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
 
 class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 
-    /**
+	/**
 	 * db post type of the model being tested
-	 * @var  string
+	 *
+	 * @var string
 	 */
-    protected $post_type = '';
+	protected $post_type = '';
 
 	/**
-	 *
 	 * Setup.
 	 *
 	 * @since 1.0.0-beta.7
+	 * @since 1.0.0-beta.27 Define `$this->object_type` as `$this->post_type`.
 	 */
 	public function set_up() {
 		parent::set_up();
@@ -39,6 +35,9 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 		// clean the db from this post type
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'posts', array( 'post_type' => $this->post_type ) );
+
+		$this->object_type = $this->post_type;
+
 	}
 
 
@@ -456,29 +455,465 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	}
 
 	/**
+	 * Test item schema with meta fields.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_meta() {
+
+		global $wp_meta_keys;
+		$original_wp_meta_keys = $wp_meta_keys;
+
+		// Create a post first.
+		wp_set_current_user( $this->user_allowed );
+		$post      = $this->create_post_resource();
+		$llms_post = llms_get_post( $post );
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+			// Nothing else to do.
+			return;
+		} else {
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Register a meta, show it in rest.
+		register_meta(
+			'post',
+			'meta_test',
+			array(
+				'description'       => 'Meta test',
+				'object_subtype'    => $this->object_type,
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => true,
+			)
+		);
+
+		// Register a meta, do not show in rest.
+		register_meta(
+			'post',
+			'meta_test_not_in_rest',
+			array(
+				'description'       => 'Meta test',
+				'object_subtype'    => $this->object_type,
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => false,
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$this->assertEquals(
+			array( 'meta_test' ),
+			array_keys( $response->get_data()['meta'] ),
+			$this->post_type
+		);
+
+		// Register meta which are not allowed because potentially covered by the schema.
+		$disallowed_meta_fields = LLMS_Unit_Test_Util::get_private_property_value( $this->endpoint, 'disallowed_meta_fields' );
+
+		foreach ( $disallowed_meta_fields as $meta_field ) {
+			register_meta(
+				'post',
+				$meta_field,
+				array(
+					'description'       => 'Meta test',
+					'object_subtype'    => $this->object_type,
+					'type'              => 'string',
+					'single'            => true,
+					'show_in_rest'      => true,
+				)
+			);
+		}
+
+		// Meta above not registered.
+		$response = $this->perform_mock_request( 'GET', $this->route . '/' . $llms_post->get( 'id' ) );
+		$this->assertEquals(
+			array( 'meta_test' ),
+			array_keys( $response->get_data()['meta'] ),
+			$this->post_type
+		);
+
+		// Unregister meta.
+		$wp_meta_keys = $original_wp_meta_keys;
+
+	}
+
+	/**
+	 * Test setting an unregistered meta.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_set_unregistered_meta() {
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Set a meta which is not registered.
+		$meta_key = uniqid();
+
+		// On creation.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					'meta' => array(
+						$meta_key => 'whatever',
+					),
+				)
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+		} else {
+			// Otherwise check the meta `$meta_key` isn't included in the response.
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Check there's no post meta set.
+		$this->assertEmpty(
+			get_post_meta( $response->get_data()['id'], $meta_key ),
+			$this->post_type
+		);
+
+		// Update.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'meta' => array(
+					$meta_key => 'whatever update',
+				),
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+		} else {
+			// Otherwise check the meta `$meta_key` isn't included in the response.
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Check there's no post meta set.
+		$this->assertEmpty(
+			get_post_meta( $response->get_data()['id'], $meta_key ),
+			$this->post_type
+		);
+
+	}
+
+	/**
+	 * Test setting a registered meta not available in rest.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_meta_not_in_rest() {
+
+		global $wp_meta_keys;
+		$original_wp_meta_keys = $wp_meta_keys;
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Register a meta, do not show in rest.
+		$meta_key = uniqid();
+		register_meta(
+			'post',
+			$meta_key,
+			array(
+				'description'       => 'Meta test',
+				'object_subtype'    => $this->object_type,
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => false,
+			)
+		);
+
+		// On creation.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					'meta' => array(
+						$meta_key => 'whatever',
+					),
+				)
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+		} else {
+			// Otherwise check the meta `$meta_key` isn't included in the response.
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Check there's no post meta set.
+		$this->assertEmpty(
+			get_post_meta( $response->get_data()['id'], $meta_key ),
+			$this->post_type
+		);
+
+		// Update.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'meta' => array(
+					$meta_key => 'whatever update',
+				),
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+		} else {
+			// Otherwise check the meta `$meta_key` isn't included in the response.
+			$this->assertEquals(
+				array(),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+		}
+
+		// Check there's no post meta set.
+		$this->assertEmpty(
+			get_post_meta( $response->get_data()['id'], $meta_key ),
+			$this->post_type
+		);
+
+		// Unregister meta.
+		$wp_meta_keys = $original_wp_meta_keys;
+
+	}
+
+	/**
+	 * Test setting a registered meta.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_meta() {
+
+		global $wp_meta_keys;
+		$original_wp_meta_keys = $wp_meta_keys;
+
+		wp_set_current_user( $this->user_allowed );
+
+		// Register a meta and set it.
+		$meta_key = uniqid();
+		register_meta(
+			'post',
+			$meta_key,
+			array(
+				'description'    => 'Meta test',
+				'object_subtype' => $this->post_type,
+				'type'           => 'string',
+				'single'         => true,
+				'show_in_rest'   => true,
+				'auth_callback'  => '__return_true',
+			)
+		);
+
+		// On creation.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					'meta' => array(
+						$meta_key => 'whatever',
+					),
+				)
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data()
+			);
+
+			// Check there's no post meta set.
+			$this->assertEmpty(
+				get_post_meta( $response->get_data()['id'], $meta_key ),
+				$this->post_type
+			);
+
+		} else {
+			// Otherwise check the meta `$meta_key` is included in the response.
+			$this->assertEquals(
+				array(
+					$meta_key => 'whatever',
+				),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+
+			// Check the meta.
+			$this->assertEquals(
+				'whatever',
+				get_post_meta( $response->get_data()['id'], $meta_key, true ),
+				$this->post_type
+			);
+		}
+
+		// Update.
+		$response = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $response->get_data()['id'],
+			array(
+				'meta' => array(
+					$meta_key => 'whatever update',
+				),
+			)
+		);
+
+		// If this post type doesn't support custom fields, we don't expect the 'meta' to be added to the schema.
+		if ( ! post_type_supports( $this->post_type, 'custom-fields' ) ) {
+			$this->assertArrayNotHasKey(
+				'meta',
+				$response->get_data(),
+				$this->post_type
+			);
+			// Check there's no post meta set.
+			$this->assertEmpty(
+				get_post_meta( $response->get_data()['id'], $meta_key ),
+				$this->post_type
+			);
+		} else {
+			// Otherwise check the meta `$meta_key` is included in the response.
+			$this->assertEquals(
+				array(
+					$meta_key => 'whatever update',
+				),
+				$response->get_data()['meta'],
+				$this->post_type
+			);
+
+			// Check the meta.
+			$this->assertEquals(
+				'whatever update',
+				get_post_meta( $response->get_data()['id'], $meta_key, true ),
+				$this->post_type
+			);
+		}
+
+		// Unregister meta.
+		$wp_meta_keys = $original_wp_meta_keys;
+
+	}
+
+	/**
+	 * Create resource.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return mixed The resource identifier.
+	 */
+	protected function create_resource() {
+		return $this->create_post_resource()->ID;
+	}
+
+	/**
 	 * Create a resource for this post type.
 	 *
 	 * @since 1.0.0-beta.25
+	 * @since 1.0.0-beta.27 Log in before creating the post, log out right after.
+	 *                      Retrieve creation args via `self::get_creation_args()`.
 	 *
 	 * @param array $params Array of request params.
 	 * @return WP_Post
 	 */
 	protected function create_post_resource( $params = array() ) {
 
+		$log_user = ! is_user_logged_in();
+		if ( $log_user ) {
+			wp_set_current_user( $this->user_allowed );
+		}
+
 		$resource = $this->perform_mock_request(
 			'POST',
 			$this->route,
 			array_merge(
-				array(
-					'title'   => sprintf( "A %s", $this->post_type ),
-					'content' => sprintf( "Some content for %s", $this->post_type ),
-				),
+				$this->get_creation_args(),
 				$params
 			)
 		);
 
-		return get_post( $resource->get_data()['id'] );
+		$post = get_post( $resource->get_data()['id'] );
 
+		if ( $log_user ) {
+			wp_set_current_user( 0 );
+		}
+
+		return $post;
+
+	}
+
+	/**
+	 * Get resource creation args.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return array
+	 */
+	protected function get_creation_args() {
+		return array(
+			'title'   => sprintf( "A %s", $this->post_type ),
+			'content' => sprintf( "Some content for %s", $this->post_type ),
+		);
 	}
 
 	/**

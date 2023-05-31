@@ -5,9 +5,6 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.11 Fixed pagination test taking into account post revisions.
- * @since 1.0.0-beta.18 Added utility to retrieve schema defaults.
- * @since 1.0.0-beta.21 Added tests on the search param.
  */
 
 class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
@@ -54,6 +51,43 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	protected $defaults;
 
 	/**
+	 * Original registered rest fields.
+	 *
+	 * @var string
+	 */
+	protected $original_rest_fields;
+
+	/**
+	 * Additional rest fields.
+	 *
+	 * @var array
+	 */
+	protected $rest_additional_fields;
+
+	/**
+	 * Object type.
+	 *
+	 * Used by meta and additional rest fields.
+	 *
+	 * @var string
+	 */
+	protected $object_type;
+
+	/**
+	 * Can the resource be created via REST.
+	 *
+	 * @var boolean
+	 */
+	protected $is_creatable_via_rest = true;
+
+	/**
+	 * Update method.
+	 *
+	 * @var string
+	 */
+	protected $update_method = 'POST';
+
+	/**
 	 * Setup our test server.
 	 *
 	 * @since 1.0.0-beta.1
@@ -62,7 +96,17 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		parent::set_up();
 		$this->server = rest_get_server();
+		$this->user_allowed = $this->factory->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
 
+		$this->user_forbidden = $this->factory->user->create(
+			array(
+				'role' => 'subscriber',
+			)
+		);
 	}
 
 	/**
@@ -143,6 +187,7 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 				array_keys( $this->endpoint->get_collection_params() )
 			);
 		}
+
 	}
 
 	/**
@@ -208,6 +253,300 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		// Fine.
 		$this->assertResponseStatusEquals( 200, $response );
+
+	}
+
+	/**
+	 * Test schema adding additional fields.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_schema_with_additional_fields() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		if ( ! method_exists( $this, 'create_resource' ) ) {
+			$this->markTestSkipped( 'Cannot run this test, please implement `create_resource()` method.' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Create a resource first.
+		$resource_id = $this->create_resource();
+		$resource_id = is_array( $resource_id ) ? $resource_id : array( $resource_id );
+
+		// Register a rest field, for this resource.
+		$allowed_field = $field = uniqid();
+		$this->register_rest_field( $field );
+
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+		$this->assertArrayHasKey(
+			$field,
+			$response->get_data(),
+			$this->object_type
+		);
+
+		// Register a field not for this resource.
+		register_rest_field(
+			$this->object_type . uniqid(),
+			$field . '-unrelated',
+			array(
+				'get_callback'    => function ( $object ) use ( $field ) {
+					return '';
+				},
+				'update_callback' => function ( $value, $object ) use ( $field ) {
+				},
+				'schema'          => array(
+					'type' => 'string'
+				),
+			)
+		);
+
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+
+		$this->assertArrayNotHasKey(
+			$field . '-unrelated',
+			$response->get_data(),
+			$this->object_type
+		);
+
+		// Register fields which are not allowed because potentially covered by the schema.
+		$schema_properties = LLMS_Unit_Test_Util::call_method( $this->endpoint, 'get_item_schema_base' )['properties'];
+
+		foreach ( $schema_properties as $property => $schema ) {
+			$this->register_rest_field( $property );
+		}
+
+		/**
+		 * If the registered rest fields above overrode the original schema properties we'd expect
+		 * the default values returned in the response, since we don't allow this then the value
+		 * won't be the default one for the custom field.
+		 */
+		$response = $this->perform_mock_request( 'GET', $this->get_route( ...$resource_id ) );
+		$data     = $response->get_data();
+		foreach ( $data as $field => $value ) {
+			if ( $field !== $allowed_field ) {
+				$this->assertNotEquals(
+					"{$field}_default_value",
+					$value,
+					$field
+				);
+			}
+		}
+
+	}
+
+	/**
+	 * Test setting a registered field.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_field_on_creation() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		if ( ! $this->is_creatable_via_rest ) {
+			$this->markTestSkipped( 'This resource doesn\'t have a creation endpoint' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		$route = $this->get_route();
+		$response = $this->perform_mock_request(
+			'POST',
+			$route,
+			array_merge(
+				$this->get_creation_args(),
+				array(
+					$field => "custom_{$field}_value",
+				)
+			)
+		);
+
+		// Check the value.
+		$this->assertEquals(
+			"custom_{$field}_value",
+			$response->get_data()[$field]
+		);
+
+	}
+
+	/**
+	 * Test setting a registered field.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	public function test_set_registered_field_on_update() {
+
+		if ( empty( $this->object_type ) ) {
+			$this->markTestSkipped( 'No rest fields to test' );
+			return;
+		}
+
+		wp_set_current_user( $this->user_allowed );
+		$this->save_original_rest_additional_fields();
+
+		// Register a rest field, for this resource.
+		$field = uniqid();
+		$this->register_rest_field( $field );
+
+		// Create a resource first.
+		$resource_id = $this->create_resource();
+		$resource_id = is_array( $resource_id ) ? $resource_id : array( $resource_id );
+
+		$response = $this->perform_mock_request(
+			'GET',
+			$this->get_route( ...$resource_id )
+		);
+
+		// Resource exists, we can update.
+		$this->assertResponseStatusEquals( 200, $response );
+
+		$response = $this->perform_mock_request(
+			$this->update_method,
+			$this->get_route( ...$resource_id ),
+			array_merge(
+				$this->get_update_args(),
+				array(
+					$field => "custom_{$field}_value_updated",
+				)
+			)
+		);
+
+		$this->assertEquals(
+			"custom_{$field}_value_updated",
+			$response->get_data()[$field]
+		);
+
+	}
+
+	/**
+	 * Get route.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @param mixed $resource_id.
+	 * @return string
+	 */
+	protected function get_route( $resource_id = null ) {
+		$route = $resource_id ? $this->route . '/' . $resource_id : $this->route;
+		return $route;
+	}
+
+	/**
+	 * Register rest field.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	protected function register_rest_field( $field ) {
+
+		$object_type = $this->object_type;
+		register_rest_field(
+			$object_type,
+			$field,
+			array(
+				'get_callback'    => function ( $object ) use ( $field, $object_type ) {
+					return $this->get_registered_rest_field_value( $object, $field, $object_type );
+				},
+				'update_callback' => function ( $value, $object ) use ( $field, $object_type ) {
+					return $this->set_registered_rest_field_value( $value, $object, $field, $object_type );
+				},
+				'schema'          => array(
+					'type'        => 'string',
+					'arg_options' => array(
+						'sanitize_callback' => function ( $value ) {
+							// Make the value safe for storage.
+							return sanitize_text_field( $value );
+						},
+					),
+				),
+			)
+		);
+
+	}
+
+	/**
+	 * Set rest field value.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @param mixed  $value       The field value.
+	 * @param mixed  $object      The prepared object data.
+	 * @param string $field       The field name.
+	 * @param string $object_type The resource object type.
+	 * @return void
+	 */
+	protected function set_registered_rest_field_value( $value, $object, $field, $object_type ) {
+		$this->rest_additional_fields[ $object_type ][ $field ] = $value;
+	}
+
+	/**
+	 * Get rest field value.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @param mixed  $object      The prepared object data.
+	 * @param string $field       The field name.
+	 * @param string $object_type The resource object type.
+	 * @return mixed
+	 */
+	protected function get_registered_rest_field_value( $object, $field, $object_type ) {
+		return $this->rest_additional_fields[ $object_type ][$field ] ?? "{$field}_default_value";
+	}
+
+	/**
+	 * Save original rest additional fields.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	protected function save_original_rest_additional_fields() {
+
+		global $wp_rest_additional_fields;
+		$this->original_rest_additional_fields = $wp_rest_additional_fields;
+
+	}
+
+	/**
+	 * Unregister custom rest fields.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return void
+	 */
+	protected function unregister_rest_additional_fields() {
+
+		if ( ! isset( $this->original_rest_additional_fields ) ) {
+			return;
+		}
+
+		global $wp_rest_additional_fields;
+		$wp_rest_additional_fields = $this->original_rest_additional_fields;
+		unset( $this->original_rest_additional_fields );
+		unset( $this->rest_additional_fields[ $this->object_type ] );
 
 	}
 
@@ -385,6 +724,9 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 	 * Unset the server.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Unregister custom rest fields.
+	 *
+	 * @return void
 	 */
 	public function tear_down() {
 
@@ -395,6 +737,19 @@ class LLMS_REST_Unit_Test_Case_Server extends LLMS_REST_Unit_Test_Case_Base {
 
 		$wp_rest_server = null;
 
+		$this->unregister_rest_additional_fields();
+
+	}
+
+	/**
+	 * Get resource update args.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @return array
+	 */
+	protected function get_update_args() {
+		return array();
 	}
 
 }

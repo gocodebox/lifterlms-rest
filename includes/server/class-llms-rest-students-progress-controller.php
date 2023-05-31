@@ -2,10 +2,10 @@
 /**
  * REST Controller for Student Progress.
  *
- * @package  LifterLMS_REST/Classes
+ * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.26
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -202,11 +202,11 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the API Key's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	protected function get_item_schema_base() {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',

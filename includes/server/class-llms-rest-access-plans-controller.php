@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version 1.0.0-beta.25
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,29 +18,30 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 	/**
-	 * Post type
+	 * Post type.
 	 *
 	 * @var string
 	 */
 	protected $post_type = 'llms_access_plan';
 
 	/**
-	 * Route base
+	 * Route base.
 	 *
 	 * @var string
 	 */
 	protected $rest_base = 'access-plans';
 
 	/**
-	 * Get the Access Plan's schema, conforming to JSON Schema
+	 * Get the Access Plan's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.18
+	 * @since 1.0.0-beta.27 Do not fire the llms_rest_access_plan_item_schema filter, it'll be fired in `LLMS_REST_Controller::filter_item_schema()`.
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	public function get_item_schema_base() {
 
-		$schema = (array) parent::get_item_schema();
+		$schema = (array) parent::get_item_schema_base();
 
 		// Post properties to unset.
 		$properties_to_unset = array(
@@ -52,6 +53,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			'slug',
 			'status',
 		);
+
 		foreach ( $properties_to_unset as $to_unset ) {
 			unset( $schema['properties'][ $to_unset ] );
 		}
@@ -66,14 +68,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 			$access_plan_properties
 		);
 
-		/**
-		 * Filter item schema for the access-plan controller
-		 *
-		 * @since 1.0.0-beta.18
-		 *
-		 * @param array $schema Item schema data.
-		 */
-		return apply_filters( 'llms_rest_access_plan_item_schema', $schema );
+		return $schema;
 
 	}
 

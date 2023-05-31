@@ -6,12 +6,9 @@
  *
  * @group REST
  * @group rest_memberships
+ * @group rest_posts
  *
  * @since 1.0.0-beta.9
- * @since 1.0.0-beta.11 Fixed `post_type` property.
- * @version 1.0.0-beta.17
- *
- * @todo do more tests on the membership update/delete.
  */
 class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -55,7 +52,11 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	protected $generates_revision_on_creation = true;
 
 	/**
+	 * Schema properties.
+	 *
 	 * @since 1.0.0-beta.9
+	 * @since 1.0.0-beta.27 Added `meta` property.
+	 *
 	 * @var array
 	 */
 	private $schema_properties = array(
@@ -73,6 +74,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 		'id',
 		'instructors',
 		'menu_order',
+		'meta',
 		'password',
 		'permalink',
 		'ping_status',
@@ -110,6 +112,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.9
+	 * @since 1.0.0-beta.27 Updated sample membership args for compatibility with WordPress 6.2.
 	 *
 	 * @return void
 	 */
@@ -125,9 +128,9 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 				'raw'      => 'Gold',
 			),
 			'content'      => array(
-				'rendered' => "\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. " .
+				'rendered' => "\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n\\n\\n\\n<p>Expectoque quid ad id, quod quaerebam, respondeas. " .
 				              "Nec enim, omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n",
-				'raw'      => "<!-- wp:heading -->\\n<h2>Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>" .
+				'raw'      => "<!-- wp:heading -->\\n<h2 class=\"wp-block-heading\">Lorem ipsum dolor sit amet.</h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>" .
 				              "Expectoque quid ad id, quod quaerebam, respondeas. Nec enim, " .
 				              "omnes avaritias si aeque avaritias esse dixerimus, sequetur ut etiam aequas esse dicamus.</p>\\n<!-- /wp:paragraph -->",
 			),

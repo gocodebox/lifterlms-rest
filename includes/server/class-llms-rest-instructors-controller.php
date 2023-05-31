@@ -1,17 +1,17 @@
 <?php
 /**
- * REST Resource Controller for Instructors
+ * REST Resource Controller for Instructors.
  *
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.14
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Instructors_Controller class
+ * LLMS_REST_Instructors_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.13 Fixed authentication error messages referring to 'students' or 'users' rather than 'instructors'.
@@ -137,15 +137,15 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	}
 
 	/**
-	 * Get the item schema.
+	 * Get the item schema base.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
-	public function get_item_schema() {
+	public function get_item_schema_base() {
 
-		$schema = parent::get_item_schema();
+		$schema = parent::get_item_schema_base();
 
 		$schema['properties']['roles']['default'] = array( 'instructor' );
 
@@ -215,8 +215,8 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param int             $object_id WP User id.
-	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param array           $prepared  Prepared item data.
+	 * @param WP_REST_Request $request   Request object.
 	 * @return LLMS_Abstract_User_Data|WP_error
 	 */
 	protected function update_additional_data( $object_id, $prepared, $request ) {

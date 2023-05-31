@@ -6,11 +6,9 @@
  *
  * @group REST
  * @group rest_sections
+ * @group rest_posts
  *
  * @since 1.0.0-beta.1
- * @since 1.0.0-beta.7 Added links test, block migration forcing and db cleanup moved to LLMS_REST_Unit_Test_Case_Posts::set_up(),
- *                     fixed sections fields checks when retrieving the collection.
- * @since 1.0.0-beta.25 Added protected method `create_post_resource()` (override).
  */
 class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 
@@ -41,21 +39,13 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.7 Block migration forcing and db cleanup moved in LLMS_REST_Unit_Test_Case_Posts::set_up()
+	 * @since 1.0.0-beta.27 Users creation moved in the `parent::set_up()`.
+	 *
+	 * @return void
 	 */
 	public function set_up() {
 
 		parent::set_up();
-		$this->user_allowed = $this->factory->user->create(
-			array(
-				'role' => 'administrator',
-			)
-		);
-
-		$this->user_forbidden = $this->factory->user->create(
-			array(
-				'role' => 'subscriber',
-			)
-		);
 
 		$this->sample_section_args = array(
 			'title' => array(
@@ -401,14 +391,13 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
-	 * Create a resource for this post type.
+	 * Get resource creation args.
 	 *
-	 * @since 1.0.0-beta.25
+	 * @since 1.0.0-beta.27
 	 *
-	 * @param array $params Array of request params.
-	 * @return WP_Post
+	 * @return array
 	 */
-	protected function create_post_resource( $params = array() ) {
+	protected function get_creation_args() {
 
 		$course_id = $this->factory->course->create(
 			array(
@@ -416,7 +405,8 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 			)
 		);
 
-		return parent::create_post_resource(
+		return array_merge(
+			parent::get_creation_args(),
 			array(
 				'parent_id' => $course_id,
 			)

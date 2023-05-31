@@ -5,7 +5,6 @@
  * @package LifterLMS_REST_API/Tests
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.21
  */
 
 require_once './vendor/lifterlms/lifterlms-tests/bootstrap.php';
