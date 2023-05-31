@@ -4,7 +4,7 @@
  *
  * @package LifterLMS_REST_API/Tests
  *
- * @since [version]
+ * @since 1.0.0-beta.27
  */
 
 require_once 'class-llms-rest-unit-test-case-server.php';
@@ -14,7 +14,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test item schema with meta fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -106,7 +106,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting an unregistered meta.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -169,7 +169,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting an registered meta not available in rest.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -248,7 +248,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting a registered meta.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -334,7 +334,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Create resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return mixed The resource identifier.
 	 */
@@ -345,7 +345,7 @@ class LLMS_REST_Unit_Test_Case_Users extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Get resource creation args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

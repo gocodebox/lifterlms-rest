@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -139,7 +139,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Get the item schema base.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

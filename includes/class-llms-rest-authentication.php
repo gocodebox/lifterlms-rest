@@ -186,7 +186,7 @@ class LLMS_REST_Authentication {
 	 * Locate credentials in the $_SERVER superglobal.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @param string $key_var Variable name for the consumer key.
 	 * @param string $secret_var Variable name for the consumer secret.

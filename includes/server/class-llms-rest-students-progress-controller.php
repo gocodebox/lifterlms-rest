@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -202,7 +202,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the API Key's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

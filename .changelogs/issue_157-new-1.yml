@@ -1,5 +1,0 @@
-significance: patch
-type: dev
-links:
-  - "#157"
-entry: "Allow all the resources to be extended using `register_rest_field()`."

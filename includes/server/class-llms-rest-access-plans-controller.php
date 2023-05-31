@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.18
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -35,7 +35,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 	 * Get the Access Plan's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0-beta.18
-	 * @since [version] Do not fire the llms_rest_access_plan_item_schema filter, it'll be fired in `LLMS_REST_Controller::filter_item_schema()`.
+	 * @since 1.0.0-beta.27 Do not fire the llms_rest_access_plan_item_schema filter, it'll be fired in `LLMS_REST_Controller::filter_item_schema()`.
 	 *
 	 * @return array
 	 */

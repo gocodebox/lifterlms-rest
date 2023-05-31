@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -111,7 +111,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Fix formatting error.
 	 * @since 1.0.0-beta.17 Remove reference to 'pending_delivery' (unused) column.
-	 * @since [version] Don't use deprecated `strftime` function.
+	 * @since 1.0.0-beta.27 Don't use deprecated `strftime` function.
 	 *
 	 * @return array
 	 */

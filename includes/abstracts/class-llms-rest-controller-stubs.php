@@ -7,7 +7,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -193,7 +193,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	/**
 	 * Prepares data of a single object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param obj             $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.
@@ -225,7 +225,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()`.
-	 * @since [version] Exclude additional fields added via `register_rest_field`.
+	 * @since 1.0.0-beta.27 Exclude additional fields added via `register_rest_field`.
 	 *
 	 * @param object          $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.

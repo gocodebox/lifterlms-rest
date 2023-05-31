@@ -23,7 +23,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	 * Setup the test case.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Define `$this->object_type` as 'instructor'.
+	 * @since 1.0.0-beta.27 Define `$this->object_type` as 'instructor'.
 	 *
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	 * Test the item schema.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added schema `meta` property.
+	 * @since 1.0.0-beta.27 Added schema `meta` property.
 	 *
 	 * @return void
 	 */
@@ -289,7 +289,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	/**
 	 * Create user, returns the user ID.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return int
 	 */

@@ -22,7 +22,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	 * Setup.
 	 *
 	 * @since 1.0.0-beta.7
-	 * @since [version] Define `$this->object_type` as `$this->post_type`.
+	 * @since 1.0.0-beta.27 Define `$this->object_type` as `$this->post_type`.
 	 */
 	public function set_up() {
 		parent::set_up();
@@ -457,7 +457,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test item schema with meta fields.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -555,7 +555,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting an unregistered meta.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -638,7 +638,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting a registered meta not available in rest.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -738,7 +738,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Test setting a registered meta.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -858,7 +858,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Create resource.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return mixed The resource identifier.
 	 */
@@ -870,7 +870,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	 * Create a resource for this post type.
 	 *
 	 * @since 1.0.0-beta.25
-	 * @since [version] Log in before creating the post, log out right after.
+	 * @since 1.0.0-beta.27 Log in before creating the post, log out right after.
 	 *                      Retrieve creation args via `self::get_creation_args()`.
 	 *
 	 * @param array $params Array of request params.
@@ -905,7 +905,7 @@ class LLMS_REST_Unit_Test_Case_Posts extends LLMS_REST_Unit_Test_Case_Server {
 	/**
 	 * Get resource creation args.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */

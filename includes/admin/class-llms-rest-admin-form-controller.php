@@ -5,7 +5,7 @@
  * @package  LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -95,7 +95,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 * Handle creating/updating a webhook via admin interfaces.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return true|void|WP_Error true on update success, void (redirect) on creation success, WP_Error on failure.
 	 */
@@ -151,7 +151,7 @@ class LLMS_REST_Admin_Form_Controller {
 	 * Validates `GET` information from the credential download URL and prepares information for generating the file.
 	 *
 	 * @since 1.0.0-beta.3
-	 * @since [version] Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return false|array
 	 */

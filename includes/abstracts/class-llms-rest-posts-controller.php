@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -85,7 +85,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return void
 	 */
@@ -233,7 +233,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.7 Added `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks:
 	 *                     fired after inserting/updating an llms post into the database.
 	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
-	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
+	 * @since 1.0.0-beta.27 Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -533,7 +533,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.11 Fixed `"llms_rest_insert_{$this->post_type}"` and `"llms_rest_insert_{$this->post_type}"` action hooks fourth param:
 	 *                      must be false when updating.
 	 * @since 1.0.0-beta.25 Allow updating meta with the same value as the stored one.
-	 * @since [version] Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
+	 * @since 1.0.0-beta.27 Handle custom meta registered via `register_meta()` and custom rest fields registered via `register_rest_field()`.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -886,7 +886,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepares data of a single object for response.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param obj             $object  Raw object from database.
 	 * @param WP_REST_Request $request Request object.
@@ -1099,7 +1099,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get the LLMS Posts's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
@@ -1296,7 +1296,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Add custom fields registered via `register_meta`.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @param array $schema The resource item schema.
 	 * @return array

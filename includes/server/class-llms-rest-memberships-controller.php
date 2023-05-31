@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Classes/Controllers
  *
  * @since 1.0.0-beta.9
- * @version [version]
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -52,7 +52,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	 * Constructor.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @since [version] Call parent constructor.
+	 * @since 1.0.0-beta.27 Call parent constructor.
 	 *
 	 * @return void
 	 */
@@ -126,7 +126,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Get the Membership's schema, conforming to JSON Schema.
 	 *
-	 * @since [version]
+	 * @since 1.0.0-beta.27
 	 *
 	 * @return array
 	 */
@@ -293,7 +293,7 @@ class LLMS_REST_Memberships_Controller extends LLMS_REST_Posts_Controller {
 		 * Filter item schema for the membership controller.
 		 *
 		 * @since 1.0.0-beta.9
-		 * @deprecated [version]
+		 * @deprecated 1.0.0-beta.27
 		 *
 		 * @param array $schema Item schema data.
 		 */

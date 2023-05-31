@@ -55,7 +55,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Schema properties.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @since [version] Added `meta` property.
+	 * @since 1.0.0-beta.27 Added `meta` property.
 	 *
 	 * @var array
 	 */
@@ -112,7 +112,7 @@ class LLMS_REST_Test_Memberships extends LLMS_REST_Unit_Test_Case_Posts {
 	 * Setup our test server, endpoints, and user info.
 	 *
 	 * @since 1.0.0-beta.9
-	 * @since [version] Updated sample membership args for compatibility with WordPress 6.2.
+	 * @since 1.0.0-beta.27 Updated sample membership args for compatibility with WordPress 6.2.
 	 *
 	 * @return void
 	 */

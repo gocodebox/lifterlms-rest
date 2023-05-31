@@ -1,9 +1,0 @@
-significance: patch
-type: dev
-links:
-  - "#157"
-entry: Added
-  `llms_rest_allow_filtering_{$object_type}_item_schema_to_add_fields` filter
-  hook. It allows adding additional fields using the filter hook
-  `llms_rest_{$object_type}_item_schema` without warnings. By default
-  additional fields should be added via `register_rest_field()`.

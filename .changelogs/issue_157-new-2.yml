@@ -1,6 +1,0 @@
-significance: patch
-type: dev
-links:
-  - "#157"
-entry: Added the ability for all the `WP_Post` and `WP_User` based resources to
-  manage custom meta registered via `register_meta()`.

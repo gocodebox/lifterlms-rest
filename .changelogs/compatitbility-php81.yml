@@ -1,3 +1,0 @@
-significance: patch
-type: changed
-entry: Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
