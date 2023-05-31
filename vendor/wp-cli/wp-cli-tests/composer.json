@@ -1,0 +1,87 @@
+{
+    "name": "wp-cli/wp-cli-tests",
+    "description": "WP-CLI testing framework",
+    "keywords": [
+        "cli",
+        "wordpress"
+    ],
+    "homepage": "https://wp-cli.org",
+    "license": "MIT",
+    "type": "phpcodesniffer-standard",
+    "require": {
+        "php": ">=5.6",
+        "behat/behat": "^3.7",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3 || ^0.5 || ^0.6.2 || ^0.7.1 || ^1.0.0",
+        "php-parallel-lint/php-console-highlighter": "^1.0",
+        "php-parallel-lint/php-parallel-lint": "^1.3.1",
+        "phpcompatibility/php-compatibility": "^9.3.5",
+        "wp-cli/config-command": "^1 || ^2",
+        "wp-cli/core-command": "^1 || ^2",
+        "wp-cli/eval-command": "^1 || ^2",
+        "wp-cli/wp-cli": "^2.5.1",
+        "wp-coding-standards/wpcs": "^2.3.0",
+        "yoast/phpunit-polyfills": "^1.0.3"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "johnpbloch/wordpress-core-installer": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.0.x-dev"
+        },
+        "readme": {
+            "sections": [
+                "Using",
+                "Contributing",
+                "Support"
+            ],
+            "using": {
+                "body": ".readme-partials/USING.md"
+            },
+            "show_powered_by": false
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WP_CLI\\Tests\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "bin": [
+        "bin/install-package-tests",
+        "bin/rerun-behat-tests",
+        "bin/run-behat-tests",
+        "bin/run-linter-tests",
+        "bin/run-php-unit-tests",
+        "bin/run-phpcs-tests",
+        "bin/run-phpcbf-cleanup"
+    ],
+    "scripts": {
+        "behat": "run-behat-tests",
+        "behat-rerun": "rerun-behat-tests",
+        "lint": "run-linter-tests",
+        "phpcs": "run-phpcs-tests",
+        "phpcbf": "run-phpcbf-cleanup",
+        "phpunit": "run-php-unit-tests",
+        "prepare-tests": "install-package-tests",
+        "test": [
+            "@lint",
+            "@phpcs",
+            "@phpunit",
+            "@behat"
+        ]
+    },
+    "support": {
+        "issues": "https://github.com/wp-cli/wp-cli-tests/issues",
+        "source": "https://github.com/wp-cli/wp-cli-tests",
+        "docs": "https://make.wordpress.org/cli/handbook/"
+    }
+}

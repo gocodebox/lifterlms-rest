@@ -84,7 +84,7 @@ function llms_rest_server_error( $message = '' ) {
 }
 
 /**
- * Checks whether or not the passed object is a 401 (permission) or 403 (authorization) error
+ * Checks whether or not the passed object is a 401 (permission) or 403 (authorization) error.
  *
  * @since 1.0.0-beta.18
  *
@@ -96,7 +96,7 @@ function llms_rest_is_authorization_required_error( $wp_error ) {
 }
 
 /**
- * Checks whether or not the passed object is a 400 bad request error
+ * Checks whether or not the passed object is a 400 bad request error.
  *
  * @since 1.0.0-beta.18
  *
@@ -108,7 +108,7 @@ function llms_rest_is_bad_request_error( $wp_error ) {
 }
 
 /**
- * Checks whether or not the passed object is a 404 not found error
+ * Checks whether or not the passed object is a 404 not found error.
  *
  * @since 1.0.0-beta.18
  *
@@ -120,7 +120,7 @@ function llms_rest_is_not_found_error( $wp_error ) {
 }
 
 /**
- * Checks whether or not the passed object is a 500 internal server error
+ * Checks whether or not the passed object is a 500 internal server error.
  *
  * @since 1.0.0-beta.18
  *
@@ -132,7 +132,7 @@ function llms_rest_is_server_error( $wp_error ) {
 }
 
 /**
- * Returns all the error statuses of a WP_Error
+ * Returns all the error statuses of a WP_Error.
  *
  * @since 1.0.0-beta.18
  *
@@ -168,7 +168,7 @@ function llms_rest_get_all_error_statuses( $wp_error ) {
 }
 
 /**
- * Validate submitted array of integers is an array of real user ids
+ * Validate submitted array of integers is an array of real user ids.
  *
  * @since 1.0.0-beta.9
  *
@@ -180,7 +180,7 @@ function llms_validate_instructors( $instructors ) {
 }
 
 /**
- * Validate strict positive integer number
+ * Validate strict positive integer number.
  *
  * @since 1.0.0-beta.18
  *
@@ -192,7 +192,7 @@ function llms_rest_validate_strictly_positive_int( $number ) {
 }
 
 /**
- * Validate positive integer number including zero
+ * Validate positive integer number including zero.
  *
  * @since 1.0.0-beta.18
  *
@@ -205,7 +205,7 @@ function llms_rest_validate_positive_int_w_zero( $number ) {
 
 
 /**
- * Validate positive integer number
+ * Validate positive integer number.
  *
  * @since 1.0.0-beta.18
  *
@@ -226,7 +226,7 @@ function llms_rest_validate_positive_int( $number, $include_zero = true ) {
 }
 
 /**
- * Validate strict positive float number
+ * Validate strict positive float number.
  *
  * @since 1.0.0-beta.18
  *
@@ -238,7 +238,7 @@ function llms_rest_validate_strictly_positive_float( $number ) {
 }
 
 /**
- * Validate strict positive float number including zero
+ * Validate strict positive float number including zero.
  *
  * @since 1.0.0-beta.18
  *
@@ -250,9 +250,9 @@ function llms_rest_validate_positive_float_w_zero( $number ) {
 }
 
 /**
- * Validate strict positive float number
+ * Validate strict positive float number.
  *
- * @since [versoin]
+ * @since 1.0.0-beta.18
  *
  * @param integer $number       Float number to validate.
  * @param boolean $include_zero Optional. Whether or not 0 is included. Default is `true`.

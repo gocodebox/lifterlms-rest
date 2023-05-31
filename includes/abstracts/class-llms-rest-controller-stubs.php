@@ -4,10 +4,10 @@
  *
  * All methods which *must* be defined by extending classes are stubbed here.
  *
- * @package  LifterLMS_REST/Abstracts
+ * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.10
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -79,7 +79,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function create_object( $prepared, $request ) {
@@ -129,7 +129,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return object
 	 */
 	protected function get_objects_query( $prepared, $request ) {
@@ -165,9 +165,9 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0-beta.1
 	 *
-	 * @param obj             $query Objects query result.
+	 * @param obj             $query    Objects query result.
 	 * @param array           $prepared Array of collection arguments.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return array {
 	 *     Array of pagination information.
 	 *
@@ -191,13 +191,44 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	}
 
 	/**
+	 * Prepares data of a single object for response.
+	 *
+	 * @since 1.0.0-beta.27
+	 *
+	 * @param obj             $object  Raw object from database.
+	 * @param WP_REST_Request $request Request object.
+	 * @return array
+	 */
+	protected function prepare_object_data_for_response( $object, $request ) {
+
+		$data            = $this->prepare_object_for_response( $object, $request );
+		$response_fields = $this->get_fields_for_response( $request );
+		// Include meta data registered via `register_meta()`.
+		if ( rest_is_field_included( 'meta', $response_fields ) ) {
+			$data['meta'] = $this->meta->get_value( $this->get_object_id( $object ), $request );
+			// Exclude disallowed meta.
+			$data['meta'] = $this->exclude_disallowed_meta_fields( $data['meta'] );
+		}
+
+		// Include custom REST fields registered via `register_rest_field()`.
+		$data = $this->add_additional_fields_to_object( $data, $request );
+
+		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+		$data    = $this->filter_response_by_context( $data, $context );
+
+		return $data;
+
+	}
+
+	/**
 	 * Prepare an object for response.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.3 Conditionally throw `_doing_it_wrong()`.
+	 * @since 1.0.0-beta.27 Exclude additional fields added via `register_rest_field`.
 	 *
-	 * @param LLMS_Abstract_User_Data $object User object.
-	 * @param WP_REST_Request         $request Request object.
+	 * @param object          $object  Raw object from database.
+	 * @param WP_REST_Request $request Request object.
 	 * @return array
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
@@ -207,12 +238,13 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 			_doing_it_wrong( 'LLMS_REST_Controller::prepare_object_for_response', sprintf( __( "Method '%s' must be overridden.", 'lifterlms' ), __METHOD__ ), '1.0.0-beta.1' );
 		}
 
-		$prepared = array();
-		$map      = array_flip( $this->map_schema_to_database() );
-		$fields   = $this->get_fields_for_response( $request );
+		$prepared          = array();
+		$map               = array_flip( $this->map_schema_to_database() );
+		$fields            = $this->get_fields_for_response( $request );
+		$additional_fields = array_keys( $this->get_additional_fields() );
 
 		foreach ( $map as $db_key => $schema_key ) {
-			if ( in_array( $schema_key, $fields, true ) ) {
+			if ( in_array( $schema_key, $fields, true ) && ! in_array( $schema_key, $additional_fields, true ) ) {
 				$prepared[ $schema_key ] = $object->get( $db_key );
 			}
 		}
@@ -227,7 +259,7 @@ abstract class LLMS_REST_Controller_Stubs extends WP_REST_Controller {
 	 * @since 1.0.0-beta.1
 	 *
 	 * @param array           $prepared Prepared item data.
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request  Request object.
 	 * @return obj Object Instance of object from $this->get_object().
 	 */
 	protected function update_object( $prepared, $request ) {

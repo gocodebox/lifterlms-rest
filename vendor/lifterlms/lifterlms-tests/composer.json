@@ -1,0 +1,38 @@
+{
+  "name": "lifterlms/lifterlms-tests",
+  "description": "Testing framework for LifterLMS projects",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Team LifterLMS",
+      "email": "help@lifterlms.com"
+    }
+  ],
+  "require": {
+    "php": "^7.3 || ^8.0",
+    "phpunit/phpunit": "^7.5 || ^9.5",
+    "yoast/phpunit-polyfills": "^1.0",
+    "wp-cli/wp-cli-tests": "^3.2.6",
+    "wp-cli/extension-command": "^2.1.13"
+  },
+  "bin": [
+    "bin/llms-tests",
+    "bin/llms-env"
+  ],
+  "autoload": {
+    "psr-4": {
+      "LifterLMS\\Tests\\": "src/"
+    }
+  },
+  "extra": {
+    "llms": {
+      "version": "3.2.0"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

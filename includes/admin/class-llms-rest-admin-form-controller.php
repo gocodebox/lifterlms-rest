@@ -1,17 +1,17 @@
 <?php
 /**
- * Handle admin form submissions.
+ * Handle admin form submissions
  *
  * @package  LifterLMS_REST/Admin/Classes
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.3
+ * @version 1.0.0-beta.27
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LLMS_REST_Admin_Form_Controller class..
+ * LLMS_REST_Admin_Form_Controller class.
  *
  * @since 1.0.0-beta.1
  * @since 1.0.0-beta.3 Added API credential download methods.
@@ -92,24 +92,25 @@ class LLMS_REST_Admin_Form_Controller {
 	}
 
 	/**
-	 * Handle creating/updating a webhook via admin interfaces
+	 * Handle creating/updating a webhook via admin interfaces.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return true|void|WP_Error true on update success, void (redirect) on creation success, WP_Error on failure.
 	 */
 	protected function handle_webhook_upsert() {
 
 		$data = array(
-			'name'         => llms_filter_input( INPUT_POST, 'llms_rest_webhook_name', FILTER_SANITIZE_STRING ),
-			'status'       => llms_filter_input( INPUT_POST, 'llms_rest_webhook_status', FILTER_SANITIZE_STRING ),
-			'topic'        => llms_filter_input( INPUT_POST, 'llms_rest_webhook_topic', FILTER_SANITIZE_STRING ),
+			'name'         => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_name' ),
+			'status'       => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_status' ),
+			'topic'        => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_topic' ),
 			'delivery_url' => llms_filter_input( INPUT_POST, 'llms_rest_webhook_delivery_url', FILTER_SANITIZE_URL ),
-			'secret'       => llms_filter_input( INPUT_POST, 'llms_rest_webhook_secret', FILTER_SANITIZE_STRING ),
+			'secret'       => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_secret' ),
 		);
 
 		if ( 'action' === $data['topic'] ) {
-			$data['topic'] .= '.' . llms_filter_input( INPUT_POST, 'llms_rest_webhook_action', FILTER_SANITIZE_STRING );
+			$data['topic'] .= '.' . llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_webhook_action' );
 		}
 
 		$hook_id = llms_filter_input( INPUT_POST, 'llms_rest_webhook_id', FILTER_SANITIZE_NUMBER_INT );
@@ -150,13 +151,14 @@ class LLMS_REST_Admin_Form_Controller {
 	 * Validates `GET` information from the credential download URL and prepares information for generating the file.
 	 *
 	 * @since 1.0.0-beta.3
+	 * @since 1.0.0-beta.27 Replaced use of the deprecated `FILTER_SANITIZE_STRING` constant.
 	 *
 	 * @return false|array
 	 */
 	protected function prepare_key_download() {
 
 		$key_id       = llms_filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$consumer_key = llms_filter_input( INPUT_GET, 'ck', FILTER_SANITIZE_STRING );
+		$consumer_key = llms_filter_input_sanitize_string( INPUT_GET, 'ck' );
 
 		// return if missing required fields.
 		if ( ! $key_id || ! $consumer_key ) {
