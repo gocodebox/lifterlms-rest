@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.28 - 2023-06-08
+---------------------------
+
+##### Bug Fixes
+
++ Rebuild and re-release to avoid including unnecessary heavy files.
+
+
 v1.0.0-beta.27 - 2023-05-31
 ---------------------------
 
