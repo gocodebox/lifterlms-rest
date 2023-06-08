@@ -1,6 +1,6 @@
 {
   "name": "lifterlms-rest",
-  "version": "1.0.0-beta.27",
+  "version": "1.0.0-beta.28",
   "description": "REST API feature plugin for the LifterLMS Core.",
   "author": "LifterLMS",
   "homepage": "https://lifterlms.com/",
@@ -14,7 +14,7 @@
     "url": "https://github.com/gocodebox/lifterlms-rest/issues"
   },
   "devDependencies": {
-    "@lifterlms/dev": "^0.0.2",
+    "@lifterlms/dev": "^0.2.1",
     "openapi-snippet": "^0.9.1",
     "swagger-repo": "^2.0.0-rc.15"
   },

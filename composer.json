@@ -37,7 +37,9 @@
       "tmp",
       "web",
       "web_deploy",
-      "wordpress"
+      "wordpress",
+
+      "vendor"
     ]
   },
   "scripts": {
