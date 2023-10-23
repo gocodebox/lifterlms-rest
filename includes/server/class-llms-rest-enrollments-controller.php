@@ -1197,7 +1197,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$result = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = (${inner_query});",
+				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = ({$inner_query});",
 				$date_created
 			)
 		); // no-cache ok.
