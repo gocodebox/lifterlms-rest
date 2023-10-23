@@ -389,7 +389,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'llms_mark_complete'   => 2,
 				'llms_mark_incomplete' => 2,
 			),
-			// 'progress.deleted' => array(),
 
 		);
 
