@@ -8,6 +8,7 @@ const llms = new llmsAPI( {
 const postData = {
   "date_created": "2019-05-20 17:22:05",
   "date_created_gmt": "2019-05-20 13:22:05",
+  "post_type": "llms_question",
   "order": 1,
   "parent_id": 234,
   "points": 10,

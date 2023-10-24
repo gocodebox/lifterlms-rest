@@ -7,7 +7,7 @@ const llms = new llmsAPI( {
 
 const postData = {
   "name": "A Student Enrolled in a Course",
-  "status": "disabled",
+  "status": "active",
   "topic": "student.created",
   "delivery_url": "https://example.tld/webhook-receipt/endpoint",
   "secret": "$P3CI41-$3CR37!"

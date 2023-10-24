@@ -27,7 +27,7 @@ const postData = {
   "access_period": "year",
   "trial_enabled": false,
   "trial_length": 1,
-  "trial_period": "week",
+  "trial_period": "year",
   "trial_price": 1.99,
   "post_id": 789,
   "redirect_type": "self",

@@ -10,7 +10,8 @@ const postData = {
   "date_created": "2019-05-20 17:22:05",
   "date_created_gmt": "2019-05-20 13:22:05",
   "order": 1,
-  "parent_id": 1234
+  "parent_id": 1234,
+  "post_type": "section"
 };
 
 llms.post( '/sections/%7Bid%7D', postData, function( err, data, res ) {
