@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.27
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -1706,11 +1706,17 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Checks if an llms post can be read.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Fix fatals when searching for llms post type based resources
+	 *                  but the query post type parameter is forced to be something else.
 	 *
 	 * @param LLMS_Post_Model $object The LLMS_Post_model object.
 	 * @return bool Whether the post can be read.
 	 */
 	protected function check_read_permission( $object ) {
+
+		if ( is_wp_error( $object ) ) {
+			return false;
+		}
 
 		$post_type = get_post_type_object( $this->post_type );
 		$status    = $object->get( 'status' );

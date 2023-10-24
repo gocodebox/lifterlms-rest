@@ -153,7 +153,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				",
 					$student->get( 'id' )
 				)
-			);
+			);// no-cache ok.
 			//phpcs:enable
 
 			if ( $date ) {

@@ -543,7 +543,7 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		// Availability restrictions.
 		// If access plan related post type is not a course, set availability to 'open' and clean the `availability_restrictions` array.
 		if ( 'course' !== $access_plan->get_product_type() ) {
-			$to_set['availability'] = 'open';
+			$to_set['availability']              = 'open';
 			$to_set['availability_restrictions'] = array();
 		} elseif ( ! empty( $schema['properties']['availability_restrictions'] ) && isset( $request['availability_restrictions'] ) ) {
 			$to_set['availability_restrictions'] = $request['availability_restrictions'];

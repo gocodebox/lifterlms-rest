@@ -108,8 +108,6 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 
 		$params = parent::get_collection_params();
 
-		// $params['roles']['default'] = 'student';
-
 		$params['enrolled_in'] = array(
 			'description' => __( 'Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs.', 'lifterlms' ),
 			'type'        => 'array',

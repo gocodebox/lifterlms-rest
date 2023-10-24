@@ -24,8 +24,8 @@ if ( ! defined( 'LLMS_REMOVE_ALL_DATA' ) || true !== LLMS_REMOVE_ALL_DATA ) {
 global $wpdb;
 
 // Delete options.
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'lifterlms\_rest\_%';" );
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'llms\_rest\_%';" );
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'lifterlms\_rest\_%';" ); // no-cache ok.
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'llms\_rest\_%';" ); // no-cache ok.
 
-// drop tables.
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}lifterms_api_keys" );
+// Drop tables.
+$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}lifterms_api_keys" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.DirectDatabaseQuery.NoCaching

@@ -113,7 +113,7 @@ class LLMS_REST_Table_API_Keys extends LLMS_Admin_Table {
 
 		global $wpdb;
 
-		$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}lifterlms_api_keys", ARRAY_A );
+		$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}lifterlms_api_keys", ARRAY_A ); // no-cache ok.
 
 		$tbody_data = array();
 		foreach ( $rows as $data ) {
