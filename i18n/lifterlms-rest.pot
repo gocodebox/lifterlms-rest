@@ -2,16 +2,16 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0-beta.28\n"
+"Project-Id-Version: LifterLMS REST API 1.0.0-beta.29\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-08T06:54:08+00:00\n"
+"POT-Creation-Date: 2023-10-24T16:23:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: llms/dev 0.0.2\n"
+"X-Generator: llms/dev 0.2.1\n"
 "X-Domain: lifterlms\n"
 
 #. Plugin Name of the plugin
@@ -300,7 +300,7 @@ msgstr ""
 msgid "Invalid featured media ID."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-posts-controller.php:1841
+#: includes/abstracts/class-llms-rest-posts-controller.php:1847
 msgid "Status is forbidden."
 msgstr ""
 
@@ -833,17 +833,17 @@ msgid "Instructor deleted"
 msgstr ""
 
 #. Translators: %s = Invalid permission string.
-#: includes/class-llms-rest-webhooks.php:443
+#: includes/class-llms-rest-webhooks.php:442
 msgid "\"%s\" is not a valid status."
 msgstr ""
 
 #. Translators: %s = Invalid permission string.
-#: includes/class-llms-rest-webhooks.php:449
+#: includes/class-llms-rest-webhooks.php:448
 msgid "\"%s\" is not a valid topic."
 msgstr ""
 
 #. Translators: %s = field name.
-#: includes/class-llms-rest-webhooks.php:456
+#: includes/class-llms-rest-webhooks.php:455
 msgid "\"%s\" is required."
 msgstr ""
 
@@ -1372,27 +1372,27 @@ msgstr ""
 msgid "You are not allowed to delete this student."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:114
+#: includes/server/class-llms-rest-students-controller.php:112
 msgid "Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:122
+#: includes/server/class-llms-rest-students-controller.php:120
 msgid "Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:160
+#: includes/server/class-llms-rest-students-controller.php:158
 msgid "You are not allowed to view this student."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:178
+#: includes/server/class-llms-rest-students-controller.php:176
 msgid "You are not allowed to filter students by role."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:182
+#: includes/server/class-llms-rest-students-controller.php:180
 msgid "You are not allowed to list students."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:379
+#: includes/server/class-llms-rest-students-controller.php:377
 msgid "You are not allowed to edit this student."
 msgstr ""
 

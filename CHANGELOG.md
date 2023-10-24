@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0-beta.29 - 2023-10-24
+---------------------------
+
+##### Bug Fixes
+
++ Avoid PHP fatal when searching for courses/memberships but the query post type parameter is forced to a different post type. e.g. all post types except `post` excluded from search results. [#299](https://github.com/gocodebox/lifterlms-rest/issues/299)
+
+
 v1.0.0-beta.28 - 2023-06-08
 ---------------------------
 

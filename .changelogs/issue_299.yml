@@ -1,7 +1,0 @@
-significance: patch
-type: fixed
-links:
-  - "#299"
-entry: Avoid PHP fatal when searching for courses/memberships but the query post
-  type parameter is forced to a different post type. e.g. all post types except
-  `post` excluded from search results.
