@@ -9,6 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
+ * @version [version]
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
@@ -674,6 +675,14 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 	}
 
+	/**
+	 * Test get items with enrollment filters.
+	 *
+	 * @since Unknown
+	 * @since [version] Clean user query cache after enrollments.
+	 *
+	 * @return void
+	 */
 	public function test_get_items_enrollment_filters() {
 
 		wp_set_current_user( $this->user_admin );
@@ -701,6 +710,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		// Enroll a student.
 		llms_enroll_student( $args['include'][0], $course );
+		function_exists( 'wp_cache_flush_group' ) && wp_cache_flush_group( 'user-queries' );
 		$this->assertTrue( llms_is_user_enrolled( $args['include'][0], $course ) );
 
 		// Return only the non-enrolled students.
@@ -721,6 +731,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		// One enrolled in both.
 		llms_enroll_student( $args['include'][0], $course_2 );
+		function_exists( 'wp_cache_flush_group' ) && wp_cache_flush_group( 'user-queries' );
 		$res = $this->perform_mock_request( 'GET', $this->route, array(), $args );
 		$this->assertEquals( array( $args['include'][0] ), wp_list_pluck( $res->get_data(), 'id' ) );
 
