@@ -1009,7 +1009,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 					$query_args['id'],
 				)
 			)
-		);
+		);// no-cache ok.
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$count = count( $query->items );
@@ -1023,7 +1023,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			}
 		}
 
-		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count;
+		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count; // no-cache ok.
 
 		return $query;
 
@@ -1197,7 +1197,8 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$result = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = (${inner_query});",
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- it is prepared.
+				"UPDATE {$wpdb->prefix}lifterlms_user_postmeta SET updated_date = %s WHERE meta_id = ({$inner_query});",
 				$date_created
 			)
 		); // no-cache ok.

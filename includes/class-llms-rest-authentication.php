@@ -172,7 +172,7 @@ class LLMS_REST_Authentication {
 
 		$consumer_key = llms_rest_api_hash( $consumer_key );
 
-		$key_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}lifterlms_api_keys WHERE consumer_key = %s", $consumer_key ) );
+		$key_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}lifterlms_api_keys WHERE consumer_key = %s", $consumer_key ) ); // no-cache ok.
 
 		if ( $key_id ) {
 			return LLMS_REST_API()->keys()->get( $key_id );
