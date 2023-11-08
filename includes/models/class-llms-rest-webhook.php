@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Models
  *
  * @since 1.0.0-beta.1
- * @version 1.0.0-beta.11
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -341,13 +341,14 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Processes information from the origination action hook
+	 * Processes information from the origination action hook.
 	 *
 	 * Determines if the webhook should be delivered and whether or not it should be scheduled or delivered immediately.
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.17 Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
 	 *                      And don't rely anymore on the webhook's `pending_delivery` property to achieve the same goal.
+	 * @since [version] Updated the proccessed flag to use the second argument (Enrollment Object ID) of `$args`.
 	 *
 	 * @param mixed ...$args Arguments from the hook.
 	 * @return int|false Timestamp of the scheduled event when the webhook is successfully scheduled.
@@ -359,7 +360,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 			return false;
 		}
 
-		// Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request,
+		// Mark this hook's second argument (Enrollment Object ID) as processed to ensure it doesn't get processed again within the current request,
 		// as it might happen with webhooks with multiple hookes defined in `LLMS_REST_Webhooks::get_hooks()`.
 		$this->processed[] = $args[2];
 
