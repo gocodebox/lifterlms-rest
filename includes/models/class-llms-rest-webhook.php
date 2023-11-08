@@ -361,7 +361,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 		// Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request,
 		// as it might happen with webhooks with multiple hookes defined in `LLMS_REST_Webhooks::get_hooks()`.
-		$this->processed[] = $args[0];
+		$this->processed[] = $args[2];
 
 		/**
 		 * Disable background processing of webhooks by returning a falsy
