@@ -1,0 +1,5 @@
+significance: patch
+type: dev
+links:
+  - "#2568"
+entry: Updated the proccessed flag to use the last argument of `$args`.
