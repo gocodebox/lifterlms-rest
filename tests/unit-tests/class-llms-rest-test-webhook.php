@@ -762,6 +762,69 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
+	 * Test scheduling enrollment.created via a membership enrollment with multiple auto enroll courses
+	 *
+	 * @since Unknown
+	 *
+	 * @return void
+	 */
+	public function test_scheduling_enrollment_created_through_membership() {
+
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld',
+			'topic' => 'enrollment.created',
+			'status' => 'active',
+		) );
+
+		$webhook->enqueue();
+
+		$student_id =   $this->factory->student->create();
+		$membership_id = $this->factory->membership->create();
+		$course_id       = $this->factory->course->create( array( 'sections' => 0 ) );
+		$second_course_id = $this->factory->course->create( array( 'sections' => 0));
+
+		$membership = new LLMS_Membership( $membership_id );
+		$membership->add_auto_enroll_courses( array( $course_id, $second_course_id ), true );
+
+		$schedule_args_first_course = array(
+			'webhook_id' => $webhook->get( 'id' ),
+			'args'       => array( $student_id, $course_id ),
+		);
+
+		$schedule_args_second_course = array(
+			'webhook_id' => $webhook->get( 'id' ),
+			'args'       => array( $student_id, $second_course_id ),
+		);
+
+		$schedule_args_membership = array(
+			'webhook_id' => $webhook->get( 'id' ),
+			'args'       => array( $student_id, $membership_id ),
+		);
+
+		llms_enroll_student( $student_id, $membership_id );
+
+		$this->assertTrue( as_has_scheduled_action( 'lifterlms_rest_deliver_webhook_async', $schedule_args_first_course, 'llms-webhooks' ) );
+		$this->assertTrue( as_has_scheduled_action( 'lifterlms_rest_deliver_webhook_async', $schedule_args_second_course, 'llms-webhooks' ) );
+		$this->assertTrue( as_has_scheduled_action( 'lifterlms_rest_deliver_webhook_async', $schedule_args_membership, 'llms-webhooks' ) );
+		$this->assertCount(1, as_get_scheduled_actions( array(
+			'hook' => 'lifterlms_rest_deliver_webhook_async',
+			'args' => $schedule_args_first_course,
+			'per_page' => -1
+		) ) );
+		$this->assertCount(1, as_get_scheduled_actions( array(
+			'hook' => 'lifterlms_rest_deliver_webhook_async',
+			'args' => $schedule_args_second_course,
+			'per_page' => -1
+		) ) );
+		$this->assertCount(1, as_get_scheduled_actions( array(
+			'hook' => 'lifterlms_rest_deliver_webhook_async',
+			'args' => $schedule_args_membership,
+			'per_page' => -1
+		) ) );
+	}
+
+
+	/**
 	 * Test ping() on unresolveable urls.
 	 *
 	 * @since 1.0.0-beta.1
