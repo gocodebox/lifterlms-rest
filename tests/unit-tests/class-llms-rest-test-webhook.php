@@ -775,7 +775,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 		wp_trash_post($membership_id);
 		wp_delete_post($membership_id);
 
-		$this->assertCount(1, as_get_scheduled_actions( array( 'hook' => 'lifterlms_rest_deliver_webhook_async')));
+		$this->assertCount(1, as_get_scheduled_actions( array( 'hook' => 'lifterlms_rest_deliver_webhook_async' ) ) );
 	}
 
 	/**

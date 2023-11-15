@@ -196,7 +196,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * @return bool
 	 */
 	protected function is_already_processed( $args ) {
-		return false !== array_search( $args[0], $this->processed, true );
+		return false !== array_search( $args, $this->processed, true );
 	}
 
 	/**
@@ -361,7 +361,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 		// Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request,
 		// as it might happen with webhooks with multiple hookes defined in `LLMS_REST_Webhooks::get_hooks()`.
-		$this->processed[] = $args[0];
+		$this->processed[] = $args;
 
 		/**
 		 * Disable background processing of webhooks by returning a falsy
