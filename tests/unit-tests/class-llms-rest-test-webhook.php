@@ -762,6 +762,7 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	public function test_multiple_hooks_for_single_webhook_only_schedules_once() {
+
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
 			'delivery_url' => 'https://mock.tld',
 			'topic' => 'membership.deleted',
@@ -795,9 +796,9 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 		$webhook->enqueue();
 
-		$student_id =   $this->factory->student->create();
-		$membership_id = $this->factory->membership->create();
-		$course_id       = $this->factory->course->create( array( 'sections' => 0 ) );
+		$student_id       = $this->factory->student->create();
+		$membership_id    = $this->factory->membership->create();
+		$course_id        = $this->factory->course->create( array( 'sections' => 0 ) );
 		$second_course_id = $this->factory->course->create( array( 'sections' => 0));
 
 		$membership = new LLMS_Membership( $membership_id );
@@ -807,12 +808,10 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 			'webhook_id' => $webhook->get( 'id' ),
 			'args'       => array( $student_id, $course_id ),
 		);
-
 		$schedule_args_second_course = array(
 			'webhook_id' => $webhook->get( 'id' ),
 			'args'       => array( $student_id, $second_course_id ),
 		);
-
 		$schedule_args_membership = array(
 			'webhook_id' => $webhook->get( 'id' ),
 			'args'       => array( $student_id, $membership_id ),
