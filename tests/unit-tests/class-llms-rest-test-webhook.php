@@ -761,6 +761,14 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+
+	/**
+	 * Test scheduling a webhook via multiple hooks, ensuring only one is scheduled for delivery.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
 	public function test_multiple_hooks_for_single_webhook_only_schedules_once() {
 
 		$webhook = LLMS_REST_API()->webhooks()->create( array(
@@ -780,9 +788,9 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 	}
 
 	/**
-	 * Test scheduling enrollment.created via a membership enrollment with multiple auto enroll courses
+	 * Test scheduling enrollment.created via a membership enrollment with multiple auto enroll courses.
 	 *
-	 * @since Unknown
+	 * @since [version]
 	 *
 	 * @return void
 	 */

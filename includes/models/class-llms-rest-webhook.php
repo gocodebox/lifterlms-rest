@@ -192,6 +192,8 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 *
 	 * Helps avoid duplication of data being sent for topics that have more than one hook defined.
 	 *
+	 * @since [version] Verify the processed flag with all arguments of `$args`.
+	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
 	 */
@@ -348,6 +350,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.17 Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
 	 *                      And don't rely anymore on the webhook's `pending_delivery` property to achieve the same goal.
+	 * @since [version] Updated the processed flag to use all arguments of `$args`.
 	 *
 	 * @param mixed ...$args Arguments from the hook.
 	 * @return int|false Timestamp of the scheduled event when the webhook is successfully scheduled.
