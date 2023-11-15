@@ -1,0 +1,5 @@
+significance: patch
+type: fixed
+links:
+  - "#2568"
+entry: Update the processed flag to use all arguments.
