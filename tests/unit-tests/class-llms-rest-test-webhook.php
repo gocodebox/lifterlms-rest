@@ -761,6 +761,23 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
+	public function test_multiple_hooks_for_single_webhook_only_schedules_once() {
+		$webhook = LLMS_REST_API()->webhooks()->create( array(
+			'delivery_url' => 'https://mock.tld',
+			'topic' => 'membership.deleted',
+			'status' => 'active',
+		) );
+
+		$webhook->enqueue();
+
+		$membership_id = $this->factory->membership->create();
+
+		wp_trash_post($membership_id);
+		wp_delete_post($membership_id);
+
+		$this->assertCount(1, as_get_scheduled_actions( array( 'hook' => 'lifterlms_rest_deliver_webhook_async')));
+	}
+
 	/**
 	 * Test scheduling enrollment.created via a membership enrollment with multiple auto enroll courses
 	 *
