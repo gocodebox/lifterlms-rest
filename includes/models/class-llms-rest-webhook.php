@@ -21,14 +21,6 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 	/**
-	 * Store which object IDs this webhook has processed (ie scheduled to be delivered)
-	 * within the current page request.
-	 *
-	 * @var array
-	 */
-	protected $processed = array();
-
-	/**
 	 * Delivers the webhook
 	 *
 	 * @since 1.0.0-beta.1
@@ -185,20 +177,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 			add_action( $hook, array( $this, 'process_hook' ), 10, $args );
 		}
 
-	}
-
-	/**
-	 * Checks if the specified resource has already been queued for delivery within the current request
-	 *
-	 * Helps avoid duplication of data being sent for topics that have more than one hook defined.
-	 *
-	 * @since [version] Verify the processed flag with all arguments of `$args`.
-	 *
-	 * @param array $args Numeric array of arguments from the originating hook.
-	 * @return bool
-	 */
-	protected function is_already_processed( $args ) {
-		return false !== array_search( $args, $this->processed, true );
 	}
 
 	/**
@@ -362,10 +340,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 			return false;
 		}
 
-		// Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request,
-		// as it might happen with webhooks with multiple hookes defined in `LLMS_REST_Webhooks::get_hooks()`.
-		$this->processed[] = $args;
-
 		/**
 		 * Disable background processing of webhooks by returning a falsy
 		 *
@@ -425,7 +399,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Determines if an originating action qualifies for webhook delivery
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [verison] Drop checking whether the webhook is pending in favor of a check on if is already processed within the current request.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -434,8 +407,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 		$deliver = ( 'active' === $this->get( 'status' ) ) // Must be active.
 			&& $this->is_valid_action( $args ) // Valid action.
-			&& $this->is_valid_resource( $args ) // Valid resource.
-			&& ! $this->is_already_processed( $args ); // Not already processed.
+			&& $this->is_valid_resource( $args ); // Valid resource.
 
 		/**
 		 * Skip or hijack webhook delivery scheduling

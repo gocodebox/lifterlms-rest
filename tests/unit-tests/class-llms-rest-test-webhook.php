@@ -966,32 +966,4 @@ class LLMS_REST_Test_Webhook extends LLMS_REST_Unit_Test_Case_Base {
 
 	}
 
-	/**
-	 * Test should_deliver() method with already processed hooks().
-	 *
-	 * @since 1.0.0-beta.17
-	 *
-	 * @return void
-	 */
-	public function test_should_deliver_already_processed() {
-
-		$webhook = LLMS_REST_API()->webhooks()->create( array(
-			'delivery_url' => 'https://mock.tld',
-			'topic' => 'student.created',
-			'status' => 'active',
-		) );
-
-		$student_id = $this->factory->student->create();
-
-		// Not processed.
-		$this->assertTrue( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $student_id ) ) ) );
-
-		// Process the hook.
-		$webhook->process_hook( $student_id );
-
-		// Processed.
-		$this->assertFalse( LLMS_Unit_Test_Util::call_method( $webhook, 'should_deliver', array( array( $student_id ) ) ) );
-
-	}
-
 }
