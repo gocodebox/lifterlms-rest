@@ -21,14 +21,6 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 	/**
-	 * Store which object IDs this webhook has processed (ie scheduled to be delivered)
-	 * within the current page request.
-	 *
-	 * @var array
-	 */
-	protected $processed = array();
-
-	/**
 	 * Delivers the webhook
 	 *
 	 * @since 1.0.0-beta.1
@@ -188,18 +180,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	}
 
 	/**
-	 * Checks if the specified resource has already been queued for delivery within the current request
-	 *
-	 * Helps avoid duplication of data being sent for topics that have more than one hook defined.
-	 *
-	 * @param array $args Numeric array of arguments from the originating hook.
-	 * @return bool
-	 */
-	protected function is_already_processed( $args ) {
-		return false !== array_search( $args[0], $this->processed, true );
-	}
-
-	/**
 	 * Determine if the current action is valid for the webhook
 	 *
 	 * @since 1.0.0-beta.1
@@ -348,6 +328,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.17 Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
 	 *                      And don't rely anymore on the webhook's `pending_delivery` property to achieve the same goal.
+	 * @since 1.0.0 Remove the processed flag as the ActionScheduler prevents multiple additions of the same hook.
 	 *
 	 * @param mixed ...$args Arguments from the hook.
 	 * @return int|false Timestamp of the scheduled event when the webhook is successfully scheduled.
@@ -358,10 +339,6 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 		if ( ! $this->should_deliver( $args ) ) {
 			return false;
 		}
-
-		// Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request,
-		// as it might happen with webhooks with multiple hookes defined in `LLMS_REST_Webhooks::get_hooks()`.
-		$this->processed[] = $args[0];
 
 		/**
 		 * Disable background processing of webhooks by returning a falsy
@@ -422,7 +399,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * Determines if an originating action qualifies for webhook delivery
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [verison] Drop checking whether the webhook is pending in favor of a check on if is already processed within the current request.
+	 * @since [verison] Removed the "is already processed" check since ActionScheduler prevents duplicates.
 	 *
 	 * @param array $args Numeric array of arguments from the originating hook.
 	 * @return bool
@@ -431,8 +408,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 
 		$deliver = ( 'active' === $this->get( 'status' ) ) // Must be active.
 			&& $this->is_valid_action( $args ) // Valid action.
-			&& $this->is_valid_resource( $args ) // Valid resource.
-			&& ! $this->is_already_processed( $args ); // Not already processed.
+			&& $this->is_valid_resource( $args ); // Valid resource.
 
 		/**
 		 * Skip or hijack webhook delivery scheduling
