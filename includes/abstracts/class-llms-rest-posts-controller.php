@@ -5,7 +5,7 @@
  * @package LifterLMS_REST/Abstracts
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -1706,7 +1706,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	 * Checks if an llms post can be read.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Fix fatals when searching for llms post type based resources
+	 * @since 1.0.0 Fix fatals when searching for llms post type based resources
 	 *                  but the query post type parameter is forced to be something else.
 	 *
 	 * @param LLMS_Post_Model $object The LLMS_Post_model object.

@@ -9,7 +9,7 @@
  * @group rest_posts
  *
  * @since 1.0.0-beta.1
- * @since [version] Removed `generates_revision_on_creation` property, not needed anymore since LifterLMS 7.3.0.
+ * @since 1.0.0 Removed `generates_revision_on_creation` property, not needed anymore since LifterLMS 7.3.0.
  */
 class LLMS_REST_Test_Courses extends LLMS_REST_Unit_Test_Case_Posts {
 

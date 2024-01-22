@@ -1,6 +1,15 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.0 - 2024-01-22
+-------------------
+
+__includes/abstracts/class-llms-rest-posts-controller.php__
++ Fix fatals when searching for llms post type based resources but the query post type parameter is forced to be something else.
+__includes/models/class-llms-rest-webhook.php__
++ Remove the processed flag as the ActionScheduler prevents multiple additions of the same hook.
+
+
 v1.0.0-beta.29 - 2023-10-24
 ---------------------------
 

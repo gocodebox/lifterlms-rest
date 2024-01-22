@@ -328,7 +328,7 @@ class LLMS_REST_Webhook extends LLMS_REST_Webhook_Data {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.17 Mark this hook's first argument as processed to ensure it doesn't get processed again within the current request.
 	 *                      And don't rely anymore on the webhook's `pending_delivery` property to achieve the same goal.
-	 * @since [version] Remove the processed flag as the ActionScheduler prevents multiple additions of the same hook.
+	 * @since 1.0.0 Remove the processed flag as the ActionScheduler prevents multiple additions of the same hook.
 	 *
 	 * @param mixed ...$args Arguments from the hook.
 	 * @return int|false Timestamp of the scheduled event when the webhook is successfully scheduled.

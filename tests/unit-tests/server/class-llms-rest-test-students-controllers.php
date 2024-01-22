@@ -9,7 +9,7 @@
  * @group rest_users
  *
  * @since 1.0.0-beta.1
- * @version [version]
+ * @version 1.0.0
  */
 class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users {
 
@@ -679,7 +679,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	 * Test get items with enrollment filters.
 	 *
 	 * @since Unknown
-	 * @since [version] Clean user query cache after enrollments.
+	 * @since 1.0.0 Clean user query cache after enrollments.
 	 *
 	 * @return void
 	 */
