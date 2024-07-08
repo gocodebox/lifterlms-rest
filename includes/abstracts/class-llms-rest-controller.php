@@ -121,7 +121,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $this->get_object_id( $object ) ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -206,7 +205,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response->set_status( 204 );
 
 		return $response;
-
 	}
 
 	/**
@@ -298,7 +296,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -343,7 +340,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response = $this->add_header_pagination( $response, $pagination, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -375,7 +371,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$prepared = $this->map_params_to_query_args( $prepared, $registered, $request );
 
 		return $prepared;
-
 	}
 
 	/**
@@ -551,7 +546,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -570,7 +564,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				)
 			),
 		);
-
 	}
 
 	/**
@@ -599,7 +592,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$schema = $this->get_item_schema();
 		$keys   = array_keys( $schema['properties'] );
 		return array_combine( $keys, $keys );
-
 	}
 
 	/**
@@ -639,7 +631,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		 * Note: WordPress core doesn't cache the additional fields in the schema, see https://core.trac.wordpress.org/ticket/47871#comment:5
 		 */
 		return $this->add_additional_fields_schema( $this->schema );
-
 	}
 
 	/**
@@ -661,7 +652,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		return $schema;
-
 	}
 
 	/**
@@ -713,7 +703,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		return $additional_fields;
-
 	}
 
 	/**
@@ -752,7 +741,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		);
 
 		return $meta;
-
 	}
 
 	/**
@@ -805,11 +793,13 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 			$new_fields = array_diff_key( $schema['properties'], $unfiltered_schema['properties'] );
 			if ( count( $new_fields ) > 0 ) {
 				_doing_it_wrong(
-					"llms_rest_{$object_type}_item_schema",
-					sprintf(
+					esc_html( "llms_rest_{$object_type}_item_schema" ),
+					esc_html(
+						sprintf(
 						/* translators: %s: register_rest_field */
-						__( 'Please use %s to add new schema properties.', 'lifterlms' ),
-						'register_rest_field()'
+							__( 'Please use %s to add new schema properties.', 'lifterlms' ),
+							'register_rest_field()'
+						)
 					),
 					'[version]'
 				);
@@ -836,7 +826,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		return $schema['title'];
-
 	}
 
 	/**
@@ -860,7 +849,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		}
 
 		return $prepared;
-
 	}
 
 	/**
@@ -890,7 +878,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response->add_links( $this->prepare_links( $object, $request ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -917,7 +904,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		);
 
 		return $links;
-
 	}
 
 	/**
@@ -980,7 +966,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
@@ -1033,7 +1018,6 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -1063,7 +1047,5 @@ abstract class LLMS_REST_Controller extends LLMS_REST_Controller_Stubs {
 		if ( is_wp_error( $meta_update ) ) {
 			return $meta_update;
 		}
-
 	}
-
 }
