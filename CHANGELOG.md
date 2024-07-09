@@ -1,6 +1,18 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.1 - 2024-07-09
+-------------------
+
+##### Bug Fixes
+
++ Update the processed flag to use all arguments. [#2568](https://github.com/gocodebox/lifterlms-rest/issues/2568)
+
+##### Security Fixes
+
++ Adds additional security checks and escaping.
+
+
 v1.0.0 - 2024-01-22
 -------------------
 

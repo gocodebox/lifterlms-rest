@@ -28,7 +28,6 @@ class LLMS_REST_Admin_Form_Controller {
 	public function __construct() {
 
 		add_action( 'admin_init', array( $this, 'handle_events' ) );
-
 	}
 
 	/**
@@ -60,7 +59,6 @@ class LLMS_REST_Admin_Form_Controller {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -83,12 +81,11 @@ class LLMS_REST_Admin_Form_Controller {
 		header( 'Expires: 0' );
 
 		// Translators: %s = Consumer Key.
-		printf( __( 'Consumer Key: %s', 'lifterlms' ), $info['ck'] );
+		printf( esc_html__( 'Consumer Key: %s', 'lifterlms' ), esc_html( $info['ck'] ) );
 		echo "\r\n";
 		// Translators: %s = Consumer Secret.
-		printf( __( 'Consumer Secret: %s', 'lifterlms' ), $info['cs'] );
+		printf( esc_html__( 'Consumer Secret: %s', 'lifterlms' ), esc_html( $info['cs'] ) );
 		die();
-
 	}
 
 	/**
@@ -144,7 +141,6 @@ class LLMS_REST_Admin_Form_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -182,9 +178,7 @@ class LLMS_REST_Admin_Form_Controller {
 			'ck' => $consumer_key,
 			'cs' => $key->get( 'consumer_secret' ),
 		);
-
 	}
-
 }
 
 return new LLMS_REST_Admin_Form_Controller();

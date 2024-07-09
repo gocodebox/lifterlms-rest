@@ -43,7 +43,6 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 
 		add_filter( 'llms_table_get_table_classes', array( $this, 'get_table_classes' ), 10, 2 );
 		add_action( 'lifterlms_admin_field_title-with-html', array( $this, 'output_title_field' ), 10 );
-
 	}
 
 	/**
@@ -63,7 +62,6 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 			$current = $all ? $all[0] : 'main';
 		}
 		return $current;
-
 	}
 
 	/**
@@ -93,7 +91,6 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		 * @param array $sections Array of settings page tabs.
 		 */
 		return apply_filters( 'llms_rest_api_settings_sections', $sections );
-
 	}
 
 	/**
@@ -115,7 +112,6 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 		}
 
 		return apply_filters( 'llms_rest_api_settings_' . $curr_section, $settings );
-
 	}
 
 	/**
@@ -133,7 +129,6 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 			$classes[] = 'text-left';
 		}
 		return $classes;
-
 	}
 
 	/**
@@ -146,11 +141,9 @@ class LLMS_Rest_Admin_Settings_Page extends LLMS_Settings_Page {
 	 */
 	public function output_title_field( $field ) {
 
-		echo '<p class="llms-label">' . esc_html( $field['title'] ) . ' ' . $field['html'] . '</p>';
+		echo '<p class="llms-label">' . esc_html( $field['title'] ) . ' ' . wp_kses_post( $field['html'] ) . '</p>';
 		echo '<table class="form-table">';
-
 	}
-
 }
 
 return new LLMS_Rest_Admin_Settings_Page();

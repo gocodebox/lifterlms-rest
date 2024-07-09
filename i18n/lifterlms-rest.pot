@@ -2,50 +2,54 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.0\n"
+"Project-Id-Version: LifterLMS REST API 1.0.1\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-22T15:02:15+00:00\n"
+"POT-Creation-Date: 2024-07-09T14:31:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms/dev 0.2.1\n"
 "X-Domain: lifterlms\n"
 
 #. Plugin Name of the plugin
+#: lifterlms-rest.php
 #: includes/class-llms-rest-authentication.php:286
 msgid "LifterLMS REST API"
 msgstr ""
 
 #. Plugin URI of the plugin
 #. Author URI of the plugin
+#: lifterlms-rest.php
 msgid "https://lifterlms.com/"
 msgstr ""
 
 #. Description of the plugin
+#: lifterlms-rest.php
 msgid "REST API feature plugin for the LifterLMS Core."
 msgstr ""
 
 #. Author of the plugin
+#: lifterlms-rest.php
 msgid "LifterLMS"
 msgstr ""
 
 #. Translators: %s = method name.
 #: includes/abstracts/class-llms-rest-controller-stubs.php:56
-#: includes/abstracts/class-llms-rest-controller-stubs.php:72
+#: includes/abstracts/class-llms-rest-controller-stubs.php:71
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
 #. Translators: %s = method name.
-#: includes/abstracts/class-llms-rest-controller-stubs.php:90
-#: includes/abstracts/class-llms-rest-controller-stubs.php:119
-#: includes/abstracts/class-llms-rest-controller-stubs.php:138
-#: includes/abstracts/class-llms-rest-controller-stubs.php:156
-#: includes/abstracts/class-llms-rest-controller-stubs.php:182
-#: includes/abstracts/class-llms-rest-controller-stubs.php:238
-#: includes/abstracts/class-llms-rest-controller-stubs.php:270
+#: includes/abstracts/class-llms-rest-controller-stubs.php:88
+#: includes/abstracts/class-llms-rest-controller-stubs.php:116
+#: includes/abstracts/class-llms-rest-controller-stubs.php:134
+#: includes/abstracts/class-llms-rest-controller-stubs.php:151
+#: includes/abstracts/class-llms-rest-controller-stubs.php:176
+#: includes/abstracts/class-llms-rest-controller-stubs.php:230
+#: includes/abstracts/class-llms-rest-controller-stubs.php:261
 msgid "Method '%s' must be overridden."
 msgstr ""
 
@@ -53,50 +57,50 @@ msgstr ""
 msgid "Cannot create an existing resource."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:234
+#: includes/abstracts/class-llms-rest-controller.php:232
 msgid "Column names to be searched. Accepts a single column or a comma separated list of columns."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:246
+#: includes/abstracts/class-llms-rest-controller.php:244
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:254
+#: includes/abstracts/class-llms-rest-controller.php:252
 msgid "Sort collection by object attribute."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:262
+#: includes/abstracts/class-llms-rest-controller.php:260
 msgid "Limit results to a list of ids. Accepts a single id or a comma separated list of ids."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:271
+#: includes/abstracts/class-llms-rest-controller.php:269
 msgid "Exclude a list of ids from results. Accepts a single id or a comma separated list of ids."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:336
+#: includes/abstracts/class-llms-rest-controller.php:333
 msgid "The page number requested is larger than the number of pages available."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:413
-#: includes/abstracts/class-llms-rest-controller.php:445
+#: includes/abstracts/class-llms-rest-controller.php:408
+#: includes/abstracts/class-llms-rest-controller.php:440
 msgid "You must provide a valid set of columns to search into."
 msgstr ""
 
 #. Translators: %1$s comma separated list of search columns.
-#: includes/abstracts/class-llms-rest-controller.php:428
+#: includes/abstracts/class-llms-rest-controller.php:423
 msgid "You are not allowed to search into the provided column(s): %1$s"
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:456
+#: includes/abstracts/class-llms-rest-controller.php:451
 msgid "You need to define a search term to order by relevance."
 msgstr ""
 
 #. translators: %s: register_rest_field
-#: includes/abstracts/class-llms-rest-controller.php:811
+#: includes/abstracts/class-llms-rest-controller.php:800
 msgid "Please use %s to add new schema properties."
 msgstr ""
 
-#: includes/abstracts/class-llms-rest-controller.php:958
+#: includes/abstracts/class-llms-rest-controller.php:944
 msgid "Unique identifier for the resource."
 msgstr ""
 
@@ -431,32 +435,32 @@ msgstr ""
 msgid "Username is not editable."
 msgstr ""
 
-#: includes/admin/class-llms-rest-admin-form-controller.php:47
+#: includes/admin/class-llms-rest-admin-form-controller.php:46
 msgid "The API Key has been successfully deleted."
 msgstr ""
 
-#: includes/admin/class-llms-rest-admin-form-controller.php:55
+#: includes/admin/class-llms-rest-admin-form-controller.php:54
 msgid "The webhook has been successfully deleted."
 msgstr ""
 
 #. Translators: %s = Consumer Key.
-#: includes/admin/class-llms-rest-admin-form-controller.php:86
+#: includes/admin/class-llms-rest-admin-form-controller.php:84
 msgid "Consumer Key: %s"
 msgstr ""
 
 #. Translators: %s = Consumer Secret.
-#: includes/admin/class-llms-rest-admin-form-controller.php:89
+#: includes/admin/class-llms-rest-admin-form-controller.php:87
 msgid "Consumer Secret: %s"
 msgstr ""
 
 #. Translators: %s = Webhook ID.
-#: includes/admin/class-llms-rest-admin-form-controller.php:130
+#: includes/admin/class-llms-rest-admin-form-controller.php:127
 msgid "\"%s\" is not a valid Webhook."
 msgstr ""
 
 #. Translators: %1$s = error message; %2$s = error code.
 #. Translators: %1$s = Error message; %2$s = Error code.
-#: includes/admin/class-llms-rest-admin-form-controller.php:142
+#: includes/admin/class-llms-rest-admin-form-controller.php:139
 #: includes/admin/class-llms-rest-admin-settings-api-keys.php:249
 msgid "Error: %1$s [Code: %2$s]"
 msgstr ""
@@ -466,7 +470,7 @@ msgid "API Key Details"
 msgstr ""
 
 #: includes/admin/class-llms-rest-admin-settings-api-keys.php:54
-#: includes/admin/class-llms-rest-admin-settings-page.php:81
+#: includes/admin/class-llms-rest-admin-settings-page.php:79
 msgid "API Keys"
 msgstr ""
 
@@ -555,7 +559,7 @@ msgstr ""
 msgid "REST API"
 msgstr ""
 
-#: includes/admin/class-llms-rest-admin-settings-page.php:85
+#: includes/admin/class-llms-rest-admin-settings-page.php:83
 #: includes/admin/class-llms-rest-admin-settings-webhooks.php:44
 msgid "Webhooks"
 msgstr ""
