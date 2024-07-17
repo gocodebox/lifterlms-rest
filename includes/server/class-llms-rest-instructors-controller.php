@@ -50,7 +50,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		return current_user_can( 'list_users', $item_id );
 	}
 
-
 	/**
 	 * Format query arguments to retrieve a collection of objects
 	 *
@@ -70,16 +69,13 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 			$query_args = array_merge(
 				$query_args,
 				array(
-					'roles' => array(
-						'instructor',
-					),
+					'roles' => $this->get_item_schema_base()['properties']['roles']['default'],
 				)
 			);
 		}
 
 		return $query_args;
 	}
-
 
 	/**
 	 * Determine if current user has permission to create a user.
