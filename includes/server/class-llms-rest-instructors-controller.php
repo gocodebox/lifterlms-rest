@@ -53,7 +53,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Format query arguments to retrieve a collection of objects
 	 *
-	 * @since [version]
+	 * @since 1.0.2
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return array|WP_Error

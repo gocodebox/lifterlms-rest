@@ -1,4 +1,0 @@
-significance: patch
-type: fixed
-entry: Removes the unavailable quiz resource link from the lessons resource
-  until the quiz resource is added.

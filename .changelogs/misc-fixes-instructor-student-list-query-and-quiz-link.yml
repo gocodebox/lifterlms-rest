@@ -1,4 +1,0 @@
-significance: patch
-type: fixed
-entry: Show only instructor and student roles in the instructor and student list
-  responses by default.

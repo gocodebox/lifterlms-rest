@@ -1,6 +1,15 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.2 - 2024-07-18
+-------------------
+
+##### Bug Fixes
+
++ Removes the unavailable quiz resource link from the lessons resource until the quiz resource is added.
++ Show only instructor and student roles in the instructor and student list responses by default.
+
+
 v1.0.1 - 2024-07-09
 -------------------
 

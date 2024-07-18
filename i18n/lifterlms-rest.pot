@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.1\n"
+"Project-Id-Version: LifterLMS REST API 1.0.2\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-09T14:31:15+00:00\n"
+"POT-Creation-Date: 2024-07-18T17:20:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms/dev 0.2.1\n"
 "X-Domain: lifterlms\n"
@@ -946,12 +946,12 @@ msgid "List of course instructors. Defaults to current user when creating a new 
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:248
-#: includes/server/class-llms-rest-lessons-controller.php:370
+#: includes/server/class-llms-rest-lessons-controller.php:367
 msgid "URL to an oEmbed enable audio URL."
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:257
-#: includes/server/class-llms-rest-lessons-controller.php:379
+#: includes/server/class-llms-rest-lessons-controller.php:376
 msgid "URL to an oEmbed enable video URL."
 msgstr ""
 
@@ -1177,76 +1177,76 @@ msgstr ""
 msgid "The enrollment trigger. Default is `any`."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:65
+#: includes/server/class-llms-rest-instructors-controller.php:91
 msgid "You are not allowed to create new instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:83
+#: includes/server/class-llms-rest-instructors-controller.php:108
 msgid "You are not allowed to delete this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:102
+#: includes/server/class-llms-rest-instructors-controller.php:126
 msgid "Retrieve only instructors for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:110
+#: includes/server/class-llms-rest-instructors-controller.php:134
 msgid "Exclude instructors who do not have permissions for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:132
+#: includes/server/class-llms-rest-instructors-controller.php:155
 msgid "You are not allowed to view this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:168
+#: includes/server/class-llms-rest-instructors-controller.php:189
 msgid "You are not allowed to list instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:256
+#: includes/server/class-llms-rest-instructors-controller.php:273
 msgid "You are not allowed to edit this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:169
+#: includes/server/class-llms-rest-lessons-controller.php:168
 msgid "Invalid course_id param. It must be a valid Course ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:180
+#: includes/server/class-llms-rest-lessons-controller.php:179
 #: includes/server/class-llms-rest-sections-controller.php:221
 msgid "Invalid order param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:201
+#: includes/server/class-llms-rest-lessons-controller.php:200
 msgid "Invalid drip_days param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:326
+#: includes/server/class-llms-rest-lessons-controller.php:323
 msgid "WordPress post ID of the parent item. Must be a Section ID. 0 indicates an \"orphaned\" lesson which can be edited and viewed by instructors and admins but cannot be read by students."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:334
+#: includes/server/class-llms-rest-lessons-controller.php:331
 msgid "WordPress post ID of the lesson's parent course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:343
+#: includes/server/class-llms-rest-lessons-controller.php:340
 msgid "Order of the lesson within its immediate parent."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:353
+#: includes/server/class-llms-rest-lessons-controller.php:350
 msgid "Lesson ID of the prerequisite lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:361
+#: includes/server/class-llms-rest-lessons-controller.php:358
 msgid "Determines the weight of the lesson when grading the course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:388
+#: includes/server/class-llms-rest-lessons-controller.php:385
 msgid "The date and time when the lesson becomes available. Applicable only when drip_method is date. Format: Y-m-d H:i:s."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:396
+#: includes/server/class-llms-rest-lessons-controller.php:393
 msgid "Number of days to wait before allowing access to the lesson. Applicable only when drip_method is enrollment, start, or prerequisite."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:405
+#: includes/server/class-llms-rest-lessons-controller.php:402
 msgid ""
 "Determine the method with which to make the lesson content available.\n"
 "\t\t\t\t\t<ul>\n"
@@ -1258,23 +1258,23 @@ msgid ""
 "\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:422
+#: includes/server/class-llms-rest-lessons-controller.php:419
 msgid "Denotes a lesson that's publicly accessible regardless of course enrollment."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:428
+#: includes/server/class-llms-rest-lessons-controller.php:425
 msgid "Associate a quiz with this lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:437
+#: includes/server/class-llms-rest-lessons-controller.php:434
 msgid "Determines if a quiz is enabled for the lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:443
+#: includes/server/class-llms-rest-lessons-controller.php:440
 msgid "The post ID of the associated quiz."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:452
+#: includes/server/class-llms-rest-lessons-controller.php:449
 msgid ""
 "Determines lesson progression requirements related to the quiz.\n"
 "\t\t\t\t\t\t\t<ul>\n"
@@ -1283,7 +1283,7 @@ msgid ""
 "\t\t\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:510
+#: includes/server/class-llms-rest-lessons-controller.php:506
 msgid "Filter lessons by the parent post (section) ID."
 msgstr ""
 
@@ -1368,35 +1368,35 @@ msgstr ""
 msgid "Filter sections by the parent post (course) ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:75
+#: includes/server/class-llms-rest-students-controller.php:74
 msgid "You are not allowed to create new students."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:93
+#: includes/server/class-llms-rest-students-controller.php:91
 msgid "You are not allowed to delete this student."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:112
+#: includes/server/class-llms-rest-students-controller.php:109
 msgid "Retrieve only students enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:120
+#: includes/server/class-llms-rest-students-controller.php:117
 msgid "Retrieve only students not enrolled in the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:158
+#: includes/server/class-llms-rest-students-controller.php:153
 msgid "You are not allowed to view this student."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:176
+#: includes/server/class-llms-rest-students-controller.php:170
 msgid "You are not allowed to filter students by role."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:180
+#: includes/server/class-llms-rest-students-controller.php:174
 msgid "You are not allowed to list students."
 msgstr ""
 
-#: includes/server/class-llms-rest-students-controller.php:377
+#: includes/server/class-llms-rest-students-controller.php:393
 msgid "You are not allowed to edit this student."
 msgstr ""
 
