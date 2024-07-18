@@ -166,10 +166,10 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 		global $wpdb;
 		$wpdb->query( "TRUNCATE TABLE {$wpdb->users}" );
 
-		$admin_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		$admin_id = $this->factory->user->create( array( 'role' => 'instructor' ) );
 
 		wp_set_current_user( $admin_id );
-		// other 24 users except the admin who's an instructor too.
+
 		$ids = $this->factory->user->create_many( 24, array( 'role' => 'instructor' ) );
 		$this->pagination_test( $this->route, $admin_id );
 
