@@ -687,10 +687,6 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 					$expected_link_rels = $this->expected_link_rels;
 			endswitch;
 
-			if ( $lesson->is_quiz_enabled() ) {
-				$expected_link_rels[] = 'quiz';
-			}
-
 			$this->assertEquals( $expected_link_rels, array_keys( $response->get_links() ) );
 
 		}

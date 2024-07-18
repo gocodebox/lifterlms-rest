@@ -543,12 +543,12 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		global $wpdb;
 
+		$student_total = 25;
 		$this->factory->user->create_many( 5 );
-		$this->factory->student->create_many( 25 );
-		$db_total = absint( $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" ) );
+		$this->factory->student->create_many( $student_total );
 
 
-		$db_pages = ceil( $db_total / 10 );
+		$db_pages = ceil( $student_total / 10 );
 
 		wp_set_current_user( $this->user_admin );
 
@@ -561,7 +561,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		// Check Pagination headers.
 		$headers = $res->get_headers();
-		$this->assertEquals( $db_total, $headers['X-WP-Total'] );
+		$this->assertEquals( $student_total, $headers['X-WP-Total'] );
 		$this->assertEquals( $db_pages, $headers['X-WP-TotalPages'] );
 
 		// Link headers.
@@ -590,7 +590,7 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 
 		// Check Pagination headers.
 		$headers = $res->get_headers();
-		$this->assertEquals( $db_total, $headers['X-WP-Total'] );
+		$this->assertEquals( $student_total, $headers['X-WP-Total'] );
 		$this->assertEquals( 1, $headers['X-WP-TotalPages'] );
 
 		// No links because this is the only page.
@@ -606,8 +606,8 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	public function test_get_items_orderby_id() {
 
 		wp_set_current_user( $this->user_admin );
-		$low = $this->factory->user->create( array() );
-		$high = $this->factory->user->create( array() );
+		$low = $this->factory->user->create( array( 'role' => 'student', ) );
+		$high = $this->factory->user->create( array( 'role' => 'student', ) );
 		$args = array( 'include' => array( $low, $high ), 'orderby' => 'id' );
 
 		// Default / asc.
@@ -624,8 +624,8 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	public function test_get_items_orderby_email() {
 
 		wp_set_current_user( $this->user_admin );
-		$low = $this->factory->user->create( array( array( 'user_email' => 'aemail@mock.tld' ) ) );
-		$high = $this->factory->user->create( array( array( 'user_email' => 'bemail@mock.tld' ) ) );
+		$low = $this->factory->user->create( array( array( 'user_email' => 'aemail@mock.tld' ), 'role' => 'student' ) );
+		$high = $this->factory->user->create( array( array( 'user_email' => 'bemail@mock.tld' ), 'role' => 'student' ) );
 		$args = array( 'include' => array( $low, $high ), 'orderby' => 'email' );
 
 		// Default / asc.
@@ -642,8 +642,8 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	public function test_get_items_orderby_name() {
 
 		wp_set_current_user( $this->user_admin );
-		$low = $this->factory->user->create( array( 'display_name' => 'A Name' ) );
-		$high = $this->factory->user->create( array( 'display_name' => 'B Name' ) );
+		$low = $this->factory->user->create( array( 'display_name' => 'A Name', 'role' => 'student' ) );
+		$high = $this->factory->user->create( array( 'display_name' => 'B Name', 'role' => 'student' ) );
 		$args = array( 'include' => array( $low, $high ), 'orderby' => 'name' );
 
 		// Default / asc.
@@ -660,8 +660,8 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	public function test_get_items_orderby_registered_date() {
 
 		wp_set_current_user( $this->user_admin );
-		$low = $this->factory->user->create( array( 'user_registered' => date( 'Y-m-d h:i:s', strtotime( '-5 days', time() ) ) ) );
-		$high = $this->factory->user->create();
+		$low = $this->factory->user->create( array( 'role' => 'student', 'user_registered' => date( 'Y-m-d h:i:s', strtotime( '-5 days', time() ) ) ) );
+		$high = $this->factory->user->create( array( 'role' => 'student' ) );
 		$args = array( 'include' => array( $low, $high ), 'orderby' => 'registered_date' );
 
 		// Default / asc.
