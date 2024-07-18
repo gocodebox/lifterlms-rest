@@ -91,7 +91,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		parent::__construct();
 
 		$this->collection_params = $this->build_collection_params();
-
 	}
 
 	/**
@@ -254,7 +253,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 * @param array           $schema        The item schema.
 		 */
 		return apply_filters( 'llms_rest_pre_insert_lesson', $prepared_item, $request, $schema );
-
 	}
 
 	/**
@@ -307,7 +305,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return ! empty( $to_set );
-
 	}
 
 	/**
@@ -469,7 +466,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		$schema['properties'] = array_merge( (array) $schema['properties'], $lesson_properties );
 
 		return $schema;
-
 	}
 
 	/**
@@ -513,7 +509,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		return $query_params;
-
 	}
 
 	/**
@@ -597,7 +592,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 * @param WP_REST_Request $request Full details about the request.
 		 */
 		return apply_filters( 'llms_rest_prepare_lesson_object_response', $data, $lesson, $request );
-
 	}
 
 	/**
@@ -694,7 +688,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 * @param LLMS_Lesson $lesson  Lesson object.
 		 */
 		return apply_filters( 'llms_rest_lesson_filters_removed_for_response', $filters, $lesson );
-
 	}
 
 	/**
@@ -774,14 +767,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			);
 		}
 
-		// Quiz.
-		if ( $lesson->is_quiz_enabled() ) {
-			$quiz                 = $lesson->get_quiz();
-			$lesson_links['quiz'] = array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', 'llms/v1', 'quizzes', $quiz->get( 'id' ) ) ),
-			);
-		}
-
 		$links = array_merge( $links, $lesson_links );
 
 		/**
@@ -793,7 +778,6 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 * @param LLMS_Lesson $lesson Lesson object.
 		 */
 		return apply_filters( 'llms_rest_lesson_links', $links, $lesson );
-
 	}
 
 	/**
@@ -821,7 +805,5 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		 * At the moment we grant lessons read permission only to who can edit lessons.
 		 */
 		return parent::check_update_permission( $lesson );
-
 	}
-
 }

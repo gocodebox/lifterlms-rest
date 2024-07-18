@@ -48,7 +48,33 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return current_user_can( 'list_users', $item_id );
+	}
 
+	/**
+	 * Format query arguments to retrieve a collection of objects
+	 *
+	 * @since [version]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array|WP_Error
+	 */
+	protected function prepare_collection_query_args( $request ) {
+
+		$query_args = parent::prepare_collection_query_args( $request );
+		if ( is_wp_error( $query_args ) ) {
+			return $query_args;
+		}
+
+		if ( empty( $request['roles'] ) ) {
+			$query_args = array_merge(
+				$query_args,
+				array(
+					'roles' => $this->get_item_schema_base()['properties']['roles']['default'],
+				)
+			);
+		}
+
+		return $query_args;
 	}
 
 	/**
@@ -66,7 +92,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return $this->check_roles_permissions( $request );
-
 	}
 
 	/**
@@ -84,7 +109,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -115,7 +139,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		);
 
 		return $params;
-
 	}
 
 	/**
@@ -133,7 +156,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -150,7 +172,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		$schema['properties']['roles']['default'] = array( 'instructor' );
 
 		return $schema;
-
 	}
 
 	/**
@@ -169,7 +190,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -184,7 +204,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 
 		$instructor = llms_get_instructor( $id );
 		return $instructor ? $instructor : llms_rest_not_found_error();
-
 	}
 
 	/**
@@ -206,7 +225,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		);
 
 		return $links;
-
 	}
 
 	/**
@@ -234,7 +252,6 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return $object;
-
 	}
 
 	/**
@@ -257,7 +274,5 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		}
 
 		return $this->check_roles_permissions( $request );
-
 	}
-
 }
