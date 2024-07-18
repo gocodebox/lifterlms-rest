@@ -624,8 +624,8 @@ class LLMS_REST_Test_Students_Controllers extends LLMS_REST_Unit_Test_Case_Users
 	public function test_get_items_orderby_email() {
 
 		wp_set_current_user( $this->user_admin );
-		$low = $this->factory->user->create( array( array( 'user_email' => 'aemail@mock.tld', 'role' => 'student' ) ) );
-		$high = $this->factory->user->create( array( array( 'user_email' => 'bemail@mock.tld', 'role' => 'student' ) ) );
+		$low = $this->factory->user->create( array( array( 'user_email' => 'aemail@mock.tld' ), 'role' => 'student' ) );
+		$high = $this->factory->user->create( array( array( 'user_email' => 'bemail@mock.tld' ), 'role' => 'student' ) );
 		$args = array( 'include' => array( $low, $high ), 'orderby' => 'email' );
 
 		// Default / asc.
