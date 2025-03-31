@@ -52,7 +52,7 @@ class LLMS_REST_Test_Webhooks extends LLMS_REST_Unit_Test_Case_Base {
 
 		$ret = $this->webhooks->create( array(
 			'topic' => 'course.created',
-			'delivery_url' => 'https://mock.com',
+			'delivery_url' => 'https://sdlkfj.lifterlms.com',
 		) );
 
 		$this->assertIsWPError( $ret );
