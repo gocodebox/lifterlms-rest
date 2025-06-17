@@ -92,7 +92,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			$this->content_controller = new $this->content_controller_class();
 			$this->content_controller->set_collection_params( $this->get_content_collection_params() );
 		}
-
 	}
 
 	/**
@@ -225,7 +224,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $prepared_item;
-
 	}
 
 	/**
@@ -241,12 +239,13 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 
 		// Section's title.
 		$schema['properties']['title']['description'] = __( 'Section Title', 'lifterlms' );
+		$schema['properties']['title']['context'][]   = 'embed';
 
 		// Section's parent id.
 		$schema['properties']['parent_id'] = array(
 			'description' => __( 'WordPress post ID of the parent item. Must be a Course ID.', 'lifterlms' ),
 			'type'        => 'integer',
-			'context'     => array( 'view', 'edit' ),
+			'context'     => array( 'view', 'edit', 'embed' ),
 			'arg_options' => array(
 				'sanitize_callback' => 'absint',
 			),
@@ -285,7 +284,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $schema;
-
 	}
 
 	/**
@@ -352,7 +350,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$data['order'] = $section->get( 'order' );
 
 		return $data;
-
 	}
 
 	/**
@@ -490,7 +487,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return parent::check_read_permission( $section );
-
 	}
 
 	/**
@@ -525,7 +521,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		unset( $query_params['parent'] );
 
 		return $query_params;
-
 	}
 
 	/**
@@ -547,7 +542,5 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $result;
-
 	}
-
 }

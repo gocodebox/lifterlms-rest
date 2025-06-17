@@ -322,7 +322,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			'parent_id'    => array(
 				'description' => __( 'WordPress post ID of the parent item. Must be a Section ID. 0 indicates an "orphaned" lesson which can be edited and viewed by instructors and admins but cannot be read by students.', 'lifterlms' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'view', 'edit', 'embed' ),
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
 				),
@@ -330,7 +330,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			'course_id'    => array(
 				'description' => __( 'WordPress post ID of the lesson\'s parent course.', 'lifterlms' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'view', 'edit', 'embed' ),
 				'arg_options' => array(
 					'sanitize_callback' => 'absint',
 				),
@@ -375,7 +375,7 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 			'video_embed'  => array(
 				'description' => __( 'URL to an oEmbed enable video URL.', 'lifterlms' ),
 				'type'        => 'string',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'view', 'edit', 'embed' ),
 				'format'      => 'uri',
 				'arg_options' => array(
 					'sanitize_callback' => 'esc_url_raw',

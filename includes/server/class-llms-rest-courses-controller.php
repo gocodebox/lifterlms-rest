@@ -110,7 +110,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		$this->sections_controller = new LLMS_REST_Sections_Controller( '' );
 		$this->sections_controller->set_collection_params( $this->get_course_content_collection_params() );
-
 	}
 
 	/**
@@ -163,7 +162,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 				'schema' => array( $this->sections_controller, 'get_public_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
@@ -178,7 +176,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 
 		// For example.
 		return $object->get( 'id' );
-
 	}
 
 	/**
@@ -191,6 +188,8 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 	protected function get_item_schema_base() {
 
 		$schema = (array) parent::get_item_schema_base();
+
+		$schema['properties']['title']['context'][] = 'embed';
 
 		$course_properties = array(
 			'catalog_visibility'        => array(
@@ -539,7 +538,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		$schema['properties'] = array_merge( (array) $schema['properties'], $course_properties );
 
 		return $schema;
-
 	}
 
 	/**
@@ -682,7 +680,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		 * @param WP_REST_Request $request Full details about the request.
 		 */
 		return apply_filters( 'llms_rest_prepare_course_object_response', $data, $course, $request );
-
 	}
 
 	/**
@@ -786,7 +783,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		 * @param array           $schema        The item schema.
 		 */
 		return apply_filters( 'llms_rest_pre_insert_course', $prepared_item, $request, $schema );
-
 	}
 
 	/**
@@ -993,7 +989,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return ! empty( $to_set );
-
 	}
 
 	/**
@@ -1016,7 +1011,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		return isset( $taxonomy_base_map[ $base ] ) ? $taxonomy_base_map[ $base ] : $base;
-
 	}
 
 	/**
@@ -1098,7 +1092,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		 * @param LLMS_Course $course  Course object.
 		 */
 		return apply_filters( 'llms_rest_course_filters_removed_for_response', $filters, $course );
-
 	}
 
 	/**
@@ -1225,7 +1218,6 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		unset( $query_params['parent'] );
 
 		return $query_params;
-
 	}
 
 	/**
@@ -1247,7 +1239,5 @@ class LLMS_REST_Courses_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $result;
-
 	}
-
 }

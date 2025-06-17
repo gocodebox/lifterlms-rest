@@ -58,7 +58,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -76,7 +75,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -116,7 +114,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -162,7 +159,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return null;
-
 	}
 
 	/**
@@ -179,7 +175,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return rest_ensure_response( $response );
-
 	}
 
 	/**
@@ -216,14 +211,16 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				'student_id'   => array(
 					'description' => __( 'The ID of the student.', 'lifterlms' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
+					'embeddable'  => true,
 				),
 				'post_id'      => array(
 					'description' => __( 'The ID of the course/membership.', 'lifterlms' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
+					'embeddable'  => true,
 				),
 				'date_created' => array(
 					'description' => __( 'Creation date. Format: Y-m-d H:i:s', 'lifterlms' ),
@@ -257,7 +254,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				),
 			),
 		);
-
 	}
 
 	/**
@@ -307,7 +303,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		$obj->date_created = $this->get_date( $student, $post, 'ASC' );
 
 		return $obj;
-
 	}
 
 	/**
@@ -321,7 +316,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	protected function get_object_id( $object ) {
 
 		return array( $object->student_id, $object->post_id );
-
 	}
 
 
@@ -339,7 +333,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		$prepared['id'] = $request['id'];
 
 		return $prepared;
-
 	}
 
 	/**
@@ -373,16 +366,17 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				'href' => $base,
 			),
 			'post'    => array(
-				'type' => $post_type,
-				'href' => rest_url( sprintf( '/%1$s/%2$ss/%3$d', $this->namespace, $post_type, $object->post_id ) ),
+				'type'       => $post_type,
+				'href'       => rest_url( sprintf( '/%1$s/%2$ss/%3$d', $this->namespace, $post_type, $object->post_id ) ),
+				'embeddable' => true,
 			),
 			'student' => array(
-				'href' => rest_url( sprintf( '/%1$s/students/%2$d', $this->namespace, $object->student_id ) ),
+				'href'       => rest_url( sprintf( '/%1$s/students/%2$d', $this->namespace, $object->student_id ) ),
+				'embeddable' => true,
 			),
 		);
 
 		return $links;
-
 	}
 
 	/**
@@ -397,7 +391,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	protected function prepare_object_for_response( $object, $request ) {
 
 		return (array) $object;
-
 	}
 
 	/**
@@ -445,7 +438,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
@@ -463,7 +455,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -494,7 +485,6 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		return $this->get_object( array( $prepared['id'], $prepared['post_id'] ) );
-
 	}
 
 	/**
@@ -543,5 +533,4 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
 		return true;
 	}
-
 }

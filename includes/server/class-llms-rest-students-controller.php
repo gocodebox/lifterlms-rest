@@ -133,8 +133,10 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 	 */
 	public function get_item_schema_base() {
 
-		$schema                                   = parent::get_item_schema_base();
-		$schema['properties']['roles']['default'] = array( 'student' );
+		$schema                                     = parent::get_item_schema_base();
+		$schema['properties']['roles']['default']   = array( 'student' );
+		$schema['properties']['id']['context'][]    = 'embed';
+		$schema['properties']['email']['context'][] = 'embed';
 
 		return $schema;
 	}

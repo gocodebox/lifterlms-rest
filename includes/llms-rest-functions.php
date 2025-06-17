@@ -42,7 +42,6 @@ function llms_rest_deliver_webhook_async( $webhook_id, $args ) {
 	if ( $webhook ) {
 		$webhook->deliver( $args );
 	}
-
 }
 add_action( 'lifterlms_rest_deliver_webhook_async', 'llms_rest_deliver_webhook_async', 10, 2 );
 
@@ -64,10 +63,9 @@ function llms_rest_get_api_endpoint_data( $endpoint, $params = array() ) {
 
 	$res    = rest_do_request( $req );
 	$server = rest_get_server();
-	$json   = wp_json_encode( $server->response_to_data( $res, false ) );
+	$json   = wp_json_encode( $server->response_to_data( $res, true ) );
 
 	return json_decode( $json, true );
-
 }
 
 /**

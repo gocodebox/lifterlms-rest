@@ -71,7 +71,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
 		// Adds created and updated dates on instantiation.
 		parent::__construct();
-
 	}
 
 
@@ -92,7 +91,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 			),
 			LLMS_REST_API()->keys()->get_admin_url()
 		);
-
 	}
 
 	/**
@@ -134,7 +132,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		$hash      = hash_hmac( $hash_algo, $message, $this->get( 'secret' ) );
 
 		return sprintf( 't=%1$d,v1=%2$s', $ts, $hash );
-
 	}
 
 	/**
@@ -165,7 +162,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
 		$topic = explode( '.', $this->get( 'topic' ) );
 		return apply_filters( 'llms_rest_webhook_get_event', isset( $topic[1] ) ? $topic[1] : '', $this->get( 'id' ) );
-
 	}
 
 	/**
@@ -186,7 +182,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		}
 
 		return apply_filters( 'llms_rest_webhook_get_hooks', $hooks, $this->get( 'id' ) );
-
 	}
 
 	/**
@@ -231,7 +226,12 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 				$endpoint = sprintf( '/llms/v1/%1$ss/%2$d', $resource, $args[0] );
 			}
 
-			$payload = llms_rest_get_api_endpoint_data( $endpoint );
+			$payload = llms_rest_get_api_endpoint_data(
+				$endpoint,
+				array(
+					'_embed' => true,
+				)
+			);
 
 		}
 
@@ -250,7 +250,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		 * @param LLMS_REST_Webhook $this Webhook object.
 		 */
 		return apply_filters( 'llms_rest_webhook_get_payload', $payload, $resource, $event, $args, $this );
-
 	}
 
 	/**
@@ -264,7 +263,6 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 
 		$topic = explode( '.', $this->get( 'topic' ) );
 		return apply_filters( 'llms_rest_webhook_get_resource', $topic[0], $this->get( 'id' ) );
-
 	}
 
 	/**
@@ -317,7 +315,5 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 		}
 
 		return $this;
-
 	}
-
 }
