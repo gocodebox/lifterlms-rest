@@ -100,7 +100,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return $args;
-
 	}
 
 	/**
@@ -166,7 +165,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
@@ -191,7 +189,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -213,7 +210,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -261,7 +257,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -352,7 +347,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		);
 
 		return $response;
-
 	}
 
 	/**
@@ -376,7 +370,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -455,7 +448,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$response = $this->prepare_item_for_response( $enrollment, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -492,7 +484,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -528,7 +519,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return rest_ensure_response( $response );
-
 	}
 
 	/**
@@ -563,7 +553,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -616,7 +605,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$args = $this->prepare_items_query( $args );
 
 		return $args;
-
 	}
 
 	/**
@@ -741,7 +729,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			'[version]',
 			"llms_rest_{$this->get_object_type( $schema )}_item_schema"
 		);
-
 	}
 
 	/**
@@ -755,7 +742,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	protected function get_objects_from_query( $query ) {
 
 		return $query->items;
-
 	}
 
 	/**
@@ -809,7 +795,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$total_pages   = (int) ceil( $total_results / (int) $prepared['per_page'] );
 
 		return compact( 'current_page', 'total_results', 'total_pages' );
-
 	}
 
 	/**
@@ -833,7 +818,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$prepared['page'] = ! isset( $prepared['page'] ) ? 1 : $prepared['page'];
 
 		return $this->prepare_items_query( $prepared, $request );
-
 	}
 
 	/**
@@ -879,7 +863,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$query_args['is_students_route'] = $request ? false !== stristr( $request->get_route(), '/students/' ) : true;
 
 		return $query_args;
-
 	}
 
 	/**
@@ -1026,7 +1009,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count; // no-cache ok.
 
 		return $query;
-
 	}
 
 	/**
@@ -1086,33 +1068,37 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				),
 			),
 			'collection' => array(
-				'href' => rest_url(
+				'href'       => rest_url(
 					sprintf( '/%s/%s/%d/%s', 'llms/v1', 'students', $enrollment->student_id, 'enrollments' )
 				),
+				'embeddable' => true,
 			),
 			'student'    => array(
-				'href' => rest_url(
+				'href'       => rest_url(
 					sprintf( '/%s/%s/%d', 'llms/v1', 'students', $enrollment->student_id )
 				),
+				'embeddable' => true,
 			),
 		);
 
 		switch ( get_post_type( $enrollment->post_id ) ) :
 			case 'course':
 				$links['post'] = array(
-					'type' => 'course',
-					'href' => rest_url(
+					'type'       => 'course',
+					'href'       => rest_url(
 						sprintf( '/%s/%s/%d', 'llms/v1', 'courses', $enrollment->post_id )
 					),
+					'embeddable' => true,
 				);
 				break;
 
 			case 'llms_membership':
 				$links['post'] = array(
-					'type' => 'llms_membership',
-					'href' => rest_url(
+					'type'       => 'llms_membership',
+					'href'       => rest_url(
 						sprintf( '/%s/%s/%d', 'llms/v1', 'memberships', $enrollment->post_id )
 					),
+					'embeddable' => true,
 				);
 				break;
 		endswitch;
@@ -1126,7 +1112,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		 * @param stdClass $enrollment Enrollment object.
 		 */
 		return apply_filters( 'llms_rest_enrollment_links', $links, $enrollment );
-
 	}
 
 	/**
@@ -1156,7 +1141,6 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		endswitch;
 
 		return $updated;
-
 	}
 
 
@@ -1262,7 +1246,5 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 		}
 
 		return current_user_can( 'view_students', $enrollment->student_id );
-
 	}
-
 }

@@ -1,4 +1,0 @@
-significance: patch
-type: added
-entry: Augmented the student progress endpoint to return embedded data (student
-  and post).

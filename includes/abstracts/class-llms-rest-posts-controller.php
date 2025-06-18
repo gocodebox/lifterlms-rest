@@ -109,7 +109,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				'default'     => false,
 			),
 		);
-
 	}
 
 	/**
@@ -132,7 +131,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $params;
-
 	}
 
 	/**
@@ -163,7 +161,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -189,7 +186,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		$total_pages   = (int) ceil( $total_results / (int) $query->get( 'posts_per_page' ) );
 
 		return compact( 'current_page', 'total_results', 'total_pages' );
-
 	}
 
 	/**
@@ -411,7 +407,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $query_params;
-
 	}
 
 	/**
@@ -437,7 +432,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		$query_args = $this->prepare_items_query( $prepared, $request );
 
 		return $query_args;
-
 	}
 
 	/**
@@ -622,7 +616,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		do_action( "llms_rest_after_insert_{$this->post_type}", $object, $request, $schema, false );
 
 		return $this->prepare_item_for_response( $object, $request );
-
 	}
 
 	/**
@@ -673,7 +666,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -747,7 +739,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -786,7 +777,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	protected function get_objects_query( $prepared, $request ) {
 
 		return new WP_Query( $prepared );
-
 	}
 
 	/**
@@ -801,7 +791,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	protected function get_objects_from_query( $query ) {
 
 		return $query->posts;
-
 	}
 
 	/**
@@ -830,7 +819,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $items;
-
 	}
 
 	/**
@@ -880,7 +868,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		);
 
 		return $data;
-
 	}
 
 	/**
@@ -925,7 +912,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		wp_reset_postdata();
 
 		return $data;
-
 	}
 
 	/**
@@ -956,7 +942,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $query_args;
-
 	}
 
 	/**
@@ -985,7 +970,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $query_args;
-
 	}
 
 	/**
@@ -1093,7 +1077,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $prepared_item;
-
 	}
 
 	/**
@@ -1150,7 +1133,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 				'title'            => array(
 					'description' => __( 'Post title.', 'lifterlms' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'arg_options' => array(
 						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
 						'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
@@ -1165,7 +1148,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 						'rendered' => array(
 							'description' => __( 'Rendered title.', 'lifterlms' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'view', 'edit', 'embed' ),
 							'readonly'    => true,
 						),
 					),
@@ -1231,7 +1214,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 					'description' => __( 'Post URL.', 'lifterlms' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
 				'slug'             => array(
@@ -1246,7 +1229,7 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 					'description' => __( 'LifterLMS custom post type', 'lifterlms' ),
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 				),
 				'status'           => array(
 					'description' => __( 'The publication status of the post.', 'lifterlms' ),
@@ -1290,7 +1273,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		);
 
 		return $schema;
-
 	}
 
 	/**
@@ -1421,7 +1403,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $links;
-
 	}
 
 	/**
@@ -1454,7 +1435,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return $filters_removed;
-
 	}
 
 	/**
@@ -1504,7 +1484,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		 * @param LLMS_Post_Model $object  LLMS_Post_Model object.
 		 */
 		return apply_filters( "llms_rest_{$this->post_type}_filters_removed_for_response", array(), $object );
-
 	}
 
 	/**
@@ -1574,7 +1553,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		} else {
 			return delete_post_thumbnail( $object_id );
 		}
-
 	}
 
 	/**
@@ -1655,7 +1633,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 	protected function get_taxonomy_rest_base( $taxonomy ) {
 
 		return ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
-
 	}
 
 	/**
@@ -1669,7 +1646,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$post_type = get_post_type_object( $this->post_type );
 		return current_user_can( $post_type->cap->publish_posts );
-
 	}
 
 	/**
@@ -1684,7 +1660,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$post_type = get_post_type_object( $this->post_type );
 		return is_null( $object ) ? current_user_can( $post_type->cap->edit_posts ) : current_user_can( $post_type->cap->edit_post, $object->get( 'id' ) );
-
 	}
 
 	/**
@@ -1699,7 +1674,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		$post_type = get_post_type_object( $this->post_type );
 		return current_user_can( $post_type->cap->delete_post, $object->get( 'id' ) );
-
 	}
 
 	/**
@@ -1750,7 +1724,6 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 		}
 
 		return false;
-
 	}
 
 
@@ -1850,5 +1823,4 @@ abstract class LLMS_REST_Posts_Controller extends LLMS_REST_Controller {
 
 		return $statuses;
 	}
-
 }

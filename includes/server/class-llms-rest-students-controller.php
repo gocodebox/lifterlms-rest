@@ -137,6 +137,9 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 		$schema['properties']['roles']['default']   = array( 'student' );
 		$schema['properties']['id']['context'][]    = 'embed';
 		$schema['properties']['email']['context'][] = 'embed';
+		$schema['properties']['name']['context'][]  = 'embed';
+		$schema['properties']['first_name']['context'][] = 'embed';
+		$schema['properties']['last_name']['context'][]  = 'embed';
 
 		return $schema;
 	}
