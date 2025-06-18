@@ -1068,10 +1068,9 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 				),
 			),
 			'collection' => array(
-				'href'       => rest_url(
+				'href' => rest_url(
 					sprintf( '/%s/%s/%d/%s', 'llms/v1', 'students', $enrollment->student_id, 'enrollments' )
 				),
-				'embeddable' => true,
 			),
 			'student'    => array(
 				'href'       => rest_url(
