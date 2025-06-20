@@ -57,7 +57,6 @@ final class LifterLMS_REST_API {
 
 		// Load everything else.
 		add_action( 'plugins_loaded', array( $this, 'init' ), 10 );
-
 	}
 
 	/**
@@ -69,6 +68,10 @@ final class LifterLMS_REST_API {
 	 * @return void
 	 */
 	public function includes() {
+
+		if ( ! class_exists( 'LLMS_Abstract_Database_Store' ) ) {
+			return;
+		}
 
 		// Abstracts.
 		include_once LLMS_REST_API_PLUGIN_DIR . 'includes/abstracts/class-llms-rest-database-resource.php';
@@ -98,7 +101,6 @@ final class LifterLMS_REST_API {
 
 		add_action( 'rest_api_init', array( $this, 'rest_api_includes' ), 5 );
 		add_action( 'rest_api_init', array( $this, 'rest_api_controllers_init' ), 10 );
-
 	}
 
 	/**
@@ -185,7 +187,6 @@ final class LifterLMS_REST_API {
 			$controller_instance = new $controller();
 			$controller_instance->register_routes();
 		}
-
 	}
 
 	/**
@@ -216,7 +217,6 @@ final class LifterLMS_REST_API {
 
 		add_action( 'init', array( $this->webhooks(), 'load' ), 6 );
 		add_action( 'deleted_user', array( $this, 'on_user_deletion' ) );
-
 	}
 
 	/**
@@ -278,7 +278,6 @@ final class LifterLMS_REST_API {
 
 		// Load from the plugin's language file directory.
 		load_textdomain( 'lifterlms', LLMS_REST_API_PLUGIN_DIR . '/i18n/lifterlms-rest-' . $locale . '.mo' );
-
 	}
 
 	/**
@@ -293,5 +292,4 @@ final class LifterLMS_REST_API {
 	public function webhooks() {
 		return LLMS_REST_Webhooks::instance();
 	}
-
 }
