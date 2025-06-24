@@ -380,6 +380,8 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 			'page'     => $prepared['page'] ?? 1,
 		);
 
+		// TODO: Switch to get collection of courses, sections, or lessons for a student.
+
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS id
