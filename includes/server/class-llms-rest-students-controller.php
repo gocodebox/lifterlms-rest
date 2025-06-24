@@ -374,7 +374,8 @@ class LLMS_REST_Students_Controller extends LLMS_REST_Users_Controller {
 			'href' => sprintf( '%s/enrollments', $links['self']['href'] ),
 		);
 		$links['progress']    = array(
-			'href' => sprintf( '%s/progress', $links['self']['href'] ),
+			'href'       => sprintf( '%s/progress', $links['self']['href'] ),
+			'embeddable' => true,
 		);
 
 		return $links;

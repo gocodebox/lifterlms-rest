@@ -24,7 +24,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'students/(?P<id>[\d]+)/progress/(?P<post_id>[\d]+)';
+	protected $rest_base = 'students/(?P<id>[\d]+)/progress';
 
 	/**
 	 * Schema properties available for ordering the collection.
@@ -32,9 +32,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	 * @var string[]
 	 */
 	protected $orderby_properties = array(
-		'date_created',
-		'date_updated',
-		'progress',
+		'updated_date',
 	);
 
 	/**
@@ -53,7 +51,15 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		}
 
 		// Must be able to edit post and student to view other's progress.
-		if ( current_user_can( 'edit_post', $request['post_id'] ) && current_user_can( 'edit_students', $request['id'] ) ) {
+		if ( ! current_user_can( 'edit_students', $request['id'] ) ) {
+			return false;
+		}
+
+		if ( ! $request['post_id'] && current_user_can( 'edit_posts' ) ) {
+			return true;
+		}
+
+		if ( current_user_can( 'edit_post', $request['post_id'] ) ) {
 			return true;
 		}
 
@@ -175,6 +181,32 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		$response = $this->prepare_item_for_response( $object, $request );
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Determine if current user has permission to list all progress for a student.
+	 *
+	 * @since [version]]
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public function get_items_permissions_check( $request ) {
+
+		if ( get_current_user_id() === $request['id'] ) {
+			return true;
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return llms_rest_authorization_required_error( __( 'You are not allowed to view all progress.', 'lifterlms' ) );
+		}
+
+		// Must be able to edit post and student to view other's progress.
+		if ( ! current_user_can( 'edit_students', $request['id'] ) ) {
+			return llms_rest_authorization_required_error( __( 'You are not allowed to view progress for this student.', 'lifterlms' ) );
+		}
+
+		return true;
 	}
 
 	/**
@@ -305,6 +337,68 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		return $obj;
 	}
 
+	protected function get_pagination_data_from_query( $query, $prepared, $request ) {
+		global $wpdb;
+
+		$total_results = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+		$current_page  = isset( $prepared['paged'] ) ? (int) $prepared['paged'] : 1;
+		$total_pages   = absint( (int) ceil( $total_results / (int) $prepared['per_page'] ) );
+
+		return compact( 'current_page', 'total_results', 'total_pages' );
+	}
+
+	protected function get_objects_from_query( $query ) {
+		// The query is the array of objects via $wpdb->get_results() in this case.
+		return $query;
+	}
+
+	protected function prepare_collection_items_for_response( $objects, $request ) {
+
+		$items = array();
+
+		foreach ( $objects as $obj ) {
+			$object = $this->get_object( array( $request['id'], $obj->id ) );
+
+			if ( ! $this->check_read_object_permissions( $object ) ) {
+				continue;
+			}
+
+			$item = $this->prepare_item_for_response( $object, $request );
+			if ( ! is_wp_error( $item ) ) {
+				$items[] = $this->prepare_response_for_collection( $item );
+			}
+		}
+
+		return $items;
+	}
+
+	protected function get_objects_query( $prepared, $request ) {
+		global $wpdb;
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS id
+			 FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
+			 JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
+			 WHERE p.post_type = %s
+			   AND p.post_status = 'publish'
+			   AND upm.meta_key = '_status'
+			   AND upm.user_id = %d
+			 ORDER BY {$prepared['orderby']} {$prepared['order']}
+			 LIMIT %d, %d;
+			",
+				array(
+					'course',
+					$request['id'],
+					$prepared['per_page'] * ( $prepared['page'] - 1 ),
+					$prepared['per_page'],
+				)
+			),
+			'OBJECT_K'
+		); // db call ok; no-cache ok.
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	}
+
 	/**
 	 * Retrieve an ID from the object
 	 *
@@ -405,6 +499,32 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the student. The WP User ID.', 'lifterlms' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<post_id>[\d]+)',
 			array(
 				'args'   => array(
 					'id'      => array(
