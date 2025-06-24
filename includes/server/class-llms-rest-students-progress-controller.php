@@ -375,6 +375,11 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 	protected function get_objects_query( $prepared, $request ) {
 		global $wpdb;
 
+		$args = array(
+			'per_page' => $prepared['per_page'] ?? 10,
+			'page'     => $prepared['page'] ?? 1,
+		);
+
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT SQL_CALC_FOUND_ROWS DISTINCT upm.post_id AS id
@@ -390,8 +395,8 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 				array(
 					'course',
 					$request['id'],
-					$prepared['per_page'] * ( $prepared['page'] - 1 ),
-					$prepared['per_page'],
+					$args['per_page'] * ( $args['page'] - 1 ),
+					$args['per_page'],
 				)
 			),
 			'OBJECT_K'
