@@ -462,7 +462,7 @@ class LLMS_REST_Students_Progress_Controller extends LLMS_REST_Controller {
 
 		$links = array(
 			'self'    => array(
-				'href' => $base,
+				'href' => $base . '/' . $object->post_id,
 			),
 			'post'    => array(
 				'type'       => $post_type,
