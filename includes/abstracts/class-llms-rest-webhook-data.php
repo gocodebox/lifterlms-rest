@@ -222,6 +222,8 @@ abstract class LLMS_REST_Webhook_Data extends LLMS_Abstract_Database_Store {
 				$endpoint = sprintf( '/llms/v1/students/%1$d/enrollments/%2$d', $args[0], $args[1] );
 			} elseif ( 'progress' === $resource ) {
 				$endpoint = sprintf( '/llms/v1/students/%1$d/progress/%2$d', $args[0], $args[1] );
+			} elseif ( 'quiz_attempt' === $resource ) {
+				$endpoint = sprintf( '/llms/v1/quiz-attempts/%d', $args[2]->get( 'id' ) );
 			} else {
 				$endpoint = sprintf( '/llms/v1/%1$ss/%2$d', $resource, $args[0] );
 			}

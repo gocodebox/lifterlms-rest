@@ -82,7 +82,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		unset( $data['failure_count'] );
 
 		return $this->save( new $this->model(), $data );
-
 	}
 
 	/**
@@ -137,7 +136,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		);
 
 		return parent::get_default_column_values();
-
 	}
 
 	/**
@@ -175,7 +173,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'disabled' => __( 'Disabled', 'lifterlms' ),
 			)
 		);
-
 	}
 
 	/**
@@ -199,46 +196,46 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		return apply_filters(
 			'llms_rest_webhook_topics',
 			array(
-				'course.created'      => __( 'Course created', 'lifterlms' ),
-				'course.updated'      => __( 'Course updated', 'lifterlms' ),
-				'course.deleted'      => __( 'Course deleted', 'lifterlms' ),
-				'course.restored'     => __( 'Course restored', 'lifterlms' ),
-				'section.created'     => __( 'Section created', 'lifterlms' ),
-				'section.updated'     => __( 'Section updated', 'lifterlms' ),
-				'section.deleted'     => __( 'Section deleted', 'lifterlms' ),
-				'lesson.created'      => __( 'Lesson created', 'lifterlms' ),
-				'lesson.updated'      => __( 'Lesson updated', 'lifterlms' ),
-				'lesson.deleted'      => __( 'Lesson deleted', 'lifterlms' ),
-				'lesson.restored'     => __( 'Lesson restored', 'lifterlms' ),
-				'membership.created'  => __( 'Membership created', 'lifterlms' ),
-				'membership.updated'  => __( 'Membership updated', 'lifterlms' ),
-				'membership.deleted'  => __( 'Membership deleted', 'lifterlms' ),
-				'membership.restored' => __( 'Membership restored', 'lifterlms' ),
-				'access_plan.created' => __( 'Access Plan created', 'lifterlms' ),
-				'access_plan.updated' => __( 'Access Plan updated', 'lifterlms' ),
-				'access_plan.deleted' => __( 'Access Plan deleted', 'lifterlms' ),
-				'order.created'       => __( 'Order created', 'lifterlms' ),
-				'order.updated'       => __( 'Order updated', 'lifterlms' ),
-				'order.deleted'       => __( 'Order deleted', 'lifterlms' ),
-				'order.restored'      => __( 'Order restored', 'lifterlms' ),
-				'transaction.created' => __( 'Transaction created', 'lifterlms' ),
-				'transaction.updated' => __( 'Transaction updated', 'lifterlms' ),
-				'transaction.deleted' => __( 'Transaction deleted', 'lifterlms' ),
-				'student.created'     => __( 'Student created', 'lifterlms' ),
-				'student.updated'     => __( 'Student updated', 'lifterlms' ),
-				'student.deleted'     => __( 'Student deleted', 'lifterlms' ),
-				'enrollment.created'  => __( 'Enrollment created', 'lifterlms' ),
-				'enrollment.updated'  => __( 'Enrollment updated', 'lifterlms' ),
-				'enrollment.deleted'  => __( 'Enrollment deleted', 'lifterlms' ),
-				'progress.updated'    => __( 'Progress updated', 'lifterlms' ),
-				'progress.deleted'    => __( 'Progress deleted', 'lifterlms' ),
-				'instructor.created'  => __( 'Instructor created', 'lifterlms' ),
-				'instructor.updated'  => __( 'Instructor updated', 'lifterlms' ),
-				'instructor.deleted'  => __( 'Instructor deleted', 'lifterlms' ),
-				'action'              => __( 'Action', 'lifterlms' ),
+				'course.created'       => __( 'Course created', 'lifterlms' ),
+				'course.updated'       => __( 'Course updated', 'lifterlms' ),
+				'course.deleted'       => __( 'Course deleted', 'lifterlms' ),
+				'course.restored'      => __( 'Course restored', 'lifterlms' ),
+				'section.created'      => __( 'Section created', 'lifterlms' ),
+				'section.updated'      => __( 'Section updated', 'lifterlms' ),
+				'section.deleted'      => __( 'Section deleted', 'lifterlms' ),
+				'lesson.created'       => __( 'Lesson created', 'lifterlms' ),
+				'lesson.updated'       => __( 'Lesson updated', 'lifterlms' ),
+				'lesson.deleted'       => __( 'Lesson deleted', 'lifterlms' ),
+				'lesson.restored'      => __( 'Lesson restored', 'lifterlms' ),
+				'membership.created'   => __( 'Membership created', 'lifterlms' ),
+				'membership.updated'   => __( 'Membership updated', 'lifterlms' ),
+				'membership.deleted'   => __( 'Membership deleted', 'lifterlms' ),
+				'membership.restored'  => __( 'Membership restored', 'lifterlms' ),
+				'access_plan.created'  => __( 'Access Plan created', 'lifterlms' ),
+				'access_plan.updated'  => __( 'Access Plan updated', 'lifterlms' ),
+				'access_plan.deleted'  => __( 'Access Plan deleted', 'lifterlms' ),
+				'order.created'        => __( 'Order created', 'lifterlms' ),
+				'order.updated'        => __( 'Order updated', 'lifterlms' ),
+				'order.deleted'        => __( 'Order deleted', 'lifterlms' ),
+				'order.restored'       => __( 'Order restored', 'lifterlms' ),
+				'transaction.created'  => __( 'Transaction created', 'lifterlms' ),
+				'transaction.updated'  => __( 'Transaction updated', 'lifterlms' ),
+				'transaction.deleted'  => __( 'Transaction deleted', 'lifterlms' ),
+				'student.created'      => __( 'Student created', 'lifterlms' ),
+				'student.updated'      => __( 'Student updated', 'lifterlms' ),
+				'student.deleted'      => __( 'Student deleted', 'lifterlms' ),
+				'enrollment.created'   => __( 'Enrollment created', 'lifterlms' ),
+				'enrollment.updated'   => __( 'Enrollment updated', 'lifterlms' ),
+				'enrollment.deleted'   => __( 'Enrollment deleted', 'lifterlms' ),
+				'progress.updated'     => __( 'Progress updated', 'lifterlms' ),
+				'progress.deleted'     => __( 'Progress deleted', 'lifterlms' ),
+				'instructor.created'   => __( 'Instructor created', 'lifterlms' ),
+				'instructor.updated'   => __( 'Instructor updated', 'lifterlms' ),
+				'instructor.deleted'   => __( 'Instructor deleted', 'lifterlms' ),
+				'quiz_attempt.completed' => __( 'Quiz Attempt completed', 'lifterlms' ),
+				'action'               => __( 'Action', 'lifterlms' ),
 			)
 		);
-
 	}
 
 	/**
@@ -255,145 +252,147 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		$hooks = array(
 
 			// Courses.
-			'course.created'      => array(
+			'course.created'       => array(
 				'save_post_course' => 2,
 			),
-			'course.updated'      => array(
+			'course.updated'       => array(
 				'edit_post_course' => 2,
 			),
-			'course.deleted'      => array(
+			'course.deleted'       => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'course.restored'     => array(
+			'course.restored'      => array(
 				'untrashed_post' => 1,
 			),
 
 			// Sections.
-			'section.created'     => array(
+			'section.created'      => array(
 				'save_post_section' => 2,
 			),
-			'section.updated'     => array(
+			'section.updated'      => array(
 				'edit_post_section' => 2,
 			),
-			'section.deleted'     => array(
+			'section.deleted'      => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Lessons.
-			'lesson.created'      => array(
+			'lesson.created'       => array(
 				'save_post_lesson' => 2,
 			),
-			'lesson.updated'      => array(
+			'lesson.updated'       => array(
 				'edit_post_lesson' => 2,
 			),
-			'lesson.deleted'      => array(
+			'lesson.deleted'       => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'lesson.restored'     => array(
+			'lesson.restored'      => array(
 				'untrashed_post' => 1,
 			),
 
 			// Memberships.
-			'membership.created'  => array(
+			'membership.created'   => array(
 				'save_post_llms_membership' => 2,
 			),
-			'membership.updated'  => array(
+			'membership.updated'   => array(
 				'edit_post_llms_membership' => 2,
 			),
-			'membership.deleted'  => array(
+			'membership.deleted'   => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'membership.restored' => array(
+			'membership.restored'  => array(
 				'untrashed_post' => 1,
 			),
 
 			// Access Plans.
-			'access_plan.created' => array(
+			'access_plan.created'  => array(
 				'save_post_llms_access_plan' => 2,
 			),
-			'access_plan.updated' => array(
+			'access_plan.updated'  => array(
 				'edit_post_llms_access_plan' => 2,
 			),
-			'access_plan.deleted' => array(
+			'access_plan.deleted'  => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Orders.
-			'order.created'       => array(
+			'order.created'        => array(
 				'save_post_llms_order' => 2,
 			),
-			'order.updated'       => array(
+			'order.updated'        => array(
 				'edit_post_llms_order' => 2,
 			),
-			'order.deleted'       => array(
+			'order.deleted'        => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Transactions.
-			'transaction.created' => array(
+			'transaction.created'  => array(
 				'save_post_llms_transaction' => 2,
 			),
-			'transaction.updated' => array(
+			'transaction.updated'  => array(
 				'edit_post_llms_transaction' => 2,
 			),
-			'transaction.deleted' => array(
+			'transaction.deleted'  => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Students.
-			'student.created'     => array(
+			'student.created'      => array(
 				'user_register'             => 1,
 				'lifterlms_user_registered' => 1,
 			),
-			'student.updated'     => array(
+			'student.updated'      => array(
 				'profile_update'         => 1,
 				'lifterlms_user_updated' => 1,
 			),
-			'student.deleted'     => array(
+			'student.deleted'      => array(
 				'delete_user' => 1,
 			),
 
 			// Instructors.
-			'instructor.created'  => array(
+			'instructor.created'   => array(
 				'user_register' => 1,
 			),
-			'instructor.updated'  => array(
+			'instructor.updated'   => array(
 				'profile_update' => 1,
 			),
-			'instructor.deleted'  => array(
+			'instructor.deleted'   => array(
 				'delete_user' => 1,
 			),
 
-			'enrollment.created'  => array(
+			'enrollment.created'   => array(
 				'llms_user_course_enrollment_created'     => 2,
 				'llms_user_membership_enrollment_created' => 2,
 			),
-			'enrollment.updated'  => array(
+			'enrollment.updated'   => array(
 				'llms_user_course_enrollment_updated'     => 2,
 				'llms_user_membership_enrollment_updated' => 2,
 				'llms_user_removed_from_course'           => 2,
 				'llms_user_removed_from_membership'       => 2,
 			),
-			'enrollment.deleted'  => array(
+			'enrollment.deleted'   => array(
 				'llms_user_enrollment_deleted' => 2,
 			),
 
-			'progress.updated'    => array(
+			'progress.updated'     => array(
 				'llms_mark_complete'   => 2,
 				'llms_mark_incomplete' => 2,
 			),
 
+			'quiz_attempt.updated' => array(
+				'lifterlms_quiz_completed' => 3,
+			),
 		);
 
 		return apply_filters( 'llms_rest_webhooks_get_hooks', $hooks );
-
 	}
 
 	/**
@@ -422,7 +421,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'llms_transaction',
 			)
 		);
-
 	}
 
 	/**
@@ -457,7 +455,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -479,7 +476,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -513,11 +509,10 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		$loaded = 0;
 		foreach ( $hooks->get_webhooks() as $hook ) {
 			$hook->enqueue();
-			$loaded++;
+			++$loaded;
 		}
 
 		return $loaded;
-
 	}
 
 	/**
@@ -543,7 +538,6 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 
 		$obj->setup( $data )->save();
 		return $obj;
-
 	}
 
 	/**
@@ -580,7 +574,5 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		$data['updated'] = llms_current_time( 'mysql' );
 
 		return $data;
-
 	}
-
 }
