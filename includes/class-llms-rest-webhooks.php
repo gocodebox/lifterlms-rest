@@ -232,7 +232,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'instructor.created'   => __( 'Instructor created', 'lifterlms' ),
 				'instructor.updated'   => __( 'Instructor updated', 'lifterlms' ),
 				'instructor.deleted'   => __( 'Instructor deleted', 'lifterlms' ),
-				'quiz_attempt.completed' => __( 'Quiz Attempt completed', 'lifterlms' ),
+				'quiz_attempt.updated' => __( 'Quiz Attempt completed', 'lifterlms' ),
 				'action'               => __( 'Action', 'lifterlms' ),
 			)
 		);
