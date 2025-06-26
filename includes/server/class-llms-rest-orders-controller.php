@@ -63,9 +63,34 @@ class LLMS_REST_Orders_Controller extends LLMS_REST_Posts_Controller {
 
 		$data = parent::prepare_object_for_response( $order, $request );
 
-		$data['status'] = str_replace( 'llms-', '', $data['status'] );
+		$data['status']        = str_replace( 'llms-', '', $data['status'] );
+		$data['billing_email'] = $order->get( 'billing_email' );
 
 		return $data;
+	}
+
+	/**
+	 * Get the order's schema, conforming to JSON Schema.
+	 *
+	 * @since [version]
+	 *
+	 * @return array Item schema data.
+	 */
+	protected function get_item_schema_base() {
+
+		$schema = (array) parent::get_item_schema_base();
+
+		$order_properties = array(
+			'billing_email' => array(
+				'description' => __( 'Billing email address for the order.', 'lifterlms' ),
+				'type'        => 'string',
+				'context'     => array( 'view', 'edit', 'embed' ),
+			),
+		);
+
+		$schema['properties'] = array_merge( (array) $schema['properties'], $order_properties );
+
+		return $schema;
 	}
 
 	/**
