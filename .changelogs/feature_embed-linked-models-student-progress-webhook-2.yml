@@ -1,0 +1,3 @@
+significance: minor
+type: added
+entry: Ability to list progresses for a student via /students/<id>/progress.

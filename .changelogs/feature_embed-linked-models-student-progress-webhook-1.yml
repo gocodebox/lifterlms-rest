@@ -1,0 +1,3 @@
+significance: minor
+type: added
+entry: Allow several endpoints to be "embeddable" along with their links.
