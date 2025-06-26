@@ -30,15 +30,9 @@ class LLMS_REST_Orders_Controller extends LLMS_REST_Posts_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.2 Filter taxonomies by `public` property instead of `show_in_rest`.
-	 * @since 1.0.0-beta.3 Filter taxonomies by `show_in_llms_rest` property instead of `public`.
-	 * @since 1.0.0-beta.7 `self` and `collection` links prepared in the parent class.
-	 *                     Fix wp:featured_media link, we don't expose any embeddable field.
-	 * @since 1.0.0-beta.8 Return links to those taxonomies which have an accessible rest route.
-	 * @since 1.0.0-beta.14 Added $request parameter.
+	 * @since [version]
 	 *
-	 * @param LLMS_Post_Model $object  Object data.
+	 * @param LLMS_Order      $object  Object data.
 	 * @param WP_REST_Request $request Request object.
 	 * @return array Links for the given object.
 	 */
