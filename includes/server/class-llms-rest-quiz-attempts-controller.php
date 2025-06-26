@@ -361,7 +361,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 */
 	protected function get_objects_from_query( $query ) {
 
-		return $query->items;
+		return $query->get_attempts();
 	}
 
 	/**
@@ -476,80 +476,22 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Default null.
-	 * @return stdClass An object with two fields: 'items' an array of OBJECT result of the query; 'found_results' the total found items.
+	 * @return LLMS_Query_Quiz_Attempt
 	 */
 	protected function get_objects_query( $query_args, $request = null ) {
 
-		global $wpdb;
-
-		// Maybe limit the query results depending on the page param.
-		if ( isset( $query_args['page'] ) ) {
-			$skip  = $query_args['page'] > 1 ? ( $query_args['page'] - 1 ) * $query_args['per_page'] : 0;
-			$limit = $wpdb->prepare(
-				'LIMIT %d, %d',
-				array(
-					$skip,
-					$query_args['per_page'],
-				)
+		$args = array();
+		if ( isset( $query_args['orderby'], $query_args['order'] ) ) {
+			$args['sort'] = array(
+				$query_args['orderby'] => $query_args['order'],
 			);
-		} else {
-			$limit = $wpdb->prepare(
-				'LIMIT %d',
-				$query_args['per_page']
-			);
-		}
-
-		$filter = '';
-
-		if ( isset( $query_args['id'] ) && ! empty( $query_args['id'] ) ) {
-			$filter .= $wpdb->prepare( ' AND qa.student_id = %d', $query_args['id'] );
 		}
 
 		if ( isset( $query_args['status'] ) ) {
-			$filter .= $wpdb->prepare( ' AND qa.status = %s', $query_args['status'] );
+			$args['status'] = $query_args['status'];
 		}
 
-		if ( isset( $query_args['orderby'], $query_args['order'] ) ) {
-			$order = sprintf( 'ORDER BY %1$s %2$s', esc_sql( $query_args['orderby'] ), esc_sql( $query_args['order'] ) );
-		} else {
-			$order = '';
-		}
-
-		$query = new stdClass();
-
-		$select_found_rows = empty( $query_args['no_found_rows'] ) ? esc_sql( 'SQL_CALC_FOUND_ROWS' ) : '';
-
-		// the query.
-		$query->items = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				SELECT {$select_found_rows} DISTINCT id, student_id, quiz_id, lesson_id, start_date, update_date, end_date, status, attempt, grade, can_be_resumed
-				FROM {$wpdb->prefix}lifterlms_quiz_attempts AS qa
-				WHERE 1=1
-				{$filter}
-				{$order}
-				{$limit};
-				",
-				array(
-					$query_args['id'],
-				)
-			)
-		);// no-cache ok.
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		$count = count( $query->items );
-
-		if ( $count ) {
-			foreach ( $query->items as $key => $item ) {
-				$query->items[ $key ]->lesson_id  = (int) $item->lesson_id;
-				$query->items[ $key ]->student_id = (int) $item->student_id;
-				$query->items[ $key ]->quiz_id    = (int) $item->quiz_id;
-			}
-		}
-
-		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count; // no-cache ok.
-
-		return $query;
+		return new LLMS_Query_Quiz_Attempt( $args );
 	}
 
 	/**
@@ -557,24 +499,26 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param stdClass        $attempt Attempt object.
-	 * @param WP_REST_Request $request Full details about the request.
+	 * @param LLMS_Quiz_Attempt $attempt Attempt object.
+	 * @param WP_REST_Request   $request Full details about the request.
 	 * @return array
 	 */
 	public function prepare_object_for_response( $attempt, $request ) {
 
-		$prepared_quiz_attempt = get_object_vars( $attempt );
-
-		// Apply filters.
-		$prepared_quiz_attempt['status'] = apply_filters(
-			'llms_get_quiz_attempt_status',
-			$prepared_quiz_attempt['status'],
-			$prepared_quiz_attempt['student_id'],
-			$prepared_quiz_attempt['quiz_id'],
-			$prepared_quiz_attempt['lesson_id']
+		// Filter data including only schema props.
+		$prepared_quiz_attempt = array(
+			'student_id'     => (int) $attempt->get( 'student_id' ),
+			'quiz_id'        => (int) $attempt->get( 'quiz_id' ),
+			'lesson_id'      => (int) $attempt->get( 'lesson_id' ),
+			'start_date'     => $attempt->get( 'start_date' ),
+			'update_date'    => $attempt->get( 'update_date' ),
+			'end_date'       => $attempt->get( 'end_date' ),
+			'attempt'        => (int) $attempt->get( 'attempt' ),
+			'status'         => $attempt->get( 'status' ),
+			'grade'          => (float) $attempt->get( 'grade' ),
+			'can_be_resumed' => (bool) $attempt->get( 'can_be_resumed' ),
 		);
 
-		// Filter data including only schema props.
 		$data = array_intersect_key( $prepared_quiz_attempt, array_flip( $this->get_fields_for_response( $request ) ) );
 
 		/**
@@ -582,7 +526,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 		 *
 		 * @since 1.0.0-beta.10
 		 *
-		 * @param array           $data       Array of enrollment properties prepared for response.
+		 * @param array           $data       Array of quiz attempt properties prepared for response.
 		 * @param stdClass        $enrollment Enrollment object.
 		 * @param WP_REST_Request $request    Full details about the request.
 		 */
@@ -594,8 +538,8 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param object          $attempt Attempt object data.
-	 * @param WP_REST_Request $request    Request object.
+	 * @param LLMS_Quiz_Attempt $attempt Attempt object data.
+	 * @param WP_REST_Request   $request    Request object.
 	 * @return array Links for the given object.
 	 */
 	public function prepare_links( $attempt, $request ) {
@@ -603,7 +547,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 		$links = array(
 			'self'       => array(
 				'href' => rest_url(
-					sprintf( '/%s/%s/%d', 'llms/v1', 'quiz-attempts', $attempt->id )
+					sprintf( '/%s/%s/%d', 'llms/v1', 'quiz-attempts', $attempt->get( 'id' ) )
 				),
 			),
 			'collection' => array(
@@ -613,19 +557,19 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 			),
 			'student'    => array(
 				'href'       => rest_url(
-					sprintf( '/%s/%s/%d', 'llms/v1', 'students', $attempt->student_id )
+					sprintf( '/%s/%s/%d', 'llms/v1', 'students', $attempt->get( 'student_id' ) )
 				),
 				'embeddable' => true,
 			),
 			'quiz'       => array(
 				'href'       => rest_url(
-					sprintf( '/%s/%s/%d', 'llms/v1', 'quizzes', $attempt->quiz_id )
+					sprintf( '/%s/%s/%d', 'llms/v1', 'quizzes', $attempt->get( 'quiz_id' ) )
 				),
 				'embeddable' => true,
 			),
 			'lesson'     => array(
 				'href'       => rest_url(
-					sprintf( '/%s/%s/%d', 'llms/v1', 'lessons', $attempt->lesson_id )
+					sprintf( '/%s/%s/%d', 'llms/v1', 'lessons', $attempt->get( 'lesson_id' ) )
 				),
 				'embeddable' => true,
 			),
