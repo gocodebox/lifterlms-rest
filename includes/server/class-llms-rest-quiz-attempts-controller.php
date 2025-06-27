@@ -271,7 +271,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'students-enrollments',
+			'title'      => 'quiz-attempts',
 			'type'       => 'object',
 			'properties' => array(
 				'student_id'     => array(
