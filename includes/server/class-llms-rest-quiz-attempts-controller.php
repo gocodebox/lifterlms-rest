@@ -107,7 +107,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get a collection of enrollments.
+	 * Get a collection of quiz attempts.
 	 *
 	 * @since [version]
 	 *
@@ -188,7 +188,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare enrollments objects query.
+	 * Prepare quiz attempts objects query.
 	 *
 	 * @since [version]
 	 *
@@ -213,7 +213,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @return array The Enrollments collection parameters.
+	 * @return array The quiz attempt collection parameters.
 	 */
 	public function get_collection_params() {
 		return $this->collection_params;
@@ -224,7 +224,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param array $collection_params The Enrollments collection parameters to be set.
+	 * @param array $collection_params The quiz attempt collection parameters to be set.
 	 * @return void
 	 */
 	public function set_collection_params( $collection_params ) {
@@ -382,7 +382,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param stdClass        $query    Objects query result returned by {@see LLMS_REST_Enrollments_Controller::get_objects_query()}.
+	 * @param stdClass        $query    Objects query result returned by {@see LLMS_REST_Quiz_Attempts_Controller::get_objects_query()}.
 	 * @param array           $prepared Array of collection arguments.
 	 * @param WP_REST_Request $request  Request object.
 	 * @return array {
@@ -403,7 +403,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Prepare enrollments objects query
+	 * Prepare quiz attempts objects query
 	 *
 	 * @since [version]
 	 *
@@ -455,7 +455,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	}
 
 	/**
-	 * Get enrollments query.
+	 * Get quiz attempts query.
 	 *
 	 * @since [version]
 	 *
@@ -507,19 +507,19 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 		$data = array_intersect_key( $prepared_quiz_attempt, array_flip( $this->get_fields_for_response( $request ) ) );
 
 		/**
-		 * Filters the enrollment data for a response.
+		 * Filters the quiz attempt data for a response.
 		 *
-		 * @since 1.0.0-beta.10
+		 * @since [version]
 		 *
 		 * @param array           $data       Array of quiz attempt properties prepared for response.
-		 * @param stdClass        $enrollment Enrollment object.
+		 * @param stdClass        $attempt    Attempt object.
 		 * @param WP_REST_Request $request    Full details about the request.
 		 */
 		return apply_filters( 'llms_rest_prepare_quiz_attempt_object_response', $data, $attempt, $request );
 	}
 
 	/**
-	 * Prepare enrollments links for the request.
+	 * Prepare quiz attempt links for the request.
 	 *
 	 * @since [version]
 	 *
@@ -561,11 +561,11 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 		);
 
 		/**
-		 * Filters the enrollment's links.
+		 * Filters the quiz attempt's links.
 		 *
 		 * @since [version]
 		 *
-		 * @param array    $links      Links for the given enrollment.
+		 * @param array    $links      Links for the given quiz attempt.
 		 * @param stdClass $attempt Attempt object.
 		 */
 		return apply_filters( 'llms_rest_quiz_attempt_links', $links, $attempt );
@@ -577,7 +577,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request The request array.
-	 * @return bool Whether the enrollment can be read.
+	 * @return bool Whether the quiz attempt can be read.
 	 */
 	protected function check_read_permission( $request ) {
 
