@@ -41,11 +41,6 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 		'end_date',
 	);
 
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0-beta.1
-	 */
 	public function __construct() {
 		$this->collection_params = $this->build_collection_params();
 	}
@@ -53,10 +48,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.7 Fixed description of the `post_id` path parameter.
-	 * @since 1.0.0-beta.10 Add `trigger` param for create/update/delete endpoints.
-	 *                      Use backticks in args descriptions.
+	 * @since [version]
 	 *
 	 * @return void
 	 */
@@ -100,10 +92,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read items.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.4 Everybody who can view the enrollment's student can list the enrollments although
-	 *                     the single enrollment permission will be checked in
-	 *                     `LLMS_REST_Enrollments_Controller::get_objects()`.
+	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -139,7 +128,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Check if a given request has access to read an item.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|boolean
@@ -156,7 +145,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get a single item.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -176,9 +165,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Get object.
 	 *
-	 * @since 1.0.0-beta.1
-	 * @since 1.0.0-beta.4 Fix call to undefined function llms_rest_bad_request(),
-	 *                     must be llms_rest_bad_request_error().
+	 * @since [version]
 	 *
 	 * @param int $student_id Student ID.
 	 * @param int $post_id The course/membership ID.
@@ -204,8 +191,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare enrollments objects query.
 	 *
-	 * @since 1.0.0-beta.7
-	 * @since 1.0.0-beta.10 Set query limit to 1.
+	 * @since [version]
 	 *
 	 * @param int $attempt_id Student ID.
 	 * @return array
@@ -226,7 +212,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @return array The Enrollments collection parameters.
 	 */
@@ -237,7 +223,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieves the query params for the objects collection.
 	 *
-	 * @since 1.0.0-beta.1
+	 * @since [version]
 	 *
 	 * @param array $collection_params The Enrollments collection parameters to be set.
 	 * @return void
@@ -354,7 +340,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve an array of objects from the result of $this->get_objects_query().
 	 *
-	 * @since 1.0.0-beta.7
+	 * @since [version]
 	 *
 	 * @param WP_Query $query Query result.
 	 * @return obj[]
@@ -367,7 +353,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Prepare collection items for response.
 	 *
-	 * @since 1.0.0-beta.7
+	 * @since [version]
 	 *
 	 * @param array           $objects Array of objects to be prepared for response.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -395,7 +381,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	/**
 	 * Retrieve pagination information from an objects query.
 	 *
-	 * @since 1.0.0-beta.7
+	 * @since [version]
 	 *
 	 * @param stdClass        $query    Objects query result returned by {@see LLMS_REST_Enrollments_Controller::get_objects_query()}.
 	 * @param array           $prepared Array of collection arguments.
