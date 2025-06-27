@@ -167,8 +167,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $student_id Student ID.
-	 * @param int $post_id The course/membership ID.
+	 * @param int $attempt_id Quiz attempt ID.
 	 * @return object|WP_Error
 	 */
 	protected function get_object( $attempt_id ) {
@@ -193,7 +192,7 @@ class LLMS_REST_Quiz_Attempts_Controller extends LLMS_REST_Controller {
 	 *
 	 * @since [version]
 	 *
-	 * @param int $attempt_id Student ID.
+	 * @param int $attempt_id Attempt ID.
 	 * @return array
 	 */
 	protected function prepare_object_query_args( $attempt_id ) {
