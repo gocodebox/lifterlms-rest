@@ -232,7 +232,7 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 				'instructor.created'   => __( 'Instructor created', 'lifterlms' ),
 				'instructor.updated'   => __( 'Instructor updated', 'lifterlms' ),
 				'instructor.deleted'   => __( 'Instructor deleted', 'lifterlms' ),
-				'quiz_attempt.updated' => __( 'Quiz Attempt completed', 'lifterlms' ),
+				'quiz-attempt.updated' => __( 'Quiz Attempt completed', 'lifterlms' ),
 				'action'               => __( 'Action', 'lifterlms' ),
 			)
 		);
@@ -252,143 +252,147 @@ class LLMS_REST_Webhooks extends LLMS_REST_Database_Resource {
 		$hooks = array(
 
 			// Courses.
-			'course.created'       => array(
+			'course.created'                => array(
 				'save_post_course' => 2,
 			),
-			'course.updated'       => array(
+			'course.updated'                => array(
 				'edit_post_course' => 2,
 			),
-			'course.deleted'       => array(
+			'course.deleted'                => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'course.restored'      => array(
+			'course.restored'               => array(
 				'untrashed_post' => 1,
 			),
 
 			// Sections.
-			'section.created'      => array(
+			'section.created'               => array(
 				'save_post_section' => 2,
 			),
-			'section.updated'      => array(
+			'section.updated'               => array(
 				'edit_post_section' => 2,
 			),
-			'section.deleted'      => array(
+			'section.deleted'               => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Lessons.
-			'lesson.created'       => array(
+			'lesson.created'                => array(
 				'save_post_lesson' => 2,
 			),
-			'lesson.updated'       => array(
+			'lesson.updated'                => array(
 				'edit_post_lesson' => 2,
 			),
-			'lesson.deleted'       => array(
+			'lesson.deleted'                => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'lesson.restored'      => array(
+			'lesson.restored'               => array(
 				'untrashed_post' => 1,
 			),
 
 			// Memberships.
-			'membership.created'   => array(
+			'membership.created'            => array(
 				'save_post_llms_membership' => 2,
 			),
-			'membership.updated'   => array(
+			'membership.updated'            => array(
 				'edit_post_llms_membership' => 2,
 			),
-			'membership.deleted'   => array(
+			'membership.deleted'            => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
-			'membership.restored'  => array(
+			'membership.restored'           => array(
 				'untrashed_post' => 1,
 			),
 
 			// Access Plans.
-			'access_plan.created'  => array(
+			'access_plan.created'           => array(
 				'save_post_llms_access_plan' => 2,
 			),
-			'access_plan.updated'  => array(
+			'access_plan.updated'           => array(
 				'edit_post_llms_access_plan' => 2,
 			),
-			'access_plan.deleted'  => array(
+			'access_plan.deleted'           => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Orders.
-			'order.created'        => array(
+			'order.created'                 => array(
 				'save_post_llms_order' => 2,
 			),
-			'order.updated'        => array(
+			'order.updated'                 => array(
 				'edit_post_llms_order' => 2,
 			),
-			'order.deleted'        => array(
+			'order.deleted'                 => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Transactions.
-			'transaction.created'  => array(
+			'transaction.created'           => array(
 				'save_post_llms_transaction' => 2,
 			),
-			'transaction.updated'  => array(
+			'transaction.updated'           => array(
 				'edit_post_llms_transaction' => 2,
 			),
-			'transaction.deleted'  => array(
+			'transaction.deleted'           => array(
 				'wp_trash_post' => 1,
 				'delete_post'   => 1,
 			),
 
 			// Students.
-			'student.created'      => array(
+			'student.created'               => array(
 				'user_register'             => 1,
 				'lifterlms_user_registered' => 1,
 			),
-			'student.updated'      => array(
+			'student.updated'               => array(
 				'profile_update'         => 1,
 				'lifterlms_user_updated' => 1,
 			),
-			'student.deleted'      => array(
+			'student.deleted'               => array(
 				'delete_user' => 1,
 			),
 
 			// Instructors.
-			'instructor.created'   => array(
+			'instructor.created'            => array(
 				'user_register' => 1,
 			),
-			'instructor.updated'   => array(
+			'instructor.updated'            => array(
 				'profile_update' => 1,
 			),
-			'instructor.deleted'   => array(
+			'instructor.deleted'            => array(
 				'delete_user' => 1,
 			),
 
-			'enrollment.created'   => array(
+			'enrollment.created'            => array(
 				'llms_user_course_enrollment_created'     => 2,
 				'llms_user_membership_enrollment_created' => 2,
 			),
-			'enrollment.updated'   => array(
+			'enrollment.updated'            => array(
 				'llms_user_course_enrollment_updated'     => 2,
 				'llms_user_membership_enrollment_updated' => 2,
 				'llms_user_removed_from_course'           => 2,
 				'llms_user_removed_from_membership'       => 2,
 			),
-			'enrollment.deleted'   => array(
+			'enrollment.deleted'            => array(
 				'llms_user_enrollment_deleted' => 2,
 			),
 
-			'progress.updated'     => array(
+			'progress.updated'              => array(
 				'llms_mark_complete'   => 2,
 				'llms_mark_incomplete' => 2,
 			),
 
-			'quiz_attempt.updated' => array(
+			'quiz-attempt.updated'          => array(
 				'lifterlms_quiz_completed' => 3,
+			),
+
+			'assignment-submission.created' => array(
+				'llms_assignment_submitted' => 1,
 			),
 		);
 
