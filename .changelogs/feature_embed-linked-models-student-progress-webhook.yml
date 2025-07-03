@@ -1,3 +1,3 @@
 significance: minor
 type: added
-entry: New Quiz and Quiz Attempt endpoints.
+entry: New Quiz, Quiz Attempt, Certificate, Awarded Certificate, and Order endpoints.
