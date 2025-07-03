@@ -67,12 +67,18 @@ class LLMS_REST_Awarded_Certificates_Controller extends LLMS_REST_Posts_Controll
 			'readonly'    => true,
 		);
 
+		$schema['properties']['student_id'] = array(
+			'description' => __( 'The student ID the certificate was awarded to.', 'lifterlms' ),
+			'type'        => 'integer',
+			'context'     => array( 'view', 'edit', 'embed' ),
+			'readonly'    => true,
+		);
+
 		// Update defaults.
 		$schema['properties']['content']['required'] = false;
 
 		// Remove unnecessary props.
 		$remove = array(
-			'status',
 			'comment_status',
 			'password',
 			'ping_status',
@@ -143,8 +149,8 @@ class LLMS_REST_Awarded_Certificates_Controller extends LLMS_REST_Posts_Controll
 
 		$data = parent::prepare_object_for_response( $certificate, $request );
 
-		$data['post']        = $certificate->get( 'post_id' );
-		$data['certificate'] = $certificate->get( 'parent' );
+		$data['certificate_id'] = $certificate->get( 'parent' );
+		$data['student_id']     = $certificate->get( 'author' );
 
 		/**
 		 * Filters the assignment data for a response.
@@ -170,6 +176,13 @@ class LLMS_REST_Awarded_Certificates_Controller extends LLMS_REST_Posts_Controll
 	protected function prepare_links( $certificate, $request ) {
 
 		$links = parent::prepare_links( $certificate, $request );
+
+		$links['student'] = array(
+			'href'       => rest_url(
+				sprintf( '/%s/%s/%d', 'llms/v1', 'students', $certificate->get( 'author' ) )
+			),
+			'embeddable' => true,
+		);
 
 		unset( $links['content'] );
 
