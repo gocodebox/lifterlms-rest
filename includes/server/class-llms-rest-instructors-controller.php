@@ -265,14 +265,14 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 
-		if ( get_current_user_id() === $request['id'] ) {
-			return true;
+		if ( is_wp_error( ( new WP_REST_Users_Controller() )->update_item_permissions_check( $request ) ) ) {
+			return llms_rest_authorization_required_error( __( 'You are not allowed to edit this user.', 'lifterlms' ) );
 		}
 
-		if ( ! current_user_can( 'edit_users', $request['id'] ) ) {
-			return llms_rest_authorization_required_error( __( 'You are not allowed to edit this instructor.', 'lifterlms' ) );
+		if ( ! empty( $request['roles'] ) ) {
+			return $this->check_roles_permissions( $request );
 		}
 
-		return $this->check_roles_permissions( $request );
+		return true;
 	}
 }
