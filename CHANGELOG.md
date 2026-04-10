@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.5 - 2026-04-10
+-------------------
+
+##### Updates and Enhancements
+
++ Handle removal of depreciated SQL_CALC_FOUND_ROWS for counting query results.
+
+
 v1.0.4 - 2026-04-10
 -------------------
 

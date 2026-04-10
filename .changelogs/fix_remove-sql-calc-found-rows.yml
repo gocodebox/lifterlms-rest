@@ -1,3 +1,0 @@
-significance: patch
-type: changed
-entry: Handle removal of depreciated SQL_CALC_FOUND_ROWS for counting query results.

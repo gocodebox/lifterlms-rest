@@ -889,7 +889,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 * @since 1.0.0-beta.10 Added subquery to retrieve the enrollments trigger.
 	 * @since 1.0.0-beta.18 Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
-	 * @since [version] Replaced `SQL_CALC_FOUND_ROWS` / `FOUND_ROWS()` with a separate `COUNT(DISTINCT)` query.
+	 * @since 1.0.5 Replaced `SQL_CALC_FOUND_ROWS` / `FOUND_ROWS()` with a separate `COUNT(DISTINCT)` query.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Default null.
