@@ -40,21 +40,21 @@ class LLMS_REST_Admin_Form_Controller {
 	 */
 	public function handle_events() {
 
-		if ( llms_verify_nonce( 'key-revoke-nonce', 'revoke', 'GET' ) ) {
+		if ( isset( $_REQUEST['key-revoke-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['key-revoke-nonce'] ) ), 'revoke' ) ) {
 			$delete = LLMS_REST_API()->keys()->delete( llms_filter_input( INPUT_GET, 'revoke-key', FILTER_VALIDATE_INT ) );
 			if ( $delete ) {
 				LLMS_Admin_Notices::flash_notice( esc_html__( 'The API Key has been successfully deleted.', 'lifterlms' ), 'success' );
 				return llms_redirect_and_exit( admin_url( 'admin.php?page=llms-settings&tab=rest-api&section=keys' ) );
 			}
-		} elseif ( llms_verify_nonce( 'llms_rest_webhook_nonce', 'create-update-webhook', 'POST' ) ) {
+		} elseif ( isset( $_REQUEST['llms_rest_webhook_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['llms_rest_webhook_nonce'] ) ), 'create-update-webhook' ) ) {
 			return $this->handle_webhook_upsert();
-		} elseif ( llms_verify_nonce( 'delete-webhook-nonce', 'delete', 'GET' ) ) {
+		} elseif ( isset( $_REQUEST['delete-webhook-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['delete-webhook-nonce'] ) ), 'delete' ) ) {
 			$delete = LLMS_REST_API()->webhooks()->delete( llms_filter_input( INPUT_GET, 'delete-webhook', FILTER_VALIDATE_INT ) );
 			if ( $delete ) {
 				LLMS_Admin_Notices::flash_notice( esc_html__( 'The webhook has been successfully deleted.', 'lifterlms' ), 'success' );
 				return llms_redirect_and_exit( admin_url( 'admin.php?page=llms-settings&tab=rest-api&section=webhooks' ) );
 			}
-		} elseif ( llms_verify_nonce( 'dl-key-nonce', 'dl-key', 'GET' ) ) {
+		} elseif ( isset( $_REQUEST['dl-key-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['dl-key-nonce'] ) ), 'dl-key' ) ) {
 			return $this->handle_key_download();
 		}
 
