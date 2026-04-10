@@ -889,6 +889,7 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 	 * @since 1.0.0-beta.4 Enrollment's post_id and student_id casted to integer.
 	 * @since 1.0.0-beta.10 Added subquery to retrieve the enrollments trigger.
 	 * @since 1.0.0-beta.18 Fixed wrong trigger retrieved when multiple trigger were present for the same user,post pair.
+	 * @since 1.0.5 Replaced `SQL_CALC_FOUND_ROWS` / `FOUND_ROWS()` with a separate `COUNT(DISTINCT)` query.
 	 *
 	 * @param  array           $query_args Array of collection arguments.
 	 * @param  WP_REST_Request $request    Optional. Full details about the request. Default null.
@@ -989,19 +990,18 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 
 		$query = new stdClass();
 
-		$select_found_rows = empty( $query_args['no_found_rows'] ) ? esc_sql( 'SQL_CALC_FOUND_ROWS' ) : '';
-
-		// the query.
-		$query->items = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				SELECT {$select_found_rows} DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status, upm3.meta_value as etrigger
-				FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
+		$from_joins_where = "FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 				JOIN {$updated_date_status} as upm2 ON upm.post_id = upm2.post_id AND upm.user_id = upm2.user_id
 				JOIN {$trigger} as upm3 ON upm.post_id = upm3.post_id AND upm.user_id = upm3.user_id
 				WHERE upm.meta_key = '_start_date'
 				AND upm.{$id_column} = %d
-				{$filter}
+				{$filter}";
+
+		$query->items = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				SELECT DISTINCT upm.post_id AS post_id, upm.user_id as student_id, upm.updated_date as date_created, upm2.updated_date as date_updated, upm2.meta_value as status, upm3.meta_value as etrigger
+				{$from_joins_where}
 				{$order}
 				{$limit};
 				",
@@ -1023,7 +1023,18 @@ class LLMS_REST_Enrollments_Controller extends LLMS_REST_Controller {
 			}
 		}
 
-		$query->found_results = empty( $query_args['no_found_rows'] ) ? absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ) : $count; // no-cache ok.
+		if ( empty( $query_args['no_found_rows'] ) ) {
+			$query->found_results = absint(
+				$wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->prepare(
+						"SELECT COUNT(DISTINCT upm.post_id, upm.user_id) {$from_joins_where}",
+						array( $query_args['id'] )
+					)
+				)
+			);
+		} else {
+			$query->found_results = $count;
+		}
 
 		return $query;
 
