@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.4 - 2026-04-10
+-------------------
+
+##### Updates and Enhancements
+
++ Using standard WP nonce check functions instead of llms_verify_nonce.
+
+
 v1.0.3 - 2025-11-11
 -------------------
 
