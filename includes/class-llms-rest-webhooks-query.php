@@ -123,6 +123,7 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.16 Use `$this->sql_select_columns({columns})` to determine the columns to select.
 	 * @since 1.0.0-beta.22 Renamed from `preprare_query()`.
+	 * @since 1.0.5 Set `$this->count_query` for found results without `SQL_CALC_FOUND_ROWS`.
 	 *
 	 * @return string
 	 */
@@ -130,9 +131,16 @@ class LLMS_REST_Webhooks_Query extends LLMS_Database_Query {
 
 		global $wpdb;
 
+		$from  = "FROM {$wpdb->prefix}lifterlms_webhooks";
+		$where = $this->sql_where();
+
+		if ( ! $this->get( 'no_found_rows' ) ) {
+			$this->count_query = "SELECT COUNT(*) {$from} {$where}";
+		}
+
 		return "SELECT {$this->sql_select_columns( 'id' )}
-				FROM {$wpdb->prefix}lifterlms_webhooks
-				{$this->sql_where()}
+				{$from}
+				{$where}
 				{$this->sql_orderby()}
 				{$this->sql_limit()};";
 
