@@ -210,6 +210,10 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Course ID.', 'lifterlms' ) );
 			}
 
+			if ( ! current_user_can( 'edit_post', $parent_course->get( 'id' ) ) ) {
+				return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to create or move sections into the requested course.', 'lifterlms' ) );
+			}
+
 			$prepared_item['parent_course'] = $request['parent_id'];
 		}
 

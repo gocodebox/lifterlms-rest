@@ -207,6 +207,40 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test that an instructor cannot create a section inside a course they cannot edit.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_create_section_forbidden_parent_course() {
+
+		// Admin creates a victim course the instructor cannot edit.
+		wp_set_current_user( $this->user_allowed );
+		$victim_course_id = $this->factory->course->create( array( 'sections' => 0 ) );
+
+		// Act as an instructor who can publish sections but cannot edit the victim course.
+		$instructor = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		wp_set_current_user( $instructor );
+
+		$this->assertFalse( current_user_can( 'edit_post', $victim_course_id ) );
+
+		$section_args              = $this->sample_section_args;
+		$section_args['parent_id'] = $victim_course_id;
+
+		$request = new WP_REST_Request( 'POST', $this->route );
+		$request->set_body_params( $section_args );
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 403, $response->get_status() );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $response );
+
+		// Ensure no section was injected into the victim course.
+		$victim_course = new LLMS_Course( $victim_course_id );
+		$this->assertEmpty( $victim_course->get_sections() );
+	}
+
+	/**
 	 * Test producing bad request error when creating a single section.
 	 *
 	 * @since 1.0.0-beta.1

@@ -145,18 +145,29 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		// Parent (section) id.
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
 
+			$parent_section_id = absint( $request['parent_id'] );
+
 			// Retrieve the parent section.
-			$parent_section = llms_get_post( $request['parent_id'] );
+			$parent_section = $parent_section_id ? llms_get_post( $parent_section_id ) : null;
 
-			$prepared_item['parent_section'] = $parent_section && is_a( $parent_section, 'LLMS_Section' ) ? $request['parent_id'] : 0;
+			if ( $parent_section && is_a( $parent_section, 'LLMS_Section' ) ) {
 
-			// Retrieve the parent course id.
-			if ( $prepared_item['parent_section'] ) {
 				$parent_course = $parent_section->get_course();
+
+				if ( ! current_user_can( 'edit_post', $parent_section_id ) ||
+					! $parent_course || ! is_a( $parent_course, 'LLMS_Course' ) ||
+					! current_user_can( 'edit_post', $parent_course->get( 'id' ) ) ) {
+					return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to create or move lessons into the requested section.', 'lifterlms' ) );
+				}
+
+				$prepared_item['parent_section'] = $parent_section_id;
+				$prepared_item['parent_course']  = $parent_course->get( 'id' );
+
+			} else {
+				// An empty or invalid parent_id denotes an "orphaned" lesson.
+				$prepared_item['parent_section'] = 0;
+				$prepared_item['parent_course']  = 0;
 			}
-
-			$prepared_item['parent_course'] = ! empty( $parent_course ) && is_a( $parent_course, 'LLMS_Course' ) ? $parent_course->get( 'id' ) : 0;
-
 		}
 
 		// Course id.
@@ -166,6 +177,10 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 
 			if ( ! $parent_course || ! is_a( $parent_course, 'LLMS_Course' ) ) {
 				return llms_rest_bad_request_error( __( 'Invalid course_id param. It must be a valid Course ID.', 'lifterlms' ) );
+			}
+
+			if ( ! current_user_can( 'edit_post', $parent_course->get( 'id' ) ) ) {
+				return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to create or move lessons into the requested course.', 'lifterlms' ) );
 			}
 
 			$prepared_item['parent_course'] = $request['course_id'];
@@ -228,13 +243,20 @@ class LLMS_REST_Lessons_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		// Quiz id.
-		if ( ! empty( $schema['properties']['quiz']['properties']['id'] ) && isset( $request['quiz']['id'] ) ) {
+		if ( ! empty( $schema['properties']['quiz']['properties']['id'] ) && ! empty( $request['quiz']['id'] ) ) {
+
+			$quiz_id = absint( $request['quiz']['id'] );
 
 			// check if quiz exists.
-			$quiz = llms_get_post( $request['quiz']['id'] );
+			$quiz = llms_get_post( $quiz_id );
 
 			if ( is_a( $quiz, 'LLMS_Quiz' ) ) {
-				$prepared_item['quiz'] = $request['quiz']['id'];
+
+				if ( ! current_user_can( 'edit_post', $quiz_id ) ) {
+					return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to attach the requested quiz to this lesson.', 'lifterlms' ) );
+				}
+
+				$prepared_item['quiz'] = $quiz_id;
 			}
 		}
 
