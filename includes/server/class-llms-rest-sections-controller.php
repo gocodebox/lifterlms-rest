@@ -92,7 +92,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			$this->content_controller = new $this->content_controller_class();
 			$this->content_controller->set_collection_params( $this->get_content_collection_params() );
 		}
-
 	}
 
 	/**
@@ -229,7 +228,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $prepared_item;
-
 	}
 
 	/**
@@ -289,7 +287,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $schema;
-
 	}
 
 	/**
@@ -356,7 +353,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$data['order'] = $section->get( 'order' );
 
 		return $data;
-
 	}
 
 	/**
@@ -494,7 +490,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return parent::check_read_permission( $section );
-
 	}
 
 	/**
@@ -529,7 +524,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		unset( $query_params['parent'] );
 
 		return $query_params;
-
 	}
 
 	/**
@@ -551,7 +545,5 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $result;
-
 	}
-
 }
