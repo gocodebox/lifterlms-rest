@@ -263,6 +263,76 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	// public function test_get_item_not_found() {}
 	// public function test_get_item_success() {}
 
+	/**
+	 * An instructor must not be able to read a non-instructor (administrator) user.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_item_blocks_non_instructor_target() {
+
+		wp_set_current_user( $this->user_instructor );
+
+		// Administrator target.
+		$res = $this->perform_mock_request( 'GET', $this->route . '/' . $this->user_admin, array(), array( 'context' => 'edit' ) );
+		$this->assertNotEquals( 200, $res->get_status() );
+		$data = $res->get_data();
+		$this->assertArrayNotHasKey( 'email', (array) $data );
+		$this->assertArrayNotHasKey( 'billing_address_1', (array) $data );
+
+		// Subscriber target.
+		$res = $this->perform_mock_request( 'GET', $this->route . '/' . $this->user_subscriber, array(), array( 'context' => 'edit' ) );
+		$this->assertNotEquals( 200, $res->get_status() );
+
+	}
+
+	/**
+	 * An instructor can still read self and other instructor-role users.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_item_allows_instructor_targets() {
+
+		wp_set_current_user( $this->user_instructor );
+
+		// Self.
+		$res = $this->perform_mock_request( 'GET', $this->route . '/' . $this->user_instructor, array(), array( 'context' => 'edit' ) );
+		$this->assertEquals( 200, $res->get_status() );
+
+		// Another instructor.
+		$other = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		$res   = $this->perform_mock_request( 'GET', $this->route . '/' . $other, array(), array( 'context' => 'edit' ) );
+		$this->assertEquals( 200, $res->get_status() );
+
+		// Instructor's assistant.
+		$res = $this->perform_mock_request( 'GET', $this->route . '/' . $this->user_assistant, array(), array( 'context' => 'edit' ) );
+		$this->assertEquals( 200, $res->get_status() );
+
+	}
+
+	/**
+	 * The collection endpoint must not enumerate administrators via the roles param.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_get_items_does_not_enumerate_administrators() {
+
+		wp_set_current_user( $this->user_instructor );
+
+		$res = $this->perform_mock_request( 'GET', $this->route, array(), array( 'roles' => 'administrator', 'context' => 'edit' ) );
+		$this->assertEquals( 200, $res->get_status() );
+
+		$ids = wp_list_pluck( $res->get_data(), 'id' );
+		$this->assertNotContains( $this->user_admin, $ids );
+		$this->assertNotContains( $this->user_subscriber, $ids );
+
+	}
+
 	// public function test_update_item_auth() {}
 	// public function test_update_item_errors() {}
 	// public function test_update_item_success() {}
