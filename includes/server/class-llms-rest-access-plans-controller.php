@@ -411,6 +411,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Post id.
 		if ( ! empty( $schema['properties']['post_id'] ) && isset( $request['post_id'] ) ) {
+			if ( ! current_user_can( 'edit_post', absint( $request['post_id'] ) ) ) {
+				return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to manage access plans for the requested product.', 'lifterlms' ) );
+			}
+
 			$prepared_item['product_id'] = $request['post_id'];
 		}
 
