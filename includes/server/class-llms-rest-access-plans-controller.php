@@ -69,7 +69,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		);
 
 		return $schema;
-
 	}
 
 	/**
@@ -164,7 +163,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$can_update = $this->related_product_permissions_check( $can_update, $request );
 
 		return is_wp_error( $can_update ) ? $can_update : $this->allow_request_when_access_plan_limit_not_reached( $request );
-
 	}
 
 	/**
@@ -181,7 +179,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// If current user cannot delete the item because of authorization, check if the current user can edit the "parent" course/membership.
 		return $this->related_product_permissions_check( $can_delete, $request );
-
 	}
 
 	/**
@@ -232,7 +229,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		 * @param LLMS_Access_Plan $access_plan LLMS Access Plan instance.
 		 */
 		return apply_filters( 'llms_rest_access_plan_links', $links, $access_plan );
-
 	}
 
 	/**
@@ -411,6 +407,10 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		// Post id.
 		if ( ! empty( $schema['properties']['post_id'] ) && isset( $request['post_id'] ) ) {
+			if ( ! current_user_can( 'edit_post', absint( $request['post_id'] ) ) ) {
+				return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to manage access plans for the requested product.', 'lifterlms' ) );
+			}
+
 			$prepared_item['product_id'] = $request['post_id'];
 		}
 
@@ -613,7 +613,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		$this->add_subordinate_props( $to_set, $saved_props, $creating );
 
 		$this->unset_subordinate_props( $to_set, $saved_props );
-
 	}
 
 	/**
@@ -657,7 +656,6 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		$to_set = array_merge( $to_set, $subordinate_props );
-
 	}
 
 	/**
@@ -779,5 +777,4 @@ class LLMS_REST_Access_Plans_Controller extends LLMS_REST_Posts_Controller {
 
 		return true;
 	}
-
 }

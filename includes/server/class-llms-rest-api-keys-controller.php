@@ -211,7 +211,10 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	public function create_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key      = LLMS_REST_API()->keys()->create( $prepared );
+		if ( is_wp_error( $prepared ) ) {
+			return $prepared;
+		}
+		$key = LLMS_REST_API()->keys()->create( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
@@ -345,7 +348,10 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 	public function update_item( $request ) {
 
 		$prepared = $this->prepare_item_for_database( $request );
-		$key      = LLMS_REST_API()->keys()->update( $prepared );
+		if ( is_wp_error( $prepared ) ) {
+			return $prepared;
+		}
+		$key = LLMS_REST_API()->keys()->update( $prepared );
 		if ( is_wp_error( $request ) ) {
 			$request->add_data( array( 'status' => 400 ) );
 			return $request;
@@ -427,7 +433,11 @@ class LLMS_REST_API_Keys_Controller extends LLMS_REST_Controller {
 		}
 
 		if ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
-			$prepared['user_id'] = (int) $request['user_id'];
+			$user_id = (int) $request['user_id'];
+			if ( ! current_user_can( 'edit_user', $user_id ) ) {
+				return llms_rest_authorization_required_error( __( 'You are not allowed to create or edit an API key for this user.', 'lifterlms' ) );
+			}
+			$prepared['user_id'] = $user_id;
 		}
 
 		if ( ! empty( $schema['properties']['permissions'] ) && isset( $request['permissions'] ) ) {

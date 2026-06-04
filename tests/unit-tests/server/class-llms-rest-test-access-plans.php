@@ -581,6 +581,54 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test that an access plan cannot be moved onto a product the current user cannot edit.
+	 *
+	 * @since [version]
+	 *
+	 * @return void
+	 */
+	public function test_update_cannot_move_plan_to_unauthorized_product() {
+
+		// Instructor owns course A.
+		$instructor = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		wp_set_current_user( $instructor );
+		$course_a = $this->factory->course->create_and_get();
+
+		// Create an access plan on course A (allowed: the instructor can edit their own course).
+		$create = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->sample_access_plan_args,
+				array( 'post_id' => $course_a->get( 'id' ) )
+			)
+		);
+		$this->assertEquals( 201, $create->get_status() );
+		$plan_id = $create->get_data()['id'];
+
+		// Admin owns victim course B.
+		wp_set_current_user( $this->user_allowed );
+		$course_b = $this->factory->course->create();
+
+		// Back to the instructor: attempt to move the plan onto the victim course B.
+		wp_set_current_user( $instructor );
+		$update = $this->perform_mock_request(
+			'POST',
+			$this->route . '/' . $plan_id,
+			array_merge(
+				$this->sample_access_plan_args,
+				array( 'post_id' => $course_b )
+			)
+		);
+
+		$this->assertEquals( 403, $update->get_status() );
+
+		// The plan must still belong to course A.
+		$plan = new LLMS_Access_Plan( $plan_id );
+		$this->assertEquals( $course_a->get( 'id' ), $plan->get( 'product_id' ) );
+	}
+
+	/**
 	 * Test update free access plan.
 	 *
 	 * @since 1.0.0-beta-24
