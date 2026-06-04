@@ -92,7 +92,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 			$this->content_controller = new $this->content_controller_class();
 			$this->content_controller->set_collection_params( $this->get_content_collection_params() );
 		}
-
 	}
 
 	/**
@@ -210,6 +209,10 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 				return llms_rest_bad_request_error( __( 'Invalid parent_id param. It must be a valid Course ID.', 'lifterlms' ) );
 			}
 
+			if ( ! current_user_can( 'edit_post', $parent_course->get( 'id' ) ) ) {
+				return llms_rest_authorization_required_error( __( 'Sorry, you are not allowed to create or move sections into the requested course.', 'lifterlms' ) );
+			}
+
 			$prepared_item['parent_course'] = $request['parent_id'];
 		}
 
@@ -225,7 +228,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $prepared_item;
-
 	}
 
 	/**
@@ -285,7 +287,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $schema;
-
 	}
 
 	/**
@@ -352,7 +353,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		$data['order'] = $section->get( 'order' );
 
 		return $data;
-
 	}
 
 	/**
@@ -490,7 +490,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return parent::check_read_permission( $section );
-
 	}
 
 	/**
@@ -525,7 +524,6 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		unset( $query_params['parent'] );
 
 		return $query_params;
-
 	}
 
 	/**
@@ -547,7 +545,5 @@ class LLMS_REST_Sections_Controller extends LLMS_REST_Posts_Controller {
 		}
 
 		return $result;
-
 	}
-
 }

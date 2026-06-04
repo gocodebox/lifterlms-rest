@@ -47,7 +47,48 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 			return true;
 		}
 
-		return current_user_can( 'list_users', $item_id );
+		if ( ! current_user_can( 'list_users', $item_id ) ) {
+			return false;
+		}
+
+		return $this->is_instructor( $item_id );
+	}
+
+	/**
+	 * Retrieve the list of roles considered instructors for this endpoint.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return string[]
+	 */
+	protected function get_instructor_roles() {
+
+		/**
+		 * Filters the list of user roles served by the instructors REST endpoint.
+		 *
+		 * @since 1.0.6
+		 *
+		 * @param string[] $roles List of role keys treated as instructors.
+		 */
+		return apply_filters(
+			'llms_rest_instructor_roles',
+			array( 'instructor', 'instructors_assistant' )
+		);
+	}
+
+	/**
+	 * Determine if a given user has an instructor role.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @param int $user_id WP_User id.
+	 * @return bool
+	 */
+	protected function is_instructor( $user_id ) {
+
+		$user = get_userdata( $user_id );
+
+		return $user ? (bool) array_intersect( $this->get_instructor_roles(), (array) $user->roles ) : false;
 	}
 
 	/**
@@ -65,14 +106,20 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 			return $query_args;
 		}
 
+		$instructor_roles = $this->get_instructor_roles();
+		$default          = $this->get_item_schema_base()['properties']['roles']['default'];
+
 		if ( empty( $request['roles'] ) ) {
-			$query_args = array_merge(
-				$query_args,
-				array(
-					'roles' => $this->get_item_schema_base()['properties']['roles']['default'],
-				)
-			);
+			$roles = $default;
+		} else {
+			$roles = array_values( array_intersect( (array) $request['roles'], $instructor_roles ) );
+			// Requested only non-instructor roles: return instructors only, never the requested role.
+			if ( empty( $roles ) ) {
+				$roles = $default;
+			}
 		}
+
+		$query_args['roles'] = $roles;
 
 		return $query_args;
 	}
