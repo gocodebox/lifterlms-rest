@@ -57,7 +57,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Retrieve the list of roles considered instructors for this endpoint.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return string[]
 	 */
@@ -66,7 +66,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 		/**
 		 * Filters the list of user roles served by the instructors REST endpoint.
 		 *
-		 * @since [version]
+		 * @since 1.0.6
 		 *
 		 * @param string[] $roles List of role keys treated as instructors.
 		 */
@@ -79,7 +79,7 @@ class LLMS_REST_Instructors_Controller extends LLMS_REST_Users_Controller {
 	/**
 	 * Determine if a given user has an instructor role.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @param int $user_id WP_User id.
 	 * @return bool

@@ -266,7 +266,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	/**
 	 * An instructor must not be able to read a non-instructor (administrator) user.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
@@ -290,7 +290,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	/**
 	 * An instructor can still read self and other instructor-role users.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
@@ -316,7 +316,7 @@ class LLMS_REST_Test_Instructors_Controllers extends LLMS_REST_Unit_Test_Case_Us
 	/**
 	 * The collection endpoint must not enumerate administrators via the roles param.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */

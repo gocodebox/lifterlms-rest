@@ -209,7 +209,7 @@ class LLMS_REST_Test_Sections extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test that an instructor cannot create a section inside a course they cannot edit.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */

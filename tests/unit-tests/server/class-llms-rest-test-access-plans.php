@@ -583,7 +583,7 @@ class LLMS_REST_Test_Access_Plans extends LLMS_REST_Unit_Test_Case_Posts {
 	/**
 	 * Test that an access plan cannot be moved onto a product the current user cannot edit.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */

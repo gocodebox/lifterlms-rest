@@ -166,7 +166,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test an LMS Manager cannot create a key owned by an Administrator.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
@@ -192,7 +192,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test an LMS Manager can create a key owned by themselves.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
@@ -217,7 +217,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test an LMS Manager can create a key owned by a user they're allowed to manage.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
@@ -243,7 +243,7 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	/**
 	 * Test an LMS Manager cannot change an existing key's owner to an Administrator.
 	 *
-	 * @since [version]
+	 * @since 1.0.6
 	 *
 	 * @return void
 	 */
