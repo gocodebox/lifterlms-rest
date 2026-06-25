@@ -7,14 +7,14 @@
  * @group admin
  * @group admin_settings_api_keys
  *
- * @since [version]
+ * @since 1.0.7
  */
 class LLMS_REST_Test_Admin_Settings_API_Keys extends LLMS_REST_Unit_Test_Case_Base {
 
 	/**
 	 * Setup the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @return void
 	 */
@@ -35,7 +35,7 @@ class LLMS_REST_Test_Admin_Settings_API_Keys extends LLMS_REST_Unit_Test_Case_Ba
 	/**
 	 * Tear down the test case.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @return void
 	 */
@@ -51,7 +51,7 @@ class LLMS_REST_Test_Admin_Settings_API_Keys extends LLMS_REST_Unit_Test_Case_Ba
 	/**
 	 * Count the API keys owned by a given user.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @param int $user_id WP_User ID.
 	 * @return int
@@ -71,7 +71,7 @@ class LLMS_REST_Test_Admin_Settings_API_Keys extends LLMS_REST_Unit_Test_Case_Ba
 	/**
 	 * An LMS Manager cannot create a key owned by a user they are not allowed to edit.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ class LLMS_REST_Test_Admin_Settings_API_Keys extends LLMS_REST_Unit_Test_Case_Ba
 	/**
 	 * An LMS Manager can create a key owned by a user they are allowed to edit.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @return void
 	 */

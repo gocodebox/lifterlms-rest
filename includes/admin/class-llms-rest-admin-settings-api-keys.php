@@ -326,7 +326,7 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	/**
 	 * Ensure the current user is allowed to assign the requested key owner.
 	 *
-	 * @since [version]
+	 * @since 1.0.7
 	 *
 	 * @param int $user_id WP_User ID of the requested key owner.
 	 * @return WP_Error|true Returns `true` when authorized or a `WP_Error` when not.

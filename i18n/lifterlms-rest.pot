@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.6\n"
+"Project-Id-Version: LifterLMS REST API 1.0.7\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-04T13:58:57+00:00\n"
+"POT-Creation-Date: 2026-06-25T14:21:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms/dev 0.2.1\n"
 "X-Domain: lifterlms\n"
@@ -577,9 +577,13 @@ msgid "Invalid api key."
 msgstr ""
 
 #. Translators: %s = Invalid API Key ID.
-#: includes/admin/class-llms-rest-admin-settings-api-keys.php:296
+#: includes/admin/class-llms-rest-admin-settings-api-keys.php:303
 #, php-format
 msgid "\"%s\" is not a valid API Key."
+msgstr ""
+
+#: includes/admin/class-llms-rest-admin-settings-api-keys.php:337
+msgid "You are not allowed to assign this user as the key owner."
 msgstr ""
 
 #: includes/admin/class-llms-rest-admin-settings-page.php:31
