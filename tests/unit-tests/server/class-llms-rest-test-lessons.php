@@ -722,6 +722,110 @@ class LLMS_REST_Test_Lessons extends LLMS_REST_Unit_Test_Case_Posts {
 	}
 
 	/**
+	 * Test that an instructor cannot create a lesson inside a section/course they cannot edit.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_create_item_forbidden_parent_section() {
+
+		// Admin creates a victim course + section the instructor cannot edit.
+		wp_set_current_user( $this->user_allowed );
+		$victim_course = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 0,
+			)
+		);
+		$victim_section_id = $victim_course->get_sections( 'ids' )[0];
+
+		// Act as an instructor who can publish lessons but cannot edit the victim section/course.
+		$instructor = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		wp_set_current_user( $instructor );
+
+		// Sanity: the instructor cannot edit the victim objects.
+		$this->assertFalse( current_user_can( 'edit_post', $victim_section_id ) );
+		$this->assertFalse( current_user_can( 'edit_post', $victim_course->get( 'id' ) ) );
+
+		// Control: the instructor can create an orphaned lesson (proves create permission isn't the blocker).
+		$res = $this->perform_mock_request( 'POST', $this->route, array_merge( $this->sample_lesson, array( 'parent_id' => 0 ) ) );
+		$this->assertResponseStatusEquals( 201, $res );
+
+		// Attack: inject a lesson into the victim section.
+		$res = $this->perform_mock_request(
+			'POST',
+			$this->route,
+			array_merge(
+				$this->sample_lesson,
+				array( 'parent_id' => $victim_section_id )
+			)
+		);
+
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+		// Ensure no lesson was injected into the victim section.
+		$this->assertEmpty( $victim_course->get_lessons() );
+	}
+
+	/**
+	 * Test that an instructor cannot attach a quiz they cannot edit to a lesson they own.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_update_item_forbidden_quiz_attachment() {
+
+		// Admin creates a victim quiz the instructor cannot edit.
+		wp_set_current_user( $this->user_allowed );
+		$victim_course  = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 1,
+				'quizzes'  => 1,
+			)
+		);
+		$victim_quiz_id = $victim_course->get_lessons()[0]->get( 'quiz' );
+		$this->assertTrue( $victim_quiz_id > 0 );
+
+		// Act as an instructor who owns their own course + lesson.
+		$instructor = $this->factory->user->create( array( 'role' => 'instructor' ) );
+		wp_set_current_user( $instructor );
+		$attacker_course    = $this->factory->course->create_and_get(
+			array(
+				'sections' => 1,
+				'lessons'  => 1,
+				'quizzes'  => 0,
+			)
+		);
+		$attacker_lesson_id = $attacker_course->get_lessons( 'ids' )[0];
+
+		// Sanity: the instructor can edit their lesson but not the victim quiz.
+		$this->assertTrue( current_user_can( 'edit_post', $attacker_lesson_id ) );
+		$this->assertFalse( current_user_can( 'edit_post', $victim_quiz_id ) );
+
+		$res = $this->perform_mock_request(
+			'POST',
+			"{$this->route}/{$attacker_lesson_id}",
+			array(
+				'quiz' => array(
+					'enabled' => true,
+					'id'      => $victim_quiz_id,
+				),
+			)
+		);
+
+		$this->assertResponseStatusEquals( 403, $res );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $res );
+
+		// Ensure the victim quiz was NOT attached to the attacker lesson.
+		$lesson = llms_get_post( $attacker_lesson_id );
+		$this->assertEquals( 0, absint( $lesson->get( 'quiz' ) ) );
+	}
+
+	/**
 	 * Get resource creation args.
 	 *
 	 * @since 1.0.0-beta.27

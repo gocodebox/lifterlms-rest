@@ -263,10 +263,17 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 	 */
 	protected static function save_create() {
 
+		$user_id = llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT );
+
+		$authorized = self::authorize_key_owner( $user_id );
+		if ( is_wp_error( $authorized ) ) {
+			return $authorized;
+		}
+
 		$create = LLMS_REST_API()->keys()->create(
 			array(
 				'description' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_description' ),
-				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
+				'user_id'     => $user_id,
 				'permissions' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_permissions' ),
 			)
 		);
@@ -296,16 +303,41 @@ class LLMS_Rest_Admin_Settings_API_Keys {
 			return new WP_Error( 'llms_rest_api_key_not_found', sprintf( __( '"%s" is not a valid API Key.', 'lifterlms' ), $key_id ) );
 		}
 
+		$user_id = llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT );
+
+		$authorized = self::authorize_key_owner( $user_id );
+		if ( is_wp_error( $authorized ) ) {
+			return $authorized;
+		}
+
 		$update = LLMS_REST_API()->keys()->update(
 			array(
 				'id'          => $key_id,
 				'description' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_description' ),
-				'user_id'     => llms_filter_input( INPUT_POST, 'llms_rest_key_user_id', FILTER_SANITIZE_NUMBER_INT ),
+				'user_id'     => $user_id,
 				'permissions' => llms_filter_input_sanitize_string( INPUT_POST, 'llms_rest_key_permissions' ),
 			)
 		);
 
 		return $update;
+
+	}
+
+	/**
+	 * Ensure the current user is allowed to assign the requested key owner.
+	 *
+	 * @since 1.0.7
+	 *
+	 * @param int $user_id WP_User ID of the requested key owner.
+	 * @return WP_Error|true Returns `true` when authorized or a `WP_Error` when not.
+	 */
+	protected static function authorize_key_owner( $user_id ) {
+
+		if ( $user_id && ! current_user_can( 'edit_user', (int) $user_id ) ) {
+			return new WP_Error( 'llms_rest_key_invalid_user_id', __( 'You are not allowed to assign this user as the key owner.', 'lifterlms' ) );
+		}
+
+		return true;
 
 	}
 

@@ -164,6 +164,114 @@ class LLMS_REST_Test_API_Keys_Controller extends LLMS_REST_Unit_Test_Case_Server
 	}
 
 	/**
+	 * Test an LMS Manager cannot create a key owned by an Administrator.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_create_item_forbidden_owner() {
+
+		$manager = $this->factory->user->create( array( 'role' => 'lms_manager' ) );
+		$admin   = $this->factory->user->create( array( 'role' => 'administrator' ) );
+
+		wp_set_current_user( $manager );
+
+		$args = array(
+			'description' => 'admin key',
+			'user_id'     => $admin,
+			'permissions' => 'read_write',
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $args );
+		$this->assertResponseStatusEquals( 403, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $response );
+
+	}
+
+	/**
+	 * Test an LMS Manager can create a key owned by themselves.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_create_item_self_owner_allowed() {
+
+		$manager = $this->factory->user->create( array( 'role' => 'lms_manager' ) );
+
+		wp_set_current_user( $manager );
+
+		$args = array(
+			'description' => 'self key',
+			'user_id'     => $manager,
+			'permissions' => 'read_write',
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $args );
+		$this->assertResponseStatusEquals( 201, $response );
+		$this->assertEquals( $manager, $response->get_data()['user_id'] );
+
+	}
+
+	/**
+	 * Test an LMS Manager can create a key owned by a user they're allowed to manage.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_create_item_manageable_owner_allowed() {
+
+		$manager = $this->factory->user->create( array( 'role' => 'lms_manager' ) );
+		$student = $this->factory->user->create( array( 'role' => 'student' ) );
+
+		wp_set_current_user( $manager );
+
+		$args = array(
+			'description' => 'student key',
+			'user_id'     => $student,
+			'permissions' => 'read_write',
+		);
+
+		$response = $this->perform_mock_request( 'POST', $this->route, $args );
+		$this->assertResponseStatusEquals( 201, $response );
+		$this->assertEquals( $student, $response->get_data()['user_id'] );
+
+	}
+
+	/**
+	 * Test an LMS Manager cannot change an existing key's owner to an Administrator.
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return void
+	 */
+	public function test_update_item_forbidden_owner_change() {
+
+		$manager = $this->factory->user->create( array( 'role' => 'lms_manager' ) );
+		$admin   = $this->factory->user->create( array( 'role' => 'administrator' ) );
+
+		wp_set_current_user( $manager );
+
+		$key = $this->get_mock_api_key( 'read_write', $manager, false );
+		$id  = $key->get( 'id' );
+
+		$response = $this->perform_mock_request(
+			'POST',
+			sprintf( '%1$s/%2$d', $this->route, $id ),
+			array( 'user_id' => $admin )
+		);
+
+		$this->assertResponseStatusEquals( 403, $response );
+		$this->assertResponseCodeEquals( 'llms_rest_forbidden_request', $response );
+
+		// Owner unchanged.
+		$this->assertEquals( $manager, LLMS_REST_API()->keys()->get( $id )->get( 'user_id' ) );
+
+	}
+
+	/**
 	 * Test the permissions check methods.
 	 *
 	 * @return void

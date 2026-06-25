@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: LifterLMS REST API 1.0.5\n"
+"Project-Id-Version: LifterLMS REST API 1.0.7\n"
 "Report-Msgid-Bugs-To: https://lifterlms.com/my-account/my-tickets\n"
 "Last-Translator: Team LifterLMS <team@lifterlms.com>\n"
 "Language-Team: Team LifterLMS <team@lifterlms.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-10T13:45:41+00:00\n"
+"POT-Creation-Date: 2026-06-25T14:21:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: llms/dev 0.2.1\n"
 "X-Domain: lifterlms\n"
@@ -39,6 +39,7 @@ msgstr ""
 #. Translators: %s = method name.
 #: includes/abstracts/class-llms-rest-controller-stubs.php:56
 #: includes/abstracts/class-llms-rest-controller-stubs.php:71
+#, php-format
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
@@ -50,6 +51,7 @@ msgstr ""
 #: includes/abstracts/class-llms-rest-controller-stubs.php:176
 #: includes/abstracts/class-llms-rest-controller-stubs.php:230
 #: includes/abstracts/class-llms-rest-controller-stubs.php:261
+#, php-format
 msgid "Method '%s' must be overridden."
 msgstr ""
 
@@ -88,6 +90,7 @@ msgstr ""
 
 #. Translators: %1$s comma separated list of search columns.
 #: includes/abstracts/class-llms-rest-controller.php:423
+#, php-format
 msgid "You are not allowed to search into the provided column(s): %1$s"
 msgstr ""
 
@@ -97,6 +100,7 @@ msgstr ""
 
 #. translators: %s: register_rest_field
 #: includes/abstracts/class-llms-rest-controller.php:800
+#, php-format
 msgid "Please use %s to add new schema properties."
 msgstr ""
 
@@ -106,11 +110,13 @@ msgstr ""
 
 #. Translators: %s = name of the resource type (for example: "API Key").
 #: includes/abstracts/class-llms-rest-database-resource.php:105
+#, php-format
 msgid "Cannot create a new %s with a pre-defined ID."
 msgstr ""
 
 #. Translators: %1$s = name of the resource type; %2$s = field name.
 #: includes/abstracts/class-llms-rest-database-resource.php:118
+#, php-format
 msgid "%1$s \"%2$s\" is required."
 msgstr ""
 
@@ -120,11 +126,13 @@ msgstr ""
 
 #. Translators: %s = name of the resource type (for example: "API Key").
 #: includes/abstracts/class-llms-rest-database-resource.php:212
+#, php-format
 msgid "No %s ID was supplied."
 msgstr ""
 
 #. Translators: %s = name of the resource type (for example: "API Key").
 #: includes/abstracts/class-llms-rest-database-resource.php:218
+#, php-format
 msgid "The requested %s could not be located."
 msgstr ""
 
@@ -138,11 +146,13 @@ msgstr ""
 
 #. Translators: %s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:211
+#, php-format
 msgid "Cannot create existing %s."
 msgstr ""
 
 #. Translators: %s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:216
+#, php-format
 msgid "Sorry, you are not allowed to create %s as this user."
 msgstr ""
 
@@ -161,21 +171,25 @@ msgstr ""
 
 #. Translators: %s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:513
+#, php-format
 msgid "Sorry, you are not allowed to update %s as this user."
 msgstr ""
 
 #. Translators: %s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:669
+#, php-format
 msgid "Sorry, you are not allowed to delete %s as this user."
 msgstr ""
 
 #. translators: %1$s: post type name, %2$s: force=true
 #: includes/abstracts/class-llms-rest-posts-controller.php:720
+#, php-format
 msgid "The %1$s does not support trashing. Set '%2$s' to delete."
 msgstr ""
 
 #. translators: %s: post type name
 #: includes/abstracts/class-llms-rest-posts-controller.php:744
+#, php-format
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -282,21 +296,25 @@ msgstr ""
 
 #. translators: %s: post type
 #: includes/abstracts/class-llms-rest-posts-controller.php:1324
+#, php-format
 msgid "The %s cannot be retrieved."
 msgstr ""
 
 #. translators: %s: post type
 #: includes/abstracts/class-llms-rest-posts-controller.php:1350
+#, php-format
 msgid "The %s cannot be created."
 msgstr ""
 
 #. Translators: %s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:1532
+#, php-format
 msgid "Sorry, you are not allowed to create private %s."
 msgstr ""
 
 #. Translators: $s = The post type name.
 #: includes/abstracts/class-llms-rest-posts-controller.php:1539
+#, php-format
 msgid "Sorry, you are not allowed to publish %s."
 msgstr ""
 
@@ -310,6 +328,7 @@ msgstr ""
 
 #. Translators: %s = role key.
 #: includes/abstracts/class-llms-rest-users-controller.php:101
+#, php-format
 msgid "The role %s does not exist."
 msgstr ""
 
@@ -408,6 +427,7 @@ msgstr ""
 
 #. Translators: %d = avatar image size in pixels.
 #: includes/abstracts/class-llms-rest-users-controller.php:419
+#, php-format
 msgid "Avatar URL with image size of %d pixels."
 msgstr ""
 
@@ -445,16 +465,19 @@ msgstr ""
 
 #. Translators: %s = Consumer Key.
 #: includes/admin/class-llms-rest-admin-form-controller.php:84
+#, php-format
 msgid "Consumer Key: %s"
 msgstr ""
 
 #. Translators: %s = Consumer Secret.
 #: includes/admin/class-llms-rest-admin-form-controller.php:87
+#, php-format
 msgid "Consumer Secret: %s"
 msgstr ""
 
 #. Translators: %s = Webhook ID.
 #: includes/admin/class-llms-rest-admin-form-controller.php:127
+#, php-format
 msgid "\"%s\" is not a valid Webhook."
 msgstr ""
 
@@ -462,6 +485,7 @@ msgstr ""
 #. Translators: %1$s = Error message; %2$s = Error code.
 #: includes/admin/class-llms-rest-admin-form-controller.php:139
 #: includes/admin/class-llms-rest-admin-settings-api-keys.php:249
+#, php-format
 msgid "Error: %1$s [Code: %2$s]"
 msgstr ""
 
@@ -494,6 +518,7 @@ msgstr ""
 
 #. Translators: %1$s = opening anchor tag to capabilities doc; %2$s closing anchor tag.
 #: includes/admin/class-llms-rest-admin-settings-api-keys.php:86
+#, php-format
 msgid "The owner is used to determine what user %1$scapabilities%2$s are available to the API key."
 msgstr ""
 
@@ -508,6 +533,7 @@ msgstr ""
 
 #. Translators: %1$s = opening anchor tag to doc; %2$s closing anchor tag.
 #: includes/admin/class-llms-rest-admin-settings-api-keys.php:102
+#, php-format
 msgid "Determines what kind of requests can be made with the API key. %1$sRead more%2$s."
 msgstr ""
 
@@ -551,8 +577,13 @@ msgid "Invalid api key."
 msgstr ""
 
 #. Translators: %s = Invalid API Key ID.
-#: includes/admin/class-llms-rest-admin-settings-api-keys.php:296
+#: includes/admin/class-llms-rest-admin-settings-api-keys.php:303
+#, php-format
 msgid "\"%s\" is not a valid API Key."
+msgstr ""
+
+#: includes/admin/class-llms-rest-admin-settings-api-keys.php:337
+msgid "You are not allowed to assign this user as the key owner."
 msgstr ""
 
 #: includes/admin/class-llms-rest-admin-settings-page.php:31
@@ -653,6 +684,7 @@ msgstr ""
 
 #. Translators: %s = Invalid user id.
 #: includes/class-llms-rest-api-keys.php:176
+#, php-format
 msgid "\"%s\" is not a valid user ID."
 msgstr ""
 
@@ -662,16 +694,19 @@ msgstr ""
 
 #. Translators: %s = Invalid permission string.
 #: includes/class-llms-rest-api-keys.php:187
+#, php-format
 msgid "\"%s\" is not a valid permission."
 msgstr ""
 
 #. Translators: %1$s = created date.
 #: includes/class-llms-rest-webhooks.php:127
+#, php-format
 msgid "Webhook created on %1$s"
 msgstr ""
 
 #. Translators: %1$s Date format as specified in the WordPress General Settings, %1$s Time format as specified in the WordPress General Settings.
 #: includes/class-llms-rest-webhooks.php:131
+#, php-format
 msgctxt "Webhook created on date parsed by wp_date"
 msgid "%1$s @ %2$s"
 msgstr ""
@@ -838,16 +873,19 @@ msgstr ""
 
 #. Translators: %s = Invalid permission string.
 #: includes/class-llms-rest-webhooks.php:442
+#, php-format
 msgid "\"%s\" is not a valid status."
 msgstr ""
 
 #. Translators: %s = Invalid permission string.
 #: includes/class-llms-rest-webhooks.php:448
+#, php-format
 msgid "\"%s\" is not a valid topic."
 msgstr ""
 
 #. Translators: %s = field name.
 #: includes/class-llms-rest-webhooks.php:455
+#, php-format
 msgid "\"%s\" is required."
 msgstr ""
 
@@ -857,6 +895,7 @@ msgstr ""
 
 #. Translators: %1$s: Last access date; %2$s: Last access time.
 #: includes/models/class-llms-rest-api-key.php:132
+#, php-format
 msgid "%1$s at %2$s"
 msgstr ""
 
@@ -866,20 +905,27 @@ msgstr ""
 
 #. Translators: %s = Error message.
 #: includes/models/class-llms-rest-webhook.php:386
+#, php-format
 msgid "Could not reach the delivery url: \"%s\"."
 msgstr ""
 
 #. Translators: %d = Response code.
 #: includes/models/class-llms-rest-webhook.php:391
+#, php-format
 msgid "The delivery url returned the response code \"%d\"."
 msgstr ""
 
-#: includes/server/class-llms-rest-access-plans-controller.php:87
+#: includes/server/class-llms-rest-access-plans-controller.php:86
 msgid "Retrieve access plans for a specific list of one or more posts. Accepts a course/membership id or comma separated list of course/membership ids."
 msgstr ""
 
+#: includes/server/class-llms-rest-access-plans-controller.php:411
+msgid "Sorry, you are not allowed to manage access plans for the requested product."
+msgstr ""
+
 #. Translators: %1$d = access plans limit per product, %2$s access plan post type plural name, %3$s product post type singular name.
-#: includes/server/class-llms-rest-access-plans-controller.php:771
+#: includes/server/class-llms-rest-access-plans-controller.php:769
+#, php-format
 msgid "Only %1$d %2$s allowed per %3$s"
 msgstr ""
 
@@ -916,6 +962,10 @@ msgstr ""
 msgid "The date the key was last used. Format: Y-m-d H:i:s."
 msgstr ""
 
+#: includes/server/class-llms-rest-api-keys-controller.php:438
+msgid "You are not allowed to create or edit an API key for this user."
+msgstr ""
+
 #: includes/server/class-llms-rest-courses-controller.php:133
 #: includes/server/class-llms-rest-courses-controller.php:153
 msgid "Unique Course Identifier. The WordPress Post ID"
@@ -946,12 +996,12 @@ msgid "List of course instructors. Defaults to current user when creating a new 
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:248
-#: includes/server/class-llms-rest-lessons-controller.php:367
+#: includes/server/class-llms-rest-lessons-controller.php:389
 msgid "URL to an oEmbed enable audio URL."
 msgstr ""
 
 #: includes/server/class-llms-rest-courses-controller.php:257
-#: includes/server/class-llms-rest-lessons-controller.php:376
+#: includes/server/class-llms-rest-lessons-controller.php:398
 msgid "URL to an oEmbed enable video URL."
 msgstr ""
 
@@ -1177,77 +1227,89 @@ msgstr ""
 msgid "The enrollment trigger. Default is `any`."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:91
+#: includes/server/class-llms-rest-instructors-controller.php:138
 msgid "You are not allowed to create new instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:108
+#: includes/server/class-llms-rest-instructors-controller.php:155
 msgid "You are not allowed to delete this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:126
+#: includes/server/class-llms-rest-instructors-controller.php:173
 msgid "Retrieve only instructors for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:134
+#: includes/server/class-llms-rest-instructors-controller.php:181
 msgid "Exclude instructors who do not have permissions for the specified course(s) and/or membership(s). Accepts a single WP Post ID or a comma separated list of IDs."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:155
+#: includes/server/class-llms-rest-instructors-controller.php:202
 msgid "You are not allowed to view this instructor."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:189
+#: includes/server/class-llms-rest-instructors-controller.php:236
 msgid "You are not allowed to list instructors."
 msgstr ""
 
-#: includes/server/class-llms-rest-instructors-controller.php:269
+#: includes/server/class-llms-rest-instructors-controller.php:316
 #: includes/server/class-llms-rest-students-controller.php:389
 msgid "You are not allowed to edit this user."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:168
-msgid "Invalid course_id param. It must be a valid Course ID."
+#: includes/server/class-llms-rest-lessons-controller.php:160
+msgid "Sorry, you are not allowed to create or move lessons into the requested section."
 msgstr ""
 
 #: includes/server/class-llms-rest-lessons-controller.php:179
-#: includes/server/class-llms-rest-sections-controller.php:221
+msgid "Invalid course_id param. It must be a valid Course ID."
+msgstr ""
+
+#: includes/server/class-llms-rest-lessons-controller.php:183
+msgid "Sorry, you are not allowed to create or move lessons into the requested course."
+msgstr ""
+
+#: includes/server/class-llms-rest-lessons-controller.php:194
+#: includes/server/class-llms-rest-sections-controller.php:224
 msgid "Invalid order param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:200
+#: includes/server/class-llms-rest-lessons-controller.php:215
 msgid "Invalid drip_days param. It must be greater than 0."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:323
+#: includes/server/class-llms-rest-lessons-controller.php:256
+msgid "Sorry, you are not allowed to attach the requested quiz to this lesson."
+msgstr ""
+
+#: includes/server/class-llms-rest-lessons-controller.php:345
 msgid "WordPress post ID of the parent item. Must be a Section ID. 0 indicates an \"orphaned\" lesson which can be edited and viewed by instructors and admins but cannot be read by students."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:331
+#: includes/server/class-llms-rest-lessons-controller.php:353
 msgid "WordPress post ID of the lesson's parent course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:340
+#: includes/server/class-llms-rest-lessons-controller.php:362
 msgid "Order of the lesson within its immediate parent."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:350
+#: includes/server/class-llms-rest-lessons-controller.php:372
 msgid "Lesson ID of the prerequisite lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:358
+#: includes/server/class-llms-rest-lessons-controller.php:380
 msgid "Determines the weight of the lesson when grading the course."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:385
+#: includes/server/class-llms-rest-lessons-controller.php:407
 msgid "The date and time when the lesson becomes available. Applicable only when drip_method is date. Format: Y-m-d H:i:s."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:393
+#: includes/server/class-llms-rest-lessons-controller.php:415
 msgid "Number of days to wait before allowing access to the lesson. Applicable only when drip_method is enrollment, start, or prerequisite."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:402
+#: includes/server/class-llms-rest-lessons-controller.php:424
 msgid ""
 "Determine the method with which to make the lesson content available.\n"
 "\t\t\t\t\t<ul>\n"
@@ -1259,23 +1321,23 @@ msgid ""
 "\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:419
+#: includes/server/class-llms-rest-lessons-controller.php:441
 msgid "Denotes a lesson that's publicly accessible regardless of course enrollment."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:425
+#: includes/server/class-llms-rest-lessons-controller.php:447
 msgid "Associate a quiz with this lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:434
+#: includes/server/class-llms-rest-lessons-controller.php:456
 msgid "Determines if a quiz is enabled for the lesson."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:440
+#: includes/server/class-llms-rest-lessons-controller.php:462
 msgid "The post ID of the associated quiz."
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:449
+#: includes/server/class-llms-rest-lessons-controller.php:471
 msgid ""
 "Determines lesson progression requirements related to the quiz.\n"
 "\t\t\t\t\t\t\t<ul>\n"
@@ -1284,7 +1346,7 @@ msgid ""
 "\t\t\t\t\t\t\t</ul>"
 msgstr ""
 
-#: includes/server/class-llms-rest-lessons-controller.php:506
+#: includes/server/class-llms-rest-lessons-controller.php:528
 msgid "Filter lessons by the parent post (section) ID."
 msgstr ""
 
@@ -1345,27 +1407,32 @@ msgid "Unique Membership Identifier. The WordPress Post ID"
 msgstr ""
 
 #. translators: %1$s the post type name.
-#: includes/server/class-llms-rest-sections-controller.php:117
+#: includes/server/class-llms-rest-sections-controller.php:116
+#, php-format
 msgid "Unique %1$s Identifier. The WordPress Post ID"
 msgstr ""
 
-#: includes/server/class-llms-rest-sections-controller.php:210
+#: includes/server/class-llms-rest-sections-controller.php:209
 msgid "Invalid parent_id param. It must be a valid Course ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-sections-controller.php:243
+#: includes/server/class-llms-rest-sections-controller.php:213
+msgid "Sorry, you are not allowed to create or move sections into the requested course."
+msgstr ""
+
+#: includes/server/class-llms-rest-sections-controller.php:245
 msgid "Section Title"
 msgstr ""
 
-#: includes/server/class-llms-rest-sections-controller.php:247
+#: includes/server/class-llms-rest-sections-controller.php:249
 msgid "WordPress post ID of the parent item. Must be a Course ID."
 msgstr ""
 
-#: includes/server/class-llms-rest-sections-controller.php:258
+#: includes/server/class-llms-rest-sections-controller.php:260
 msgid "Order of the section within the course."
 msgstr ""
 
-#: includes/server/class-llms-rest-sections-controller.php:326
+#: includes/server/class-llms-rest-sections-controller.php:327
 msgid "Filter sections by the parent post (course) ID."
 msgstr ""
 
