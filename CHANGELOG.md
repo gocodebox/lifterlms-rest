@@ -1,6 +1,14 @@
 LifterLMS REST API Changelog
 ============================
 
+v1.0.8 - 2026-06-29
+-------------------
+
+##### Security Fixes
+
++ Additional checks when authenticating REST API requests.
+
+
 v1.0.7 - 2026-06-25
 -------------------
 
