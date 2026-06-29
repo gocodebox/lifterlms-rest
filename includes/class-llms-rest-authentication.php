@@ -56,7 +56,6 @@ class LLMS_REST_Authentication {
 			add_filter( 'rest_pre_dispatch', array( $this, 'check_permissions' ), 10, 3 );
 
 		}
-
 	}
 
 	/**
@@ -105,7 +104,6 @@ class LLMS_REST_Authentication {
 		do_action( 'llms_rest_basic_auth_success', $user_id );
 
 		return $user_id;
-
 	}
 
 	/**
@@ -126,7 +124,6 @@ class LLMS_REST_Authentication {
 		}
 
 		return $this->get_error();
-
 	}
 
 	/**
@@ -179,7 +176,6 @@ class LLMS_REST_Authentication {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -203,7 +199,6 @@ class LLMS_REST_Authentication {
 		}
 
 		return compact( 'key', 'secret' );
-
 	}
 
 	/**
@@ -222,6 +217,7 @@ class LLMS_REST_Authentication {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.5 Access `$_SERVER['REQUEST_URI']` via `filter_var` instead of `llms_filter_input()`, see https://bugs.php.net/bug.php?id=49184.
+	 * @since 1.0.8 Match against the parsed REST route instead of substring-searching the full request URI.
 	 *
 	 * @return bool
 	 */
@@ -231,20 +227,50 @@ class LLMS_REST_Authentication {
 		if ( empty( $request ) ) {
 			return false;
 		}
-		if ( empty( $request ) ) {
-			return false;
-		}
 
 		$request = esc_url_raw( wp_unslash( $request ) );
-		$prefix  = trailingslashit( rest_get_url_prefix() );
+		$route   = $this->get_rest_route( $request );
 
-		$core = ( false !== strpos( $request, $prefix . 'llms/' ) );
+		$core = ( '' !== $route && 0 === strpos( $route, 'llms/' ) );
 
 		// Allow 3rd parties to use core auth.
-		$external = ( false !== strpos( $request, $prefix . 'llms-' ) );
+		$external = ( '' !== $route && 0 === strpos( $route, 'llms-' ) );
 
 		return apply_filters( 'llms_is_rest_request', $core || $external, $request );
+	}
 
+	/**
+	 * Extract the REST route from a request URI.
+	 *
+	 * Supports pretty permalinks (`/wp-json/{route}`) and plain permalinks (`?rest_route=/{route}`).
+	 * The query string is intentionally ignored when matching the path so that an `llms` marker
+	 * placed in a query argument cannot make a non-LifterLMS route look like a LifterLMS route.
+	 *
+	 * @since 1.0.8
+	 *
+	 * @param string $request The sanitized request URI.
+	 * @return string The route relative to the REST prefix (no leading slash), or an empty string.
+	 */
+	private function get_rest_route( $request ) {
+
+		$prefix = rest_get_url_prefix();
+		$path   = (string) wp_parse_url( $request, PHP_URL_PATH );
+
+		$needle = '/' . $prefix . '/';
+		$pos    = $path ? strpos( $path, $needle ) : false;
+		if ( false !== $pos ) {
+			return ltrim( substr( $path, $pos + strlen( $needle ) ), '/' );
+		}
+
+		$query = (string) wp_parse_url( $request, PHP_URL_QUERY );
+		if ( $query ) {
+			parse_str( $query, $vars );
+			if ( ! empty( $vars['rest_route'] ) ) {
+				return ltrim( (string) $vars['rest_route'], '/' );
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -269,7 +295,6 @@ class LLMS_REST_Authentication {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -288,7 +313,6 @@ class LLMS_REST_Authentication {
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -302,7 +326,6 @@ class LLMS_REST_Authentication {
 	protected function set_error( $err ) {
 		$this->error = $err;
 	}
-
 }
 
 return new LLMS_REST_Authentication();
