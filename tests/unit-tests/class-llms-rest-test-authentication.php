@@ -181,7 +181,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the is_rest_request() method.
 	 *
 	 * @since 1.0.0-beta.1
-	 * @since [version] Added query-string and namespace boundary bypass cases.
+	 * @since 1.0.8 Added query-string and namespace boundary bypass cases.
 	 *
 	 * @return void
 	 */

@@ -217,7 +217,7 @@ class LLMS_REST_Authentication {
 	 *
 	 * @since 1.0.0-beta.1
 	 * @since 1.0.0-beta.5 Access `$_SERVER['REQUEST_URI']` via `filter_var` instead of `llms_filter_input()`, see https://bugs.php.net/bug.php?id=49184.
-	 * @since [version] Match against the parsed REST route instead of substring-searching the full request URI.
+	 * @since 1.0.8 Match against the parsed REST route instead of substring-searching the full request URI.
 	 *
 	 * @return bool
 	 */
@@ -246,7 +246,7 @@ class LLMS_REST_Authentication {
 	 * The query string is intentionally ignored when matching the path so that an `llms` marker
 	 * placed in a query argument cannot make a non-LifterLMS route look like a LifterLMS route.
 	 *
-	 * @since [version]
+	 * @since 1.0.8
 	 *
 	 * @param string $request The sanitized request URI.
 	 * @return string The route relative to the REST prefix (no leading slash), or an empty string.
