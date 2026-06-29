@@ -181,6 +181,7 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 	 * Test the is_rest_request() method.
 	 *
 	 * @since 1.0.0-beta.1
+	 * @since [version] Added query-string and namespace boundary bypass cases.
 	 *
 	 * @return void
 	 */
@@ -191,11 +192,21 @@ class LLMS_REST_Test_Authentication extends LLMS_REST_Unit_Test_Case_Base {
 			'http://example.com/wp-json/wp/v1/mock' => false,
 			'https://example.com/wp-json/mock/v1/mock' => false,
 
+			// An `llms` marker in the query string or a later path segment must not authenticate a non-LifterLMS route.
+			'https://example.com/wp-json/wp/v2/users?x=/wp-json/llms/courses' => false,
+			'https://example.com/wp-json/wp/v2/users?redirect=/wp-json/llms-foo' => false,
+			'https://example.com/wp-json/wp/v2/wp-json/llms/v1/mock' => false,
+			'https://example.com/?rest_route=/wp/v2/users&x=/wp-json/llms/' => false,
+
 			'https://example.org/wp-json/llms/v1/mock' => true,
 			'https://example.com/wp-json/llms/v1/mock' => true,
 			'https://example.com/wp-json/llms/v2/mock' => true,
 			'http://example.com/wp-json/llms/v1/mock' => true,
 			'http://example.com/wp-json/llms-external/v1/mock' => true,
+
+			// Subdirectory install and plain-permalink routes still match.
+			'https://example.com/blog/wp-json/llms/v1/mock' => true,
+			'https://example.com/?rest_route=/llms/v1/courses' => true,
 		);
 
 		foreach ( $tests as $uri => $expect ) {
